@@ -1340,7 +1340,75 @@ namespace EVEMon.Common
        
         public string DescriptionNl
         {
-            get { return m_descriptionNl.Replace(@".", ".\n"); }
+            //get { return m_descriptionNl.Replace(@".", ".\n"); }
+            get { return WordWrap(m_descriptionNl, 100); }
+        }
+
+        public string WordWrap(string text, int maxLength)
+        {
+            text = text.Replace("\n", " ");
+            text = text.Replace("\r", " ");
+            text = text.Replace(".", ". ");
+            text = text.Replace(">", "> ");
+            text = text.Replace("\t", " ");
+            text = text.Replace(",", ", ");
+            text = text.Replace(";", "; ");
+
+            string[] Words = text.Split(' ');
+            int currentLineLength = 0;
+            ArrayList Lines = new ArrayList(text.Length / maxLength);
+            string currentLine = "";
+            bool InTag = false;
+
+            foreach (string currentWord in Words)
+            {
+                //ignore html
+                if (currentWord.Length > 0)
+                {
+                    if (currentWord.Substring(0, 1) == "<")
+                        InTag = true;
+                    if (InTag)
+                    {
+                        //handle filenames inside html tags
+                        if (currentLine.EndsWith("."))
+                        {
+                            currentLine += currentWord;
+                        }
+                        else
+                            currentLine += " " + currentWord;
+                        if (currentWord.IndexOf(">") > -1)
+                            InTag = false;
+                    }
+                    else
+                    {
+                        if (currentLineLength + currentWord.Length + 1 < maxLength)
+                        {
+                            currentLine += " " + currentWord;
+                            currentLineLength += (currentWord.Length + 1);
+                        }
+                        else
+                        {
+                            Lines.Add(currentLine);
+                            currentLine = currentWord;
+                            currentLineLength = currentWord.Length;
+                        }
+                    }
+                }
+            }
+            if (currentLine != "")
+            {
+                Lines.Add(currentLine);
+            }
+            string[] textLinesStr = new string[Lines.Count];
+            Lines.CopyTo(textLinesStr, 0);
+
+            string strWrapped = "";
+            foreach(string line in textLinesStr) 
+            {
+                strWrapped += line + "\n";
+            }
+
+            return strWrapped;
         }
 
         public EveAttribute PrimaryAttribute
