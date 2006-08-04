@@ -70,6 +70,14 @@ namespace EVEMon.Common
             set { m_DisableXMLAutoUpdate = value; }
         }
 
+        private bool m_EnableSkillCompleteDialog;
+
+        public bool EnableSkillCompleteDialog
+        {
+            get { return m_EnableSkillCompleteDialog; }
+            set { m_EnableSkillCompleteDialog = value; }
+        }
+	
         private bool m_DisableEVEMonVersionCheck;
 
         public bool DisableEVEMonVersionCheck

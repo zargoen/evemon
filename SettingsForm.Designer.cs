@@ -93,6 +93,7 @@ namespace EVEMon
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbShowBalloonTips = new System.Windows.Forms.CheckBox();
+            this.cbShowCompletedSkillsDialog = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -220,7 +221,7 @@ namespace EVEMon
             // cbPlaySoundOnSkillComplete
             // 
             this.cbPlaySoundOnSkillComplete.AutoSize = true;
-            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(12, 26);
+            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(12, 49);
             this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
             this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(216, 17);
             this.cbPlaySoundOnSkillComplete.TabIndex = 5;
@@ -923,7 +924,7 @@ namespace EVEMon
             this.groupBox4.Controls.Add(this.flowLayoutPanel5);
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(368, 66);
+            this.groupBox4.Size = new System.Drawing.Size(368, 89);
             this.groupBox4.TabIndex = 7;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Alerts";
@@ -933,13 +934,14 @@ namespace EVEMon
             this.flowLayoutPanel5.AutoSize = true;
             this.flowLayoutPanel5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel5.Controls.Add(this.cbShowBalloonTips);
+            this.flowLayoutPanel5.Controls.Add(this.cbShowCompletedSkillsDialog);
             this.flowLayoutPanel5.Controls.Add(this.cbPlaySoundOnSkillComplete);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(362, 46);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(362, 69);
             this.flowLayoutPanel5.TabIndex = 6;
             // 
             // cbShowBalloonTips
@@ -952,6 +954,16 @@ namespace EVEMon
             this.cbShowBalloonTips.Text = "Show balloon tip when skill training completes";
             this.cbShowBalloonTips.UseVisualStyleBackColor = true;
             // 
+            // cbShowCompletedSkillsDialog
+            // 
+            this.cbShowCompletedSkillsDialog.AutoSize = true;
+            this.cbShowCompletedSkillsDialog.Location = new System.Drawing.Point(12, 26);
+            this.cbShowCompletedSkillsDialog.Name = "cbShowCompletedSkillsDialog";
+            this.cbShowCompletedSkillsDialog.Size = new System.Drawing.Size(159, 17);
+            this.cbShowCompletedSkillsDialog.TabIndex = 7;
+            this.cbShowCompletedSkillsDialog.Text = "Show completed skills dialog";
+            this.cbShowCompletedSkillsDialog.UseVisualStyleBackColor = true;
+            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -959,7 +971,7 @@ namespace EVEMon
             this.groupBox3.AutoSize = true;
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
-            this.groupBox3.Location = new System.Drawing.Point(3, 75);
+            this.groupBox3.Location = new System.Drawing.Point(3, 98);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(368, 270);
             this.groupBox3.TabIndex = 6;
@@ -1401,5 +1413,6 @@ namespace EVEMon
         private System.Windows.Forms.NumericUpDown numericStatusInterval;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox cbShowCompletedSkillsDialog;
     }
 }

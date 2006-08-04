@@ -81,6 +81,8 @@ namespace EVEMon
 
             m_settings.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
             m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
+
+            m_settings.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
