@@ -187,6 +187,7 @@ namespace EVEMon
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
             cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
+            cm.DownloadAttemptCompleted += new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
@@ -214,6 +215,7 @@ namespace EVEMon
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
             cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
+            cm.DownloadAttemptCompleted += new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
@@ -336,7 +338,7 @@ namespace EVEMon
                     niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                     if (m_completedSkills.Count == 1)
                         niAlertIcon.BalloonTipText = sa;
-                    else
+                    else if (m_completedSkills.Count > 1)
                         niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
                     niAlertIcon.BalloonTipIcon = ToolTipIcon.Info;
                     niAlertIcon.Visible = true;
@@ -348,6 +350,32 @@ namespace EVEMon
 
                 if (m_settings.EnableEmailAlert)
                     Emailer.SendAlertMail(m_settings, e.SkillName, e.CharacterName);
+            }));
+        }
+
+        private void cm_DownloadAttemptCompleted(object sender, SkillTrainingCompletedEventArgs e)
+        {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                if (m_settings.EnableBalloonTips)
+                {
+                    string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
+                    if (m_completedSkills.Contains(sa))
+                    {
+                        m_completedSkills.Remove(sa);
+                        if (m_completedSkills.Count == 0)
+                        {
+                            // need to disable the alert and associated stuff
+                            // Is this really as simple as:
+                            niAlertIcon.Visible = false;
+                            tmrAlertRefresh.Enabled = false;
+                        }
+                        if (m_completedSkills.Count == 1)
+                            niAlertIcon.BalloonTipText = m_completedSkills[0];
+                        else if (m_completedSkills.Count > 1)
+                            niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                    }
+                }
             }));
         }
 
@@ -365,6 +393,7 @@ namespace EVEMon
             if (cm != null)
                 cm.Stop();
             cm.SkillTrainingCompleted -= new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
+            cm.DownloadAttemptCompleted -= new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             cm.ShortInfoChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
             if (tp.Tag is CharLoginInfo)
@@ -562,9 +591,7 @@ namespace EVEMon
             }
         }
 
-        
- 
-         public GrandCharacterInfo GetGrandCharacterInfo(string charName)
+        public GrandCharacterInfo GetGrandCharacterInfo(string charName)
         {
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
@@ -731,53 +758,54 @@ namespace EVEMon
                 tmrClock.Enabled = true;
             }
         }
- 
-         private void tmrServerStatus_Tick(object sender, EventArgs e)
-         {
-             tmrServerStatus.Enabled = false;
+
+        private void tmrServerStatus_Tick(object sender, EventArgs e)
+        {
+            tmrServerStatus.Enabled = false;
             if (m_settings.CheckTranquilityStatus)
-             {
-                try{
-                //this is causing EVEMon to freeze up when Tranquility is down.
-                TcpClient conn = new TcpClient("87.237.38.200", 26000);
-                if (conn.Connected)
+            {
+                try
                 {
-                    m_serverOnline = true;
-                    NetworkStream stream = conn.GetStream();
-                    byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
+                    //this is causing EVEMon to freeze up when Tranquility is down.
+                    TcpClient conn = new TcpClient("87.237.38.200", 26000);
+                    if (conn.Connected)
+                    {
+                        m_serverOnline = true;
+                        NetworkStream stream = conn.GetStream();
+                        byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
                                 0x00, 0x14, 0x06, 0x04, 0xE8, 0x99, 0x02, 0x00,
                                 0x05, 0x8B, 0x00, 0x08, 0x0A, 0xCD, 0xCC, 0xCC,
                                 0xCC, 0xCC, 0xCC, 0x00, 0x40, 0x05, 0x49, 0x0F,
                                 0x10, 0x05, 0x42, 0x6C, 0x6F, 0x6F, 0x64};
-                    stream.Write(data, 0, data.Length);
-                    byte[] response = new byte[256];
-                    int bytes = stream.Read(response, 0, 256);
-                    if (bytes > 21)
-                    {
-                        m_serverUsers = response[21] * 256 + response[20];
+                        stream.Write(data, 0, data.Length);
+                        byte[] response = new byte[256];
+                        int bytes = stream.Read(response, 0, 256);
+                        if (bytes > 21)
+                        {
+                            m_serverUsers = response[21] * 256 + response[20];
+                        }
+                        else
+                        {
+                            m_serverUsers = 0;
+                        }
                     }
-                    else
-                    {
-                        m_serverUsers = 0;
-                    }
-                 }
                     conn.Close();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     m_serverOnline = false;
                     m_serverUsers = 0;
                 }
             }
-                 else
-                 {
-                    m_serverOnline = false;
-                     m_serverUsers = 0;
-                 }
-                tmrServerStatus.Interval = m_settings.StatusUpdateInterval * 60000;
-                tmrServerStatus.Enabled = true;
-             tmrClock.Enabled = true;
-             }
+            else
+            {
+                m_serverOnline = false;
+                m_serverUsers = 0;
+            }
+            tmrServerStatus.Interval = m_settings.StatusUpdateInterval * 60000;
+            tmrServerStatus.Enabled = true;
+            tmrClock.Enabled = true;
+        }
 
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -790,7 +818,6 @@ namespace EVEMon
         {
             Application.Exit();
         }
-        
-        }
     }
+}
 

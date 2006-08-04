@@ -101,6 +101,21 @@ namespace EVEMon
             }
         }
 
+        public event DownloadAttemptCompletedHandler DownloadAttemptCompleted;
+
+        private void OnDownloadAttemptComplete(string charName, string skillName)
+        {
+            if (String.IsNullOrEmpty(charName) || String.IsNullOrEmpty(skillName))
+                return;
+
+            if (DownloadAttemptCompleted != null)
+            {
+                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(charName, skillName);
+                DownloadAttemptCompleted(this, e);
+            }
+        }
+
+
         public void Start()
         {
             m_session = null;
@@ -822,6 +837,10 @@ namespace EVEMon
 
         private int m_lastTickSPPaint = 0;
 
+        private bool attempted_dl = false;
+        private bool attempted_dl_complete = false;
+        private String old_skill = null;
+
         private void tmrTick_Tick(object sender, EventArgs e)
         {
 
@@ -845,8 +864,21 @@ namespace EVEMon
                     }
                 }
             }
-
-            if (m_estimatedCompletion < DateTime.Now && m_skillTrainingName != m_lastCompletedSkill)
+            if (m_throbberRunning && !attempted_dl)
+            {
+                attempted_dl = true;
+                if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
+                    old_skill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
+            }
+            if (attempted_dl && !(m_throbberRunning))
+            {
+                if (!attempted_dl_complete)
+                    attempted_dl_complete = true;
+                if (old_skill != null && m_grandCharacterInfo.GetSkill(old_skill).IsPartiallyTrained())
+                    OnDownloadAttemptComplete(m_cli.CharacterName, old_skill);
+                attempted_dl = false;
+            }
+            if (attempted_dl_complete && m_estimatedCompletion < DateTime.Now && m_skillTrainingName != m_lastCompletedSkill)
             {
                 m_lastCompletedSkill = m_skillTrainingName;
                 OnSkillTrainingComplete(m_cli.CharacterName, m_skillTrainingName);
@@ -1617,6 +1649,8 @@ namespace EVEMon
     }
 
     public delegate void SkillTrainingCompletedHandler(object sender, SkillTrainingCompletedEventArgs e);
+
+    public delegate void DownloadAttemptCompletedHandler(object sender, SkillTrainingCompletedEventArgs oldskill);
 
     public class SkillTrainingCompletedEventArgs : EventArgs
     {
