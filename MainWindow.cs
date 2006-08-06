@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Sales;
+using System.Runtime.InteropServices;
 
 namespace EVEMon
 {
@@ -126,6 +127,30 @@ namespace EVEMon
                 m_igbServer.Stop();
             }
         }
+
+        void im_Signaled(object sender, EventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    im_Signaled(sender, e);
+                }));
+                return;
+            }
+
+            if (!this.Visible)
+                niMinimizeIcon_Click(this, new EventArgs());
+            else if (this.WindowState == FormWindowState.Minimized)
+                this.WindowState = FormWindowState.Normal;
+            else
+                this.BringToFront();
+
+            FlashWindow(this.Handle, true);
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
         private bool m_updateShowing = false;
 
