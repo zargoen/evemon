@@ -6,7 +6,8 @@ using EVEMon.Common;
 
 namespace EVEMon.Sales
 {
-    delegate void TileUpdate(MineralTile mt, Single s);
+    internal delegate void TileUpdate(MineralTile mt, Single s);
+
     public partial class MineralWorksheet : EVEMonForm
     {
         private EventHandler<EventArgs> tileChangeHandler;
@@ -14,7 +15,7 @@ namespace EVEMon.Sales
 
         public MineralWorksheet()
         {
-            InitializeComponent();      
+            InitializeComponent();
         }
 
         public MineralWorksheet(Settings s)
@@ -76,8 +77,8 @@ namespace EVEMon.Sales
 
         private void mi_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem mi = (ToolStripMenuItem)sender;
-            string s = (string)mi.Tag;
+            ToolStripMenuItem mi = (ToolStripMenuItem) sender;
+            string s = (string) mi.Tag;
 
             Dictionary<string, Decimal> prices = new Dictionary<string, decimal>();
             try
@@ -91,14 +92,16 @@ namespace EVEMon.Sales
             {
                 ExceptionHandler.LogException(mpe, true);
                 MessageBox.Show("Failed to retrieve mineral pricing data:\n" + mpe.Message,
-                    "Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                "Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             foreach (MineralTile mt in Tiles)
             {
                 if (prices.ContainsKey(mt.MineralName))
+                {
                     mt.PricePerUnit = prices[mt.MineralName];
+                }
             }
 
             tslCourtesy.Text = "Mineral Prices Courtesy of " + MineralDataRequest.GetCourtesyText(s);
@@ -122,13 +125,13 @@ namespace EVEMon.Sales
 
         private void btnLockPrices_Click(object sender, EventArgs e)
         {
-            if (m_pricesLocked) {
+            if (m_pricesLocked)
+            {
                 PricesLocked = false;
                 btnLockPrices.Text = "Lock Prices";
-
-                
             }
-            else {
+            else
+            {
                 PricesLocked = true;
                 btnLockPrices.Text = "Unlock Prices";
             }

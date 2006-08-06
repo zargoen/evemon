@@ -63,7 +63,7 @@ namespace EVEMon
             s.EmailToAddress = tbToAddress.Text;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
-            ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
+            ProxySetting httpSetting = ((ProxySetting) btnProxyHttpAuth.Tag).Clone();
             httpSetting.Host = tbProxyHttpHost.Text;
             try
             {
@@ -77,7 +77,7 @@ namespace EVEMon
             s.HttpProxy = httpSetting;
 
             m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
-            m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
+            m_settings.StatusUpdateInterval = (int) numericStatusInterval.Value;
 
             m_settings.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
             m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
@@ -125,9 +125,13 @@ namespace EVEMon
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
+            {
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
+            }
             else
+            {
                 cbScreenList.SelectedIndex = 0;
+            }
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
@@ -140,7 +144,7 @@ namespace EVEMon
             tbToAddress.Text = m_settings.EmailToAddress;
 
             rbDefaultProxy.Checked = (m_settings.UseCustomProxySettings == false);
-            rbCustomProxy.Checked = (m_settings.UseCustomProxySettings == true);
+            rbCustomProxy.Checked = (m_settings.UseCustomProxySettings);
             tbProxyHttpHost.Text = m_settings.HttpProxy.Host;
             tbProxyHttpPort.Text = m_settings.HttpProxy.Port.ToString();
             btnProxyHttpAuth.Tag = m_settings.HttpProxy.Clone();
@@ -160,7 +164,7 @@ namespace EVEMon
             {
                 cbRunAtStartup.Checked = true;
             }
-           UpdateDisables();
+            UpdateDisables();
         }
 
         private void cbRunAtStartup_CheckedChanged(object sender, EventArgs e)
@@ -199,7 +203,9 @@ namespace EVEMon
             if (rbCustomProxy.Checked)
             {
                 if (String.IsNullOrEmpty(host))
+                {
                     return false;
+                }
 
                 int junk;
                 if (!Int32.TryParse(port, out junk) || junk < 0)
@@ -217,11 +223,13 @@ namespace EVEMon
             ApplyToSettings(ts);
             if (!Emailer.SendTestMail(ts))
             {
-                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
             }
             else
             {
-                MessageBox.Show("The message sent successfully. Please verify that the message was received.", "Mail Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The message sent successfully. Please verify that the message was received.",
+                                "Mail Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -253,7 +261,7 @@ namespace EVEMon
 
         private void btnProxyHttpAuth_Click(object sender, EventArgs e)
         {
-            ProxySetting ps = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
+            ProxySetting ps = ((ProxySetting) btnProxyHttpAuth.Tag).Clone();
             using (ProxyAuthenticationWindow f = new ProxyAuthenticationWindow())
             {
                 f.ProxySetting = ps;

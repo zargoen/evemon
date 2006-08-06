@@ -18,19 +18,19 @@ namespace EVEMon.SkillPlanner
             try
             {
                 cbSortType.Items.Clear();
-                int count = Enum.GetValues(typeof(PlanSortType)).Length;
+                int count = Enum.GetValues(typeof (PlanSortType)).Length;
                 for (int i = 0; i < count; i++)
                 {
                     string txt = String.Empty;
                     PlanSortDescriptionAttribute descAttr =
-                        EnumAttributeReader<PlanSortType, PlanSortDescriptionAttribute>.GetAttribute((PlanSortType)i);
+                        EnumAttributeReader<PlanSortType, PlanSortDescriptionAttribute>.GetAttribute((PlanSortType) i);
                     if (descAttr != null)
                     {
                         txt = descAttr.DisplayText;
                     }
                     else
                     {
-                        txt = ((PlanSortType)i).ToString();
+                        txt = ((PlanSortType) i).ToString();
                     }
                     cbSortType.Items.Add(txt);
                 }
@@ -39,13 +39,14 @@ namespace EVEMon.SkillPlanner
             {
                 cbSortType.EndUpdate();
             }
-            cbSortType.SelectedIndex = (int)PlanSortType.FastestFirst;
+            cbSortType.SelectedIndex = (int) PlanSortType.FastestFirst;
         }
 
         private void cbSortType_SelectedIndexChanged(object sender, EventArgs e)
         {
             PlanSortDescriptionAttribute descAttr =
-                EnumAttributeReader<PlanSortType, PlanSortDescriptionAttribute>.GetAttribute((PlanSortType)cbSortType.SelectedIndex);
+                EnumAttributeReader<PlanSortType, PlanSortDescriptionAttribute>.GetAttribute(
+                    (PlanSortType) cbSortType.SelectedIndex);
             if (descAttr != null)
             {
                 lblDescription.Text = descAttr.Description;
@@ -77,7 +78,7 @@ namespace EVEMon.SkillPlanner
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            m_resultSortType = (PlanSortType)cbSortType.SelectedIndex;
+            m_resultSortType = (PlanSortType) cbSortType.SelectedIndex;
             m_resultLearningFirst = cbArrangeLearning.Checked;
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -86,10 +87,10 @@ namespace EVEMon.SkillPlanner
 
     public enum PlanSortType
     {
-        [PlanSortDescription("No Sorting", "Do not sort skills in the plan.")]
-        NoChange,
-        [PlanSortDescription("Fastest Skills First", "Skills with the shortest remaining training time will be ordered first.")]
-        FastestFirst
+        [PlanSortDescription("No Sorting", "Do not sort skills in the plan.")] NoChange,
+        [
+            PlanSortDescription("Fastest Skills First",
+                "Skills with the shortest remaining training time will be ordered first.")] FastestFirst
     }
 
     public class PlanSortDescriptionAttribute : Attribute
@@ -188,7 +189,7 @@ namespace EVEMon.SkillPlanner
         {
             foreach (PlanEntry pe in m_plan.Entries)
             {
-                PlanEntry xpe = (PlanEntry)pe.Clone();
+                PlanEntry xpe = (PlanEntry) pe.Clone();
                 m_originalOrder.Add(xpe);
                 m_skillsToInsert.Add(xpe);
             }
@@ -197,7 +198,9 @@ namespace EVEMon.SkillPlanner
             {
                 m_plan.Entries.Clear();
                 if (m_learningFirst)
+                {
                     ArrangeLearningSkills();
+                }
                 ArrangeInSortTypeOrder();
             }
             catch (Exception ex)
@@ -206,11 +209,11 @@ namespace EVEMon.SkillPlanner
                 m_plan.Entries.Clear();
                 foreach (PlanEntry xpe in m_originalOrder)
                 {
-                    PlanEntry pe = (PlanEntry)xpe.Clone();
+                    PlanEntry pe = (PlanEntry) xpe.Clone();
                     m_plan.Entries.Add(pe);
                 }
                 MessageBox.Show("Sorting failed: " + ex.Message, "Sorting Failed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -225,7 +228,7 @@ namespace EVEMon.SkillPlanner
                 case PlanSortType.NoChange:
                     while (m_skillsToInsert.Count > 0)
                     {
-                        PlanEntry pe = (PlanEntry)m_skillsToInsert[0].Clone();
+                        PlanEntry pe = (PlanEntry) m_skillsToInsert[0].Clone();
                         m_plan.Entries.Add(pe);
                         m_skillsToInsert.RemoveAt(0);
                     }
@@ -272,9 +275,11 @@ namespace EVEMon.SkillPlanner
                     }
                 }
                 if (fastestPe == null)
+                {
                     throw new ApplicationException("no suitable skill -- should never happen!");
+                }
 
-                m_plan.Entries.Add((PlanEntry)fastestPe.Clone());
+                m_plan.Entries.Add((PlanEntry) fastestPe.Clone());
                 m_skillsToInsert.Remove(fastestPe);
                 trainedLevels[fastestPe.SkillName] = fastestPe.Level;
             }
@@ -291,7 +296,7 @@ namespace EVEMon.SkillPlanner
                     if (m_skillsToInsert[z].SkillName == skillname &&
                         m_skillsToInsert[z].Level == level)
                     {
-                        PlanEntry pe = (PlanEntry)m_skillsToInsert[z].Clone();
+                        PlanEntry pe = (PlanEntry) m_skillsToInsert[z].Clone();
                         m_plan.Entries.Add(pe);
                         m_skillsToInsert.RemoveAt(z);
                         break;
@@ -301,4 +306,3 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
-

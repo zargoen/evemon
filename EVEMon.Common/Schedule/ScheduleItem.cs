@@ -30,8 +30,8 @@ namespace EVEMon.Common.Schedule
     public enum ScheduleEntryOptions
     {
         None = 0,
-        Blocking = 1,    // Blocks skill training starting
-        Quiet = 2        // Silences alerts
+        Blocking = 1, // Blocks skill training starting
+        Quiet = 2 // Silences alerts
     }
 
     public abstract class ScheduleEntry
@@ -43,7 +43,7 @@ namespace EVEMon.Common.Schedule
         public abstract string Title { set; get; }
     }
 
-    public class SimpleScheduleEntry: ScheduleEntry
+    public class SimpleScheduleEntry : ScheduleEntry
     {
         private DateTime m_start = DateTime.MinValue;
         private DateTime m_end = DateTime.MinValue;
@@ -63,7 +63,6 @@ namespace EVEMon.Common.Schedule
         }
 
         #region ScheduleEntry Members
-
         public override bool Contains(DateTime checkDateTime)
         {
             return (checkDateTime >= m_start && checkDateTime < m_end);
@@ -80,7 +79,9 @@ namespace EVEMon.Common.Schedule
             List<ScheduleDateTimeRange> result = new List<ScheduleDateTimeRange>();
             if ((m_start < fromDt && m_end > fromDt) ||
                 (m_start >= fromDt && m_start <= toDt))
+            {
                 result.Add(new ScheduleDateTimeRange(m_start, m_end));
+            }
             return result;
         }
 
@@ -95,7 +96,6 @@ namespace EVEMon.Common.Schedule
             get { return m_title; }
             set { m_title = value; }
         }
-
         #endregion
     }
 
@@ -110,9 +110,9 @@ namespace EVEMon.Common.Schedule
 
     public enum MonthlyOverflowResolution
     {
-        ClipBack,       // Apr 31 becomes Apr 30
-        Drop,           // Apr 31 is ignored
-        OverlapForward  // Apr 31 becomes May 1
+        ClipBack, // Apr 31 becomes Apr 30
+        Drop, // Apr 31 is ignored
+        OverlapForward // Apr 31 becomes May 1
     }
 
     public class RecurringScheduleEntry : ScheduleEntry
@@ -183,17 +183,18 @@ namespace EVEMon.Common.Schedule
             set { m_endSecond = value; }
         }
 
-        public const int SECONDS_PER_DAY = 60 * 60 * 24;
+        public const int SECONDS_PER_DAY = 60*60*24;
 
         #region ScheduleEntry Members
-
         public override bool Contains(DateTime checkDateTime)
         {
             IEnumerable<ScheduleDateTimeRange> ranges = GetRangesInPeriod(checkDateTime, checkDateTime);
             foreach (ScheduleDateTimeRange sdtr in ranges)
             {
                 if (checkDateTime >= sdtr.From && checkDateTime < sdtr.To)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -207,18 +208,20 @@ namespace EVEMon.Common.Schedule
         public override IEnumerable<ScheduleDateTimeRange> GetRangesInPeriod(DateTime fromDt, DateTime toDt)
         {
             List<ScheduleDateTimeRange> result = new List<ScheduleDateTimeRange>();
-            DateTime startDt = fromDt - 
-                TimeSpan.FromMilliseconds(fromDt.Millisecond) -
-                TimeSpan.FromSeconds(fromDt.Second) -
-                TimeSpan.FromMinutes(fromDt.Minute) -
-                TimeSpan.FromHours(fromDt.Hour);
+            DateTime startDt = fromDt -
+                               TimeSpan.FromMilliseconds(fromDt.Millisecond) -
+                               TimeSpan.FromSeconds(fromDt.Second) -
+                               TimeSpan.FromMinutes(fromDt.Minute) -
+                               TimeSpan.FromHours(fromDt.Hour);
             DateTime endDt = toDt -
-                TimeSpan.FromMilliseconds(toDt.Millisecond) -
-                TimeSpan.FromSeconds(toDt.Second) -
-                TimeSpan.FromMinutes(toDt.Minute) -
-                TimeSpan.FromHours(toDt.Hour) + TimeSpan.FromDays(1);
+                             TimeSpan.FromMilliseconds(toDt.Millisecond) -
+                             TimeSpan.FromSeconds(toDt.Second) -
+                             TimeSpan.FromMinutes(toDt.Minute) -
+                             TimeSpan.FromHours(toDt.Hour) + TimeSpan.FromDays(1);
             if (m_endSecond > SECONDS_PER_DAY)
+            {
                 startDt -= TimeSpan.FromDays(1);
+            }
             DateTime wrkDt = startDt;
             while (wrkDt < endDt)
             {
@@ -239,35 +242,57 @@ namespace EVEMon.Common.Schedule
                     break;
                 case RecurFrequency.Weekdays:
                     if (wrkDt.DayOfWeek >= DayOfWeek.Monday && wrkDt.DayOfWeek <= DayOfWeek.Friday)
+                    {
                         appliesToday = true;
+                    }
                     else
+                    {
                         appliesToday = false;
+                    }
                     break;
                 case RecurFrequency.Weekends:
                     if (wrkDt.DayOfWeek == DayOfWeek.Saturday || wrkDt.DayOfWeek == DayOfWeek.Sunday)
+                    {
                         appliesToday = true;
+                    }
                     else
+                    {
                         appliesToday = false;
+                    }
                     break;
                 case RecurFrequency.Weekly:
                     if (wrkDt.DayOfWeek == m_recurDayOfWeek)
+                    {
                         appliesToday = true;
+                    }
                     else
+                    {
                         appliesToday = false;
+                    }
                     break;
                 case RecurFrequency.Monthly:
                     if (wrkDt.Day == m_recurDayOfMonth)
+                    {
                         appliesToday = true;
+                    }
                     else if (wrkDt.Day <= 3 && m_recurDayOfMonth >= 29)
+                    {
                         appliesToday = IsOverflowDate(wrkDt, m_recurDayOfMonth);
+                    }
                     else if (wrkDt.Day >= 28 && m_recurDayOfMonth >= 29)
+                    {
                         appliesToday = IsOverflowDate(wrkDt, m_recurDayOfMonth);
+                    }
                     else
+                    {
                         appliesToday = false;
+                    }
                     break;
             }
             if (!appliesToday)
+            {
                 return;
+            }
             ScheduleDateTimeRange sdtr = new ScheduleDateTimeRange(
                 wrkDt + TimeSpan.FromSeconds(m_startSecond),
                 wrkDt + TimeSpan.FromSeconds(m_endSecond));
@@ -286,17 +311,27 @@ namespace EVEMon.Common.Schedule
                     int lastDayOfPreviousMonth = lastDayOfPreviousMonthDt.Day;
                     int dayOfThisMonth = wrkDt.Day;
                     if (m_recurDayOfMonth - lastDayOfPreviousMonth == dayOfThisMonth)
+                    {
                         return true;
+                    }
                     else
+                    {
                         return false;
+                    }
                 case MonthlyOverflowResolution.ClipBack:
                     DateTime searchForward = wrkDt + TimeSpan.FromDays(1);
                     if (wrkDt.Month == searchForward.Month)
+                    {
                         return false;
+                    }
                     else if (m_recurDayOfMonth > wrkDt.Day)
+                    {
                         return true;
+                    }
                     else
+                    {
                         return false;
+                    }
             }
         }
 
@@ -311,7 +346,6 @@ namespace EVEMon.Common.Schedule
             get { return m_title; }
             set { m_title = value; }
         }
-
         #endregion
     }
 }

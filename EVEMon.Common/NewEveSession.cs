@@ -18,8 +18,8 @@ namespace EVEMon.Common
     public class EveSession
     {
         #region Static Members
-
-        private static Dictionary<string, WeakReference<EveSession>> m_sessions = new Dictionary<string, WeakReference<EveSession>>();
+        private static Dictionary<string, WeakReference<EveSession>> m_sessions =
+            new Dictionary<string, WeakReference<EveSession>>();
 
         public static EveSession GetSession(string username, string password)
         {
@@ -67,9 +67,11 @@ namespace EVEMon.Common
             get
             {
                 string cacheDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                    "\\EVEMon\\cache\\images";
+                                  "\\EVEMon\\cache\\images";
                 if (!Directory.Exists(cacheDir))
+                {
                     Directory.CreateDirectory(cacheDir);
+                }
                 return cacheDir;
             }
         }
@@ -98,11 +100,13 @@ namespace EVEMon.Common
                 }
                 GetImageCallback origCallback = callback;
                 callback = new GetImageCallback(delegate(EveSession s, Image i)
-                {
-                    if (i != null)
-                        AddImageToCache(url, i);
-                    origCallback(s, i);
-                });
+                                                    {
+                                                        if (i != null)
+                                                        {
+                                                            AddImageToCache(url, i);
+                                                        }
+                                                        origCallback(s, i);
+                                                    });
             }
             HttpWebRequest wr = EVEMonWebRequest.GetWebRequest(url);
             Pair<HttpWebRequest, GetImageCallback> p =
@@ -117,7 +121,7 @@ namespace EVEMon.Common
             GetImageCallback callback = p.B;
             try
             {
-                HttpWebResponse resp = (HttpWebResponse)wr.EndGetResponse(ar);
+                HttpWebResponse resp = (HttpWebResponse) wr.EndGetResponse(ar);
                 int contentLength = Convert.ToInt32(resp.ContentLength);
                 int bytesToGo = contentLength;
                 byte[] data = new byte[bytesToGo];
@@ -181,11 +185,9 @@ namespace EVEMon.Common
             sb.Append(ext);
             return sb.ToString();
         }
-
         #endregion
 
         #region Nonstatic Members
-
         private string m_username;
         private string m_password;
 
@@ -203,11 +205,15 @@ namespace EVEMon.Common
         public List<Pair<string, int>> GetCharacterList()
         {
             if (m_storedCharacterList != null)
+            {
                 return m_storedCharacterList;
+            }
 
             string stxt = GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp");
             if (String.IsNullOrEmpty(stxt))
+            {
                 throw new ApplicationException("Could not retrieve character list.");
+            }
 
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(stxt);
@@ -215,7 +221,7 @@ namespace EVEMon.Common
             foreach (XmlElement el in xdoc.SelectNodes("/charactersheet/characters/character"))
             {
                 nl.Add(new Pair<string, int>(el.GetAttribute("name"),
-                    Convert.ToInt32(el.GetAttribute("characterID"))));
+                                             Convert.ToInt32(el.GetAttribute("characterID"))));
             }
             m_storedCharacterList = nl;
             return m_storedCharacterList;
@@ -230,16 +236,22 @@ namespace EVEMon.Common
             {
                 maxTries--;
                 if (needLogin)
+                {
                     ReLogin();
+                }
                 needLogin = true;
 
                 string myurl = url;
                 if (!String.IsNullOrEmpty(m_requestSid))
                 {
                     if (myurl.Contains("?"))
+                    {
                         myurl = myurl + "&sid=" + m_requestSid;
+                    }
                     else
+                    {
                         myurl = myurl + "?sid=" + m_requestSid;
+                    }
                     m_requestSid = null;
                 }
 
@@ -252,7 +264,9 @@ namespace EVEMon.Common
                 {
                     string txt = EVEMonWebRequest.GetUrlString(myurl, wrs, out resp);
                     if (wrs.RequestError == RequestError.None && resp.StatusCode == HttpStatusCode.OK)
+                    {
                         return txt;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -267,7 +281,9 @@ namespace EVEMon.Common
             foreach (Pair<string, int> p in m_storedCharacterList)
             {
                 if (p.A == charName)
+                {
                     return p.B;
+                }
             }
             return -1;
         }
@@ -275,22 +291,29 @@ namespace EVEMon.Common
         public void GetCharacterInfoAsync(int charId, GetCharacterInfoCallback callback)
         {
             ThreadPool.QueueUserWorkItem(delegate
-            {
-                SerializableCharacterInfo sci = GetCharacterInfo(charId);
-                callback(null, sci);
-            });
+                                             {
+                                                 SerializableCharacterInfo sci = GetCharacterInfo(charId);
+                                                 callback(null, sci);
+                                             });
         }
 
         private SerializableCharacterInfo GetCharacterInfo(int charId)
         {
             try
             {
-                string stxt = GetSessionUrlText("http://myeve.eve-online.com/character/skilltree.asp?characterID=" + charId.ToString());
+                string stxt =
+                    GetSessionUrlText("http://myeve.eve-online.com/character/skilltree.asp?characterID=" +
+                                      charId.ToString());
                 if (String.IsNullOrEmpty(stxt) || !stxt.Contains("skills trained, for a total of"))
+                {
                     return null;
-                string xtxt = GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp?characterID=" + charId.ToString());
+                }
+                string xtxt =
+                    GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp?characterID=" + charId.ToString());
                 if (String.IsNullOrEmpty(xtxt))
+                {
                     return null;
+                }
                 XmlDocument xdoc = new XmlDocument();
                 try
                 {
@@ -318,14 +341,16 @@ namespace EVEMon.Common
 
         private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int charId, out int cacheExpires)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
-            XmlElement charRoot = xdoc.DocumentElement.SelectSingleNode("/charactersheet/characters/character[@characterID='" + charId.ToString() + "']") as XmlElement;
+            XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
+            XmlElement charRoot =
+                xdoc.DocumentElement.SelectSingleNode("/charactersheet/characters/character[@characterID='" +
+                                                      charId.ToString() + "']") as XmlElement;
 
             cacheExpires = Convert.ToInt32(charRoot.GetAttribute("timeLeftInCache"));
 
             using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
             {
-                return (SerializableCharacterInfo)xs.Deserialize(xnr);
+                return (SerializableCharacterInfo) xs.Deserialize(xnr);
             }
         }
 
@@ -340,11 +365,17 @@ namespace EVEMon.Common
                 string s1 = Regex.Match(bsubstr, @"knaR>i< / (.+?)>""xp11:ezis-tnof").Groups[1].Value;
                 sit.SkillName = ReverseString(s1);
                 string fsubstr = htmld.Substring(cti, 800);
-                sit.TrainingToLevel = Convert.ToInt32(Regex.Match(fsubstr, @"Currently training to: <\/font><strong>level (\d) </st").Groups[1].Value);
+                sit.TrainingToLevel =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"Currently training to: <\/font><strong>level (\d) </st").Groups[1].Value);
                 string timeLeft = Regex.Match(fsubstr, @"Time left: <\/font><strong>(.+?)<\/strong>").Groups[1].Value;
                 sit.EstimatedCompletion = DateTime.Now + ConvertTimeStringToTimeSpan(timeLeft);
-                sit.CurrentPoints = Convert.ToInt32(Regex.Match(fsubstr, @"SP done: </font><strong>(\d+) of \d+</strong>").Groups[1].Value);
-                sit.NeededPoints = Convert.ToInt32(Regex.Match(fsubstr, @"SP done: </font><strong>\d+ of (\d+)</strong>").Groups[1].Value);
+                sit.CurrentPoints =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"SP done: </font><strong>(\d+) of \d+</strong>").Groups[1].Value);
+                sit.NeededPoints =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"SP done: </font><strong>\d+ of (\d+)</strong>").Groups[1].Value);
             }
             else
             {
@@ -357,17 +388,25 @@ namespace EVEMon.Common
         {
             TimeSpan result = new TimeSpan();
             if (timeLeft.Contains("second"))
+            {
                 result += TimeSpan.FromSeconds(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) seconds?").Groups[1].Value));
+            }
             if (timeLeft.Contains("minute"))
+            {
                 result += TimeSpan.FromMinutes(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) minutes?").Groups[1].Value));
+            }
             if (timeLeft.Contains("hour"))
+            {
                 result += TimeSpan.FromHours(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) hours?").Groups[1].Value));
+            }
             if (timeLeft.Contains("day"))
+            {
                 result += TimeSpan.FromDays(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) days?").Groups[1].Value));
+            }
             return result;
         }
 
@@ -375,7 +414,9 @@ namespace EVEMon.Common
         {
             char[] ca = new char[p.Length];
             for (int i = 0; i < p.Length; i++)
+            {
                 ca[p.Length - i - 1] = p[i];
+            }
             return new String(ca);
         }
 
@@ -395,7 +436,9 @@ namespace EVEMon.Common
         public void ReLogin()
         {
             if (m_cookies == null)
+            {
                 m_cookies = new CookieContainer();
+            }
 
             WebRequestState wrs = new WebRequestState();
             wrs.CookieContainer = m_cookies;
@@ -411,7 +454,9 @@ namespace EVEMon.Common
             string loc = resp.Headers[HttpResponseHeader.Location];
             Match sidm = null;
             if (!String.IsNullOrEmpty(loc))
+            {
                 sidm = Regex.Match(loc, @"sid=(\d+)");
+            }
             if (sidm != null && sidm.Success)
             {
                 string sid = sidm.Groups[1].Value;
@@ -419,13 +464,14 @@ namespace EVEMon.Common
 
                 HttpWebResponse resp1 = null;
                 EVEMonWebRequest.GetUrlString(
-                "http://myeve.eve-online.com/login.asp", wrs, out resp1); 
+                    "http://myeve.eve-online.com/login.asp", wrs, out resp1);
 
                 return;
             }
             else if (s.Contains("Login credentials incorrect"))
             {
-                throw new ApplicationException("The username/password supplied is invalid. Please ensure it is entered correctly.");
+                throw new ApplicationException(
+                    "The username/password supplied is invalid. Please ensure it is entered correctly.");
             }
             else
             {
@@ -440,7 +486,8 @@ namespace EVEMon.Common
             public UpdateGrandCharacterInfoCallback UpdateGrandCharacterInfoCallback;
         }
 
-        public void UpdateGrandCharacterInfoAsync(GrandCharacterInfo grandCharacterInfo, Control invokeControl, UpdateGrandCharacterInfoCallback callback)
+        public void UpdateGrandCharacterInfoAsync(GrandCharacterInfo grandCharacterInfo, Control invokeControl,
+                                                  UpdateGrandCharacterInfoCallback callback)
         {
             UpdateGCIArgs xx = new UpdateGCIArgs();
             xx.GrandCharacterInfo = grandCharacterInfo;
@@ -455,28 +502,30 @@ namespace EVEMon.Common
 
         private void UpdateGrandCharacterInfoAsyncCaller(object state)
         {
-            UpdateGCIArgs args = (UpdateGCIArgs)state;
+            UpdateGCIArgs args = (UpdateGCIArgs) state;
             GC.Collect();
             int timeLeftInCache = this.UpdateGrandCharacterInfo(args.GrandCharacterInfo, args.InvokeControl);
             args.UpdateGrandCharacterInfoCallback(null, timeLeftInCache);
         }
 
-        private const int DEFAULT_RETRY_INTERVAL = 60 * 5 * 1000;
+        private const int DEFAULT_RETRY_INTERVAL = 60*5*1000;
 
         public int UpdateGrandCharacterInfo(GrandCharacterInfo grandCharacterInfo, Control invokeControl)
         {
             SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
 
-            if (sci == null) return DEFAULT_RETRY_INTERVAL;
+            if (sci == null)
+            {
+                return DEFAULT_RETRY_INTERVAL;
+            }
 
             invokeControl.Invoke(new MethodInvoker(delegate
-            {
-                grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
-            }));
+                                                       {
+                                                           grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
+                                                       }));
 
             return sci.TimeLeftInCache;
         }
-
         #endregion
     }
 }

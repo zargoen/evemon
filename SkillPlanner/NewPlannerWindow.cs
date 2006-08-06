@@ -48,10 +48,10 @@ namespace EVEMon.SkillPlanner
             itemBrowserControl1.Plan = m_plan;
 
             TipWindow.ShowTip("planner",
-                "Welcome to the Skill Planner",
-                "Select skills to add to your plan using the list on the left. To " +
-                "view the list of skills you've added to your plan, choose " +
-                "\"View Plan\" from the dropdown in the upper left.");
+                              "Welcome to the Skill Planner",
+                              "Select skills to add to your plan using the list on the left. To " +
+                              "view the list of skills you've added to your plan, choose " +
+                              "\"View Plan\" from the dropdown in the upper left.");
             m_showing = true;
         }
 
@@ -66,7 +66,9 @@ namespace EVEMon.SkillPlanner
             {
                 ImplantCalculator ic = ric.Target;
                 if (ic != null && ic.Visible)
+                {
                     ic.Close();
+                }
             }
             m_calcWindows.Clear();
         }
@@ -224,10 +226,12 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level < i)
                 {
                     int x = 1 << i;
-                    thisPss = (PlanSelectShowing)((int)thisPss + x);
+                    thisPss = (PlanSelectShowing) ((int) thisPss + x);
                 }
                 if (m_plan.IsPlanned(m_selectedSkill, i))
+                {
                     plannedTo = i;
+                }
             }
             if (thisPss != m_planSelectShowing || plannedTo != m_planSelectSelected)
             {
@@ -238,37 +242,49 @@ namespace EVEMon.SkillPlanner
                 {
                     cbPlanSelect.Items.Add("Not Planned");
                     if (plannedTo == 0)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
                 if ((thisPss & PlanSelectShowing.One) != 0)
                 {
                     cbPlanSelect.Items.Add("Level I");
                     if (plannedTo == 1)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
                 if ((thisPss & PlanSelectShowing.Two) != 0)
                 {
                     cbPlanSelect.Items.Add("Level II");
                     if (plannedTo == 2)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
                 if ((thisPss & PlanSelectShowing.Three) != 0)
                 {
                     cbPlanSelect.Items.Add("Level III");
                     if (plannedTo == 3)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
                 if ((thisPss & PlanSelectShowing.Four) != 0)
                 {
                     cbPlanSelect.Items.Add("Level IV");
                     if (plannedTo == 4)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
                 if ((thisPss & PlanSelectShowing.Five) != 0)
                 {
                     cbPlanSelect.Items.Add("Level V");
                     if (plannedTo == 5)
+                    {
                         cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                    }
                 }
 
                 m_planSelectShowing = thisPss;
@@ -279,7 +295,7 @@ namespace EVEMon.SkillPlanner
 
         private void cbPlanSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string s = (string)cbPlanSelect.Items[cbPlanSelect.SelectedIndex];
+            string s = (string) cbPlanSelect.Items[cbPlanSelect.SelectedIndex];
             int setLevel = 0;
             if (s.StartsWith("Level "))
             {
@@ -307,30 +323,30 @@ namespace EVEMon.SkillPlanner
                 lblSkillName.Text = m_selectedSkill.Name;
                 lblDescription.Text = m_selectedSkill.Description;
                 lblAttributes.Text = "Primary: " + m_selectedSkill.PrimaryAttribute.ToString() + ", " +
-                    "Secondary: " + m_selectedSkill.SecondaryAttribute.ToString();
+                                     "Secondary: " + m_selectedSkill.SecondaryAttribute.ToString();
 
                 //int plannedTo = 0;
                 bool anyPlan = false;
                 bool tPlan;
                 tPlan = SetPlanLabel(lblLevel1Time, 1);
                 //if (tPlan)
-                    //plannedTo = 1;
+                //plannedTo = 1;
                 anyPlan = anyPlan || tPlan;
                 tPlan = SetPlanLabel(lblLevel2Time, 2);
                 //if (tPlan)
-                    //plannedTo = 2;
+                //plannedTo = 2;
                 anyPlan = anyPlan || tPlan;
                 tPlan = SetPlanLabel(lblLevel3Time, 3);
                 //if (tPlan)
-                    //plannedTo = 3;
+                //plannedTo = 3;
                 anyPlan = anyPlan || tPlan;
                 tPlan = SetPlanLabel(lblLevel4Time, 4);
                 //if (tPlan)
-                    //plannedTo = 4;
+                //plannedTo = 4;
                 anyPlan = anyPlan || tPlan;
                 tPlan = SetPlanLabel(lblLevel5Time, 5);
                 //if (tPlan)
-                    //plannedTo = 5;
+                //plannedTo = 5;
                 anyPlan = anyPlan || tPlan;
                 //btnCancelPlan.Enabled = anyPlan;
 
@@ -358,19 +374,23 @@ namespace EVEMon.SkillPlanner
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                {
-                    UpdateStatusBar();
-                }));
+                                                  {
+                                                      UpdateStatusBar();
+                                                  }));
                 return;
             }
 
             TimeSpan res = m_plan.GetTotalTime(null);
             slblStatusText.Text = String.Format("{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}",
-                m_plan.Entries.Count,
-                m_plan.Entries.Count == 1 ? "" : "s",
-                m_plan.UniqueSkillCount,
-                m_plan.UniqueSkillCount == 1 ? "" : "s",
-                GrandSkill.TimeSpanToDescriptiveText(res, DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
+                                                m_plan.Entries.Count,
+                                                m_plan.Entries.Count == 1 ? "" : "s",
+                                                m_plan.UniqueSkillCount,
+                                                m_plan.UniqueSkillCount == 1 ? "" : "s",
+                                                GrandSkill.TimeSpanToDescriptiveText(res,
+                                                                                     DescriptiveTextOptions.FullText |
+                                                                                     DescriptiveTextOptions.
+                                                                                         IncludeCommas |
+                                                                                     DescriptiveTextOptions.SpaceText));
 
             if (m_plan.HasAttributeSuggestion)
             {
@@ -379,12 +399,12 @@ namespace EVEMon.SkillPlanner
                 {
                     m_suggestionTipUp = true;
                     TipWindow.ShowTip("suggestion",
-                        "Plan Suggestion",
-                        "EVEMon has analyzed your plan and has come up with a " +
-                        "suggestion of learning skills that you can add that will " +
-                        "lower the overall training time of the plan. To view this " +
-                        "suggestion and the resulting change in plan time, click the " +
-                        "\"Suggestion\" link in the planner status bar.");
+                                      "Plan Suggestion",
+                                      "EVEMon has analyzed your plan and has come up with a " +
+                                      "suggestion of learning skills that you can add that will " +
+                                      "lower the overall training time of the plan. To view this " +
+                                      "suggestion and the resulting change in plan time, click the " +
+                                      "\"Suggestion\" link in the planner status bar.");
                     m_suggestionTipUp = false;
                 }
             }
@@ -410,10 +430,12 @@ namespace EVEMon.SkillPlanner
             {
                 TimeSpan tts = m_selectedSkill.GetTrainingTimeOfLevelOnly(level);
                 if (m_selectedSkill.Level == level - 1)
+                {
                     tts = m_selectedSkill.GetTrainingTimeToLevel(level);
+                }
                 sb.Append(GrandSkill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
-                TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level-1) +
-                    m_selectedSkill.GetPrerequisiteTime();
+                TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) +
+                                m_selectedSkill.GetPrerequisiteTime();
                 if (prts > TimeSpan.Zero)
                 {
                     sb.Append(" (plus ");
@@ -446,7 +468,8 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private const DescriptiveTextOptions DTO_OPTS = DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
+        private const DescriptiveTextOptions DTO_OPTS =
+            DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
 
         private bool SetMenuItemState(ToolStripMenuItem mi, GrandSkill gs, int level)
         {
@@ -488,7 +511,7 @@ namespace EVEMon.SkillPlanner
                 {
                     TimeSpan ts = gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(level);
                     mi.Text = "Plan to Level " + GrandSkill.GetRomanSkillNumber(level) + " (" +
-                        GrandSkill.TimeSpanToDescriptiveText(ts, DTO_OPTS) + ")";
+                              GrandSkill.TimeSpanToDescriptiveText(ts, DTO_OPTS) + ")";
                     mi.Enabled = true;
                 }
             }
@@ -540,7 +563,9 @@ namespace EVEMon.SkillPlanner
                 foreach (PlanEntry pe in list)
                 {
                     if (pe.SkillName == gs.Name && pe.Level == level)
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -594,10 +619,10 @@ namespace EVEMon.SkillPlanner
                         if (!m_plan.RemoveEntry(pe))
                         {
                             MessageBox.Show(this,
-                                "The plan for this skill could not be set below level " +
-                                GrandSkill.GetRomanSkillNumber(i) + " because this skill is " +
-                                "required at that level for another skill you have planned.",
-                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                            "The plan for this skill could not be set below level " +
+                                            GrandSkill.GetRomanSkillNumber(i) + " because this skill is " +
+                                            "required at that level for another skill you have planned.",
+                                            "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                             break;
                         }
                     }
@@ -681,11 +706,17 @@ namespace EVEMon.SkillPlanner
             {
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return;
+                }
                 if (dr == DialogResult.Yes)
+                {
                     CancelPlan(true);
+                }
                 if (dr == DialogResult.No)
+                {
                     CancelPlan(false);
+                }
             }
         }
 
@@ -695,9 +726,9 @@ namespace EVEMon.SkillPlanner
             if (!result)
             {
                 MessageBox.Show(this,
-                    "The plan for this skill could not be cancelled because this skill is " +
-                    "required for another skill you have planned.",
-                    "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                "The plan for this skill could not be cancelled because this skill is " +
+                                "required for another skill you have planned.",
+                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             else
             {
@@ -723,7 +754,9 @@ namespace EVEMon.SkillPlanner
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
+            {
                 return;
+            }
 
             m_settings.RemovePlanFor(m_grandCharacterInfo.Name, m_plan.Name);
         }
@@ -734,11 +767,13 @@ namespace EVEMon.SkillPlanner
             {
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return;
+                }
             }
             // XXX: apply plan change
 
-           // List<PlanEntry> nonLearningEntries = new List<PlanEntry>();
+            // List<PlanEntry> nonLearningEntries = new List<PlanEntry>();
             m_plan.SuppressEvents();
             try
             {
@@ -776,12 +811,14 @@ namespace EVEMon.SkillPlanner
 
         private void tsbCopyForum_Click(object sender, EventArgs e)
         {
-            PlanTextOptions pto = (PlanTextOptions)m_settings.DefaultCopyOptions.Clone();
+            PlanTextOptions pto = (PlanTextOptions) m_settings.DefaultCopyOptions.Clone();
             using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, true))
             {
                 f.ShowDialog();
                 if (f.DialogResult == DialogResult.Cancel)
+                {
                     return;
+                }
                 if (f.SetAsDefault)
                 {
                     m_settings.DefaultCopyOptions = pto;
@@ -799,7 +836,8 @@ namespace EVEMon.SkillPlanner
             }
 
             MessageBox.Show("The skill plan has been copied to the clipboard in a " +
-                "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
 
         private enum SaveType
@@ -813,23 +851,27 @@ namespace EVEMon.SkillPlanner
         private void tsbSaveAs_Click(object sender, EventArgs e)
         {
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Skill Plan";
-            sfdSave.FilterIndex = (int)SaveType.Emp;
+            sfdSave.FilterIndex = (int) SaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
             if (dr == DialogResult.Cancel)
+            {
                 return;
+            }
 
             string fileName = sfdSave.FileName;
             try
             {
                 PlanTextOptions pto = null;
-                if ((SaveType)sfdSave.FilterIndex == SaveType.Text)
+                if ((SaveType) sfdSave.FilterIndex == SaveType.Text)
                 {
-                    pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
+                    pto = (PlanTextOptions) m_settings.DefaultSaveOptions.Clone();
                     using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, false))
                     {
                         f.ShowDialog();
                         if (f.DialogResult == DialogResult.Cancel)
+                        {
                             return;
+                        }
                         if (f.SetAsDefault)
                         {
                             m_settings.DefaultSaveOptions = pto;
@@ -840,7 +882,7 @@ namespace EVEMon.SkillPlanner
 
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    switch ((SaveType)sfdSave.FilterIndex)
+                    switch ((SaveType) sfdSave.FilterIndex)
                     {
                         case SaveType.Emp:
                             using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
@@ -863,13 +905,13 @@ namespace EVEMon.SkillPlanner
             {
                 ExceptionHandler.LogException(err, true);
                 MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void SerializePlanTo(Stream s)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Plan));
+            XmlSerializer xs = new XmlSerializer(typeof (Plan));
             xs.Serialize(s, m_plan);
         }
 
@@ -943,7 +985,6 @@ namespace EVEMon.SkillPlanner
 
         private void skillSelectControl1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void skillSelectControl1_SelectedSkillChanged(object sender, EventArgs e)
@@ -979,7 +1020,6 @@ namespace EVEMon.SkillPlanner
 
         private void shipSelectControl1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void shipSelectControl1_SelectedShipChanged(object sender, EventArgs e)
@@ -998,9 +1038,9 @@ namespace EVEMon.SkillPlanner
                 EveSession.GetImageAsync(
                     "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
                     shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
-                    {
-                        GotShipImage(shipId, i);
-                    });
+                                                          {
+                                                              GotShipImage(shipId, i);
+                                                          });
 
                 lblShipClass.Text = s.Type + " > " + s.Race;
                 lblShipName.Text = s.Name;
@@ -1023,7 +1063,9 @@ namespace EVEMon.SkillPlanner
                     }
                     TimeSpan trainTime = m_grandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
                     lblShipTimeRequired.Text = "Training Time: " +
-                        GrandSkill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+                                               GrandSkill.TimeSpanToDescriptiveText(trainTime,
+                                                                                    DescriptiveTextOptions.IncludeCommas |
+                                                                                    DescriptiveTextOptions.SpaceText);
                     btnShipSkillsAdd.Enabled = true;
                 }
                 else
@@ -1067,9 +1109,11 @@ namespace EVEMon.SkillPlanner
                 GrandSkill gs = m_grandCharacterInfo.GetSkill(list[rnum].Name);
                 string knownText = String.Empty;
                 if (gs.Level >= list[rnum].Level)
+                {
                     knownText = " (Known)";
+                }
                 skillLabel.Text = list[rnum].Name + " " +
-                    GrandSkill.GetRomanSkillNumber(list[rnum].Level) + knownText;
+                                  GrandSkill.GetRomanSkillNumber(list[rnum].Level) + knownText;
                 return (knownText.Length > 0);
             }
             else
@@ -1082,11 +1126,17 @@ namespace EVEMon.SkillPlanner
         private void GotShipImage(int shipId, Image i)
         {
             if (i == null)
+            {
                 return;
+            }
             if (shipSelectControl1.SelectedShip == null)
+            {
                 return;
+            }
             if (shipId != shipSelectControl1.SelectedShip.Id)
+            {
                 return;
+            }
             pbShipImage.Image = i;
         }
 
@@ -1094,7 +1144,9 @@ namespace EVEMon.SkillPlanner
         {
             Ship s = shipSelectControl1.SelectedShip;
             if (s == null)
+            {
                 return;
+            }
 
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
             foreach (ShipRequiredSkill srs in s.RequiredSkills)
@@ -1136,12 +1188,10 @@ namespace EVEMon.SkillPlanner
 
         private void lblShipDescription_Click(object sender, EventArgs e)
         {
-
         }
 
         private void scShipSelect_Panel2_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void pnlShipDescription_ClientSizeChanged(object sender, EventArgs e)
@@ -1162,12 +1212,10 @@ namespace EVEMon.SkillPlanner
     public class PlannerWindowFactory : IPlannerWindowFactory
     {
         #region IPlannerWindowFactory Members
-
         public Form CreateWindow(Settings s, GrandCharacterInfo gci, Plan p)
         {
             return new NewPlannerWindow(s, gci, p);
         }
-
         #endregion
     }
 }

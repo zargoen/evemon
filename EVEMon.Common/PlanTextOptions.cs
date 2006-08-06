@@ -79,12 +79,10 @@ namespace EVEMon.Common
         }
 
         #region ICloneable Members
-
         public object Clone()
         {
             return this.MemberwiseClone();
         }
-
         #endregion
     }
 }

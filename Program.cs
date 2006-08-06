@@ -9,13 +9,13 @@ using EVEMon.WindowRelocator;
 
 namespace EVEMon
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
 #if !DEBUG
             InstanceManager im = InstanceManager.GetInstance();
@@ -36,7 +36,9 @@ namespace EVEMon
                 {
                     StartNetlog();
                     if (m_logger == null)
+                    {
                         return;
+                    }
                 }
 
                 if (targ == "-startMinimized")
@@ -52,7 +54,8 @@ namespace EVEMon
             InstallerDeleter.Schedule();
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            AppDomain.CurrentDomain.UnhandledException +=
+                new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             //Application.Run(new Form1(ca));
             s_settings = Settings.LoadFromKey(m_settingKey);
@@ -61,7 +64,9 @@ namespace EVEMon
 
             SetRelocatorState(false);
             if (m_logger != null)
+            {
                 m_logger.Dispose();
+            }
         }
 
         private static MainWindow m_mainWindow;
@@ -84,7 +89,9 @@ namespace EVEMon
         public static void SetRelocatorState(bool state)
         {
             if (!state && !m_relocatorRunning)
+            {
                 return;
+            }
             InternalSetRelocatorState(state);
         }
 

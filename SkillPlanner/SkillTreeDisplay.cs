@@ -54,7 +54,8 @@ namespace EVEMon.SkillPlanner
         public bool WorksafeMode
         {
             get { return m_worksafeMode; }
-            set {
+            set
+            {
                 if (m_worksafeMode != value)
                 {
                     m_worksafeMode = value;
@@ -142,7 +143,7 @@ namespace EVEMon.SkillPlanner
                 rootSi.Left = 0;
                 mainLevel.Add(rootSi);
                 //m_alreadyInLayout.Add(m_rootSkill, rootSi);
-        
+
                 BuildPrereqs(rootSi, 1);
             }
             AttachLayoutData();
@@ -181,7 +182,9 @@ namespace EVEMon.SkillPlanner
                     GrandSkill gs = si.Skill;
                     gs.Changed += m_eventChangeHandler;
                     if (gs.InTraining)
+                    {
                         SetTrainingSkill(gs);
+                    }
                 }
             }
         }
@@ -190,7 +193,7 @@ namespace EVEMon.SkillPlanner
 
         private void SetTrainingSkill(GrandSkill gs)
         {
-            if (gs !=null && gs.InTraining)
+            if (gs != null && gs.InTraining)
             {
                 if (m_trainingSkill != gs)
                 {
@@ -198,7 +201,7 @@ namespace EVEMon.SkillPlanner
                     tmrSkillTick.Enabled = true;
                 }
             }
-            else if (gs==null || (!gs.InTraining && m_trainingSkill == gs))
+            else if (gs == null || (!gs.InTraining && m_trainingSkill == gs))
             {
                 m_trainingSkill = null;
                 tmrSkillTick.Enabled = false;
@@ -211,33 +214,37 @@ namespace EVEMon.SkillPlanner
         {
             GrandSkill gs = sender as GrandSkill;
             if (gs == null)
+            {
                 return;
+            }
 
             this.Invoke(new MethodInvoker(delegate
-            {
-                SetTrainingSkill(gs);
-                using (Region r = GetSkillRegion(gs))
-                {
-                    if (m_inTick)
-                    {
-                        foreach (GrandSkill sgs in m_skillsToUpdateOnTick)
-                        {
-                            using (Region sr = GetSkillRegion(sgs))
-                            {
-                                r.Union(sr);
-                            }
-                        }
-                    }
-                    this.Invalidate(r);
-                }
-            }));
+                                              {
+                                                  SetTrainingSkill(gs);
+                                                  using (Region r = GetSkillRegion(gs))
+                                                  {
+                                                      if (m_inTick)
+                                                      {
+                                                          foreach (GrandSkill sgs in m_skillsToUpdateOnTick)
+                                                          {
+                                                              using (Region sr = GetSkillRegion(sgs))
+                                                              {
+                                                                  r.Union(sr);
+                                                              }
+                                                          }
+                                                      }
+                                                      this.Invalidate(r);
+                                                  }
+                                              }));
         }
 
         private void tmrSkillTick_Tick(object sender, EventArgs e)
         {
             m_inTick = true;
             if (m_trainingSkill != null)
+            {
                 OnEventChanged(m_trainingSkill, new EventArgs());
+            }
             m_inTick = false;
         }
 
@@ -252,7 +259,9 @@ namespace EVEMon.SkillPlanner
                     foreach (SkillInfo si in lsi)
                     {
                         if (si.Skill == gs)
+                        {
                             r.Union(si.CurrentRectangle);
+                        }
                     }
                 }
                 return r;
@@ -272,21 +281,27 @@ namespace EVEMon.SkillPlanner
             {
                 //if (!m_alreadyInLayout.ContainsKey(pp.Skill))
                 //{
-                    if (m_layoutData.Count <= level)
-                        m_layoutData.Add(new List<SkillInfo>());
-                    List<SkillInfo> thisLevel = m_layoutData[level];
+                if (m_layoutData.Count <= level)
+                {
+                    m_layoutData.Add(new List<SkillInfo>());
+                }
+                List<SkillInfo> thisLevel = m_layoutData[level];
 
-                    SkillInfo si = new SkillInfo(pp.Skill, parentSi);
-                    si.RequiredLevel = pp.RequiredLevel;
-                    if (thisLevel.Count == 0)
-                        si.Left = -10;
-                    else
-                        si.Left = thisLevel[thisLevel.Count - 1].Left + SKILLBOX_WIDTH + SKILLBOX_MARGIN_LR;
-                    thisLevel.Add(si);
-                    //m_alreadyInLayout.Add(pp.Skill, si);
-                    parentSi.AddChild(si);
+                SkillInfo si = new SkillInfo(pp.Skill, parentSi);
+                si.RequiredLevel = pp.RequiredLevel;
+                if (thisLevel.Count == 0)
+                {
+                    si.Left = -10;
+                }
+                else
+                {
+                    si.Left = thisLevel[thisLevel.Count - 1].Left + SKILLBOX_WIDTH + SKILLBOX_MARGIN_LR;
+                }
+                thisLevel.Add(si);
+                //m_alreadyInLayout.Add(pp.Skill, si);
+                parentSi.AddChild(si);
 
-                    BuildPrereqs(si, level + 1);
+                BuildPrereqs(si, level + 1);
                 //}
                 //else
                 //{
@@ -380,7 +395,7 @@ namespace EVEMon.SkillPlanner
                 int desiredMovement = parentLeft - myLeft;
                 overallMovement += desiredMovement;
             }
-            overallMovement = overallMovement / principals.Count;
+            overallMovement = overallMovement/principals.Count;
 
             if (overallMovement < 0)
             {
@@ -391,7 +406,9 @@ namespace EVEMon.SkillPlanner
                 for (int i = 0; i < m_layoutData[level].Count; i++)
                 {
                     if (m_layoutData[level][i] == leadSi)
+                    {
                         break;
+                    }
                     neighborSi = m_layoutData[level][i];
                 }
                 if (neighborSi == null)
@@ -412,7 +429,7 @@ namespace EVEMon.SkillPlanner
                         {
                             si.Left += canMoveAmount;
                         }
-                        principals.Insert(0,neighborSi);
+                        principals.Insert(0, neighborSi);
                         ResolveLayoutConflict(principals, level);
                         return;
                     }
@@ -429,7 +446,7 @@ namespace EVEMon.SkillPlanner
             else if (overallMovement > 0)
             {
                 // Moving right...
-                SkillInfo leadSi = principals[principals.Count-1];
+                SkillInfo leadSi = principals[principals.Count - 1];
                 int desiredLeft = leadSi.Left + overallMovement;
                 int desiredRight = desiredLeft + SKILLBOX_WIDTH + SKILLBOX_MARGIN_LR;
                 SkillInfo neighborSi = null;
@@ -495,8 +512,8 @@ namespace EVEMon.SkillPlanner
 
                     if (parentSi != null)
                     {
-                        Point lineFrom = new Point(si.Left + (SKILLBOX_WIDTH / 2), level);
-                        Point lineTo = new Point(parentSi.Left + (SKILLBOX_WIDTH / 2), level - 1);
+                        Point lineFrom = new Point(si.Left + (SKILLBOX_WIDTH/2), level);
+                        Point lineTo = new Point(parentSi.Left + (SKILLBOX_WIDTH/2), level - 1);
                         PlotLine(lineFrom, lineTo);
                     }
                 }
@@ -508,11 +525,11 @@ namespace EVEMon.SkillPlanner
         {
             //throw new Exception("The method or operation is not implemented.");
             Point actualFrom = new Point(lineFrom.X,
-                lineFrom.Y * (SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD) + (SKILLBOX_HEIGHT/2));
+                                         lineFrom.Y*(SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD) + (SKILLBOX_HEIGHT/2));
             Point actualTo = new Point(lineTo.X,
-                lineTo.Y * (SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD) + (SKILLBOX_HEIGHT/2));
+                                       lineTo.Y*(SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD) + (SKILLBOX_HEIGHT/2));
             m_lines.Add(new Rectangle(actualFrom.X, actualFrom.Y,
-                actualTo.X - actualFrom.X, actualTo.Y - actualFrom.Y));
+                                      actualTo.X - actualFrom.X, actualTo.Y - actualFrom.Y));
         }
 
         private Rectangle m_graphBounds = new Rectangle(0, 0, 10, 10);
@@ -528,14 +545,18 @@ namespace EVEMon.SkillPlanner
                     int myLeft = si.Left;
                     int myRight = si.Left + SKILLBOX_WIDTH;
                     if (myLeft < left)
+                    {
                         left = myLeft;
+                    }
                     if (myRight > right)
+                    {
                         right = myRight;
+                    }
                 }
             }
 
-            int hh = m_layoutData.Count * (SKILLBOX_HEIGHT);
-            hh += (m_layoutData.Count - 1) * (SKILLBOX_MARGIN_UD);
+            int hh = m_layoutData.Count*(SKILLBOX_HEIGHT);
+            hh += (m_layoutData.Count - 1)*(SKILLBOX_MARGIN_UD);
 
             m_graphBounds = new Rectangle(left, 0, right - left, hh);
             this.AutoScrollMinSize = m_graphBounds.Size;
@@ -555,7 +576,8 @@ namespace EVEMon.SkillPlanner
 
         private List<GrandSkill> m_skillsToUpdateOnTick = new List<GrandSkill>();
 
-        private const DescriptiveTextOptions DTO_TIME = DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
+        private const DescriptiveTextOptions DTO_TIME =
+            DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -576,22 +598,26 @@ namespace EVEMon.SkillPlanner
             int ofsTop = 0 - m_graphBounds.Top + this.AutoScrollPosition.Y;
             if (this.ClientSize.Width > m_graphBounds.Width)
             {
-                int twHalf = this.ClientSize.Width / 2;
-                int gwHalf = m_graphBounds.Width / 2;
+                int twHalf = this.ClientSize.Width/2;
+                int gwHalf = m_graphBounds.Width/2;
                 ofsLeft = (twHalf - gwHalf) - m_graphBounds.Left;
             }
             if (this.ClientSize.Height > m_graphBounds.Height)
             {
-                int thHalf = this.ClientSize.Height / 2;
-                int ghHalf = m_graphBounds.Height / 2;
+                int thHalf = this.ClientSize.Height/2;
+                int ghHalf = m_graphBounds.Height/2;
                 ofsTop = (thHalf - ghHalf) - m_graphBounds.Top;
             }
 
             Pen linePen;
             if (!m_worksafeMode)
+            {
                 linePen = new Pen(Color.White, 5.0F);
+            }
             else
+            {
                 linePen = new Pen(SystemColors.ControlText, 5.0F);
+            }
             try
             {
                 foreach (Rectangle liner in m_lines)
@@ -612,7 +638,7 @@ namespace EVEMon.SkillPlanner
                 m_skillsToUpdateOnTick.Clear();
                 foreach (List<SkillInfo> lsi in m_layoutData)
                 {
-                    int ttop = (level * (SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD)) + ofsTop;
+                    int ttop = (level*(SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD)) + ofsTop;
                     foreach (SkillInfo si in lsi)
                     {
                         Rectangle rect = new Rectangle(
@@ -672,19 +698,25 @@ namespace EVEMon.SkillPlanner
                             if (pts > TimeSpan.Zero)
                             {
                                 prereqTime = "Prerequisite: " +
-                                    GrandSkill.TimeSpanToDescriptiveText(pts, DTO_TIME);
+                                             GrandSkill.TimeSpanToDescriptiveText(pts, DTO_TIME);
                                 if (timeIncludesTraining)
+                                {
                                     m_skillsToUpdateOnTick.Add(si.Skill);
+                                }
                             }
                         }
 
                         if (fillBrush == null)
+                        {
                             fillBrush = new LinearGradientBrush(rect, Color.LightGray,
-                                Color.DarkGray, 90.0F);
+                                                                Color.DarkGray, 90.0F);
+                        }
                         if (m_worksafeMode)
                         {
                             if (fillBrush != null)
+                            {
                                 fillBrush.Dispose();
+                            }
                             fillBrush = new SolidBrush(SystemColors.Control);
                         }
 
@@ -694,30 +726,30 @@ namespace EVEMon.SkillPlanner
 
                         Size sz;
                         Point drawPoint = new Point(rect.Left + 5, rect.Top + 5);
-                        sz = MeasureAndDrawText(e.Graphics, si.Skill.Name, boldf, 
-                            drawPoint, stdTextColor);
+                        sz = MeasureAndDrawText(e.Graphics, si.Skill.Name, boldf,
+                                                drawPoint, stdTextColor);
                         drawPoint.Y += sz.Height;
 
                         sz = MeasureAndDrawText(e.Graphics, currentLevelText, this.Font,
-                            drawPoint, stdTextColor);
+                                                drawPoint, stdTextColor);
                         drawPoint.Y += sz.Height;
 
                         if (!String.IsNullOrEmpty(requiredLevel))
                         {
                             sz = MeasureAndDrawText(e.Graphics, requiredLevel, this.Font,
-                                drawPoint, reqTextColor);
+                                                    drawPoint, reqTextColor);
                             drawPoint.Y += sz.Height;
                         }
                         if (!String.IsNullOrEmpty(thisRequiredTime))
                         {
                             sz = MeasureAndDrawText(e.Graphics, thisRequiredTime, this.Font,
-                                drawPoint, reqTextColor);
+                                                    drawPoint, reqTextColor);
                             drawPoint.Y += sz.Height;
                         }
                         if (!String.IsNullOrEmpty(prereqTime))
                         {
                             sz = MeasureAndDrawText(e.Graphics, prereqTime, this.Font,
-                                drawPoint, prTextColor);
+                                                    drawPoint, prTextColor);
                             drawPoint.Y += sz.Height;
                         }
 
@@ -738,7 +770,8 @@ namespace EVEMon.SkillPlanner
 
             // ...but this one doesn't.  Freaky.
             TextRenderer.DrawText(g, text, f,
-                new Rectangle(p.X, p.Y, res.Width, res.Height), c, Color.Transparent, TextFormatFlags.Default);
+                                  new Rectangle(p.X, p.Y, res.Width, res.Height), c, Color.Transparent,
+                                  TextFormatFlags.Default);
             return res;
         }
 
@@ -780,7 +813,7 @@ namespace EVEMon.SkillPlanner
 
     public delegate void SkillClickedHandler(object sender, SkillClickedEventArgs e);
 
-    public class SkillClickedEventArgs: EventArgs
+    public class SkillClickedEventArgs : EventArgs
     {
         private GrandSkill m_skill;
         private MouseButtons m_button;

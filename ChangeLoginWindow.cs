@@ -63,7 +63,7 @@ namespace EVEMon
                 {
                     ExceptionHandler.LogException(ex, true);
                     isLoginOk = false;
-                }   
+                }
             }
             if (isOk)
             {
@@ -75,10 +75,15 @@ namespace EVEMon
             else
             {
                 if (!isLoginOk)
-                    MessageBox.Show("Could not log in to EVE Online with that username/password.", "Unable to Log In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                {
+                    MessageBox.Show("Could not log in to EVE Online with that username/password.", "Unable to Log In",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 else
+                {
                     MessageBox.Show("Could not find " + m_charName + " on that EVE Online account.",
-                        "Could Not Find Character", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                    "Could Not Find Character", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
             }
         }
 
@@ -95,8 +100,7 @@ namespace EVEMon
         private void CheckDisables()
         {
             btnOk.Enabled = (!String.IsNullOrEmpty(tbUsername.Text) &&
-                !String.IsNullOrEmpty(tbPassword.Text));
+                             !String.IsNullOrEmpty(tbPassword.Text));
         }
     }
 }
-

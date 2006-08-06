@@ -37,7 +37,9 @@ namespace EVEMon
         {
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                m_size = TextRenderer.MeasureText(g, this.Text, this.Font, new Size(0, 0), TextFormatFlags.NoClipping | TextFormatFlags.NoPadding);
+                m_size =
+                    TextRenderer.MeasureText(g, this.Text, this.Font, new Size(0, 0),
+                                             TextFormatFlags.NoClipping | TextFormatFlags.NoPadding);
             }
             m_size = new Size(m_size.Width + 6, m_size.Height + 4);
             this.ClientSize = m_size;
@@ -50,10 +52,10 @@ namespace EVEMon
 
             g.FillRectangle(SystemBrushes.Info, e.ClipRectangle);
             g.DrawRectangle(SystemPens.InfoText, 0, 0, this.ClientSize.Width - 1,
-                this.ClientSize.Height - 1);
+                            this.ClientSize.Height - 1);
             TextRenderer.DrawText(e.Graphics, this.Text, this.Font,
-                new Point(3,2), SystemColors.InfoText, Color.Transparent,
-                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+                                  new Point(3, 2), SystemColors.InfoText, Color.Transparent,
+                                  TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
         }
 
         internal class NativeMethods
@@ -66,9 +68,10 @@ namespace EVEMon
 
             [DllImport("user32.dll")]
             public static extern IntPtr FindWindow(
-            string lpClassName,
-            string lpWindowName
-            );
+                string lpClassName,
+                string lpWindowName
+                );
+
             public const string TaskbarClass = "Shell_TrayWnd";
 
             [StructLayout(LayoutKind.Sequential)]
@@ -77,9 +80,10 @@ namespace EVEMon
                 public static APPBARDATA Create()
                 {
                     APPBARDATA appBarData = new APPBARDATA();
-                    appBarData.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
+                    appBarData.cbSize = Marshal.SizeOf(typeof (APPBARDATA));
                     return appBarData;
                 }
+
                 public int cbSize;
                 public IntPtr hWnd;
                 public uint uCallbackMessage;
@@ -87,8 +91,10 @@ namespace EVEMon
                 public RECT rc;
                 public int lParam;
             }
+
             public const int ABM_QUERYPOS = 0x00000002,
-            ABM_GETTASKBARPOS = 5;
+                             ABM_GETTASKBARPOS = 5;
+
             public const int ABE_LEFT = 0;
             public const int ABE_TOP = 1;
             public const int ABE_RIGHT = 2;
@@ -111,11 +117,25 @@ namespace EVEMon
                     Bottom = bottom_;
                 }
 
-                public int Height { get { return Bottom - Top + 1; } }
-                public int Width { get { return Right - Left + 1; } }
-                public Size Size { get { return new Size(Width, Height); } }
+                public int Height
+                {
+                    get { return Bottom - Top + 1; }
+                }
 
-                public Point Location { get { return new Point(Left, Top); } }
+                public int Width
+                {
+                    get { return Right - Left + 1; }
+                }
+
+                public Size Size
+                {
+                    get { return new Size(Width, Height); }
+                }
+
+                public Point Location
+                {
+                    get { return new Point(Left, Top); }
+                }
 
                 // Handy method for converting to a System.Drawing.Rectangle
                 public Rectangle ToRectangle()
@@ -131,12 +151,11 @@ namespace EVEMon
                 public override int GetHashCode()
                 {
                     return Left ^ ((Top << 13) | (Top >> 0x13))
-                    ^ ((Width << 0x1a) | (Width >> 6))
-                    ^ ((Height << 7) | (Height >> 0x19));
+                           ^ ((Width << 0x1a) | (Width >> 6))
+                           ^ ((Height << 7) | (Height >> 0x19));
                 }
 
                 #region Operator overloads
-
                 public static implicit operator Rectangle(RECT rect)
                 {
                     return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
@@ -146,10 +165,9 @@ namespace EVEMon
                 {
                     return new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
                 }
-
                 #endregion
             }
-        } 
+        }
 
         private LowLevelMouseHook m_hook;
 
@@ -195,16 +213,24 @@ namespace EVEMon
             if (slideLeftRight)
             {
                 if (winPoint.X + this.Width > curScreen.Bounds.Right)
+                {
                     winPoint = new Point(curScreen.Bounds.Right - this.Width - 1, winPoint.Y);
+                }
                 if (winPoint.X < curScreen.Bounds.Left)
+                {
                     winPoint = new Point(curScreen.Bounds.Left + 2, winPoint.Y);
+                }
             }
             else
             {
                 if (winPoint.Y + this.Height > curScreen.Bounds.Bottom)
+                {
                     winPoint = new Point(winPoint.X, curScreen.Bounds.Bottom - this.Height - 1);
+                }
                 if (winPoint.Y < curScreen.Bounds.Top)
+                {
                     winPoint = new Point(winPoint.X, curScreen.Bounds.Top + 2);
+                }
             }
             this.Location = winPoint;
         }
@@ -215,7 +241,9 @@ namespace EVEMon
         {
             m_moveCount++;
             if (m_moveCount == 2)
+            {
                 this.Close();
+            }
         }
 
         public void RefreshAlive()
@@ -230,7 +258,7 @@ namespace EVEMon
         }
     }
 
-    public class LowLevelMouseHook: IDisposable
+    public class LowLevelMouseHook : IDisposable
     {
         public delegate int LowLevelMouseDelegate(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -241,13 +269,14 @@ namespace EVEMon
         private int hHook = 0;
 
         [DllImport("user32", SetLastError = true)]
-        private static extern int SetWindowsHookEx(int idHook, LowLevelMouseDelegate lpfn, IntPtr hInstance, int threadId);
+        private static extern int SetWindowsHookEx(int idHook, LowLevelMouseDelegate lpfn, IntPtr hInstance,
+                                                   int threadId);
 
         [DllImport("user32")]
         private static extern bool UnhookWindowsHookEx(int idHook);
 
         [DllImport("user32")]
-        static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+        private static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
         ~LowLevelMouseHook()
         {
@@ -255,7 +284,7 @@ namespace EVEMon
         }
 
         public event EventHandler<EventArgs> MouseMove;
-        
+
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
 
@@ -269,10 +298,10 @@ namespace EVEMon
             m_delegate = new LowLevelMouseDelegate(OnMouseProc);
 
             hHook = SetWindowsHookEx(WH_MOUSE_LL,
-                m_delegate,
-                //Marshal.GetHINSTANCE(this.GetType().Module),
-                hinst,
-                0);
+                                     m_delegate,
+                                     //Marshal.GetHINSTANCE(this.GetType().Module),
+                                     hinst,
+                                     0);
             if (hHook == 0)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -282,7 +311,9 @@ namespace EVEMon
         public void Dispose()
         {
             if (hHook == 0)
+            {
                 return;
+            }
             UnhookWindowsHookEx(hHook);
             m_delegate = null;
             hHook = 0;
@@ -295,7 +326,7 @@ namespace EVEMon
             {
                 if (nCode <= 0)
                 {
-                    switch ((int)wParam)
+                    switch ((int) wParam)
                     {
                         case WM_MOUSEMOVE:
                             OnMouseMove();
@@ -313,7 +344,9 @@ namespace EVEMon
         private void OnMouseMove()
         {
             if (MouseMove != null)
+            {
                 MouseMove(this, new EventArgs());
+            }
         }
     }
 }

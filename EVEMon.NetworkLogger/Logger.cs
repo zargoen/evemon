@@ -9,7 +9,7 @@ using EVEMon.Common;
 
 namespace EVEMon.NetworkLogger
 {
-    public class Logger: IDisposable
+    public class Logger : IDisposable
     {
         public static Logger StartLogging()
         {
@@ -17,7 +17,9 @@ namespace EVEMon.NetworkLogger
             {
                 f.ShowDialog();
                 if (f.DialogResult == DialogResult.Cancel)
+                {
                     return null;
+                }
 
                 Logger l = new Logger(f.FileName, f.LoggingLevel);
                 return l;
@@ -46,19 +48,27 @@ namespace EVEMon.NetworkLogger
             {
                 case LoggingLevel.NoUsernameOrPassword:
                     if (e.Url.Contains("username="))
+                    {
                         e.Url = Regex.Replace(e.Url, "username=([^&]*)", "username=REMOVED");
+                    }
                     if (e.Referer.Contains("username="))
+                    {
                         e.Referer = Regex.Replace(e.Referer, "username=([^&]*)", "username=REMOVED");
+                    }
                     goto case LoggingLevel.NoPassword;
                 case LoggingLevel.NoPassword:
                     if (e.Url.Contains("password="))
+                    {
                         e.Url = Regex.Replace(e.Url, "password=([^&]*)", "password=REMOVED");
+                    }
                     if (e.Referer.Contains("password="))
+                    {
                         e.Referer = Regex.Replace(e.Referer, "password=([^&]*)", "password=REMOVED");
+                    }
                     break;
             }
 
-            XmlSerializer xs = new XmlSerializer(typeof(NetworkLogEventArgs));
+            XmlSerializer xs = new XmlSerializer(typeof (NetworkLogEventArgs));
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
             xs.Serialize(m_xmlWriter, e, ns);
@@ -71,7 +81,6 @@ namespace EVEMon.NetworkLogger
         private LoggingLevel m_loggingLevel;
 
         #region IDisposable Members
-
         public void Dispose()
         {
             m_xmlWriter.WriteEndElement();
@@ -86,7 +95,6 @@ namespace EVEMon.NetworkLogger
                 ExceptionHandler.LogException(e, false);
             }
         }
-
         #endregion
     }
 

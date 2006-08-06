@@ -7,13 +7,15 @@ using EVEMon.Common;
 namespace EVEMon.Sales
 {
     [DefaultMineralParser("matari")]
-    public class MatariParser: IMineralParser
+    public class MatariParser : IMineralParser
     {
         private static Regex mineralLineScan = new Regex(@"\<table.*last.updated", RegexOptions.Compiled);
-        private static Regex mineralTokenizer = new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td", RegexOptions.Compiled);
+
+        private static Regex mineralTokenizer =
+            new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td",
+                      RegexOptions.Compiled);
 
         #region IMineralParser Members
-
         public string Title
         {
             get { return "Matari Mineral Index"; }
@@ -53,7 +55,7 @@ namespace EVEMon.Sales
             foreach (Match mineral in mc)
             {
                 string name = mineral.Groups["name"].Value;
-                
+
                 try
                 {
                     CultureInfo culture = new CultureInfo("en-US");
@@ -68,7 +70,6 @@ namespace EVEMon.Sales
                 yield return new Pair<string, Decimal>(name, price);
             }
         }
-
         #endregion
     }
 }

@@ -53,21 +53,21 @@ namespace EVEMon.IGBService
             cli.Start();
         }
 
-        void cli_DataRead(object sender, IGBClientDataReadEventArgs e)
+        private void cli_DataRead(object sender, IGBClientDataReadEventArgs e)
         {
             byte[] newBuf;
             lock (m_clients)
             {
-                byte[] existingBuf = m_clients[(IGBTcpClient)sender];
+                byte[] existingBuf = m_clients[(IGBTcpClient) sender];
                 newBuf = new byte[existingBuf.Length + e.Count];
 
                 Array.Copy(existingBuf, newBuf, existingBuf.Length);
                 Array.Copy(e.Buffer, 0, newBuf, existingBuf.Length, e.Count);
 
-                m_clients[(IGBTcpClient)sender] = newBuf;
+                m_clients[(IGBTcpClient) sender] = newBuf;
             }
 
-            TryProcessBuffer((IGBTcpClient)sender, newBuf, Math.Min(e.Count+1, newBuf.Length));
+            TryProcessBuffer((IGBTcpClient) sender, newBuf, Math.Min(e.Count + 1, newBuf.Length));
         }
 
         private void TryProcessBuffer(IGBTcpClient client, byte[] newBuf, int tailLength)
@@ -76,7 +76,7 @@ namespace EVEMon.IGBService
             bool gotTwo = false;
             for (int i = 0; i < tailLength; i++)
             {
-                if (newBuf[newBuf.Length - i - 1] == ((byte)'\n'))
+                if (newBuf[newBuf.Length - i - 1] == ((byte) '\n'))
                 {
                     if (gotOne)
                     {
@@ -88,18 +88,22 @@ namespace EVEMon.IGBService
                         gotOne = true;
                     }
                 }
-                else if (newBuf[newBuf.Length - i - 1] != ((byte)'\r'))
+                else if (newBuf[newBuf.Length - i - 1] != ((byte) '\r'))
                 {
                     gotOne = false;
                 }
             }
             if (!gotTwo)
+            {
                 return;
+            }
 
-            Dictionary<string, string> headers = new Dictionary<string,string>();
+            Dictionary<string, string> headers = new Dictionary<string, string>();
             string headerStr = Encoding.UTF8.GetString(newBuf);
-            if (headerStr.IndexOf('\r')!=-1)
+            if (headerStr.IndexOf('\r') != -1)
+            {
                 headerStr = headerStr.Replace("\r", "");
+            }
 
             bool first = true;
             string requestUrl = String.Empty;
@@ -137,7 +141,9 @@ namespace EVEMon.IGBService
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
                 if (headers["eve.trusted"].ToLower() == "no")
+                {
                     client.Write("eve.trustme: http://localhost/::EVEMon needs your pilot information.\n");
+                }
                 client.Write("Connection: close\n");
                 client.Write("Content-Length: " + ms.Length.ToString() + "\n\n");
                 using (StreamReader sr = new StreamReader(ms))
@@ -165,7 +171,7 @@ namespace EVEMon.IGBService
                 string planName = HttpUtility.UrlDecode(requestUrl.Substring(14));
                 sw.WriteLine("<html><head><title>Plan</title></head><body>");
                 sw.WriteLine(String.Format("<h1>Plan: {0}</h1>",
-                    HttpUtility.HtmlEncode(planName)));
+                                           HttpUtility.HtmlEncode(planName)));
 
                 Plan p = Program.Settings.GetPlanByName(headers["eve.charname"], planName);
                 if (p == null)
@@ -175,7 +181,9 @@ namespace EVEMon.IGBService
                 else
                 {
                     if (p.GrandCharacterInfo == null)
+                    {
                         p.GrandCharacterInfo = Program.MainWindow.GetGrandCharacterInfo(headers["eve.charname"]);
+                    }
                     if (p.GrandCharacterInfo == null)
                     {
                         sw.Write("Could not get character info");
@@ -203,25 +211,25 @@ namespace EVEMon.IGBService
             {
                 sw.WriteLine(
                     String.Format("<html><head><title>Hi</title></head><body><h1>Hello, {0}</h1>",
-                    headers["eve.charname"]));
+                                  headers["eve.charname"]));
 
                 sw.WriteLine("<h2>Your Plans:</h2>");
                 foreach (string s in Program.Settings.GetPlansForCharacter(headers["eve.charname"]))
                 {
-                    sw.WriteLine(String.Format("<a href=\"/viewplan.x?p={0}\">{1}</a><br>", 
-                        HttpUtility.UrlEncode(s),
-                        HttpUtility.HtmlEncode(s)));
+                    sw.WriteLine(String.Format("<a href=\"/viewplan.x?p={0}\">{1}</a><br>",
+                                               HttpUtility.UrlEncode(s),
+                                               HttpUtility.HtmlEncode(s)));
                 }
 
                 sw.WriteLine("</body></html>");
             }
         }
 
-        void cli_Closed(object sender, EventArgs e)
+        private void cli_Closed(object sender, EventArgs e)
         {
             lock (m_clients)
             {
-                m_clients.Remove((IGBTcpClient)sender);
+                m_clients.Remove((IGBTcpClient) sender);
             }
         }
     }
@@ -262,7 +270,9 @@ namespace EVEMon.IGBService
         private void BeginAcceptTcpClient(bool acquireLock)
         {
             if (acquireLock)
+            {
                 Monitor.Enter(this);
+            }
             try
             {
                 IAsyncResult ar;
@@ -270,13 +280,17 @@ namespace EVEMon.IGBService
                 {
                     ar = null;
                     if (m_running)
+                    {
                         ar = m_listener.BeginAcceptTcpClient(new AsyncCallback(EndAcceptTcpClient), null);
-                } while (ar!=null && ar.CompletedSynchronously);
+                    }
+                } while (ar != null && ar.CompletedSynchronously);
             }
             finally
             {
                 if (acquireLock)
+                {
                     Monitor.Exit(this);
+                }
             }
         }
 
@@ -289,7 +303,9 @@ namespace EVEMon.IGBService
                 TcpClient newClient = m_listener.EndAcceptTcpClient(ar);
                 OnClientConnected(newClient, !inLock);
                 if (!ar.CompletedSynchronously)
+                {
                     BeginAcceptTcpClient(true);
+                }
             }
             catch (Exception e)
             {
@@ -300,7 +316,9 @@ namespace EVEMon.IGBService
         private void OnClientConnected(TcpClient newClient, bool acquireLock)
         {
             if (acquireLock)
+            {
                 Monitor.Enter(this);
+            }
             try
             {
                 if (m_running && ClientConnected != null)
@@ -322,7 +340,9 @@ namespace EVEMon.IGBService
             finally
             {
                 if (acquireLock)
+                {
                     Monitor.Exit(this);
+                }
             }
         }
 
@@ -391,7 +411,9 @@ namespace EVEMon.IGBService
         private void BeginRead(bool acquireLock)
         {
             if (acquireLock)
+            {
                 Monitor.Enter(this);
+            }
             try
             {
                 IAsyncResult ar;
@@ -399,13 +421,17 @@ namespace EVEMon.IGBService
                 {
                     ar = null;
                     if (m_running)
+                    {
                         ar = m_stream.BeginRead(m_buffer, 0, m_buffer.Length, new AsyncCallback(EndRead), null);
+                    }
                 } while (ar != null && ar.CompletedSynchronously);
             }
             finally
             {
                 if (acquireLock)
+                {
                     Monitor.Exit(this);
+                }
             }
         }
 
@@ -414,7 +440,7 @@ namespace EVEMon.IGBService
             try
             {
                 int bytesRead = m_stream.EndRead(ar);
-                if (bytesRead<=0)
+                if (bytesRead <= 0)
                 {
                     Close();
                 }
@@ -422,7 +448,9 @@ namespace EVEMon.IGBService
                 {
                     OnDataRead(m_buffer, 0, bytesRead);
                     if (!ar.CompletedSynchronously)
+                    {
                         BeginRead(true);
+                    }
                 }
             }
             catch (Exception e)
@@ -435,7 +463,9 @@ namespace EVEMon.IGBService
         private void OnDataRead(byte[] buffer, int offset, int count)
         {
             if (DataRead != null)
+            {
                 DataRead(this, new IGBClientDataReadEventArgs(buffer, offset, count));
+            }
         }
 
         public void Close()
@@ -458,7 +488,9 @@ namespace EVEMon.IGBService
         private void OnClosed()
         {
             if (Closed != null)
+            {
                 Closed(this, new EventArgs());
+            }
         }
 
         public event EventHandler<IGBClientDataReadEventArgs> DataRead;

@@ -8,7 +8,8 @@ namespace EVEMon
     public static class MP3Player
     {
         [DllImport("winmm.dll")]
-        private static extern int mciSendString(string strCommand, StringBuilder strReturn, int iReturnLength, IntPtr hwndCallback);
+        private static extern int mciSendString(string strCommand, StringBuilder strReturn, int iReturnLength,
+                                                IntPtr hwndCallback);
 
         [DllImport("winmm.dll")]
         private static extern bool mciGetErrorString(int fdwError, StringBuilder lpszErrorText, uint cchErrorText);
@@ -16,6 +17,7 @@ namespace EVEMon
         public const int MM_MCINOTIFY = 953;
         private static bool m_filterInstalled = false;
         private static bool m_isOpen = false;
+
         public static void Play(string fileName, bool async)
         {
             int result;
@@ -72,7 +74,6 @@ namespace EVEMon
         public class MsgFilter : IMessageFilter
         {
             #region IMessageFilter Members
-
             public bool PreFilterMessage(ref Message m)
             {
                 if (m.Msg == MM_MCINOTIFY)
@@ -82,7 +83,6 @@ namespace EVEMon
                 }
                 return false;
             }
-
             #endregion
         }
 

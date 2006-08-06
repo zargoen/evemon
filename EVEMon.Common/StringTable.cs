@@ -19,7 +19,7 @@ namespace EVEMon.Common
 
         private static StringTable sm_scopedInstance = null;
 
-        public class StringTableContext: IDisposable
+        public class StringTableContext : IDisposable
         {
             private bool m_disposes;
 
@@ -37,7 +37,6 @@ namespace EVEMon.Common
             }
 
             #region IDisposable Members
-
             public void Dispose()
             {
                 if (m_disposes)
@@ -45,7 +44,6 @@ namespace EVEMon.Common
                     sm_scopedInstance = null;
                 }
             }
-
             #endregion
         }
 
@@ -54,7 +52,9 @@ namespace EVEMon.Common
         public static StringTable GetInstance()
         {
             if (sm_scopedInstance != null)
+            {
                 return sm_scopedInstance;
+            }
 
             StringTable st = null;
             if (sm_tableRef != null)
@@ -84,7 +84,9 @@ namespace EVEMon.Common
         {
             StringTable st = GetInstance();
             if (st.Table.ContainsKey(value))
+            {
                 return st.Table[value];
+            }
             st.Table[value] = value;
             return value;
         }

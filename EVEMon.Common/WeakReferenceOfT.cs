@@ -1,4 +1,4 @@
-using System;
+using WeakReference=System.WeakReference;
 
 namespace EVEMon.Common
 {
@@ -17,10 +17,7 @@ namespace EVEMon.Common
 
         public new T Target
         {
-            get
-            {
-                return base.Target as T;
-            }
+            get { return base.Target as T; }
         }
     }
 }

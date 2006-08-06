@@ -44,7 +44,7 @@ namespace EVEMon.SkillPlanner
             foreach (PlanEntry pe in entries)
             {
                 lbSkills.Items.Add(pe.SkillName + " " +
-                    GrandSkill.GetRomanSkillNumber(pe.Level));
+                                   GrandSkill.GetRomanSkillNumber(pe.Level));
 
                 GrandSkill gs = gci.GetSkill(pe.SkillName);
                 postTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);

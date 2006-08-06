@@ -17,7 +17,9 @@ namespace EVEMon
         public static UpdateManager GetInstance()
         {
             if (m_updateManager == null)
+            {
                 m_updateManager = new UpdateManager();
+            }
             return m_updateManager;
         }
 
@@ -30,7 +32,7 @@ namespace EVEMon
             get { return m_running; }
             set { m_running = value; }
         }
-	
+
 
         public void Start()
         {
@@ -61,7 +63,9 @@ namespace EVEMon
             lock (m_lockObject)
             {
                 if (!m_running)
+                {
                     return;
+                }
 
                 try
                 {
@@ -79,7 +83,9 @@ namespace EVEMon
                     }
 
                     if (xdoc.DocumentElement.Name != "evemon")
+                    {
                         return;
+                    }
 
                     XmlElement newestEl = xdoc.DocumentElement.SelectSingleNode("newest") as XmlElement;
                     if (newestEl != null)
@@ -106,9 +112,14 @@ namespace EVEMon
                             // call Stop() on the UpdateManager.
                             ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
                                                                               {
-                                OnUpdateAvailable(updateUrl, updateMessage, newestVersion,
-                                    currentVersion, canAutoInstall, installArgs, installUrl);
-                            }));
+                                                                                  OnUpdateAvailable(updateUrl,
+                                                                                                    updateMessage,
+                                                                                                    newestVersion,
+                                                                                                    currentVersion,
+                                                                                                    canAutoInstall,
+                                                                                                    installArgs,
+                                                                                                    installUrl);
+                                                                              }));
                         }
                     }
                 }
@@ -122,8 +133,8 @@ namespace EVEMon
         public event UpdateAvailableHandler UpdateAvailable;
 
         private void OnUpdateAvailable(string updateUrl, string updateMessage,
-            Version newestVersion, Version currentVersion, bool canAutoInstall,
-            string installArgs, string installUrl)
+                                       Version newestVersion, Version currentVersion, bool canAutoInstall,
+                                       string installArgs, string installUrl)
         {
             if (UpdateAvailable != null)
             {

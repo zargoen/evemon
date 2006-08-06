@@ -45,7 +45,9 @@ namespace EVEMon.SkillPlanner
                     sb.Insert(0, cat.Name);
                     cat = cat.ParentCategory;
                     if (cat != null)
+                    {
                         sb.Insert(0, " > ");
+                    }
                 }
                 lblItemCategory.Text = sb.ToString();
                 lblItemName.Text = i.Name;
@@ -81,7 +83,9 @@ namespace EVEMon.SkillPlanner
                     }
                     TimeSpan trainTime = m_plan.GrandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
                     lblItemTimeRequired.Text = "Training Time: " +
-                        GrandSkill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+                                               GrandSkill.TimeSpanToDescriptiveText(trainTime,
+                                                                                    DescriptiveTextOptions.IncludeCommas |
+                                                                                    DescriptiveTextOptions.SpaceText);
                     btnItemSkillsAdd.Enabled = true;
                 }
                 else
@@ -93,14 +97,18 @@ namespace EVEMon.SkillPlanner
                 if (!String.IsNullOrEmpty(i.Icon))
                 {
                     EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
-                        delegate(EveSession sess, Image img)
-                        {
-                            this.Invoke(new MethodInvoker(delegate
-                            {
-                                if (itemSelectControl1.SelectedItem == i)
-                                    GotItemImage(img);
-                            }));
-                        });
+                                             delegate(EveSession sess, Image img)
+                                                 {
+                                                     this.Invoke(new MethodInvoker(delegate
+                                                                                       {
+                                                                                           if (
+                                                                                               itemSelectControl1.
+                                                                                                   SelectedItem == i)
+                                                                                           {
+                                                                                               GotItemImage(img);
+                                                                                           }
+                                                                                       }));
+                                                 });
                 }
             }
         }
@@ -148,7 +156,9 @@ namespace EVEMon.SkillPlanner
         private void GotItemImage(Image i)
         {
             if (i != null)
+            {
                 pbItemIcon.Image = i;
+            }
         }
 
         private void ItemBrowserControl_Load(object sender, EventArgs e)
@@ -160,7 +170,9 @@ namespace EVEMon.SkillPlanner
         {
             Item i = itemSelectControl1.SelectedItem;
             if (i == null)
+            {
                 return;
+            }
 
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
             foreach (ItemRequiredSkill irs in i.RequiredSkills)

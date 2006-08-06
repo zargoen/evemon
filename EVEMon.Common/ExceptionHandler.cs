@@ -10,9 +10,13 @@ namespace EVEMon.Common
         {
             string type;
             if (handled)
+            {
                 type = "Handled";
+            }
             else
+            {
                 type = "Caught";
+            }
             LogException(e, type);
         }
 
@@ -27,7 +31,9 @@ namespace EVEMon.Common
             StackTrace trace = new StackTrace(e, true);
             StackFrame frame = trace.GetFrame(trace.FrameCount - 1);
             Debug.WriteLine("");
-            Debug.WriteLine(string.Format("{0} {1} at {2} line {3}", type, e.GetType().Name, frame.GetFileName(), frame.GetFileLineNumber()), "Exception");
+            Debug.WriteLine(
+                string.Format("{0} {1} at {2} line {3}", type, e.GetType().Name, frame.GetFileName(),
+                              frame.GetFileLineNumber()), "Exception");
             Debug.WriteLine(e.Message, "Exception Message");
             Debug.WriteLine("");
         }

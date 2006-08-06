@@ -20,16 +20,18 @@ namespace EVEMon.SkillPlanner
         public string NoteText
         {
             get { return textBox1.Text; }
-            set {
+            set
+            {
                 if (String.IsNullOrEmpty(value))
+                {
                     value = String.Empty;
-                textBox1.Lines = value.Split(new string[4] { "\r\n", "\n\r", "\r", "\n" }, StringSplitOptions.None);
+                }
+                textBox1.Lines = value.Split(new string[4] {"\r\n", "\n\r", "\r", "\n"}, StringSplitOptions.None);
             }
         }
 
         private void EditEntryNoteWindow_Load(object sender, EventArgs e)
         {
-
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -45,4 +47,3 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
-

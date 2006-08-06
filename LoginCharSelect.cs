@@ -24,12 +24,20 @@ namespace EVEMon
 
         private bool CharOk
         {
-            set { m_charOk = value; CheckValidation(); }
+            set
+            {
+                m_charOk = value;
+                CheckValidation();
+            }
         }
 
         private bool FileOk
         {
-            set { m_fileOk = value; CheckValidation(); }
+            set
+            {
+                m_fileOk = value;
+                CheckValidation();
+            }
         }
 
         private void CheckValidation()
@@ -139,7 +147,7 @@ namespace EVEMon
             {
                 SetNoCharacter();
                 MessageBox.Show("Enter your login information first.",
-                    "Login Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                "Login Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
@@ -156,7 +164,7 @@ namespace EVEMon
                 //    "ensure it is entered correctly.\n\nThe error message returned was: "+errm, "Unable to Log In",
                 //    MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 MessageBox.Show(errm, "Unable to Log In",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
@@ -165,8 +173,8 @@ namespace EVEMon
             {
                 SetNoCharacter();
                 MessageBox.Show("No characters were found on that account.",
-                    "No Characters Found",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                "No Characters Found",
+                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
@@ -184,8 +192,8 @@ namespace EVEMon
         private void LoginCharSelect_Load(object sender, EventArgs e)
         {
             gbSavedXML.Location = gbEveLogin.Location;
-            this.ClientSize = new Size(gbSavedXML.Width + (gbSavedXML.Left * 2),
-                this.ClientSize.Height);
+            this.ClientSize = new Size(gbSavedXML.Width + (gbSavedXML.Left*2),
+                                       this.ClientSize.Height);
             cbCharacterType.SelectedIndex = 0;
         }
 

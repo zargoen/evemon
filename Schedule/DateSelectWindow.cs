@@ -44,7 +44,9 @@ namespace EVEMon.Schedule
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
             if (m_numClicks >= 2)
+            {
                 btnOk_Click(this, new EventArgs());
+            }
         }
 
         private void monthCalendar1_MouseDown(object sender, MouseEventArgs e)
@@ -61,4 +63,3 @@ namespace EVEMon.Schedule
         }
     }
 }
-

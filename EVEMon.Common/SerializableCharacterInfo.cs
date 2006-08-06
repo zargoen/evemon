@@ -50,47 +50,47 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("intelligenceBonus")]
-    public class SerializableIntelligenceBonus: SerializableEveAttributeBonus
+    public class SerializableIntelligenceBonus : SerializableEveAttributeBonus
     {
         public override EveAttribute EveAttribute
         {
-        	get { return EveAttribute.Intelligence; }
+            get { return EveAttribute.Intelligence; }
         }
     }
 
     [XmlRoot("charismaBonus")]
-    public class SerializableCharismaBonus: SerializableEveAttributeBonus
+    public class SerializableCharismaBonus : SerializableEveAttributeBonus
     {
         public override EveAttribute EveAttribute
         {
-        	get { return EveAttribute.Charisma; }
+            get { return EveAttribute.Charisma; }
         }
     }
-    
+
     [XmlRoot("perceptionBonus")]
-    public class SerializablePerceptionBonus: SerializableEveAttributeBonus
+    public class SerializablePerceptionBonus : SerializableEveAttributeBonus
     {
         public override EveAttribute EveAttribute
         {
-        	get { return EveAttribute.Perception; }
+            get { return EveAttribute.Perception; }
         }
     }
 
     [XmlRoot("memoryBonus")]
-    public class SerializableMemoryBonus: SerializableEveAttributeBonus
+    public class SerializableMemoryBonus : SerializableEveAttributeBonus
     {
         public override EveAttribute EveAttribute
         {
-        	get { return EveAttribute.Memory; }
+            get { return EveAttribute.Memory; }
         }
     }
 
     [XmlRoot("willpowerBonus")]
-    public class SerializableWillpowerBonus: SerializableEveAttributeBonus
+    public class SerializableWillpowerBonus : SerializableEveAttributeBonus
     {
         public override EveAttribute EveAttribute
         {
-        	get { return EveAttribute.Willpower; }
+            get { return EveAttribute.Willpower; }
         }
     }
 
@@ -99,11 +99,11 @@ namespace EVEMon.Common
     {
         private List<SerializableEveAttributeBonus> m_attributeBonuses = new List<SerializableEveAttributeBonus>();
 
-        [XmlElement("intelligenceBonus", typeof(SerializableIntelligenceBonus))]
-        [XmlElement("charismaBonus", typeof(SerializableCharismaBonus))]
-        [XmlElement("perceptionBonus", typeof(SerializablePerceptionBonus))]
-        [XmlElement("memoryBonus", typeof(SerializableMemoryBonus))]
-        [XmlElement("willpowerBonus", typeof(SerializableWillpowerBonus))]
+        [XmlElement("intelligenceBonus", typeof (SerializableIntelligenceBonus))]
+        [XmlElement("charismaBonus", typeof (SerializableCharismaBonus))]
+        [XmlElement("perceptionBonus", typeof (SerializablePerceptionBonus))]
+        [XmlElement("memoryBonus", typeof (SerializableMemoryBonus))]
+        [XmlElement("willpowerBonus", typeof (SerializableWillpowerBonus))]
         public List<SerializableEveAttributeBonus> Bonuses
         {
             get { return m_attributeBonuses; }
@@ -216,10 +216,13 @@ namespace EVEMon.Common
         public EveAttributes Attributes
         {
             get { return m_attributes; }
-            set {
+            set
+            {
                 m_attributes = value;
                 if (value != null)
+                {
                     value.SetOwner(this);
+                }
             }
         }
 
@@ -289,12 +292,14 @@ namespace EVEMon.Common
                 foreach (SerializableSkill s in sg.Skills)
                 {
                     if (s.Name == skillName)
+                    {
                         return s;
+                    }
                 }
             }
             return null;
         }
-        
+
         //anders - new function
         public static XmlElement FindCharacterElement(XmlDocument xdoc)
         {
@@ -303,13 +308,12 @@ namespace EVEMon.Common
             {
                 return xdoc.DocumentElement;
             }
-            //eve-o file
+                //eve-o file
             else if (xdoc.DocumentElement.Name == "charactersheet")
-            {                
-                return (XmlElement)xdoc.SelectSingleNode("charactersheet/characters/character[count(child::*)>0]");     
+            {
+                return (XmlElement) xdoc.SelectSingleNode("charactersheet/characters/character[count(child::*)>0]");
             }
             return null;
-            
         }
 
         public static SerializableCharacterInfo CreateFromFile(string fileName)
@@ -319,14 +323,16 @@ namespace EVEMon.Common
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.Load(fileName);
                 XmlElement charRootEl = FindCharacterElement(xdoc);
-                
+
                 if (charRootEl == null)
+                {
                     return null;
+                }
 
                 using (XmlNodeReader nxr = new XmlNodeReader(charRootEl))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
-                    return (SerializableCharacterInfo)xs.Deserialize(nxr);
+                    XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
+                    return (SerializableCharacterInfo) xs.Deserialize(nxr);
                 }
             }
             catch (Exception e)
@@ -373,7 +379,9 @@ namespace EVEMon.Common
             sb.Append(m_skills.Count);
             sb.Append(" Skill");
             if (m_skills.Count > 1)
+            {
                 sb.Append("s");
+            }
             sb.Append(", ");
             int points = 0;
             foreach (SerializableSkill s in m_skills)
@@ -439,7 +447,8 @@ namespace EVEMon.Common
         public int Rank
         {
             get { return m_rank; }
-            set {
+            set
+            {
                 m_rank = value;
                 for (int i = 0; i < 5; i++)
                 {
@@ -453,19 +462,29 @@ namespace EVEMon.Common
 
         public static int GetSkillPointsForLevel(int rank, int level)
         {
-            int pointsForLevel = Convert.ToInt32(250 * rank * Math.Pow(32, Convert.ToDouble(level-1) / 2));
+            int pointsForLevel = Convert.ToInt32(250*rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
             // There's some sort of weird rounding error
             // these values need to be corrected by one.
             if (pointsForLevel == 1414)
+            {
                 pointsForLevel = 1415;
+            }
             else if (pointsForLevel == 2828)
+            {
                 pointsForLevel = 2829;
+            }
             else if (pointsForLevel == 7071)
+            {
                 pointsForLevel = 7072;
+            }
             else if (pointsForLevel == 181019)
+            {
                 pointsForLevel = 181020;
+            }
             else if (pointsForLevel == 226274)
+            {
                 pointsForLevel = 226275;
+            }
             return pointsForLevel;
         }
 
@@ -483,7 +502,7 @@ namespace EVEMon.Common
             set { m_level = value; }
         }
 
-        private int[] m_skillLevel = new int[5] { 0, 0, 0, 0, 0 };
+        private int[] m_skillLevel = new int[5] {0, 0, 0, 0, 0};
 
         [XmlElement("skilllevel1")]
         public int SkillLevel1

@@ -16,7 +16,7 @@ namespace EVEMon.Common
             m_entries.Cleared += new EventHandler<ClearedEventArgs<PlanEntry>>(m_entries_Cleared);
         }
 
-        void m_entries_Cleared(object sender, ClearedEventArgs<PlanEntry> e)
+        private void m_entries_Cleared(object sender, ClearedEventArgs<PlanEntry> e)
         {
             foreach (PlanEntry pe in e.Items)
             {
@@ -24,7 +24,7 @@ namespace EVEMon.Common
             }
         }
 
-        void m_entries_Changed(object sender, ChangedEventArgs<PlanEntry> e)
+        private void m_entries_Changed(object sender, ChangedEventArgs<PlanEntry> e)
         {
             m_uniqueSkillCount = -1;
             m_attributeSuggestion = null;
@@ -93,21 +93,27 @@ namespace EVEMon.Common
                     {
                         m_firedEvents.Enqueue(fei);
                         if (!String.IsNullOrEmpty(key))
+                        {
                             m_eventsInQueue.Add(key, true);
+                        }
                     }
                 }
                 else
+                {
                     fei();
+                }
             }
         }
 
         private void OnChange()
         {
             FireEvent(delegate
-            {
-                if (Changed != null)
-                    Changed(this, new EventArgs());
-            }, "change");
+                          {
+                              if (Changed != null)
+                              {
+                                  Changed(this, new EventArgs());
+                              }
+                          }, "change");
         }
 
         private MonitoredList<PlanEntry> m_entries = new MonitoredList<PlanEntry>();
@@ -126,7 +132,9 @@ namespace EVEMon.Common
             get
             {
                 if (m_attributeSuggestion == null)
+                {
                     CheckForAttributeSuggestion();
+                }
                 return m_attributeSuggestion.Value;
             }
         }
@@ -156,17 +164,25 @@ namespace EVEMon.Common
             TimeSpan baseTime = GetTotalTime(null);
 
             m_attributeSuggestion = CheckForTimeBenefit("Analytical Mind", "Logic", baseTime);
-            if (m_attributeSuggestion==true)
+            if (m_attributeSuggestion == true)
+            {
                 return;
+            }
             m_attributeSuggestion = CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime);
             if (m_attributeSuggestion == true)
+            {
                 return;
+            }
             m_attributeSuggestion = CheckForTimeBenefit("Iron Will", "Focus", baseTime);
             if (m_attributeSuggestion == true)
+            {
                 return;
+            }
             m_attributeSuggestion = CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime);
             if (m_attributeSuggestion == true)
+            {
                 return;
+            }
             m_attributeSuggestion = CheckForTimeBenefit("Empathy", "Presence", baseTime);
         }
 
@@ -259,8 +275,10 @@ namespace EVEMon.Common
         public TimeSpan GetTotalTime(EveAttributeScratchpad scratchpad)
         {
             TimeSpan ts = TimeSpan.Zero;
-            if (scratchpad==null)
+            if (scratchpad == null)
+            {
                 scratchpad = new EveAttributeScratchpad();
+            }
             foreach (PlanEntry pe in m_entries)
             {
                 ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
@@ -277,7 +295,9 @@ namespace EVEMon.Common
             get
             {
                 if (m_uniqueSkillCount == -1)
+                {
                     CountUniqueSkills();
+                }
                 return m_uniqueSkillCount;
             }
         }
@@ -302,16 +322,21 @@ namespace EVEMon.Common
         public GrandCharacterInfo GrandCharacterInfo
         {
             get { return m_grandCharacterInfo; }
-            set {
+            set
+            {
                 this.SuppressEvents();
                 try
                 {
                     m_attributeSuggestion = null;
                     if (m_grandCharacterInfo != null)
+                    {
                         m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+                    }
                     m_grandCharacterInfo = value;
                     if (m_grandCharacterInfo != null)
+                    {
                         m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+                    }
                     CheckForCompletedSkills();
                     CheckForMissingPrerequisites();
                 }
@@ -361,7 +386,7 @@ namespace EVEMon.Common
                     }
                     if (!jumpBack)
                     {
-                        if (pe.Level-1 > gs.Level)
+                        if (pe.Level - 1 > gs.Level)
                         {
                             // The previous level is needed in the plan...
                             int prIndex = GetIndexOf(gs.Name, pe.Level - 1);
@@ -400,7 +425,9 @@ namespace EVEMon.Common
             {
                 PlanEntry pe = m_entries[i];
                 if (pe.SkillName == skillName && pe.Level == level)
+                {
                     return i;
+                }
             }
             return -1;
         }
@@ -423,8 +450,10 @@ namespace EVEMon.Common
                 {
                     PlanEntry pe = m_entries[i];
                     GrandSkill gs = m_grandCharacterInfo.GetSkill(pe.SkillName);
-                    if (gs == null || pe.Level>5 || pe.Level<1)
+                    if (gs == null || pe.Level > 5 || pe.Level < 1)
+                    {
                         throw new ApplicationException("The plan contains invalid skills.");
+                    }
                     if (gs.Level >= pe.Level)
                     {
                         m_entries.RemoveAt(i);
@@ -448,7 +477,9 @@ namespace EVEMon.Common
             foreach (PlanEntry pe in m_entries)
             {
                 if (pe.Skill == gs)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -458,7 +489,9 @@ namespace EVEMon.Common
             foreach (PlanEntry pe in m_entries)
             {
                 if (pe.SkillName == gs.Name && pe.Level == level)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -495,7 +528,9 @@ namespace EVEMon.Common
                     if (tSkill.HasAsPrerequisite(pe.Skill, out thisMinNeeded))
                     {
                         if (thisMinNeeded >= pe.Level)
+                        {
                             return false;
+                        }
                     }
                 }
                 m_entries.Remove(pe);
@@ -520,10 +555,14 @@ namespace EVEMon.Common
                     int thisMinNeeded;
                     if (tSkill.HasAsPrerequisite(gs, out thisMinNeeded))
                     {
-                        if (thisMinNeeded == 5)  // All are needed, fail now
+                        if (thisMinNeeded == 5) // All are needed, fail now
+                        {
                             return false;
+                        }
                         if (thisMinNeeded > minNeeded)
+                        {
                             minNeeded = thisMinNeeded;
+                        }
                     }
                 }
                 // Remove this skill...
@@ -540,9 +579,13 @@ namespace EVEMon.Common
                     }
                 }
                 if (!anyRemoved)
+                {
                     return false;
+                }
                 if (!removePrerequisites)
+                {
                     return true;
+                }
 
                 // Remove prerequisites
                 foreach (GrandSkill.Prereq pp in gs.Prereqs)
@@ -562,7 +605,9 @@ namespace EVEMon.Common
             foreach (PlanEntry pe in m_entries)
             {
                 if (pe.SkillName == name && pe.Level == level)
+                {
                     return pe;
+                }
             }
             return null;
         }
@@ -654,7 +699,9 @@ namespace EVEMon.Common
             try
             {
                 while (m_entries.Count > 0)
+                {
                     m_entries.RemoveAt(m_entries.Count - 1);
+                }
             }
             finally
             {
@@ -668,7 +715,9 @@ namespace EVEMon.Common
             {
                 GrandSkill gs = pe.Skill;
                 if (gs == null)
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -681,40 +730,44 @@ namespace EVEMon.Common
         public void SaveAsText(StreamWriter sw, PlanTextOptions pto, MarkupType markupType)
         {
             MethodInvoker writeLine = delegate
-            {
-                if (markupType == MarkupType.Html)
-                    sw.WriteLine("<br>");
-                else
-                    sw.WriteLine();
-            };
+                                          {
+                                              if (markupType == MarkupType.Html)
+                                              {
+                                                  sw.WriteLine("<br>");
+                                              }
+                                              else
+                                              {
+                                                  sw.WriteLine();
+                                              }
+                                          };
             MethodInvoker boldStart = delegate
-            {
-                switch (markupType)
-                {
-                    case MarkupType.None:
-                        break;
-                    case MarkupType.Forum:
-                        sw.Write("[b]");
-                        break;
-                    case MarkupType.Html:
-                        sw.Write("<b>");
-                        break;
-                }
-            };
+                                          {
+                                              switch (markupType)
+                                              {
+                                                  case MarkupType.None:
+                                                      break;
+                                                  case MarkupType.Forum:
+                                                      sw.Write("[b]");
+                                                      break;
+                                                  case MarkupType.Html:
+                                                      sw.Write("<b>");
+                                                      break;
+                                              }
+                                          };
             MethodInvoker boldEnd = delegate
-            {
-                switch (markupType)
-                {
-                    case MarkupType.None:
-                        break;
-                    case MarkupType.Forum:
-                        sw.Write("[/b]");
-                        break;
-                    case MarkupType.Html:
-                        sw.Write("</b>");
-                        break;
-                }
-            };
+                                        {
+                                            switch (markupType)
+                                            {
+                                                case MarkupType.None:
+                                                    break;
+                                                case MarkupType.Forum:
+                                                    sw.Write("[/b]");
+                                                    break;
+                                                case MarkupType.Html:
+                                                    sw.Write("</b>");
+                                                    break;
+                                            }
+                                        };
 
             if (pto.IncludeHeader)
             {
@@ -756,13 +809,17 @@ namespace EVEMon.Common
                     if (pto.EntryTrainingTimes)
                     {
                         sw.Write(GrandSkill.TimeSpanToDescriptiveText(trainingTime,
-                            DescriptiveTextOptions.FullText|DescriptiveTextOptions.IncludeCommas|DescriptiveTextOptions.SpaceText));
+                                                                      DescriptiveTextOptions.FullText |
+                                                                      DescriptiveTextOptions.IncludeCommas |
+                                                                      DescriptiveTextOptions.SpaceText));
                         needComma = true;
                     }
                     if (pto.EntryStartDate)
                     {
                         if (needComma)
+                        {
                             sw.Write("; ");
+                        }
                         sw.Write("Start: ");
                         sw.Write(startDate.ToString());
                         needComma = true;
@@ -770,7 +827,9 @@ namespace EVEMon.Common
                     if (pto.EntryFinishDate)
                     {
                         if (needComma)
+                        {
                             sw.Write("; ");
+                        }
                         sw.Write("Finish: ");
                         sw.Write(finishDate.ToString());
                         needComma = true;
@@ -790,24 +849,32 @@ namespace EVEMon.Common
                     boldEnd();
                     sw.Write(" skill");
                     if (num != 1)
+                    {
                         sw.Write('s');
+                    }
                     needComma = true;
                 }
                 if (pto.FooterTotalTime)
                 {
                     if (needComma)
+                    {
                         sw.Write("; ");
+                    }
                     sw.Write("Total time: ");
                     boldStart();
                     sw.Write(GrandSkill.TimeSpanToDescriptiveText(totalTrainingTime,
-                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
+                                                                  DescriptiveTextOptions.FullText |
+                                                                  DescriptiveTextOptions.IncludeCommas |
+                                                                  DescriptiveTextOptions.SpaceText));
                     boldEnd();
                     needComma = true;
                 }
                 if (pto.FooterDate)
                 {
                     if (needComma)
+                    {
                         sw.Write("; ");
+                    }
                     sw.Write("Completion: ");
                     boldStart();
                     sw.Write(curDt.ToString());
@@ -833,7 +900,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("planentry")]
-    public class PlanEntry: ICloneable
+    public class PlanEntry : ICloneable
     {
         private Plan m_owner;
         private string m_skillName;
@@ -845,21 +912,26 @@ namespace EVEMon.Common
         public Plan Plan
         {
             get { return m_owner; }
-            set {
+            set
+            {
                 if (m_owner != value)
                 {
-                    if (m_owner!=null)
+                    if (m_owner != null)
+                    {
                         m_owner.Changed -= new EventHandler<EventArgs>(m_owner_Changed);
+                    }
                     m_owner = value;
                     if (m_owner != null)
+                    {
                         m_owner.Changed += new EventHandler<EventArgs>(m_owner_Changed);
+                    }
                 }
             }
         }
 
         private IEnumerable<PlanEntryPrerequisite> m_prerequisiteCache = null;
 
-        void m_owner_Changed(object sender, EventArgs e)
+        private void m_owner_Changed(object sender, EventArgs e)
         {
             m_prerequisiteCache = null;
         }
@@ -894,7 +966,9 @@ namespace EVEMon.Common
             get
             {
                 if (m_owner == null || m_owner.GrandCharacterInfo == null)
+                {
                     return null;
+                }
                 return m_owner.GrandCharacterInfo.GetSkill(m_skillName);
             }
         }
@@ -915,7 +989,8 @@ namespace EVEMon.Common
             }
         }
 
-        private void BuildPrereqs(GrandSkill gs, int level, List<PlanEntryPrerequisite> result, Dictionary<string, bool> contains)
+        private void BuildPrereqs(GrandSkill gs, int level, List<PlanEntryPrerequisite> result,
+                                  Dictionary<string, bool> contains)
         {
             for (int l = level; l >= 1; l--)
             {
@@ -923,7 +998,7 @@ namespace EVEMon.Common
                 if (!contains.ContainsKey(tSkill))
                 {
                     PlanEntryPrerequisite pep = new PlanEntryPrerequisite(gs, l,
-                        m_owner.GetEntry(gs.Name, l));
+                                                                          m_owner.GetEntry(gs.Name, l));
                     contains[tSkill] = true;
                     result.Insert(0, pep);
                 }
@@ -934,16 +1009,16 @@ namespace EVEMon.Common
                 if (!contains.ContainsKey(tSkill))
                 {
                     PlanEntryPrerequisite pep = new PlanEntryPrerequisite(pp.Skill, pp.RequiredLevel,
-                        m_owner.GetEntry(pp.Skill.Name, pp.RequiredLevel));
+                                                                          m_owner.GetEntry(pp.Skill.Name,
+                                                                                           pp.RequiredLevel));
                     contains[tSkill] = true;
                     result.Insert(0, pep);
-                    BuildPrereqs(pp.Skill, pp.RequiredLevel, result, contains);    
+                    BuildPrereqs(pp.Skill, pp.RequiredLevel, result, contains);
                 }
             }
         }
 
         #region ICloneable Members
-
         public object Clone()
         {
             PlanEntry pe = new PlanEntry();
@@ -953,7 +1028,6 @@ namespace EVEMon.Common
             pe.Notes = this.Notes;
             return pe;
         }
-
         #endregion
     }
 

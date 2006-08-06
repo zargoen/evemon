@@ -21,11 +21,17 @@ namespace EVEMon.NetworkLogger
         {
             m_fileName = tbFilename.Text;
             if (rbNoUsername.Checked)
+            {
                 m_loggingLevel = LoggingLevel.NoUsernameOrPassword;
+            }
             else if (rbNoPassword.Checked)
+            {
                 m_loggingLevel = LoggingLevel.NoPassword;
+            }
             else if (rbAll.Checked)
+            {
                 m_loggingLevel = LoggingLevel.All;
+            }
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -47,7 +53,7 @@ namespace EVEMon.NetworkLogger
         private void LoggerWindow_Load(object sender, EventArgs e)
         {
             tbFilename.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                "/EVEMon Network Log.txt";
+                              "/EVEMon Network Log.txt";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,10 +61,11 @@ namespace EVEMon.NetworkLogger
             sfdSaveLocation.FileName = tbFilename.Text;
             DialogResult dr = sfdSaveLocation.ShowDialog();
             if (dr == DialogResult.Cancel)
+            {
                 return;
+            }
 
             tbFilename.Text = sfdSaveLocation.FileName;
         }
     }
 }
-

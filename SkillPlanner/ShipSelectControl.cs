@@ -17,7 +17,9 @@ namespace EVEMon.SkillPlanner
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
             if (this.DesignMode)
+            {
                 return;
+            }
 
             m_ships = Ship.GetShips();
             BuildTreeView();
@@ -149,7 +151,9 @@ namespace EVEMon.SkillPlanner
             lbShipResults.Visible = showListBox;
             lbNoMatches.Visible = showListBox && (lbShipResults.Items.Count == 0);
             if (lbNoMatches.Visible)
+            {
                 lbNoMatches.BringToFront();
+            }
         }
 
         private void tvShips_AfterSelect(object sender, TreeViewEventArgs e)
@@ -159,7 +163,7 @@ namespace EVEMon.SkillPlanner
             {
                 if (tn.Tag is Ship)
                 {
-                    OnSelectedShipChanged((Ship)tn.Tag);
+                    OnSelectedShipChanged((Ship) tn.Tag);
                 }
             }
         }
@@ -169,7 +173,7 @@ namespace EVEMon.SkillPlanner
             int idx = lbShipResults.SelectedIndex;
             if (idx >= 0)
             {
-                string shipName = (string)lbShipResults.Items[idx];
+                string shipName = (string) lbShipResults.Items[idx];
                 foreach (Ship s in m_ships)
                 {
                     if (s.Name == shipName)
@@ -192,7 +196,9 @@ namespace EVEMon.SkillPlanner
         {
             m_selectedShip = s;
             if (SelectedShipChanged != null)
+            {
                 SelectedShipChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> SelectedShipChanged;

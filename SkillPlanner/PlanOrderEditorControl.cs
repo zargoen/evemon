@@ -26,10 +26,14 @@ namespace EVEMon.SkillPlanner
             set
             {
                 if (m_plan != null)
+                {
                     m_plan.Changed -= new EventHandler<EventArgs>(m_plan_Changed);
+                }
                 m_plan = value;
                 if (m_plan != null)
+                {
                     m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
+                }
                 UpdateListColumns();
                 PlanChanged();
             }
@@ -69,15 +73,20 @@ namespace EVEMon.SkillPlanner
                         ListViewItem lvi = new ListViewItem();
                         lvi.Tag = pe;
                         if (lvSkills.Items.Count <= itemIndex)
+                        {
                             lvSkills.Items.Add(lvi);
+                        }
                         else
+                        {
                             lvSkills.Items[itemIndex] = lvi;
+                        }
                         itemIndex++;
 
                         GrandSkill gs = pe.Skill;
                         if (gs.InTraining)
+                        {
                             tmrTick.Enabled = true;
-
+                        }
                     }
                     while (itemIndex < lvSkills.Items.Count)
                     {
@@ -92,7 +101,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        private void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
             UpdateListViewItems();
         }
@@ -117,9 +126,9 @@ namespace EVEMon.SkillPlanner
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                {
-                    UpdateListViewItems();
-                }));
+                                                  {
+                                                      UpdateListViewItems();
+                                                  }));
                 return;
             }
 
@@ -141,11 +150,13 @@ namespace EVEMon.SkillPlanner
                     //lvSkills.Items.Insert(lvSkills.Items.IndexOf(olvi), lvi);
                     //lvSkills.Items.Remove(olvi);
 
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    PlanEntry pe = (PlanEntry) lvi.Tag;
                     GrandSkill gs = pe.Skill;
 
-                    while (lvi.SubItems.Count < lvSkills.Columns.Count+1)
+                    while (lvi.SubItems.Count < lvSkills.Columns.Count + 1)
+                    {
                         lvi.SubItems.Add(String.Empty);
+                    }
 
                     TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
                     int currentSP = gs.CurrentSkillPoints;
@@ -153,9 +164,11 @@ namespace EVEMon.SkillPlanner
                     int reqToThisLevel = gs.GetPointsRequiredForLevel(pe.Level);
                     int pointsInThisLevel = currentSP - reqBeforeThisLevel;
                     if (pointsInThisLevel < 0)
+                    {
                         pointsInThisLevel = 0;
+                    }
                     double deltaPointsOfLevel = Convert.ToDouble(reqToThisLevel - reqBeforeThisLevel);
-                    double pctComplete = pointsInThisLevel / deltaPointsOfLevel;
+                    double pctComplete = pointsInThisLevel/deltaPointsOfLevel;
 
                     DateTime thisStart = start;
                     start += trainTime;
@@ -165,7 +178,7 @@ namespace EVEMon.SkillPlanner
 
                     for (int x = 0; x < lvSkills.Columns.Count; x++)
                     {
-                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
+                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType) lvSkills.Columns[x].Tag;
                         string res = String.Empty;
                         switch (ct)
                         {
@@ -173,7 +186,8 @@ namespace EVEMon.SkillPlanner
                                 res = gs.Name + " " + GrandSkill.GetRomanSkillNumber(pe.Level);
                                 break;
                             case ColumnPreference.ColumnType.TrainingTime:
-                                res = GrandSkill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                                res =
+                                    GrandSkill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
                                 break;
                             case ColumnPreference.ColumnType.EarliestStart:
                                 res = thisStart.ToString();
@@ -199,14 +213,20 @@ namespace EVEMon.SkillPlanner
                             case ColumnPreference.ColumnType.Notes:
                                 string xx;
                                 if (String.IsNullOrEmpty(pe.Notes))
+                                {
                                     res = String.Empty;
+                                }
                                 else
                                 {
                                     xx = Regex.Replace(pe.Notes, @"(\r|\n)+", " ", RegexOptions.None);
                                     if (xx.Length <= MAX_NOTES_PREVIEW_CHARS)
+                                    {
                                         res = xx;
+                                    }
                                     else
-                                        res = xx.Substring(0,MAX_NOTES_PREVIEW_CHARS)+"...";
+                                    {
+                                        res = xx.Substring(0, MAX_NOTES_PREVIEW_CHARS) + "...";
+                                    }
                                 }
                                 break;
                             case ColumnPreference.ColumnType.PlanType:
@@ -342,7 +362,7 @@ namespace EVEMon.SkillPlanner
                 m_plan.Entries.Clear();
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
-                    PlanEntry newPe = ((PlanEntry)lvi.Tag).Clone() as PlanEntry;
+                    PlanEntry newPe = ((PlanEntry) lvi.Tag).Clone() as PlanEntry;
                     //PlanEntry pe = new PlanEntry();
                     //Match m = Regex.Match(lvi.Text, "^(.*) ([IV]+)$");
                     //pe.SkillName = m.Groups[1].Value;
@@ -368,24 +388,34 @@ namespace EVEMon.SkillPlanner
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             if (lvSkills.SelectedItems.Count != 1)
+            {
                 return;
+            }
 
             using (CancelChoiceWindow f = new CancelChoiceWindow())
             {
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return;
+                }
                 if (dr == DialogResult.Yes)
+                {
                     RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), true);
+                }
                 if (dr == DialogResult.No)
+                {
                     RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), false);
+                }
             }
         }
 
         private PlanEntry GetPlanEntryForListViewItem(ListViewItem lvi)
         {
             if (lvi == null)
+            {
                 return null;
+            }
             return lvi.Tag as PlanEntry;
         }
 
@@ -395,9 +425,9 @@ namespace EVEMon.SkillPlanner
             if (!result)
             {
                 MessageBox.Show(this,
-                    "The plan for this skill could not be cancelled because this skill is " +
-                    "required for another skill you have planned.",
-                    "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                "The plan for this skill could not be cancelled because this skill is " +
+                                "required for another skill you have planned.",
+                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
@@ -429,8 +459,10 @@ namespace EVEMon.SkillPlanner
                     {
                         try
                         {
-                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(
-                                typeof(ColumnPreference.ColumnType), ts, true);
+                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType) Enum.Parse(
+                                                                                               typeof (
+                                                                                                   ColumnPreference.
+                                                                                                   ColumnType), ts, true);
                             if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
                             {
                                 ColumnHeader ch = new ColumnHeader();
@@ -449,7 +481,7 @@ namespace EVEMon.SkillPlanner
 
                     for (int i = 0; i < ColumnPreference.ColumnCount; i++)
                     {
-                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)i;
+                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType) i;
                         if (m_plan.ColumnPreference[i] && !alreadyAdded.Contains(ct))
                         {
                             ColumnHeader ch = new ColumnHeader();
@@ -460,20 +492,20 @@ namespace EVEMon.SkillPlanner
                             alreadyAdded.Add(ct);
                         }
                     }
-                //}
-                //finally
-                //{
-                //    lvSkills.EndUpdate();
-                //}
-                UpdateListViewItems();
-                //lvSkills.BeginUpdate();
-                //try
-                //{
+                    //}
+                    //finally
+                    //{
+                    //    lvSkills.EndUpdate();
+                    //}
+                    UpdateListViewItems();
+                    //lvSkills.BeginUpdate();
+                    //try
+                    //{
                     for (int i = 0; i < lvSkills.Columns.Count; i++)
                     {
                         ColumnHeader ch = lvSkills.Columns[i];
-                        ColumnPreference.ColumnDisplayAttribute cda = 
-                            ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
+                        ColumnPreference.ColumnDisplayAttribute cda =
+                            ColumnPreference.GetAttribute((ColumnPreference.ColumnType) ch.Tag);
                         ch.Width = cda.Width;
                     }
                 }
@@ -489,27 +521,54 @@ namespace EVEMon.SkillPlanner
             // Because this occurs before the reordering happens, we have to delay the
             // Order update a bit...
             ThreadPool.QueueUserWorkItem(delegate
-            {
-                this.Invoke(new MethodInvoker(delegate
-                {
-                    StringBuilder sb = new StringBuilder();
-                    SortedDictionary<int, ColumnPreference.ColumnType> order = new SortedDictionary<int, ColumnPreference.ColumnType>();
-                    for (int i = 0; i < lvSkills.Columns.Count; i++)
-                    {
-                        ColumnHeader ch = lvSkills.Columns[i];
-                        order.Add(ch.DisplayIndex, (ColumnPreference.ColumnType)ch.Tag);
-                    }
-                    foreach (KeyValuePair<int, ColumnPreference.ColumnType> pair in order)
-                    {
-                        if (sb.Length != 0)
-                            sb.Append(',');
-                        sb.Append(pair.Value.ToString());
-                    }
+                                             {
+                                                 this.Invoke(new MethodInvoker(delegate
+                                                                                   {
+                                                                                       StringBuilder sb =
+                                                                                           new StringBuilder();
+                                                                                       SortedDictionary
+                                                                                           <int,
+                                                                                               ColumnPreference.
+                                                                                                   ColumnType> order =
+                                                                                                       new
+                                                                                                           SortedDictionary
+                                                                                                               <int,
+                                                                                                                   ColumnPreference
+                                                                                                                       .
+                                                                                                                       ColumnType
+                                                                                                                   >();
+                                                                                       for (int i = 0;
+                                                                                            i < lvSkills.Columns.Count;
+                                                                                            i++)
+                                                                                       {
+                                                                                           ColumnHeader ch =
+                                                                                               lvSkills.Columns[i];
+                                                                                           order.Add(ch.DisplayIndex,
+                                                                                                     (
+                                                                                                     ColumnPreference.
+                                                                                                         ColumnType)
+                                                                                                     ch.Tag);
+                                                                                       }
+                                                                                       foreach (
+                                                                                           KeyValuePair
+                                                                                               <int,
+                                                                                                   ColumnPreference.
+                                                                                                       ColumnType> pair
+                                                                                               in order)
+                                                                                       {
+                                                                                           if (sb.Length != 0)
+                                                                                           {
+                                                                                               sb.Append(',');
+                                                                                           }
+                                                                                           sb.Append(
+                                                                                               pair.Value.ToString());
+                                                                                       }
 
-                    m_plan.ColumnPreference.Order = sb.ToString();
-                    Program.Settings.Save();
-                }));
-            });
+                                                                                       m_plan.ColumnPreference.Order =
+                                                                                           sb.ToString();
+                                                                                       Program.Settings.Save();
+                                                                                   }));
+                                             });
         }
 
         private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
@@ -522,7 +581,8 @@ namespace EVEMon.SkillPlanner
             else
             {
                 tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
-                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] != lvSkills.Items.Count - 1);
+                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] !=
+                                       lvSkills.Items.Count - 1);
             }
         }
 
@@ -536,7 +596,7 @@ namespace EVEMon.SkillPlanner
                 foreach (int si in lvSkills.SelectedIndices)
                 {
                     ListViewItem lvi = lvSkills.Items[si];
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    PlanEntry pe = (PlanEntry) lvi.Tag;
                     sel.Add(si);
                     seld[pe.SkillName + " " + pe.Level.ToString()] = true;
                 }
@@ -555,12 +615,16 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    PlanEntry pe = (PlanEntry) lvi.Tag;
                     string k = pe.SkillName + " " + pe.Level.ToString();
                     if (seld.ContainsKey(k))
+                    {
                         lvi.Selected = true;
+                    }
                     else
+                    {
                         lvi.Selected = false;
+                    }
                 }
                 lvSkills.EndUpdate();
             }
@@ -576,7 +640,7 @@ namespace EVEMon.SkillPlanner
                 foreach (int si in lvSkills.SelectedIndices)
                 {
                     ListViewItem lvi = lvSkills.Items[si];
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    PlanEntry pe = (PlanEntry) lvi.Tag;
                     sel.Add(si);
                     seld[pe.SkillName + " " + pe.Level.ToString()] = true;
                 }
@@ -595,12 +659,16 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    PlanEntry pe = (PlanEntry) lvi.Tag;
                     string k = pe.SkillName + " " + pe.Level.ToString();
                     if (seld.ContainsKey(k))
+                    {
                         lvi.Selected = true;
+                    }
                     else
+                    {
                         lvi.Selected = false;
+                    }
                 }
                 lvSkills.EndUpdate();
             }
@@ -609,20 +677,28 @@ namespace EVEMon.SkillPlanner
         private void miChangeNote_Click(object sender, EventArgs e)
         {
             if (lvSkills.SelectedItems.Count < 0)
+            {
                 return;
+            }
             ListViewItem lvi = lvSkills.SelectedItems[0];
             if (lvi == null)
+            {
                 return;
+            }
             PlanEntry pe = lvi.Tag as PlanEntry;
             if (pe == null)
+            {
                 return;
+            }
             string sn = pe.SkillName + " " + GrandSkill.GetRomanSkillNumber(pe.Level);
             using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
             {
                 f.NoteText = pe.Notes;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return;
+                }
                 pe.Notes = f.NoteText;
                 UpdateListViewItems();
                 Program.Settings.Save();
@@ -641,5 +717,4 @@ namespace EVEMon.SkillPlanner
             }
         }
     }
-
 }

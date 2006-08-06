@@ -46,30 +46,18 @@ namespace EVEMon.Common
 
         public enum ColumnType
         {
-            [ColumnDisplay("Skill Name")]
-            SkillName,
-            [ColumnDisplay("Training Time")]
-            TrainingTime,
-            [ColumnDisplay("Earliest Start")]
-            EarliestStart,
-            [ColumnDisplay("Earliest End")]
-            EarliestEnd,
-            [ColumnDisplay("Percent Complete", "%")]
-            PercentComplete,
-            [ColumnDisplay("Skill Rank", "Rank")]
-            SkillRank,
-            [ColumnDisplay("Primary Attribute", "Primary")]
-            PrimaryAttribute,
-            [ColumnDisplay("Secondary Attribute", "Secondary")]
-            SecondaryAttribute,
-            [ColumnDisplay("Skill Group", "Group")]
-            SkillGroup,
-            [ColumnDisplay("Notes", "Notes")]
-            Notes,
-            [ColumnDisplay("Plan Type (Planned/Prerequisite)", "Type")]
-            PlanType,
-            [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")]
-            SPTotal
+            [ColumnDisplay("Skill Name")] SkillName,
+            [ColumnDisplay("Training Time")] TrainingTime,
+            [ColumnDisplay("Earliest Start")] EarliestStart,
+            [ColumnDisplay("Earliest End")] EarliestEnd,
+            [ColumnDisplay("Percent Complete", "%")] PercentComplete,
+            [ColumnDisplay("Skill Rank", "Rank")] SkillRank,
+            [ColumnDisplay("Primary Attribute", "Primary")] PrimaryAttribute,
+            [ColumnDisplay("Secondary Attribute", "Secondary")] SecondaryAttribute,
+            [ColumnDisplay("Skill Group", "Group")] SkillGroup,
+            [ColumnDisplay("Notes", "Notes")] Notes,
+            [ColumnDisplay("Plan Type (Planned/Prerequisite)", "Type")] PlanType,
+            [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal
         }
 
         private bool[] m_prefs;
@@ -78,7 +66,9 @@ namespace EVEMon.Common
         {
             m_prefs = new bool[ColumnCount];
             for (int i = 0; i < m_prefs.Length; i++)
+            {
                 m_prefs[i] = false;
+            }
 
             this.SkillName = true;
             this.TrainingTime = true;
@@ -97,40 +87,50 @@ namespace EVEMon.Common
 
         public static string GetDescription(int index)
         {
-            return GetDescription((ColumnType)index);
+            return GetDescription((ColumnType) index);
         }
 
         public static string GetDescription(ColumnType ct)
         {
             ColumnDisplayAttribute cda = GetAttribute(ct);
             if (cda != null)
+            {
                 return cda.Text;
+            }
             else
+            {
                 return ct.ToString();
+            }
         }
 
         public static string GetHeader(int index)
         {
-            return GetHeader((ColumnType)index);
+            return GetHeader((ColumnType) index);
         }
 
         public static string GetHeader(ColumnType ct)
         {
             ColumnDisplayAttribute cda = GetAttribute(ct);
             if (cda != null)
+            {
                 return cda.Header;
+            }
             else
+            {
                 return ct.ToString();
+            }
         }
 
         public static ColumnDisplayAttribute GetAttribute(ColumnType ct)
         {
-            MemberInfo[] memInfo = typeof(ColumnType).GetMember(ct.ToString());
+            MemberInfo[] memInfo = typeof (ColumnType).GetMember(ct.ToString());
             if (memInfo != null && memInfo.Length > 0)
             {
-                object[] attrs = memInfo[0].GetCustomAttributes(typeof(ColumnDisplayAttribute), false);
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof (ColumnDisplayAttribute), false);
                 if (attrs != null && attrs.Length > 0)
-                    return (ColumnDisplayAttribute)attrs[0];
+                {
+                    return (ColumnDisplayAttribute) attrs[0];
+                }
             }
             return null;
         }
@@ -138,7 +138,7 @@ namespace EVEMon.Common
         [XmlIgnore]
         public static int ColumnCount
         {
-            get { return Enum.GetValues(typeof(ColumnType)).Length; }
+            get { return Enum.GetValues(typeof (ColumnType)).Length; }
         }
 
         [XmlIgnore]
@@ -151,8 +151,8 @@ namespace EVEMon.Common
         [XmlIgnore]
         public bool this[ColumnType index]
         {
-            get { return this[(int)index]; }
-            set { this[(int)index] = value; }
+            get { return this[(int) index]; }
+            set { this[(int) index] = value; }
         }
 
         [XmlAttribute]

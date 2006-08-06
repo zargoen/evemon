@@ -50,49 +50,50 @@ namespace EVEMon.SkillPlanner
 
         private void LoadAttribute(EveAttribute attrib, NumericUpDown nud, bool withImplants)
         {
-            int baseAttr = Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, withImplants));
+            int baseAttr =
+                Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, withImplants));
             nud.Value = baseAttr;
         }
 
         private void nudIntelligence_ValueChanged(object sender, EventArgs e)
         {
             AttributeUpdate(EveAttribute.Intelligence, Convert.ToInt32(nudIntelligence.Value),
-                lblAdjustIntelligence, lblEffectiveIntelligence);
+                            lblAdjustIntelligence, lblEffectiveIntelligence);
             CalculatePlanTimes();
         }
 
         private void nudCharisma_ValueChanged(object sender, EventArgs e)
         {
             AttributeUpdate(EveAttribute.Charisma, Convert.ToInt32(nudCharisma.Value),
-                lblAdjustCharisma, lblEffectiveCharisma);
+                            lblAdjustCharisma, lblEffectiveCharisma);
             CalculatePlanTimes();
         }
 
         private void nudPerception_ValueChanged(object sender, EventArgs e)
         {
             AttributeUpdate(EveAttribute.Perception, Convert.ToInt32(nudPerception.Value),
-                lblAdjustPerception, lblEffectivePerception);
+                            lblAdjustPerception, lblEffectivePerception);
             CalculatePlanTimes();
         }
 
         private void nudMemory_ValueChanged(object sender, EventArgs e)
         {
             AttributeUpdate(EveAttribute.Memory, Convert.ToInt32(nudMemory.Value),
-                lblAdjustMemory, lblEffectiveMemory);
+                            lblAdjustMemory, lblEffectiveMemory);
             CalculatePlanTimes();
         }
 
         private void nudWillpower_ValueChanged(object sender, EventArgs e)
         {
             AttributeUpdate(EveAttribute.Willpower, Convert.ToInt32(nudWillpower.Value),
-                lblAdjustWillpower, lblEffectiveWillpower);
+                            lblAdjustWillpower, lblEffectiveWillpower);
             CalculatePlanTimes();
         }
 
         private void AttributeUpdate(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffective)
         {
             int learningLevel = m_grandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
-            double learningAdjust = 1.0 + (0.02 * Convert.ToDouble(learningLevel));
+            double learningAdjust = 1.0 + (0.02*Convert.ToDouble(learningLevel));
 
             //int baseAttr = m_grandCharacterInfo.GetBaseAttribute(attrib);
             int baseAttr = Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, false));
@@ -109,14 +110,16 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString();
             }
 
-            double effectiveAttr = Convert.ToDouble(myValue) * learningAdjust;
+            double effectiveAttr = Convert.ToDouble(myValue)*learningAdjust;
             lblEffective.Text = effectiveAttr.ToString("#0.00");
         }
 
         private void CalculatePlanTimes()
         {
             if (m_disablePlanCalc)
+            {
                 return;
+            }
 
             // Current -- empty scratchpad is fine
             EveAttributeScratchpad currentScratchpad = new EveAttributeScratchpad();
@@ -126,7 +129,7 @@ namespace EVEMon.SkillPlanner
             EveAttributeScratchpad baseScratchpad = new EveAttributeScratchpad();
             for (int an = 0; an < 5; an++)
             {
-                EveAttribute thisAttrib = (EveAttribute)an;
+                EveAttribute thisAttrib = (EveAttribute) an;
                 int implantAmount = 0;
                 foreach (GrandEveAttributeBonus geab in m_grandCharacterInfo.AttributeBonuses)
                 {
@@ -143,7 +146,7 @@ namespace EVEMon.SkillPlanner
             EveAttributeScratchpad thisScratchpad = new EveAttributeScratchpad();
             for (int an = 0; an < 5; an++)
             {
-                EveAttribute thisAttrib = (EveAttribute)an;
+                EveAttribute thisAttrib = (EveAttribute) an;
                 int tBaseWI = Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(thisAttrib, null, false, true));
                 int tCur = 0;
                 switch (thisAttrib)
@@ -172,30 +175,30 @@ namespace EVEMon.SkillPlanner
             {
                 lblComparedToBase.ForeColor = Color.Red;
                 lblComparedToBase.Text = GrandSkill.TimeSpanToDescriptiveText(thisSpan - baseSpan,
-                    DescriptiveTextOptions.IncludeCommas) +
-                    " slower than current base";
+                                                                              DescriptiveTextOptions.IncludeCommas) +
+                                         " slower than current base";
             }
             else
             {
                 lblComparedToBase.ForeColor = SystemColors.ControlText;
                 lblComparedToBase.Text = GrandSkill.TimeSpanToDescriptiveText(baseSpan - thisSpan,
-                    DescriptiveTextOptions.IncludeCommas) +
-                    " better than current base";
+                                                                              DescriptiveTextOptions.IncludeCommas) +
+                                         " better than current base";
             }
 
             if (thisSpan > currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.Red;
                 lblComparedToCurrent.Text = GrandSkill.TimeSpanToDescriptiveText(thisSpan - currentSpan,
-                    DescriptiveTextOptions.IncludeCommas) +
-                    " slower than current";
+                                                                                 DescriptiveTextOptions.IncludeCommas) +
+                                            " slower than current";
             }
             else
             {
                 lblComparedToCurrent.ForeColor = SystemColors.ControlText;
                 lblComparedToCurrent.Text = GrandSkill.TimeSpanToDescriptiveText(currentSpan - thisSpan,
-                    DescriptiveTextOptions.IncludeCommas) +
-                    " better than current";
+                                                                                 DescriptiveTextOptions.IncludeCommas) +
+                                            " better than current";
             }
         }
 
@@ -221,4 +224,3 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
-

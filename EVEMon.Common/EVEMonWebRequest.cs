@@ -30,7 +30,9 @@ namespace EVEMon.Common
             finally
             {
                 if (s != null)
+                {
                     s.Dispose();
+                }
             }
         }
 
@@ -40,7 +42,9 @@ namespace EVEMon.Common
             WebRequestState wrs = new WebRequestState();
             Stream result = GetUrlStream(url, wrs, out junk);
             if (result == null)
+            {
                 throw new EVEMonNetworkException(wrs.RequestError);
+            }
             return result;
         }
 
@@ -60,7 +64,7 @@ namespace EVEMon.Common
                 HttpWebRequest req = GetWebRequest(url, wrs);
                 try
                 {
-                    resp = (HttpWebResponse)req.GetResponse();
+                    resp = (HttpWebResponse) req.GetResponse();
                 }
                 catch (WebException ex)
                 {
@@ -87,7 +91,6 @@ namespace EVEMon.Common
             wrs.RequestError = RequestError.MaxRedirectsExceeded;
             resp = null;
             return null;
-
         }
 
         public static Image GetUrlImage(string url)
@@ -96,7 +99,9 @@ namespace EVEMon.Common
             wrs.Accept = "image/*;q=0.8,*/*;q=0.5";
             Image result = GetUrlImage(url, wrs);
             if (result == null)
+            {
                 throw new EVEMonNetworkException(wrs.RequestError);
+            }
             return result;
         }
 
@@ -106,7 +111,9 @@ namespace EVEMon.Common
             try
             {
                 if (s == null)
+                {
                     return null;
+                }
                 return Image.FromStream(s, true, true);
             }
             catch (WebException ex)
@@ -120,7 +127,9 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogRethrowException(ex);
                 if (s != null)
+                {
                     s.Dispose();
+                }
                 throw;
             }
         }
@@ -130,7 +139,9 @@ namespace EVEMon.Common
             WebRequestState wrs = new WebRequestState();
             string result = GetUrlString(url, wrs);
             if (result == null)
+            {
                 throw new EVEMonNetworkException(wrs.RequestError);
+            }
             return result;
         }
 
@@ -146,7 +157,9 @@ namespace EVEMon.Common
             try
             {
                 if (s == null)
+                {
                     return null;
+                }
                 using (StreamReader sr = new StreamReader(s))
                 {
                     return sr.ReadToEnd();
@@ -156,7 +169,9 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(ex, true);
                 if (s != null)
+                {
                     s.Dispose();
+                }
                 wrs.RequestError = RequestError.WebException;
                 wrs.WebException = ex;
                 resp = null;
@@ -166,7 +181,9 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogRethrowException(e);
                 if (s != null)
+                {
                     s.Dispose();
+                }
                 throw;
             }
         }
@@ -230,7 +247,9 @@ namespace EVEMon.Common
 
         private static string sm_appVersion;
         private static string sm_userAgent;
-        private const string USER_AGENT_BASE = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1";
+
+        private const string USER_AGENT_BASE =
+            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1";
 
         private string m_userAgent;
         private string m_referer = "http://myeve.eve-online.com/news.asp";
@@ -255,14 +274,15 @@ namespace EVEMon.Common
             set { m_cookieContainer = value; }
         }
 
-        private string m_accept = "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+        private string m_accept =
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
 
         public string Accept
         {
             get { return m_accept; }
             set { m_accept = value; }
         }
-        
+
         private EventHandler<NetworkLogEventArgs> m_logDelegate;
 
         public EventHandler<NetworkLogEventArgs> LogDelegate
@@ -332,13 +352,13 @@ namespace EVEMon.Common
         }
 
         public EVEMonNetworkException(RequestError re)
-            : base (re.ToString())
+            : base(re.ToString())
         {
             m_requestError = re;
         }
 
         public EVEMonNetworkException(RequestError re, WebException exc)
-            : base (exc.ToString())
+            : base(exc.ToString())
         {
             m_requestError = re;
             m_webException = exc;

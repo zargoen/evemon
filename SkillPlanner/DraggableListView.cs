@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace EVEMon.SkillPlanner
 {
-    public class DraggableListView: ListView
+    public class DraggableListView : ListView
     {
         public DraggableListView()
             : base()
@@ -17,12 +17,10 @@ namespace EVEMon.SkillPlanner
         private const string REORDER = "Reorder";
 
         private bool allowRowReorder = true;
+
         public bool AllowRowReorder
         {
-            get
-            {
-                return this.allowRowReorder;
-            }
+            get { return this.allowRowReorder; }
             set
             {
                 this.allowRowReorder = value;
@@ -32,14 +30,8 @@ namespace EVEMon.SkillPlanner
 
         public new SortOrder Sorting
         {
-            get
-            {
-                return SortOrder.None;
-            }
-            set
-            {
-                base.Sorting = SortOrder.None;
-            }
+            get { return SortOrder.None; }
+            set { base.Sorting = SortOrder.None; }
         }
 
         private void DraggableInit()
@@ -80,10 +72,12 @@ namespace EVEMon.SkillPlanner
             if (ListViewItemsDragging != null)
             {
                 ListViewDragEventArgs args = new ListViewDragEventArgs(base.SelectedItems[0].Index,
-                    base.SelectedItems.Count, dropIndex);
+                                                                       base.SelectedItems.Count, dropIndex);
                 ListViewItemsDragging(this, args);
                 if (args.Cancel)
+                {
                     return;
+                }
             }
 
             ArrayList insertItems =
@@ -95,7 +89,7 @@ namespace EVEMon.SkillPlanner
             for (int i = insertItems.Count - 1; i >= 0; i--)
             {
                 ListViewItem insertItem =
-                    (ListViewItem)insertItems[i];
+                    (ListViewItem) insertItems[i];
                 base.Items.Insert(dropIndex, insertItem);
             }
             foreach (ListViewItem removeItem in base.SelectedItems)
@@ -126,7 +120,9 @@ namespace EVEMon.SkillPlanner
         private void DrawDropMarker(int index, bool below)
         {
             if (m_dropMarkerOn != -1 && m_dropMarkerOn != index)
+            {
                 ClearDropMarker();
+            }
             if (m_dropMarkerOn != index)
             {
                 m_dropMarkerOn = index;
@@ -162,7 +158,9 @@ namespace EVEMon.SkillPlanner
             base.OnPaint(e);
 
             if (m_dragging)
+            {
                 RestrictedPaint();
+            }
         }
 
         protected override void OnDragOver(DragEventArgs e)
@@ -198,7 +196,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
             base.OnDragOver(e);
-            String text = (String)e.Data.GetData(REORDER.GetType());
+            String text = (String) e.Data.GetData(REORDER.GetType());
             if (text.CompareTo(REORDER) == 0)
             {
                 e.Effect = DragDropEffects.Move;
@@ -229,7 +227,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
             base.OnDragEnter(e);
-            String text = (String)e.Data.GetData(REORDER.GetType());
+            String text = (String) e.Data.GetData(REORDER.GetType());
             if (text.CompareTo(REORDER) == 0)
             {
                 e.Effect = DragDropEffects.Move;
@@ -251,7 +249,7 @@ namespace EVEMon.SkillPlanner
             base.DoDragDrop(REORDER, DragDropEffects.Move);
             m_dragging = true;
         }
-#endregion
+        #endregion
     }
 
     public class ListViewDragEventArgs : EventArgs

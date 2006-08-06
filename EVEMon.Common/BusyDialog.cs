@@ -14,9 +14,9 @@ namespace EVEMon.Common
         internal void Complete()
         {
             this.Invoke(new MethodInvoker(delegate
-            {
-                this.Close();
-            }));
+                                              {
+                                                  this.Close();
+                                              }));
         }
 
         private static object m_lockObj = new object();
@@ -32,15 +32,19 @@ namespace EVEMon.Common
                 {
                     AutoResetEvent startEvent = new AutoResetEvent(false);
                     m_runThread = new Thread(new ThreadStart(delegate
-                    {
-                        using (BusyDialog d = new BusyDialog())
-                        {
-                            m_instance = d;
-                            d.Shown += new EventHandler(delegate { startEvent.Set(); });
-                            d.ShowDialog();
-                            m_instance = null;
-                        }
-                    }));
+                                                                 {
+                                                                     using (BusyDialog d = new BusyDialog())
+                                                                     {
+                                                                         m_instance = d;
+                                                                         d.Shown += new EventHandler(delegate
+                                                                                                         {
+                                                                                                             startEvent.
+                                                                                                                 Set();
+                                                                                                         });
+                                                                         d.ShowDialog();
+                                                                         m_instance = null;
+                                                                     }
+                                                                 }));
                     m_runThread.Start();
                     startEvent.WaitOne();
                 }
@@ -59,9 +63,9 @@ namespace EVEMon.Common
                     if (m_instance != null)
                     {
                         m_instance.Invoke(new MethodInvoker(delegate
-                        {
-                            m_instance.Close();
-                        }));
+                                                                {
+                                                                    m_instance.Close();
+                                                                }));
                     }
                     if (m_runThread != null)
                     {
@@ -85,12 +89,10 @@ namespace EVEMon.Common
             }
 
             #region IDisposable Members
-
             public void Dispose()
             {
                 DecrementDisplay();
             }
-
             #endregion
         }
     }

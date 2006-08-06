@@ -17,7 +17,7 @@ namespace EVEMon
         private UpdateAvailableEventArgs m_args;
 
         public UpdateNotifyForm(Settings settings, UpdateAvailableEventArgs args)
-            :this()
+            : this()
         {
             m_args = args;
             m_settings = settings;
@@ -33,7 +33,9 @@ namespace EVEMon
                 MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.No)
+            {
                 return;
+            }
             m_settings.IgnoreUpdateVersion = m_args.NewestVersion.ToString();
             m_settings.Save();
             this.DialogResult = DialogResult.Cancel;
@@ -107,7 +109,7 @@ namespace EVEMon
             UpdateManager.GetInstance().UpdateAvailable += new UpdateAvailableHandler(UpdateNotifyForm_UpdateAvailable);
         }
 
-        void UpdateNotifyForm_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
+        private void UpdateNotifyForm_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             m_args = e;
             UpdateInformation();
@@ -118,12 +120,15 @@ namespace EVEMon
             string updMessage = m_args.UpdateMessage;
             updMessage.Replace("\r", "");
             textBox1.Lines = updMessage.Split('\n');
-            label1.Text = String.Format(@"An EVEMon update is available.
+            label1.Text =
+                String.Format(
+                    @"An EVEMon update is available.
 
 Current version: {0}
 Newest version: {1}
 
-The newest version has the following updates:", m_args.CurrentVersion, m_args.NewestVersion);
+The newest version has the following updates:",
+                    m_args.CurrentVersion, m_args.NewestVersion);
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
         }

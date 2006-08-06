@@ -38,16 +38,18 @@ namespace EVEMon.WindowRelocator
                 screenNumber++;
             }
             ThreadPool.QueueUserWorkItem(delegate
-            {
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-                ClearDisplay();
-            });
+                                             {
+                                                 Thread.Sleep(TimeSpan.FromSeconds(5));
+                                                 ClearDisplay();
+                                             });
         }
 
         private static void ClearDisplay()
         {
             if (m_displayedForms == null)
+            {
                 return;
+            }
             if (m_displayedForms[0].InvokeRequired)
             {
                 m_displayedForms[0].Invoke(new MethodInvoker(ClearDisplay));
@@ -69,20 +71,21 @@ namespace EVEMon.WindowRelocator
         private void IdentifyScreenForm_Load(object sender, EventArgs e)
         {
             Bitmap b = new Bitmap(pbScreenNumber.ClientSize.Width,
-                pbScreenNumber.ClientSize.Height);
+                                  pbScreenNumber.ClientSize.Height);
             using (Graphics g = Graphics.FromImage(b))
-            using (Font tf = new Font("Tahoma", b.Height-STROKE_SIZE, GraphicsUnit.Pixel))
+            using (Font tf = new Font("Tahoma", b.Height - STROKE_SIZE, GraphicsUnit.Pixel))
             using (GraphicsPath p = new GraphicsPath())
             using (Pen sp = new Pen(Color.Black, Convert.ToSingle(STROKE_SIZE)))
             {
                 g.FillRectangle(Brushes.Magenta, new Rectangle(new Point(0, 0), b.Size));
 
-                p.AddString(m_number.ToString(), new FontFamily("Tahoma"), (int)FontStyle.Bold,
-                    tf.SizeInPoints, new Point(0, STROKE_SIZE/2), StringFormat.GenericTypographic);
+                p.AddString(m_number.ToString(), new FontFamily("Tahoma"), (int) FontStyle.Bold,
+                            tf.SizeInPoints, new Point(0, STROKE_SIZE/2), StringFormat.GenericTypographic);
                 RectangleF bounds = p.GetBounds();
                 p.Reset();
-                p.AddString(m_number.ToString(), new FontFamily("Tahoma"), (int)FontStyle.Bold,
-                    tf.SizeInPoints, new Point(Convert.ToInt32((b.Width / 2) - (bounds.Width / 2)), STROKE_SIZE/2), StringFormat.GenericTypographic);
+                p.AddString(m_number.ToString(), new FontFamily("Tahoma"), (int) FontStyle.Bold,
+                            tf.SizeInPoints, new Point(Convert.ToInt32((b.Width/2) - (bounds.Width/2)), STROKE_SIZE/2),
+                            StringFormat.GenericTypographic);
 
                 g.FillPath(Brushes.White, p);
                 g.DrawPath(sp, p);
@@ -90,10 +93,10 @@ namespace EVEMon.WindowRelocator
 
             pbScreenNumber.Image = b;
 
-            Screen ts = Screen.AllScreens[m_number-1];
+            Screen ts = Screen.AllScreens[m_number - 1];
             this.Location = new Point(
-                (ts.Bounds.Width / 2) - (this.Width / 2) + ts.Bounds.X,
-                (ts.Bounds.Height / 2) - (this.Height / 2) + ts.Bounds.Y);
+                (ts.Bounds.Width/2) - (this.Width/2) + ts.Bounds.X,
+                (ts.Bounds.Height/2) - (this.Height/2) + ts.Bounds.Y);
         }
     }
 }

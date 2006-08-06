@@ -22,9 +22,13 @@ namespace EVEMon
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (cbDontShowAgain.Checked)
+            {
                 this.DialogResult = DialogResult.OK;
+            }
             else
+            {
                 this.DialogResult = DialogResult.Cancel;
+            }
 
             this.Close();
         }

@@ -29,9 +29,13 @@ namespace EVEMon.SkillPlanner
         private void CopySaveOptionsWindow_Load(object sender, EventArgs e)
         {
             if (m_isForCopy)
+            {
                 this.Text = "Copy Options";
+            }
             else
+            {
                 this.Text = "Save Options";
+            }
 
             cbIncludeHeader.Checked = m_planTextOptions.IncludeHeader;
             cbEntryNumber.Checked = m_planTextOptions.EntryNumber;
@@ -52,14 +56,14 @@ namespace EVEMon.SkillPlanner
             {
                 if (c is CheckBox && c != cbRememberOptions)
                 {
-                    CheckBox cb = (CheckBox)c;
+                    CheckBox cb = (CheckBox) c;
                     cb.CheckedChanged += new EventHandler(cb_CheckedChanged);
                 }
                 RecurseUnder(c);
             }
         }
 
-        void cb_CheckedChanged(object sender, EventArgs e)
+        private void cb_CheckedChanged(object sender, EventArgs e)
         {
             OptionChange();
         }
@@ -110,4 +114,3 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
-

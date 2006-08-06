@@ -21,21 +21,29 @@ namespace EVEMon.Common
         public List<Pair<string, int>> GetCharacterList()
         {
             if (m_storedCharacterList != null)
+            {
                 return m_storedCharacterList;
+            }
 
             List<Pair<string, int>> result = new List<Pair<string, int>>();
             bool firstAttempt = true;
-        AGAIN:
+            AGAIN:
             string s = GetUrl("http://myeve.eve-online.com/character/skilltree.asp", null);
 
-            Regex re = new Regex(@"<a href=""/character/skilltree.asp\?characterID=(\d+)"".*?<br>([^<>]+?)<\/td>", RegexOptions.IgnoreCase);
+            Regex re =
+                new Regex(@"<a href=""/character/skilltree.asp\?characterID=(\d+)"".*?<br>([^<>]+?)<\/td>",
+                          RegexOptions.IgnoreCase);
             MatchCollection mcol = re.Matches(s);
             if (mcol.Count == 0)
             {
                 if (!WebLogin())
+                {
                     return null;
+                }
                 if (!firstAttempt)
+                {
                     return null;
+                }
                 firstAttempt = false;
                 goto AGAIN;
             }
@@ -53,14 +61,20 @@ namespace EVEMon.Common
         public int GetCharacterId(string charName)
         {
             if (m_storedCharacterList == null)
+            {
                 GetCharacterList();
+            }
             if (m_storedCharacterList == null)
+            {
                 return -2;
+            }
 
             foreach (Pair<string, int> p in m_storedCharacterList)
             {
                 if (p.A == charName)
+                {
                     return p.B;
+                }
             }
 
             return -1;
@@ -83,7 +97,7 @@ namespace EVEMon.Common
             bool firstAttempt = true;
             AGAIN:
             string htmld = GetUrl("http://myeve.eve-online.com/character/skilltree.asp?characterID=" +
-                                    charId.ToString(), null);
+                                  charId.ToString(), null);
             if (!htmld.Contains("skills trained, for a total of"))
             {
                 if (!WebLogin() || !firstAttempt)
@@ -105,11 +119,17 @@ namespace EVEMon.Common
                 string s1 = Regex.Match(bsubstr, @"knaR>i< / (.+?)>""xp11:ezis-tnof").Groups[1].Value;
                 sit.SkillName = ReverseString(s1);
                 string fsubstr = htmld.Substring(cti, 800);
-                sit.TrainingToLevel = Convert.ToInt32(Regex.Match(fsubstr, @"Currently training to: <\/font><strong>level (\d) </st").Groups[1].Value);
+                sit.TrainingToLevel =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"Currently training to: <\/font><strong>level (\d) </st").Groups[1].Value);
                 string timeLeft = Regex.Match(fsubstr, @"Time left: <\/font><strong>(.+?)<\/strong>").Groups[1].Value;
                 sit.EstimatedCompletion = DateTime.Now + ConvertTimeStringToTimeSpan(timeLeft);
-                sit.CurrentPoints = Convert.ToInt32(Regex.Match(fsubstr, @"SP done: </font><strong>(\d+) of \d+</strong>").Groups[1].Value);
-                sit.NeededPoints = Convert.ToInt32(Regex.Match(fsubstr, @"SP done: </font><strong>\d+ of (\d+)</strong>").Groups[1].Value);
+                sit.CurrentPoints =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"SP done: </font><strong>(\d+) of \d+</strong>").Groups[1].Value);
+                sit.NeededPoints =
+                    Convert.ToInt32(
+                        Regex.Match(fsubstr, @"SP done: </font><strong>\d+ of (\d+)</strong>").Groups[1].Value);
             }
             else
             {
@@ -125,7 +145,7 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(e, false);
             }
-            
+
             if (xdoc == null)
             {
                 //callback(this, null);
@@ -153,14 +173,16 @@ namespace EVEMon.Common
 
         private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int characterId, out int cacheExpires)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
-            XmlElement charRoot = xdoc.DocumentElement.SelectSingleNode("/charactersheet/characters/character[@characterID='" + characterId.ToString() + "']") as XmlElement;
+            XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
+            XmlElement charRoot =
+                xdoc.DocumentElement.SelectSingleNode("/charactersheet/characters/character[@characterID='" +
+                                                      characterId.ToString() + "']") as XmlElement;
 
             cacheExpires = Convert.ToInt32(charRoot.GetAttribute("timeLeftInCache"));
 
             using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
             {
-                return (SerializableCharacterInfo)xs.Deserialize(xnr);
+                return (SerializableCharacterInfo) xs.Deserialize(xnr);
             }
         }
 
@@ -168,17 +190,25 @@ namespace EVEMon.Common
         {
             TimeSpan result = new TimeSpan();
             if (timeLeft.Contains("second"))
+            {
                 result += TimeSpan.FromSeconds(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) seconds?").Groups[1].Value));
+            }
             if (timeLeft.Contains("minute"))
+            {
                 result += TimeSpan.FromMinutes(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) minutes?").Groups[1].Value));
+            }
             if (timeLeft.Contains("hour"))
+            {
                 result += TimeSpan.FromHours(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) hours?").Groups[1].Value));
+            }
             if (timeLeft.Contains("day"))
+            {
                 result += TimeSpan.FromDays(
                     Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) days?").Groups[1].Value));
+            }
             return result;
         }
 
@@ -186,7 +216,9 @@ namespace EVEMon.Common
         {
             char[] ca = new char[p.Length];
             for (int i = 0; i < p.Length; i++)
+            {
                 ca[p.Length - i - 1] = p[i];
+            }
             return new String(ca);
         }
 
@@ -199,7 +231,9 @@ namespace EVEMon.Common
             m_password = password;
 
             if (!WebLogin())
+            {
                 throw new ApplicationException(m_loginFailMessage);
+            }
         }
 
         private static Thread m_mainThread;
@@ -213,7 +247,9 @@ namespace EVEMon.Common
         private void MainThreadInvoke(MethodInvoker mi)
         {
             if (Thread.CurrentThread != m_mainThread)
+            {
                 mi.Invoke();
+            }
             else
             {
                 //using (BusyDialog f = new BusyDialog())
@@ -231,7 +267,6 @@ namespace EVEMon.Common
                     mi.Invoke();
                 }
             }
-
         }
 
         public static event EventHandler<NetworkLogEventArgs> NetworkLogEvent;
@@ -242,9 +277,9 @@ namespace EVEMon.Common
         {
             string result = null;
             MainThreadInvoke(new MethodInvoker(delegate
-            {
-                result = InternalGetUrl(url, refer);
-            }));
+                                                   {
+                                                       result = InternalGetUrl(url, refer);
+                                                   }));
             return result;
         }
 
@@ -253,12 +288,16 @@ namespace EVEMon.Common
             WebRequestState wrs = new WebRequestState();
             wrs.LogDelegate = NetworkLogEvent;
             if (m_cookies == null)
+            {
                 m_cookies = new CookieContainer();
+            }
             wrs.CookieContainer = m_cookies;
 
-        AGAIN:
+            AGAIN:
             if (!String.IsNullOrEmpty(refer))
+            {
                 wrs.Referer = refer;
+            }
 
             wrs.CookieContainer = m_cookies;
             HttpWebResponse resp;
@@ -339,7 +378,9 @@ namespace EVEMon.Common
                 HttpWebResponse xr = null;
                 string curl = "http://myeve.eve-online.com/character/xml.asp";
                 if (!String.IsNullOrEmpty(charId))
+                {
                     curl += "?characterID=" + charId;
+                }
                 string ms = EVEMonWebRequest.GetUrlString(curl, xs, out xr);
                 if (xr.StatusCode == HttpStatusCode.OK)
                 {
@@ -352,7 +393,9 @@ namespace EVEMon.Common
             WebRequestState wrs = new WebRequestState();
             wrs.LogDelegate = NetworkLogEvent;
             if (m_cookies == null)
+            {
                 m_cookies = new CookieContainer();
+            }
             wrs.CookieContainer = m_cookies;
             wrs.AllowRedirects = false;
             HttpWebResponse resp = null;
@@ -365,8 +408,10 @@ namespace EVEMon.Common
             string loc = resp.Headers[HttpResponseHeader.Location];
             Match sidm = null;
             if (!String.IsNullOrEmpty(loc))
+            {
                 sidm = Regex.Match(loc, @"sid=(\d+)");
-            if (sidm!=null && sidm.Success)
+            }
+            if (sidm != null && sidm.Success)
             {
                 string sid = sidm.Groups[1].Value;
                 WebRequestState xwrs = new WebRequestState();
@@ -375,7 +420,9 @@ namespace EVEMon.Common
                 resp = null;
                 string curl = "http://myeve.eve-online.com/character/xml.asp?sid=" + sid;
                 if (!String.IsNullOrEmpty(charId))
+                {
                     curl += "&characterID=" + charId;
+                }
                 string xs = EVEMonWebRequest.GetUrlString(curl, xwrs, out resp);
                 if (resp.StatusCode == HttpStatusCode.OK)
                 {
@@ -393,7 +440,8 @@ namespace EVEMon.Common
                 }
                 else
                 {
-                    throw new ApplicationException("Could not get character xml, HTTP code " + resp.StatusCode.ToString());
+                    throw new ApplicationException("Could not get character xml, HTTP code " +
+                                                   resp.StatusCode.ToString());
                 }
             }
             else
@@ -409,7 +457,8 @@ namespace EVEMon.Common
             }
         }
 
-        private static Dictionary<string, WeakReference<EveSession>> m_sessions = new Dictionary<string, WeakReference<EveSession>>();
+        private static Dictionary<string, WeakReference<EveSession>> m_sessions =
+            new Dictionary<string, WeakReference<EveSession>>();
 
         public static EveSession GetSession(string username, string password)
         {
@@ -456,9 +505,11 @@ namespace EVEMon.Common
             get
             {
                 string cacheDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                    "/EVEMon/cache/images";
+                                  "/EVEMon/cache/images";
                 if (!Directory.Exists(cacheDir))
+                {
                     Directory.CreateDirectory(cacheDir);
+                }
                 return cacheDir;
             }
         }
@@ -486,12 +537,14 @@ namespace EVEMon.Common
                     }
                 }
                 GetImageCallback origCallback = callback;
-                callback = new GetImageCallback(delegate (EveSession s, Image i)
-                {
-                    if (i!=null)
-                        AddImageToCache(url, i);
-                    origCallback(s, i);
-                });
+                callback = new GetImageCallback(delegate(EveSession s, Image i)
+                                                    {
+                                                        if (i != null)
+                                                        {
+                                                            AddImageToCache(url, i);
+                                                        }
+                                                        origCallback(s, i);
+                                                    });
             }
             Pair<HttpWebRequest, GetImageCallback> p = new Pair<HttpWebRequest, GetImageCallback>();
             //HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
@@ -538,7 +591,7 @@ namespace EVEMon.Common
             GetImageCallback callback = p.B;
             try
             {
-                HttpWebResponse resp = (HttpWebResponse)wr.EndGetResponse(ar);
+                HttpWebResponse resp = (HttpWebResponse) wr.EndGetResponse(ar);
                 int contentLength = Convert.ToInt32(resp.ContentLength);
                 int bytesToGo = contentLength;
                 byte[] data = new byte[bytesToGo];
@@ -561,24 +614,27 @@ namespace EVEMon.Common
             }
         }
 
-        public void UpdateGrandCharacterInfoAsync(GrandCharacterInfo grandCharacterInfo, Control invokeControl, UpdateGrandCharacterInfoCallback callback)
+        public void UpdateGrandCharacterInfoAsync(GrandCharacterInfo grandCharacterInfo, Control invokeControl,
+                                                  UpdateGrandCharacterInfoCallback callback)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
-            {
-                int timeLeftInCache = this.UpdateGrandCharacterInfo(grandCharacterInfo, invokeControl);
-                //callback(this, timeLeftInCache);
-                callback(null, timeLeftInCache);
-            }));
+                                                              {
+                                                                  int timeLeftInCache =
+                                                                      this.UpdateGrandCharacterInfo(grandCharacterInfo,
+                                                                                                    invokeControl);
+                                                                  //callback(this, timeLeftInCache);
+                                                                  callback(null, timeLeftInCache);
+                                                              }));
         }
 
-        private const int DEFAULT_RETRY_INTERVAL = 60 * 5;
+        private const int DEFAULT_RETRY_INTERVAL = 60*5;
 
         public int UpdateGrandCharacterInfo(GrandCharacterInfo grandCharacterInfo, Control invokeControl)
         {
             bool firstAttempt = true;
-        AGAIN:
+            AGAIN:
             string htmld = GetUrl("http://myeve.eve-online.com/character/skilltree.asp?characterID=" +
-                                    grandCharacterInfo.CharacterId.ToString(), null);
+                                  grandCharacterInfo.CharacterId.ToString(), null);
             if (!htmld.Contains("skills trained, for a total of"))
             {
                 if (!WebLogin() || !firstAttempt)
@@ -591,9 +647,9 @@ namespace EVEMon.Common
             }
 
             firstAttempt = true;
-        BAGAIN:
+            BAGAIN:
             string data = GetUrl("http://myeve.eve-online.com/character/xml.asp?characterID=" +
-                                    grandCharacterInfo.CharacterId.ToString(), null);
+                                 grandCharacterInfo.CharacterId.ToString(), null);
             if (!data.Contains("<charactersheet>"))
             {
                 if (!WebLogin() || !firstAttempt)
@@ -608,12 +664,13 @@ namespace EVEMon.Common
             xdoc.LoadXml(data);
 
             int timeLeftInCache;
-            SerializableCharacterInfo result = ProcessCharacterXml(xdoc, grandCharacterInfo.CharacterId, out timeLeftInCache);
+            SerializableCharacterInfo result =
+                ProcessCharacterXml(xdoc, grandCharacterInfo.CharacterId, out timeLeftInCache);
 
             invokeControl.Invoke(new MethodInvoker(delegate
-            {
-                grandCharacterInfo.AssignFromSerializableCharacterInfo(result);
-            }));
+                                                       {
+                                                           grandCharacterInfo.AssignFromSerializableCharacterInfo(result);
+                                                       }));
 
             return timeLeftInCache;
         }
@@ -664,41 +721,41 @@ namespace EVEMon.Common
             m_owner = ci;
         }
 
-        private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
+        private int[] m_values = new int[5] {0, 0, 0, 0, 0};
 
         [XmlElement("intelligence")]
         public int BaseIntelligence
         {
-            get { return m_values[(int)EveAttribute.Intelligence]; }
-            set { m_values[(int)EveAttribute.Intelligence] = value; }
+            get { return m_values[(int) EveAttribute.Intelligence]; }
+            set { m_values[(int) EveAttribute.Intelligence] = value; }
         }
 
         [XmlElement("charisma")]
         public int BaseCharisma
         {
-            get { return m_values[(int)EveAttribute.Charisma]; }
-            set { m_values[(int)EveAttribute.Charisma] = value; }
+            get { return m_values[(int) EveAttribute.Charisma]; }
+            set { m_values[(int) EveAttribute.Charisma] = value; }
         }
 
         [XmlElement("perception")]
         public int BasePerception
         {
-            get { return m_values[(int)EveAttribute.Perception]; }
-            set { m_values[(int)EveAttribute.Perception] = value; }
+            get { return m_values[(int) EveAttribute.Perception]; }
+            set { m_values[(int) EveAttribute.Perception] = value; }
         }
 
         [XmlElement("memory")]
         public int BaseMemory
         {
-            get { return m_values[(int)EveAttribute.Memory]; }
-            set { m_values[(int)EveAttribute.Memory] = value; }
+            get { return m_values[(int) EveAttribute.Memory]; }
+            set { m_values[(int) EveAttribute.Memory] = value; }
         }
 
         [XmlElement("willpower")]
         public int BaseWillpower
         {
-            get { return m_values[(int)EveAttribute.Willpower]; }
-            set { m_values[(int)EveAttribute.Willpower] = value; }
+            get { return m_values[(int) EveAttribute.Willpower]; }
+            set { m_values[(int) EveAttribute.Willpower] = value; }
         }
 
         [XmlIgnore]
@@ -748,13 +805,13 @@ namespace EVEMon.Common
         {
             get { return this.AdjustedPerception.ToString("#.00"); }
         }
-        
+
         [XmlElement("adjustedMemory")]
         public string _adjustedMemory
         {
             get { return this.AdjustedMemory.ToString("#.00"); }
         }
-        
+
         [XmlElement("adjustedWillpower")]
         public string _adjustedWillpower
         {
@@ -766,13 +823,17 @@ namespace EVEMon.Common
             double result = 0.0;
             double learningBonus = 1.0;
             if ((adjustment & SerializableEveAttributeAdjustment.Base) != 0)
-                result += m_values[(int)eveAttribute];
+            {
+                result += m_values[(int) eveAttribute];
+            }
             if ((adjustment & SerializableEveAttributeAdjustment.Implants) != 0)
             {
                 foreach (SerializableEveAttributeBonus eab in m_owner.AttributeBonuses.Bonuses)
                 {
                     if (eab.EveAttribute == eveAttribute)
+                    {
                         result += eab.Amount;
+                    }
                 }
             }
             if (((adjustment & SerializableEveAttributeAdjustment.Skills) != 0) ||
@@ -790,35 +851,47 @@ namespace EVEMon.Common
                                 {
                                     case EveAttribute.Intelligence:
                                         if (s.Name == "Analytical Mind" || s.Name == "Logic")
+                                        {
                                             result += s.Level;
+                                        }
                                         break;
                                     case EveAttribute.Charisma:
                                         if (s.Name == "Empathy" || s.Name == "Presence")
+                                        {
                                             result += s.Level;
+                                        }
                                         break;
                                     case EveAttribute.Memory:
                                         if (s.Name == "Instant Recall" || s.Name == "Eidetic Memory")
+                                        {
                                             result += s.Level;
+                                        }
                                         break;
                                     case EveAttribute.Willpower:
                                         if (s.Name == "Iron Will" || s.Name == "Focus")
+                                        {
                                             result += s.Level;
+                                        }
                                         break;
                                     case EveAttribute.Perception:
                                         if (s.Name == "Spatial Awareness" || s.Name == "Clarity")
+                                        {
                                             result += s.Level;
+                                        }
                                         break;
                                 }
                             }
                             if (s.Name == "Learning")
-                                learningBonus = 1.0 + (0.02 * s.Level);
+                            {
+                                learningBonus = 1.0 + (0.02*s.Level);
+                            }
                         }
                     }
                 }
             }
             if ((adjustment & SerializableEveAttributeAdjustment.Learning) != 0)
             {
-                result = result * learningBonus;
+                result = result*learningBonus;
             }
             return result;
         }
@@ -882,7 +955,9 @@ namespace EVEMon.Common
             get
             {
                 if (m_cookies == null)
+                {
                     return null;
+                }
                 List<string> cook = new List<string>();
                 foreach (Cookie c in m_cookies)
                 {
@@ -903,11 +978,16 @@ namespace EVEMon.Common
 
         public string ExceptionText
         {
-            get {
+            get
+            {
                 if (m_exception != null)
+                {
                     return m_exception.ToString();
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -938,17 +1018,11 @@ namespace EVEMon.Common
 
     public enum EveAttribute
     {
-        [XmlEnum("intelligence")]
-        Intelligence,
-        [XmlEnum("charisma")]
-        Charisma,
-        [XmlEnum("perception")]
-        Perception,
-        [XmlEnum("memory")]
-        Memory,
-        [XmlEnum("willpower")]
-        Willpower,
-        [XmlEnum("none")]
-        None
+        [XmlEnum("intelligence")] Intelligence,
+        [XmlEnum("charisma")] Charisma,
+        [XmlEnum("perception")] Perception,
+        [XmlEnum("memory")] Memory,
+        [XmlEnum("willpower")] Willpower,
+        [XmlEnum("none")] None
     }
 }

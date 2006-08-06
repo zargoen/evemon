@@ -19,7 +19,9 @@ namespace EVEMon
             foreach (GrandEveAttributeBonus b in bonuses)
             {
                 if (b.Manual)
+                {
                     workingList.Add(b);
+                }
             }
         }
 
@@ -103,7 +105,9 @@ namespace EVEMon
         private void miModify_Click(object sender, EventArgs e)
         {
             if (lvImplants.SelectedItems.Count != 1)
+            {
                 return;
+            }
 
             ListViewItem lvi = lvImplants.SelectedItems[0];
             using (ManualImplantDetailWindow f = new ManualImplantDetailWindow(lvi.Tag as GrandEveAttributeBonus))
@@ -120,7 +124,9 @@ namespace EVEMon
         private void miDelete_Click(object sender, EventArgs e)
         {
             if (lvImplants.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             List<ListViewItem> removeItems = new List<ListViewItem>();
             DialogResult dr = DialogResult.No;
@@ -129,13 +135,15 @@ namespace EVEMon
                 ListViewItem lvi = lvImplants.SelectedItems[0];
                 GrandEveAttributeBonus b = lvi.Tag as GrandEveAttributeBonus;
                 dr = MessageBox.Show("Are you sure you want to delete \"" + b.Name + "\"?",
-                    "Delete Implant?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                     "Delete Implant?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                     MessageBoxDefaultButton.Button2);
                 removeItems.Add(lvi);
             }
             else
             {
                 dr = MessageBox.Show("Are you sure you want to delete these implants?",
-                    "Delete Implants?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                     "Delete Implants?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                     MessageBoxDefaultButton.Button2);
                 foreach (ListViewItem lvi in lvImplants.SelectedItems)
                 {
                     removeItems.Add(lvi);
@@ -161,7 +169,6 @@ namespace EVEMon
 
         private void lvImplants_KeyPress(object sender, KeyPressEventArgs e)
         {
-
         }
 
         private void lvImplants_KeyDown(object sender, KeyEventArgs e)
@@ -185,4 +192,3 @@ namespace EVEMon
         }
     }
 }
-

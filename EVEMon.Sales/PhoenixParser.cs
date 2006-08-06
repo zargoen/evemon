@@ -9,11 +9,12 @@ namespace EVEMon.Sales
     [DefaultMineralParser("phoenix")]
     public class PhoenixParser : IMineralParser
     {
-        private static Regex mineralLineScan = new Regex(@"(?<=Corp\sMineral\sPrices\s-\s)(?<mineral>.*\s*\:\s*(\d|\.)*)", RegexOptions.Compiled);
+        private static Regex mineralLineScan =
+            new Regex(@"(?<=Corp\sMineral\sPrices\s-\s)(?<mineral>.*\s*\:\s*(\d|\.)*)", RegexOptions.Compiled);
+
         private static Regex mineralTokenizer = new Regex(@"(?<name>\w*)\:(?<price>(\d|\.)*)\s", RegexOptions.Compiled);
 
         #region IMineralParser Members
-
         public string Title
         {
             get { return "Phoenix Industries"; }
@@ -68,7 +69,6 @@ namespace EVEMon.Sales
                 yield return new Pair<string, Decimal>(name, price);
             }
         }
-
         #endregion
     }
 }

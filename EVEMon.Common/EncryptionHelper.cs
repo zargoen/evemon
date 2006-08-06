@@ -22,8 +22,10 @@ namespace EVEMon.Common
 
             using (MemoryStream m_plainStream = new MemoryStream())
             using (CryptoStream m_cryptStream = new CryptoStream(m_plainStream,
-                RMCrypto.CreateDecryptor(m_encoding.GetBytes(m_key), m_encoding.GetBytes(longName.Substring(0, 16))),
-                CryptoStreamMode.Write))
+                                                                 RMCrypto.CreateDecryptor(m_encoding.GetBytes(m_key),
+                                                                                          m_encoding.GetBytes(
+                                                                                              longName.Substring(0, 16))),
+                                                                 CryptoStreamMode.Write))
             {
                 byte[] pBytes = Convert.FromBase64String(value);
                 m_cryptStream.Write(pBytes, 0, pBytes.Length);
@@ -45,8 +47,10 @@ namespace EVEMon.Common
 
             using (MemoryStream m_plainStream = new MemoryStream())
             using (CryptoStream m_cryptStream = new CryptoStream(m_plainStream,
-                RMCrypto.CreateEncryptor(m_encoding.GetBytes(m_key), m_encoding.GetBytes(longName.Substring(0, 16))),
-                CryptoStreamMode.Write))
+                                                                 RMCrypto.CreateEncryptor(m_encoding.GetBytes(m_key),
+                                                                                          m_encoding.GetBytes(
+                                                                                              longName.Substring(0, 16))),
+                                                                 CryptoStreamMode.Write))
             {
                 byte[] pBytes = m_encoding.GetBytes(password);
                 m_cryptStream.Write(pBytes, 0, pBytes.Length);

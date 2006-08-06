@@ -5,7 +5,7 @@ using EVEMon.Common;
 
 namespace EVEMon
 {
-    class Emailer
+    internal class Emailer
     {
         private Emailer()
         {
@@ -22,15 +22,15 @@ namespace EVEMon
         public static bool SendTestMail(Settings settings)
         {
             return SendMail(settings,
-                "EVE Character Monitor Test Mail",
-                "This is a test email sent by EVE Character Monitor");
+                            "EVE Character Monitor Test Mail",
+                            "This is a test email sent by EVE Character Monitor");
         }
 
         public static bool SendAlertMail(Settings settings, string skillName, string charName)
         {
             return SendMail(settings,
-                charName + " skill " + skillName + " complete",
-                charName + " has finished training " + skillName);
+                            charName + " skill " + skillName + " complete",
+                            charName + " has finished training " + skillName);
         }
 
         private static bool SendMail(Settings settings, string subject, string body)
@@ -74,6 +74,5 @@ namespace EVEMon
                 return false;
             }
         }
-
     }
 }

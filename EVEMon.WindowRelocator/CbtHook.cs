@@ -5,17 +5,19 @@ using System.Threading;
 
 namespace EVEMon.WindowRelocator
 {
-    internal class CbtHook: IDisposable
+    internal class CbtHook : IDisposable
     {
         public CbtHook()
         {
             m_sem = new Semaphore(0, 1, "EVEMon-WindowShift-WindowCreation");
             m_waitHandle = ThreadPool.RegisterWaitForSingleObject(m_sem, new WaitOrTimerCallback(SemaphoreSignalled),
-                null, Timeout.Infinite, false);
+                                                                  null, Timeout.Infinite, false);
 
             m_lib = LoadLibrary("EVEMon.WinHook.dll");
             if (m_lib == IntPtr.Zero)
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
             UIntPtr funcPtr = GetProcAddress(m_lib, "CbtHookProc");
             if (funcPtr == UIntPtr.Zero)
             {
@@ -53,7 +55,9 @@ namespace EVEMon.WindowRelocator
             //    }
             //}
             if (WindowCreated != null)
+            {
                 WindowCreated(this, new EventArgs());
+            }
         }
 
         private void SemaphoreSignalled(object state, bool timedOut)
@@ -67,13 +71,13 @@ namespace EVEMon.WindowRelocator
         private IntPtr m_hhk = IntPtr.Zero;
 
         [DllImport("kernel32", SetLastError=true)]
-        private extern static IntPtr LoadLibrary(string fileName);
+        private static extern IntPtr LoadLibrary(string fileName);
 
         [DllImport("kernel32")]
-        private extern static bool FreeLibrary(IntPtr lib);
+        private static extern bool FreeLibrary(IntPtr lib);
 
         [DllImport("kernel32", CharSet=CharSet.Ansi, ExactSpelling=true, SetLastError=true)]
-        private extern static UIntPtr GetProcAddress(IntPtr hModule, string procName);
+        private static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
 
         private enum HookType : int
         {
@@ -101,7 +105,6 @@ namespace EVEMon.WindowRelocator
         private static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         #region IDisposable Members
-
         public void Dispose()
         {
             if (m_hhk != IntPtr.Zero)
@@ -126,7 +129,6 @@ namespace EVEMon.WindowRelocator
             }
             GC.SuppressFinalize(this);
         }
-
         #endregion
     }
 }

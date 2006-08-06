@@ -69,19 +69,20 @@ namespace EVEMon
 
         private void label2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(tbUserName.Text))
             {
-                MessageBox.Show("Please enter a user name.", "User Name Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("Please enter a user name.", "User Name Required", MessageBoxButtons.OK,
+                                MessageBoxIcon.Stop);
                 return;
             }
             if (String.IsNullOrEmpty(tbPassword.Text))
             {
-                MessageBox.Show("Please enter a password.", "Password Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("Please enter a password.", "Password Required", MessageBoxButtons.OK,
+                                MessageBoxIcon.Stop);
                 return;
             }
 

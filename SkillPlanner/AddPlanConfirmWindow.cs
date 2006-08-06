@@ -22,7 +22,6 @@ namespace EVEMon.SkillPlanner
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void AddPlanConfirmWindow_Load(object sender, EventArgs e)
@@ -53,7 +52,9 @@ namespace EVEMon.SkillPlanner
                 foreach (PlanEntry pe in list)
                 {
                     if (pe.SkillName == gs.Name && pe.Level == level)
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -121,7 +122,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 MessageBox.Show("All the required skills are already in your plan.",
-                        "Already Planned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "Already Planned", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

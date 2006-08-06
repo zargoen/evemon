@@ -19,8 +19,8 @@ namespace EVEMon.Common
                 using (Stream s = a.GetManifestResourceStream("EVEMon.Common.eve-ships2.xml.gz"))
                 using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(Ship[]));
-                    sm_ships = (Ship[])xs.Deserialize(zs);
+                    XmlSerializer xs = new XmlSerializer(typeof (Ship[]));
+                    sm_ships = (Ship[]) xs.Deserialize(zs);
                 }
             }
             return sm_ships;

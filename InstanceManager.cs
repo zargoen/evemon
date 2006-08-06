@@ -11,7 +11,9 @@ namespace EVEMon
         public static InstanceManager GetInstance()
         {
             if (m_instanceManager == null)
+            {
                 m_instanceManager = new InstanceManager();
+            }
             return m_instanceManager;
         }
 
@@ -24,7 +26,7 @@ namespace EVEMon
             m_semaphore = new Semaphore(0, 1, "EVEMonInstance", out m_createdNew);
             //m_waitHandle = 
             ThreadPool.RegisterWaitForSingleObject(m_semaphore,
-                                new WaitOrTimerCallback(SemaphoreReleased), null, -1, false);
+                                                   new WaitOrTimerCallback(SemaphoreReleased), null, -1, false);
         }
 
         public bool CreatedNew
@@ -35,7 +37,9 @@ namespace EVEMon
         private void SemaphoreReleased(object o, bool b)
         {
             if (Signaled != null)
+            {
                 Signaled(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> Signaled;

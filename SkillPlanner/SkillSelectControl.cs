@@ -34,13 +34,19 @@ namespace EVEMon.SkillPlanner
         public GrandSkill SelectedSkill
         {
             get { return m_selectedSkill; }
-            private set { m_selectedSkill = value; OnSelectedSkillChanged(); }
+            private set
+            {
+                m_selectedSkill = value;
+                OnSelectedSkillChanged();
+            }
         }
 
         private void OnSelectedSkillChanged()
         {
             if (SelectedSkillChanged != null)
+            {
                 SelectedSkillChanged(this, new EventArgs());
+            }
         }
 
         private delegate bool SkillFilter(GrandSkill gs);
@@ -53,7 +59,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateSkillFilter()
         {
             if (m_grandCharacterInfo == null || m_plan == null)
+            {
                 return;
+            }
 
             SkillFilter sf;
 
@@ -62,48 +70,47 @@ namespace EVEMon.SkillPlanner
                 default:
                 case 0: // All Skills
                     sf = delegate
-                    {
-                        return true;
-                    };
+                             {
+                                 return true;
+                             };
                     break;
                 case 1: // Known Skills
                     sf = delegate(GrandSkill gs)
-                    {
-                        return gs.Known;
-                    };
+                             {
+                                 return gs.Known;
+                             };
                     break;
                 case 2: // Not Known Skills
                     sf = delegate(GrandSkill gs)
-                    {
-                        return !gs.Known;
-                    };
+                             {
+                                 return !gs.Known;
+                             };
                     break;
                 case 3: // Planned Skills
                     sf = delegate(GrandSkill gs)
-                    {
-                        return m_plan.IsPlanned(gs);
-                    };
+                             {
+                                 return m_plan.IsPlanned(gs);
+                             };
                     break;
                 case 4: // Level I Ready Skills
                     sf = delegate(GrandSkill gs)
-                    {
-                        return (gs.Level == 0 && gs.PrerequisitesMet);
-                    };
+                             {
+                                 return (gs.Level == 0 && gs.PrerequisitesMet);
+                             };
                     break;
                 case 5: // Trainable Skills
                     sf = delegate(GrandSkill gs)
-                    {
-                        return (gs.PrerequisitesMet && gs.Level < 5);
-                    };
+                             {
+                                 return (gs.PrerequisitesMet && gs.Level < 5);
+                             };
                     break;
 
                 case 6: // partially trained skils
                     sf = delegate(GrandSkill gs)
-                    {
-                        return (gs.IsPartiallyTrained());
-                    };
+                             {
+                                 return (gs.IsPartiallyTrained());
+                             };
                     break;
-
             }
 
             tvSkillList.Nodes.Clear();
@@ -128,7 +135,7 @@ namespace EVEMon.SkillPlanner
                         //}
                         //else
                         //{
-                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", gs.Level, gs.Level);
+                        stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", gs.Level, gs.Level);
                         //}
                         stn.Tag = gs;
                         gtn.Nodes.Add(stn);
@@ -229,73 +236,90 @@ namespace EVEMon.SkillPlanner
                 case 1: // Training time to next level
                     sortColName = "Time";
                     sk = delegate(GrandSkill gs)
-                    {
-                        int curLevel = gs.Level;
-                        if (curLevel == 5)
-                            return TimeSpan.MaxValue;
-                        int nextLevel = curLevel + 1;
-                        return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(nextLevel);
-                    };
+                             {
+                                 int curLevel = gs.Level;
+                                 if (curLevel == 5)
+                                 {
+                                     return TimeSpan.MaxValue;
+                                 }
+                                 int nextLevel = curLevel + 1;
+                                 return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(nextLevel);
+                             };
                     dk = delegate(GrandSkill gs, object v)
-                    {
-                        TimeSpan ts = (TimeSpan)v;
-                        if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                            return "-";
-                        else
-                        {
-                            int nextLevel = gs.Level + 1;
-                            return
-                                GrandSkill.GetRomanSkillNumber(nextLevel) + ": " +
-                                GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
-                        }
-                    };
+                             {
+                                 TimeSpan ts = (TimeSpan) v;
+                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
+                                 {
+                                     return "-";
+                                 }
+                                 else
+                                 {
+                                     int nextLevel = gs.Level + 1;
+                                     return
+                                         GrandSkill.GetRomanSkillNumber(nextLevel) + ": " +
+                                         GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
+                                 }
+                             };
                     mu = delegate(IComparable v)
-                    {
-                        TimeSpan ts = (TimeSpan)v;
-                        if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                            ts -= TimeSpan.FromTicks(1);
-                        else
-                            ts += TimeSpan.FromTicks(1);
-                        return ts;
-                    };
+                             {
+                                 TimeSpan ts = (TimeSpan) v;
+                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
+                                 {
+                                     ts -= TimeSpan.FromTicks(1);
+                                 }
+                                 else
+                                 {
+                                     ts += TimeSpan.FromTicks(1);
+                                 }
+                                 return ts;
+                             };
                     break;
                 case 2: // Training time to level V
                     sortColName = "Time";
                     sk = delegate(GrandSkill gs)
-                    {
-                        int curLevel = gs.Level;
-                        if (curLevel == 5)
-                            return TimeSpan.MaxValue;
-                        return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(5);
-                    };
+                             {
+                                 int curLevel = gs.Level;
+                                 if (curLevel == 5)
+                                 {
+                                     return TimeSpan.MaxValue;
+                                 }
+                                 return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(5);
+                             };
                     dk = delegate(GrandSkill gs, object v)
-                    {
-                        TimeSpan ts = (TimeSpan)v;
-                        if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                            return "-";
-                        else
-                        {
-                            return
-                                GrandSkill.GetRomanSkillNumber(5) + ": " +
-                                GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
-                        }
-                    };
+                             {
+                                 TimeSpan ts = (TimeSpan) v;
+                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
+                                 {
+                                     return "-";
+                                 }
+                                 else
+                                 {
+                                     return
+                                         GrandSkill.GetRomanSkillNumber(5) + ": " +
+                                         GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
+                                 }
+                             };
                     mu = delegate(IComparable v)
-                    {
-                        TimeSpan ts = (TimeSpan)v;
-                        if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                            ts -= TimeSpan.FromTicks(1);
-                        else
-                            ts += TimeSpan.FromTicks(1);
-                        return ts;
-                    };
+                             {
+                                 TimeSpan ts = (TimeSpan) v;
+                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
+                                 {
+                                     ts -= TimeSpan.FromTicks(1);
+                                 }
+                                 else
+                                 {
+                                     ts += TimeSpan.FromTicks(1);
+                                 }
+                                 return ts;
+                             };
                     break;
             }
 
             lvSortedSkillList.BeginUpdate();
             try
             {
-                SortedList<IComparable, Pair<GrandSkill, string>> sortedItems = new SortedList<IComparable, Pair<GrandSkill, string>>();
+                SortedList<IComparable, Pair<GrandSkill, string>> sortedItems =
+                    new SortedList<IComparable, Pair<GrandSkill, string>>();
                 foreach (GrandSkill gs in filteredItems.Values)
                 {
                     IComparable sortVal = sk(gs);
@@ -334,15 +358,21 @@ namespace EVEMon.SkillPlanner
         }
 
         private delegate IComparable SortedListSortKey(GrandSkill gs);
+
         private delegate IComparable MakeUniqueSortKey(IComparable v);
+
         private delegate string SortedListDisplayKey(GrandSkill gs, object v);
 
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbSearchList.SelectedIndex >= 0)
+            {
                 this.SelectedSkill = lbSearchList.Items[lbSearchList.SelectedIndex] as GrandSkill;
+            }
             else
+            {
                 this.SelectedSkill = null;
+            }
         }
 
         private void tvSkillList_AfterSelect(object sender, TreeViewEventArgs e)
@@ -350,7 +380,9 @@ namespace EVEMon.SkillPlanner
             TreeNode tn = tvSkillList.SelectedNode;
             GrandSkill gs = tn.Tag as GrandSkill;
             if (gs != null)
+            {
                 this.SelectedSkill = gs;
+            }
         }
 
         private void SkillSelectControl_Load(object sender, EventArgs e)

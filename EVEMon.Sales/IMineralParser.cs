@@ -30,11 +30,15 @@ namespace EVEMon.Sales
             Assembly asm = Assembly.GetExecutingAssembly();
             foreach (Type tt in asm.GetTypes())
             {
-                foreach (DefaultMineralParserAttribute dmpa in tt.GetCustomAttributes(typeof(DefaultMineralParserAttribute), false))
+                foreach (
+                    DefaultMineralParserAttribute dmpa in
+                        tt.GetCustomAttributes(typeof (DefaultMineralParserAttribute), false))
                 {
                     IMineralParser mp = Activator.CreateInstance(tt) as IMineralParser;
-                    if (mp!=null)
+                    if (mp != null)
+                    {
                         RegisterDataSource(dmpa.Name, mp);
+                    }
                 }
             }
         }
@@ -60,7 +64,9 @@ namespace EVEMon.Sales
         public static IEnumerable<Pair<string, Decimal>> GetPrices(string source)
         {
             if (!sm_parsers.ContainsKey(source))
+            {
                 throw new ArgumentException("that is not a registered mineraldatasource", "source");
+            }
 
             IMineralParser p = sm_parsers[source];
             return p.GetPrices();
@@ -69,7 +75,9 @@ namespace EVEMon.Sales
         public static string GetCourtesyText(string source)
         {
             if (!sm_parsers.ContainsKey(source))
+            {
                 throw new ArgumentException("that is not a registered mineraldatasource", "source");
+            }
 
             IMineralParser p = sm_parsers[source];
             return p.CourtesyText;
@@ -78,7 +86,9 @@ namespace EVEMon.Sales
         public static string GetCourtesyUrl(string source)
         {
             if (!sm_parsers.ContainsKey(source))
+            {
                 throw new ArgumentException("that is not a registered mineraldatasource", "source");
+            }
 
             IMineralParser p = sm_parsers[source];
             return p.CourtesyUrl;

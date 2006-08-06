@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -127,30 +126,6 @@ namespace EVEMon
                 m_igbServer.Stop();
             }
         }
-
-        void im_Signaled(object sender, EventArgs e)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new MethodInvoker(delegate
-                {
-                    im_Signaled(sender, e);
-                }));
-                return;
-            }
-
-            if (!this.Visible)
-                niMinimizeIcon_Click(this, new EventArgs());
-            else if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
-            else
-                this.BringToFront();
-
-            FlashWindow(this.Handle, true);
-        }
-
-        [DllImport("user32.dll")]
-        private static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
         private bool m_updateShowing = false;
 
@@ -491,8 +466,8 @@ namespace EVEMon
                     }
                 }
             }
-//            if (this.WindowState == FormWindowState.Normal)
-                //lbSkills.Width = this.ClientSize.Width - (lbSkills.Left * 2);
+            //            if (this.WindowState == FormWindowState.Normal)
+            //lbSkills.Width = this.ClientSize.Width - (lbSkills.Left * 2);
         }
 
         private void niMinimizeIcon_Click(object sender, EventArgs e)
@@ -563,7 +538,7 @@ namespace EVEMon
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (m_settings.CloseToTray && this.Visible == true)
+            if (m_settings.CloseToTray && this.Visible)
             {
                 e.Cancel = true;
                 niMinimizeIcon.Visible = true;

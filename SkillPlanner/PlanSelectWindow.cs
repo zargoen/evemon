@@ -82,8 +82,10 @@ namespace EVEMon.SkillPlanner
             }
 
             btnOpen.Enabled = (lbPlanList.SelectedItem != null);
-            tsbRenamePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 && lbPlanList.SelectedItems.Count == 1);
-            tsbDeletePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 && lbPlanList.SelectedItems.Count == 1);
+            tsbRenamePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 &&
+                                     lbPlanList.SelectedItems.Count == 1);
+            tsbDeletePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 &&
+                                     lbPlanList.SelectedItems.Count == 1);
             btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
 
             if (lbPlanList.SelectedItem == null || lbPlanList.SelectedItems.Count > 1)
@@ -114,7 +116,7 @@ namespace EVEMon.SkillPlanner
 
                 foreach (object plan in lbPlanList.SelectedItems)
                 {
-                    string s = (string)plan;
+                    string s = (string) plan;
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
                     foreach (PlanEntry entry in p.Entries)
                     {
@@ -131,7 +133,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                string s = (string)lbPlanList.SelectedItem;
+                string s = (string) lbPlanList.SelectedItem;
                 m_result = m_settings.GetPlanByName(m_charKey, s);
             }
             DialogResult = DialogResult.OK;
@@ -141,35 +143,39 @@ namespace EVEMon.SkillPlanner
         private void lbPlanList_DoubleClick(object sender, EventArgs e)
         {
             if (lbPlanList.SelectedItems.Count > 0)
+            {
                 btnOpen_Click(this, new EventArgs());
+            }
         }
 
         private void LoadPlan()
         {
             DialogResult dr = ofdOpenDialog.ShowDialog();
             if (dr == DialogResult.Cancel)
+            {
                 return;
+            }
 
             try
             {
                 Plan loadedPlan = null;
                 using (Stream s = new FileStream(ofdOpenDialog.FileName, FileMode.Open, FileAccess.Read))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(Plan));
+                    XmlSerializer xs = new XmlSerializer(typeof (Plan));
                     try
                     {
-                        loadedPlan = (Plan)xs.Deserialize(s);
+                        loadedPlan = (Plan) xs.Deserialize(s);
                     }
                     catch (Exception ex)
                     {
                         ExceptionHandler.LogException(ex, true);
-                        
+
                         s.Seek(0, SeekOrigin.Begin);
                         using (GZipStream gzs = new GZipStream(s, CompressionMode.Decompress))
                         {
                             try
                             {
-                                loadedPlan = (Plan)xs.Deserialize(gzs);
+                                loadedPlan = (Plan) xs.Deserialize(gzs);
                             }
                             catch (Exception e)
                             {
@@ -182,16 +188,17 @@ namespace EVEMon.SkillPlanner
 
                 using (NewPlanWindow npw = new NewPlanWindow())
                 {
-                    
                     string oldPlanName = "";
                     string newPlanName = "";
-                    while (newPlanName=="")
+                    while (newPlanName == "")
                     {
                         npw.Text = "Load Plan";
                         npw.Result = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
                         DialogResult xdr = npw.ShowDialog();
                         if (xdr == DialogResult.Cancel)
+                        {
                             return;
+                        }
                         string planName = npw.Result;
 
                         Plan oldPlan = m_settings.GetPlanByName(m_charKey, planName);
@@ -204,7 +211,8 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             // Should we try replacing the original plan?
-                            string message = "Plan with name '" + planName +  "' already exists. Replace plan '" + planName + "'?";
+                            string message = "Plan with name '" + planName + "' already exists. Replace plan '" +
+                                             planName + "'?";
                             string caption = "Replace Plan '" + planName + "'";
                             DialogResult result;
 
@@ -236,23 +244,27 @@ namespace EVEMon.SkillPlanner
                         ExceptionHandler.LogException(err, true);
                         // Rename the old plan to it's original name
                         if (oldPlanName != "")
+                        {
                             m_settings.RenamePlanFor(m_charKey, oldPlanName, newPlanName);
+                        }
 
                         MessageBox.Show("Could not add the plan:\n" + err.Message,
-                            "Could Not Add Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                         return;
+                                        "Could Not Add Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
 
                     // We have successfully loaded the plan so remove the old one for good if needed
                     if (oldPlanName != "")
+                    {
                         m_settings.RemovePlanFor(m_charKey, oldPlanName);
-                 }                
+                    }
+                }
             }
             catch (Exception err)
             {
                 ExceptionHandler.LogException(err, true);
                 MessageBox.Show("There was an error loading the saved plan:\n" + err.Message,
-                    "Could Not Load Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                "Could Not Load Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             PopulatePlanList();
@@ -270,19 +282,23 @@ namespace EVEMon.SkillPlanner
                 f.Text = "Rename Plan";
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return;
-                string oldName = (string)lbPlanList.SelectedItem;
+                }
+                string oldName = (string) lbPlanList.SelectedItem;
                 string newName = f.Result;
                 if (oldName == newName)
+                {
                     return;
+                }
                 if (m_settings.GetPlanByName(m_charKey, newName) != null)
                 {
                     MessageBox.Show("A plan with that name already exists.",
-                        "Duplicate Plan Name", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                    "Duplicate Plan Name", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
                 m_settings.RenamePlanFor(m_charKey,
-                    oldName, f.Result);
+                                         oldName, f.Result);
 
                 PopulatePlanList();
             }
@@ -295,9 +311,13 @@ namespace EVEMon.SkillPlanner
             for (int i = 1; i < lbPlanList.Items.Count; i++)
             {
                 if (i == idx - 1)
-                    newOrder.Add((string)lbPlanList.SelectedItem);
+                {
+                    newOrder.Add((string) lbPlanList.SelectedItem);
+                }
                 if (i != idx)
-                    newOrder.Add((string)lbPlanList.Items[i]);
+                {
+                    newOrder.Add((string) lbPlanList.Items[i]);
+                }
             }
             FinalizePlanReorder(idx - 1, newOrder);
         }
@@ -325,21 +345,28 @@ namespace EVEMon.SkillPlanner
             for (int i = 1; i < lbPlanList.Items.Count; i++)
             {
                 if (i != idx)
-                    newOrder.Add((string)lbPlanList.Items[i]);
+                {
+                    newOrder.Add((string) lbPlanList.Items[i]);
+                }
                 if (i == idx + 1)
-                    newOrder.Add((string)lbPlanList.SelectedItem);
+                {
+                    newOrder.Add((string) lbPlanList.SelectedItem);
+                }
             }
             FinalizePlanReorder(idx + 1, newOrder);
         }
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            string planName = (string)lbPlanList.SelectedItem;
+            string planName = (string) lbPlanList.SelectedItem;
 
             DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + planName +
-                "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                              "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                              MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
+            {
                 return;
+            }
 
             m_settings.RemovePlanFor(m_charKey, planName);
             PopulatePlanList();
@@ -347,7 +374,6 @@ namespace EVEMon.SkillPlanner
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
     }
 }

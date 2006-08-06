@@ -30,17 +30,18 @@ namespace EVEMon.WindowRelocator
         }
 
         [DllImport("user32")]
-        private extern static IntPtr GetForegroundWindow();
+        private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32")]
-        private extern static int GetClientRect(IntPtr hWnd, out RECT lpRect);
+        private static extern int GetClientRect(IntPtr hWnd, out RECT lpRect);
+
         // GetClientRect: returns width and height, not right and bottom in lpRect!
 
         [DllImport("user32")]
-        private extern static int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+        private static extern int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
         [DllImport("user32.dll")]
         private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
@@ -96,12 +97,12 @@ namespace EVEMon.WindowRelocator
             int hDiff = ncr.Height - cr.Height;
 
             m_positionedPoint = new Point(sc.Bounds.X - (cr.Left - ncr.Left),
-                sc.Bounds.Y - (cr.Top - ncr.Top));
+                                          sc.Bounds.Y - (cr.Top - ncr.Top));
 
             MoveWindow(hWnd, sc.Bounds.X - (cr.Left - ncr.Left),
-                sc.Bounds.Y - (cr.Top - ncr.Top),
-                sc.Bounds.Width + wDiff,
-                sc.Bounds.Height + hDiff, true);
+                       sc.Bounds.Y - (cr.Top - ncr.Top),
+                       sc.Bounds.Width + wDiff,
+                       sc.Bounds.Height + hDiff, true);
         }
 
         private static Timer m_timer = null;
@@ -124,7 +125,9 @@ namespace EVEMon.WindowRelocator
         private static void SetupTimer()
         {
             if (m_timer == null)
+            {
                 m_timer = new Timer(new TimerCallback(TimerCallbackProc));
+            }
             m_timer.Change(250, Timeout.Infinite);
         }
 

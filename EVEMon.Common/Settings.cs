@@ -77,14 +77,14 @@ namespace EVEMon.Common
             get { return m_EnableSkillCompleteDialog; }
             set { m_EnableSkillCompleteDialog = value; }
         }
-	
+
         private bool m_DisableEVEMonVersionCheck;
 
         public bool DisableEVEMonVersionCheck
         {
             get { return m_DisableEVEMonVersionCheck; }
             set { m_DisableEVEMonVersionCheck = value; }
-        }	
+        }
 
         private bool m_enableBalloonTips = true;
 
@@ -170,7 +170,8 @@ namespace EVEMon.Common
         public string IgnoreUpdateVersion
         {
             get { return m_ignoreUpdateVersion; }
-            set {
+            set
+            {
                 Version v = new Version("0.0.0.0");
                 try
                 {
@@ -206,9 +207,13 @@ namespace EVEMon.Common
             foreach (Pair<string, Plan> x in m_plans)
             {
                 if (x.A == charName)
+                {
                     yield return PLAN_DEFAULT;
+                }
                 else if (x.A.StartsWith(charName + "::"))
+                {
                     yield return x.A.Substring(charName.Length + 2);
+                }
             }
         }
 
@@ -233,13 +238,19 @@ namespace EVEMon.Common
         public void AddPlanFor(string charName, Plan plan, string planName)
         {
             if (GetPlanByName(charName, planName) != null)
+            {
                 throw new ApplicationException("That plan already exists.");
+            }
 
             Pair<string, Plan> p = new Pair<string, Plan>();
             if (planName == PLAN_DEFAULT)
+            {
                 p.A = charName;
+            }
             else
+            {
                 p.A = charName + "::" + planName;
+            }
             p.B = plan;
             m_plans.Add(p);
 
@@ -272,7 +283,9 @@ namespace EVEMon.Common
         public bool RenamePlanFor(string charName, string planName, string newName)
         {
             if (GetPlanByName(charName, newName) != null)
+            {
                 return false;
+            }
 
             bool found = false;
             for (int i = 0; i < m_plans.Count; i++)
@@ -286,9 +299,13 @@ namespace EVEMon.Common
                 else if (m_plans[i].A == charName + "::" + planName)
                 {
                     if (newName != PLAN_DEFAULT)
+                    {
                         m_plans[i].A = charName + "::" + newName;
+                    }
                     else
+                    {
                         m_plans[i].A = charName;
+                    }
                     found = true;
                     break;
                 }
@@ -330,9 +347,13 @@ namespace EVEMon.Common
                     bool added = false;
                     string tPlanName = null;
                     if (tp.A == charName)
+                    {
                         tPlanName = PLAN_DEFAULT;
+                    }
                     else
+                    {
                         tPlanName = tp.A.Substring(tp.A.IndexOf("::") + 2);
+                    }
                     for (int x = 0; x < newOrder.Count; x++)
                     {
                         if (newOrder[x] == tPlanName)
@@ -343,13 +364,17 @@ namespace EVEMon.Common
                         }
                     }
                     if (!added)
+                    {
                         plans.Add(tp);
+                    }
                 }
             }
             foreach (Pair<string, Plan> p in plans)
             {
                 if (p != null)
+                {
                     m_plans.Add(p);
+                }
             }
             this.Save();
         }
@@ -366,7 +391,9 @@ namespace EVEMon.Common
             foreach (SerializableCharacterInfo sci in m_cachedCharacterInfo)
             {
                 if (sci.Name == charName)
+                {
                     return sci;
+                }
             }
             return null;
         }
@@ -376,7 +403,9 @@ namespace EVEMon.Common
             for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
             {
                 if (m_cachedCharacterInfo[i].Name == charName)
+                {
                     m_cachedCharacterInfo.RemoveAt(i);
+                }
             }
         }
 
@@ -421,13 +450,19 @@ namespace EVEMon.Common
         public bool WorksafeMode
         {
             get { return m_worksafeMode; }
-            set { m_worksafeMode = value; OnWorksafeChanged(); }
+            set
+            {
+                m_worksafeMode = value;
+                OnWorksafeChanged();
+            }
         }
 
         private void OnWorksafeChanged()
         {
             if (WorksafeChanged != null)
+            {
                 WorksafeChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> WorksafeChanged;
@@ -445,13 +480,19 @@ namespace EVEMon.Common
         public bool RunIGBServer
         {
             get { return m_runIgbServer; }
-            set { m_runIgbServer = value; OnRunIGBServerChanged(); }
+            set
+            {
+                m_runIgbServer = value;
+                OnRunIGBServerChanged();
+            }
         }
 
         private void OnRunIGBServerChanged()
         {
             if (RunIGBServerChanged != null)
+            {
                 RunIGBServerChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> RunIGBServerChanged;
@@ -471,7 +512,9 @@ namespace EVEMon.Common
         private void OnRelocateEveWindowChanged()
         {
             if (RelocateEveWindowChanged != null)
+            {
                 RelocateEveWindowChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> RelocateEveWindowChanged;
@@ -512,7 +555,11 @@ namespace EVEMon.Common
         public bool CheckTranquilityStatus
         {
             get { return m_checkTranquilityStatus; }
-            set { m_checkTranquilityStatus = value; OnStatusUpdateIntervalChanged(); }
+            set
+            {
+                m_checkTranquilityStatus = value;
+                OnStatusUpdateIntervalChanged();
+            }
         }
 
         private int m_statusUpdateInterval = 5;
@@ -520,13 +567,19 @@ namespace EVEMon.Common
         public int StatusUpdateInterval
         {
             get { return m_statusUpdateInterval; }
-            set {m_statusUpdateInterval = value; OnStatusUpdateIntervalChanged(); }
+            set
+            {
+                m_statusUpdateInterval = value;
+                OnStatusUpdateIntervalChanged();
+            }
         }
 
         private void OnStatusUpdateIntervalChanged()
         {
             if (StatusUpdateIntervalChanged != null)
+            {
                 StatusUpdateIntervalChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> StatusUpdateIntervalChanged;
@@ -535,15 +588,16 @@ namespace EVEMon.Common
 
         private List<ScheduleEntry> m_schedule = new List<ScheduleEntry>();
 
-        [XmlArrayItem("simple", typeof(SimpleScheduleEntry))]
-        [XmlArrayItem("recur", typeof(RecurringScheduleEntry))]
+        [XmlArrayItem("simple", typeof (SimpleScheduleEntry))]
+        [XmlArrayItem("recur", typeof (RecurringScheduleEntry))]
         public List<ScheduleEntry> Schedule
         {
             get { return m_schedule; }
             set { m_schedule = value; }
         }
 
-        private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
+        private SerializableDictionary<string, Rectangle> m_savedWindowLocations =
+            new SerializableDictionary<string, Rectangle>();
 
         public SerializableDictionary<string, Rectangle> SavedWindowLocations
         {
@@ -570,7 +624,9 @@ namespace EVEMon.Common
         public static Settings LoadFromKey(string key)
         {
             if (m_instance != null)
+            {
                 return m_instance;
+            }
 
             try
             {
@@ -578,8 +634,8 @@ namespace EVEMon.Common
                 {
                     using (FileStream fs = new FileStream(SettingsFileName, FileMode.Open, FileAccess.Read))
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof(Settings));
-                        Settings result = (Settings)xs.Deserialize(fs);
+                        XmlSerializer xs = new XmlSerializer(typeof (Settings));
+                        Settings result = (Settings) xs.Deserialize(fs);
                         result.SetKey(key);
                         m_instance = result;
                         return result;
@@ -615,8 +671,10 @@ namespace EVEMon.Common
                     {
                         Settings result = new Settings();
                         result.SetKey(key);
-                        result.Username = ((XmlElement)xdoc.SelectSingleNode("/logindata/username")).GetAttribute("value");
-                        result.Password = ((XmlElement)xdoc.SelectSingleNode("/logindata/password")).GetAttribute("value");
+                        result.Username =
+                            ((XmlElement) xdoc.SelectSingleNode("/logindata/username")).GetAttribute("value");
+                        result.Password =
+                            ((XmlElement) xdoc.SelectSingleNode("/logindata/password")).GetAttribute("value");
                         XmlNode cn = xdoc.SelectSingleNode("/logindata/character");
                         if (cn != null)
                         {
@@ -630,8 +688,8 @@ namespace EVEMon.Common
                     else if (xdoc.DocumentElement.Name == "logindata2")
                     {
                         s.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(Settings));
-                        Settings result = (Settings)xs.Deserialize(s);
+                        XmlSerializer xs = new XmlSerializer(typeof (Settings));
+                        Settings result = (Settings) xs.Deserialize(s);
                         result.SetKey(key);
                         return result;
                     }
@@ -672,9 +730,11 @@ namespace EVEMon.Common
             get
             {
                 string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                        + "/EVEMon";
+                                    + "/EVEMon";
                 if (!Directory.Exists(appDataDir))
+                {
                     Directory.CreateDirectory(appDataDir);
+                }
                 string fn = appDataDir + "/settings.xml";
 #if DEBUG
                 fn = appDataDir + "/settings-debug.xml";
@@ -704,7 +764,9 @@ namespace EVEMon.Common
             foreach (CharFileInfo tx in m_charFileList)
             {
                 if (cfi.Filename == tx.Filename)
+                {
                     return false;
+                }
             }
             m_charFileList.Add(cfi);
             this.Save();
@@ -716,7 +778,9 @@ namespace EVEMon.Common
             foreach (CharLoginInfo tx in m_characterList)
             {
                 if (cli.CharacterName == tx.CharacterName)
+                {
                     return false;
+                }
             }
             m_characterList.Add(cli);
             this.Save();
@@ -732,7 +796,7 @@ namespace EVEMon.Common
 
         public void SaveTo(Stream s)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Settings));
+            XmlSerializer xs = new XmlSerializer(typeof (Settings));
             xs.Serialize(s, this);
         }
     }
@@ -756,15 +820,19 @@ namespace EVEMon.Common
         [XmlElement("Password")]
         public string EncryptedPassword
         {
-            get {
+            get
+            {
                 if (String.IsNullOrEmpty(m_encryptedPassword))
+                {
                     m_encryptedPassword = EncryptionHelper.Encrypt(m_username, m_password);
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(ENCRYPTED_PREFIX);
                 sb.Append(m_encryptedPassword);
                 return sb.ToString();
             }
-            set {
+            set
+            {
                 if (!value.StartsWith(ENCRYPTED_PREFIX))
                 {
                     m_encryptedPassword = String.Empty;
@@ -781,14 +849,16 @@ namespace EVEMon.Common
         [XmlIgnore]
         public string Password
         {
-            get {
+            get
+            {
                 if (String.IsNullOrEmpty(m_password) && !String.IsNullOrEmpty(m_encryptedPassword))
                 {
                     m_password = EncryptionHelper.Decrypt(m_username, m_encryptedPassword);
                 }
                 return m_password;
             }
-            set {
+            set
+            {
                 m_password = value;
                 m_encryptedPassword = String.Empty;
             }
@@ -828,7 +898,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("proxySetting")]
-    public class ProxySetting: ICloneable
+    public class ProxySetting : ICloneable
     {
         private string m_host = String.Empty;
 
@@ -871,17 +941,15 @@ namespace EVEMon.Common
         }
 
         #region ICloneable Members
-
         public ProxySetting Clone()
         {
-            return (ProxySetting)((ICloneable)this).Clone();
+            return (ProxySetting) ((ICloneable) this).Clone();
         }
 
         object ICloneable.Clone()
         {
             return this.MemberwiseClone();
         }
-
         #endregion
     }
 
@@ -893,10 +961,9 @@ namespace EVEMon.Common
     }
 
     [XmlRoot]
-    public class SerializableDictionary<TKey, TValue>: Dictionary<TKey, TValue>, IXmlSerializable
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
         #region IXmlSerializable Members
-
         public XmlSchema GetSchema()
         {
             return null;
@@ -904,8 +971,8 @@ namespace EVEMon.Common
 
         public void ReadXml(XmlReader reader)
         {
-            XmlSerializer keySer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSer = new XmlSerializer(typeof(TValue));
+            XmlSerializer keySer = new XmlSerializer(typeof (TKey));
+            XmlSerializer valueSer = new XmlSerializer(typeof (TValue));
 
             reader.Read();
             reader.ReadStartElement("dictionary");
@@ -913,11 +980,11 @@ namespace EVEMon.Common
             {
                 reader.ReadStartElement("item");
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySer.Deserialize(reader);
+                TKey key = (TKey) keySer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSer.Deserialize(reader);
+                TValue value = (TValue) valueSer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 this.Add(key, value);
@@ -929,8 +996,8 @@ namespace EVEMon.Common
 
         public void WriteXml(XmlWriter writer)
         {
-            XmlSerializer keySer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSer = new XmlSerializer(typeof(TValue));
+            XmlSerializer keySer = new XmlSerializer(typeof (TKey));
+            XmlSerializer valueSer = new XmlSerializer(typeof (TValue));
 
             writer.WriteStartElement("dictionary");
             foreach (TKey key in this.Keys)
@@ -949,7 +1016,6 @@ namespace EVEMon.Common
             }
             writer.WriteEndElement();
         }
-
         #endregion
     }
 }

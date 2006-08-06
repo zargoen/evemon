@@ -16,7 +16,8 @@ namespace EVEMon
         public ProxySetting ProxySetting
         {
             get { return m_proxySetting; }
-            set {
+            set
+            {
                 m_proxySetting = value;
                 UpdateFields();
             }
@@ -57,9 +58,13 @@ namespace EVEMon
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (rbNoAuth.Checked)
+            {
                 m_proxySetting.AuthType = ProxyAuthType.None;
+            }
             else if (rbSystemDefault.Checked)
+            {
                 m_proxySetting.AuthType = ProxyAuthType.SystemDefault;
+            }
             else if (rbSuppliedAuth.Checked)
             {
                 m_proxySetting.AuthType = ProxyAuthType.Specified;
@@ -72,4 +77,3 @@ namespace EVEMon
         }
     }
 }
-

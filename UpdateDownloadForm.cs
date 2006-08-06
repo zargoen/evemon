@@ -25,7 +25,6 @@ namespace EVEMon
 
         private void UpdateDownloadForm_Load(object sender, EventArgs e)
         {
-
         }
 
         private HttpWebRequest m_request;
@@ -37,7 +36,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = (HttpWebRequest)WebRequest.Create(m_url);
+                m_request = (HttpWebRequest) WebRequest.Create(m_url);
                 m_request.BeginGetResponse(new AsyncCallback(GotResponse), null);
             }
             catch (Exception ex)
@@ -56,15 +55,15 @@ namespace EVEMon
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                {
-                    GotResponse(ar);
-                }));
+                                                  {
+                                                      GotResponse(ar);
+                                                  }));
                 return;
             }
 
             try
             {
-                m_response = (HttpWebResponse)m_request.EndGetResponse(ar);
+                m_response = (HttpWebResponse) m_request.EndGetResponse(ar);
                 m_netStream = m_response.GetResponseStream();
                 m_targetFile = new FileStream(m_fileName, FileMode.Create, FileAccess.Write, FileShare.None);
                 UpdateStatusText();
@@ -81,7 +80,9 @@ namespace EVEMon
         private void BeginRead()
         {
             if (m_buffer == null)
+            {
                 m_buffer = new byte[4096];
+            }
 
             try
             {
@@ -107,9 +108,9 @@ namespace EVEMon
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                {
-                    EndRead(ar);
-                }));
+                                                  {
+                                                      EndRead(ar);
+                                                  }));
                 return;
             }
 
@@ -127,7 +128,9 @@ namespace EVEMon
                     m_bytesRead += thisBytesRead;
                     UpdateStatusText();
                     if (!ar.CompletedSynchronously)
+                    {
                         BeginRead();
+                    }
                 }
             }
             catch (Exception e)
@@ -163,7 +166,8 @@ namespace EVEMon
             if (m_response.ContentLength > 0)
             {
                 label1.Text = String.Format("Downloading update ({0}%, {1} of {2} bytes received)...",
-                    m_bytesRead*100 / m_response.ContentLength, m_bytesRead, m_response.ContentLength);
+                                            m_bytesRead*100/m_response.ContentLength, m_bytesRead,
+                                            m_response.ContentLength);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
                 pbProgress.Maximum = Convert.ToInt32(m_response.ContentLength);
@@ -172,7 +176,7 @@ namespace EVEMon
             else
             {
                 label1.Text = String.Format("Downloading update ({0} bytes received)...",
-                    m_bytesRead);
+                                            m_bytesRead);
                 if (pbProgress.Style != ProgressBarStyle.Marquee)
                 {
                     pbProgress.Style = ProgressBarStyle.Marquee;
@@ -235,4 +239,3 @@ namespace EVEMon
         }
     }
 }
-

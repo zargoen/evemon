@@ -39,7 +39,6 @@ namespace EVEMon.SkillPlanner
 
         private void NewPlanWindow_Load(object sender, EventArgs e)
         {
-
         }
 
         private void NewPlanWindow_Shown(object sender, EventArgs e)

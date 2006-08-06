@@ -34,16 +34,16 @@ namespace EVEMon
                     int oWidth = i.Width;
                     if (i.Height > pbBugImage.ClientSize.Height)
                     {
-                        Double scale = Convert.ToDouble(pbBugImage.ClientSize.Height) / Convert.ToDouble(i.Height);
-                        oHeight = Convert.ToInt32(oHeight * scale);
-                        oWidth = Convert.ToInt32(oWidth * scale);
+                        Double scale = Convert.ToDouble(pbBugImage.ClientSize.Height)/Convert.ToDouble(i.Height);
+                        oHeight = Convert.ToInt32(oHeight*scale);
+                        oWidth = Convert.ToInt32(oWidth*scale);
                         Bitmap b = new Bitmap(i, new Size(oWidth, oHeight));
 
                         int oRight = pbBugImage.Right;
                         pbBugImage.ClientSize = new Size(oWidth, oHeight);
                         pbBugImage.Image = b;
                         pbBugImage.Left = oRight - pbBugImage.Width;
-                        pbBugImage.Top = (panel1.ClientSize.Height / 2) - (pbBugImage.Height / 2);
+                        pbBugImage.Top = (panel1.ClientSize.Height/2) - (pbBugImage.Height/2);
                     }
                 }
             }
@@ -51,7 +51,7 @@ namespace EVEMon
             {
                 ExceptionHandler.LogException(ex, false);
             }
-            
+
             try
             {
                 textBox1.Text = m_exception.ToString();
@@ -72,7 +72,8 @@ namespace EVEMon
         private void llCopy_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Clipboard.SetText(textBox1.Text, TextDataFormat.Text);
-            MessageBox.Show("The error details have been copied to the clipboard.", "Copy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("The error details have been copied to the clipboard.", "Copy", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -90,7 +91,7 @@ namespace EVEMon
                 Program.Settings.NeverSave();
                 Settings.ResetKey(Program.SettingKey);
                 MessageBox.Show("Your settings have been reset.",
-                    "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

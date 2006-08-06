@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace EVEMon
 {
-    public class NoFlickerListBox: ListBox
+    public class NoFlickerListBox : ListBox
     {
 /*      // This code that has been rem'd out is what I'm currently working on....
         // it does some odd stuff atm.
@@ -39,7 +39,7 @@ namespace EVEMon
 
         private enum WM
         {
-            WM_NULL       = 0x0000,
+            WM_NULL = 0x0000,
             WM_ERASEBKGND = 0x0014
         }
 
@@ -47,9 +47,9 @@ namespace EVEMon
         {
             switch (m.Msg)
             {
-                case (int)WM.WM_ERASEBKGND:
+                case (int) WM.WM_ERASEBKGND:
                     PaintNonItemRegion();
-                    m.Msg = (int)WM.WM_NULL;
+                    m.Msg = (int) WM.WM_NULL;
                     break;
             }
             base.WndProc(ref m);

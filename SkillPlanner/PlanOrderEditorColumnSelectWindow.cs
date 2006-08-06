@@ -12,13 +12,13 @@ namespace EVEMon.SkillPlanner
         }
 
         public PlanOrderEditorColumnSelectWindow(ColumnPreference pref)
-            :this()
+            : this()
         {
             m_preference = pref;
         }
 
         private ColumnPreference m_preference;
-        
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -43,7 +43,6 @@ namespace EVEMon.SkillPlanner
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void PlanOrderEditorColumnSelectWindow_Load(object sender, EventArgs e)
@@ -54,7 +53,7 @@ namespace EVEMon.SkillPlanner
             for (int i = 0; i < ccount; i++)
             {
                 clbColumns.Items.Add(ColumnPreference.GetDescription(i),
-                    m_preference[i]);
+                                     m_preference[i]);
             }
         }
     }

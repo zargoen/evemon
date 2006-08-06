@@ -22,10 +22,7 @@ namespace EVEMon.Sales
 
         public String MineralName
         {
-            get
-            {
-                return m_mineralName;
-            }
+            get { return m_mineralName; }
             set
             {
                 m_mineralName = value;
@@ -43,9 +40,13 @@ namespace EVEMon.Sales
                 {
                     ExceptionHandler.LogException(e, true);
                     if (i != null)
+                    {
                         i.Dispose();
+                    }
                     if (s != null)
+                    {
                         s.Dispose();
+                    }
                     this.icon.Image = null;
                 }
             }
@@ -53,34 +54,19 @@ namespace EVEMon.Sales
 
         public int Quantity
         {
-            get
-            {
-                return Int32.Parse(txtStock.Text);
-            }
-            set
-            {
-                txtStock.Text = value.ToString();
-            }
+            get { return Int32.Parse(txtStock.Text); }
+            set { txtStock.Text = value.ToString(); }
         }
 
         public Decimal PricePerUnit
         {
-            get
-            {
-                return Decimal.Parse(txtLastSell.Text);
-            }
-            set
-            {
-                txtLastSell.Text = value.ToString("N");
-            }
+            get { return Decimal.Parse(txtLastSell.Text); }
+            set { txtLastSell.Text = value.ToString("N"); }
         }
 
         public bool PriceLocked
         {
-            get
-            {
-                return txtLastSell.ReadOnly;
-            }
+            get { return txtLastSell.ReadOnly; }
             set
             {
                 this.txtLastSell.TabStop = !value;
@@ -92,12 +78,9 @@ namespace EVEMon.Sales
 
         public Decimal Subtotal
         {
-            get
-            {
-                return m_subtotal;
-            }
+            get { return m_subtotal; }
         }
-        
+
         private void UpdateSubtotal()
         {
             try
@@ -105,7 +88,7 @@ namespace EVEMon.Sales
                 Decimal pricePerUnit = Decimal.Parse(txtLastSell.Text);
                 int quantity = Int32.Parse(txtStock.Text);
 
-                m_subtotal = pricePerUnit * quantity;
+                m_subtotal = pricePerUnit*quantity;
             }
             catch (Exception e)
             {
@@ -115,14 +98,18 @@ namespace EVEMon.Sales
             tbSubtotal.Text = m_subtotal.ToString("N");
 
             if (SubtotalChanged != null)
+            {
                 SubtotalChanged(this, new EventArgs());
+            }
         }
 
         private void txtLastSell_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
             if (MineralPriceChanged != null)
+            {
                 MineralPriceChanged(this, new EventArgs());
+            }
         }
 
         private void txtStock_TextChanged(object sender, EventArgs e)

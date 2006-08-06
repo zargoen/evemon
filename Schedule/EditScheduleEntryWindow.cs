@@ -17,7 +17,11 @@ namespace EVEMon.Schedule
         public ScheduleEntry ScheduleEntry
         {
             get { return m_scheduleEntry; }
-            set { m_scheduleEntry = value; UpdateFromEntry(); }
+            set
+            {
+                m_scheduleEntry = value;
+                UpdateFromEntry();
+            }
         }
 
         private void UpdateFromEntry()
@@ -39,13 +43,15 @@ namespace EVEMon.Schedule
             tbRecurringTimeFrom.Text = DateTime.Today.ToShortTimeString();
             tbRecurringTimeTo.Text = dtto.ToShortTimeString();
             if (m_scheduleEntry == null)
+            {
                 return;
+            }
 
             tbTitle.Text = m_scheduleEntry.Title;
             SetTypeFlags(m_scheduleEntry.ScheduleEntryOptions);
             if (m_scheduleEntry is SimpleScheduleEntry)
             {
-                SimpleScheduleEntry sse = (SimpleScheduleEntry)m_scheduleEntry;
+                SimpleScheduleEntry sse = (SimpleScheduleEntry) m_scheduleEntry;
                 rbOneTime.Checked = true;
                 rbRecurring.Checked = false;
                 SetOneTimeStartDate(sse.StartDateTime);
@@ -55,7 +61,7 @@ namespace EVEMon.Schedule
             }
             else if (m_scheduleEntry is RecurringScheduleEntry)
             {
-                RecurringScheduleEntry rse = (RecurringScheduleEntry)m_scheduleEntry;
+                RecurringScheduleEntry rse = (RecurringScheduleEntry) m_scheduleEntry;
                 rbOneTime.Checked = false;
                 rbRecurring.Checked = true;
                 SetRecurringDateFrom(rse.RecurStart);
@@ -197,9 +203,13 @@ namespace EVEMon.Schedule
         {
             ScheduleEntryOptions result = ScheduleEntryOptions.None;
             if (cbBlocking.Checked)
+            {
                 result |= ScheduleEntryOptions.Blocking;
+            }
             if (cbSilent.Checked)
+            {
                 result |= ScheduleEntryOptions.Quiet;
+            }
             return result;
         }
 
@@ -240,10 +250,10 @@ namespace EVEMon.Schedule
         private DateTime StripToDate(DateTime dateTime)
         {
             return dateTime -
-                TimeSpan.FromHours(dateTime.Hour) -
-                TimeSpan.FromMinutes(dateTime.Minute) -
-                TimeSpan.FromSeconds(dateTime.Second) -
-                TimeSpan.FromMilliseconds(dateTime.Millisecond);
+                   TimeSpan.FromHours(dateTime.Hour) -
+                   TimeSpan.FromMinutes(dateTime.Minute) -
+                   TimeSpan.FromSeconds(dateTime.Second) -
+                   TimeSpan.FromMilliseconds(dateTime.Millisecond);
         }
 
         private void SetOneTimeStartDate(DateTime dateTime)
@@ -260,7 +270,6 @@ namespace EVEMon.Schedule
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void rbOneTime_CheckedChanged(object sender, EventArgs e)
@@ -359,7 +368,9 @@ namespace EVEMon.Schedule
                         else
                         {
                             if (startSec >= endSec)
+                            {
                                 endSec += RecurringScheduleEntry.SECONDS_PER_DAY;
+                            }
                             m_recurringStartTime = startSec;
                             m_recurringEndTime = endSec;
                         }
@@ -394,9 +405,9 @@ namespace EVEMon.Schedule
             {
                 SimpleScheduleEntry sse = new SimpleScheduleEntry();
                 sse.StartDateTime = m_oneTimeStartDate +
-                    TimeSpan.FromSeconds(m_oneTimeStartTime);
+                                    TimeSpan.FromSeconds(m_oneTimeStartTime);
                 sse.EndDateTime = m_oneTimeEndDate +
-                    TimeSpan.FromSeconds(m_oneTimeEndTime);
+                                  TimeSpan.FromSeconds(m_oneTimeEndTime);
                 result = sse;
             }
             else if (rbRecurring.Checked)
@@ -425,7 +436,9 @@ namespace EVEMon.Schedule
         private void button1_Click(object sender, EventArgs e)
         {
             if (!btnOk.Enabled)
+            {
                 return;
+            }
             ScheduleEntry ise = GenerateScheduleEntry();
             this.ScheduleEntry = ise;
         }
@@ -465,12 +478,18 @@ namespace EVEMon.Schedule
             using (DateSelectWindow f = new DateSelectWindow())
             {
                 if (res == DateTime.MinValue || res == DateTime.MaxValue)
+                {
                     f.SelectedDate = DateTime.Today;
+                }
                 else
+                {
                     f.SelectedDate = res;
+                }
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
+                {
                     return false;
+                }
                 res = f.SelectedDate;
                 return true;
             }
@@ -479,30 +498,37 @@ namespace EVEMon.Schedule
         private void btnOneTimeStartDateChoose_Click(object sender, EventArgs e)
         {
             if (GetDate(ref m_oneTimeStartDate))
+            {
                 SetOneTimeStartDate(m_oneTimeStartDate);
+            }
             ValidateData();
         }
 
         private void btnOneTimeEndDateChoose_Click(object sender, EventArgs e)
         {
             if (GetDate(ref m_oneTimeEndDate))
+            {
                 SetOneTimeEndDate(m_oneTimeEndDate);
+            }
             ValidateData();
         }
 
         private void btnRecurringStartDateChoose_Click(object sender, EventArgs e)
         {
             if (GetDate(ref m_recurringDateFrom))
+            {
                 SetRecurringDateFrom(m_recurringDateFrom);
+            }
             ValidateData();
         }
 
         private void btnRecurringEndDateChoose_Click(object sender, EventArgs e)
         {
             if (GetDate(ref m_recurringDateTo))
+            {
                 SetRecurringDateTo(m_recurringDateTo);
+            }
             ValidateData();
         }
     }
 }
-

@@ -17,7 +17,9 @@ namespace EVEMon.SkillPlanner
         private void ItemSelectControl_Load(object sender, EventArgs e)
         {
             if (this.DesignMode)
+            {
                 return;
+            }
 
             try
             {
@@ -36,7 +38,9 @@ namespace EVEMon.SkillPlanner
             try
             {
                 if (m_rootCategory != null)
+                {
                     BuildSubtree(m_rootCategory, tvItems.Nodes);
+                }
             }
             finally
             {
@@ -171,7 +175,9 @@ namespace EVEMon.SkillPlanner
         {
             m_selectedItem = i;
             if (SelectedItemChanged != null)
+            {
                 SelectedItemChanged(this, new EventArgs());
+            }
         }
 
         private void lbItemResults_SelectedIndexChanged(object sender, EventArgs e)

@@ -127,7 +127,9 @@ namespace EVEMon.Common
         {
             ItemCategory rootCat = null;
             if (m_rootCategory != null)
+            {
                 rootCat = m_rootCategory.Target;
+            }
             if (rootCat == null)
             {
                 Assembly asm = Assembly.GetExecutingAssembly();
@@ -136,7 +138,7 @@ namespace EVEMon.Common
                 {
                     using (StringTable.GetInstanceScope())
                     {
-                        XmlSerializer xs = new XmlSerializer(typeof(ItemCategory));
+                        XmlSerializer xs = new XmlSerializer(typeof (ItemCategory));
                         rootCat = xs.Deserialize(zs) as ItemCategory;
                     }
                 }

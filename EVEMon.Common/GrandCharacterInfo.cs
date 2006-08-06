@@ -31,7 +31,8 @@ namespace EVEMon.Common
             m_name = name;
 
             BuildSkillTree();
-            m_attributeBonuses.Changed += new EventHandler<ChangedEventArgs<GrandEveAttributeBonus>>(m_attributeBonuses_Changed);
+            m_attributeBonuses.Changed +=
+                new EventHandler<ChangedEventArgs<GrandEveAttributeBonus>>(m_attributeBonuses_Changed);
         }
 
         private void BuildSkillTree()
@@ -62,8 +63,10 @@ namespace EVEMon.Common
                         string _name = sel.GetAttribute("n");
                         int _id = Convert.ToInt32(sel.GetAttribute("i"));
                         string _desc = sel.GetAttribute("d");
-                        EveAttribute _primAttr = (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
-                        EveAttribute _secAttr = (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
+                        EveAttribute _primAttr =
+                            (EveAttribute) Enum.Parse(typeof (EveAttribute), sel.GetAttribute("a1"), true);
+                        EveAttribute _secAttr =
+                            (EveAttribute) Enum.Parse(typeof (EveAttribute), sel.GetAttribute("a2"), true);
                         int _rank = Convert.ToInt32(sel.GetAttribute("r"));
 
                         GrandSkill gs = new GrandSkill(
@@ -76,7 +79,7 @@ namespace EVEMon.Common
                     }
 
                     GrandSkillGroup gsg = new GrandSkillGroup(sgel.GetAttribute("n"),
-                        skills);
+                                                              skills);
                     this.m_skillGroups[gsg.Name] = gsg;
                 }
             }
@@ -93,15 +96,19 @@ namespace EVEMon.Common
         {
             lock (m_events)
             {
-                if (m_suppressed==0)
+                if (m_suppressed == 0)
+                {
                     evt();
+                }
                 else
                 {
                     if (String.IsNullOrEmpty(coalesceKey) || !m_coalescedEventTable.ContainsKey(coalesceKey))
                     {
                         m_events.Enqueue(evt);
                         if (!String.IsNullOrEmpty(coalesceKey))
+                        {
                             m_coalescedEventTable[coalesceKey] = true;
+                        }
                     }
                 }
             }
@@ -124,7 +131,9 @@ namespace EVEMon.Common
                 {
                     m_suppressed = 0;
                     while (m_events.Count > 0)
+                    {
                         m_events.Dequeue()();
+                    }
                     m_coalescedEventTable.Clear();
                 }
             }
@@ -132,11 +141,15 @@ namespace EVEMon.Common
 
         private void gs_Changed(object sender, EventArgs e)
         {
-            GrandSkill gs = (GrandSkill)sender;
+            GrandSkill gs = (GrandSkill) sender;
             if (gs == m_currentlyTrainingSkill && gs.InTraining == false)
+            {
                 m_currentlyTrainingSkill = null;
+            }
             else if (gs.InTraining)
+            {
                 m_currentlyTrainingSkill = gs;
+            }
 
             OnSkillChanged(gs);
         }
@@ -144,46 +157,90 @@ namespace EVEMon.Common
         public string Name
         {
             get { return m_name; }
-            set { if (m_name != value) { m_name = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_name != value)
+                {
+                    m_name = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public int CharacterId
         {
             get { return m_characterId; }
-            set { if (m_characterId != value) { m_characterId = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_characterId != value)
+                {
+                    m_characterId = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public string Race
         {
             get { return m_race; }
-            set { if (m_race != value) { m_race = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_race != value)
+                {
+                    m_race = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public string Bloodline
         {
             get { return m_bloodLine; }
-            set { if (m_bloodLine != value) { m_bloodLine = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_bloodLine != value)
+                {
+                    m_bloodLine = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public string Gender
         {
             get { return m_gender; }
-            set { if (m_gender != value) { m_gender = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_gender != value)
+                {
+                    m_gender = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public string CorporationName
         {
             get { return m_corporationName; }
-            set { if (m_corporationName != value) { m_corporationName = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_corporationName != value)
+                {
+                    m_corporationName = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         private void OnBioInfoChanged()
         {
             FireEvent(delegate
-            {
-                if (BioInfoChanged != null)
-                    BioInfoChanged(this, new EventArgs());
-            }, "bioinfo");
+                          {
+                              if (BioInfoChanged != null)
+                              {
+                                  BioInfoChanged(this, new EventArgs());
+                              }
+                          }, "bioinfo");
         }
 
         public event EventHandler BioInfoChanged;
@@ -191,16 +248,22 @@ namespace EVEMon.Common
         public Decimal Balance
         {
             get { return m_balance; }
-            set { m_balance = value; OnBalanceChanged(); }
+            set
+            {
+                m_balance = value;
+                OnBalanceChanged();
+            }
         }
 
         private void OnBalanceChanged()
         {
             FireEvent(delegate
-            {
-                if (BalanceChanged != null)
-                    BalanceChanged(this, new EventArgs());
-            }, "balance");
+                          {
+                              if (BalanceChanged != null)
+                              {
+                                  BalanceChanged(this, new EventArgs());
+                              }
+                          }, "balance");
         }
 
         public event EventHandler BalanceChanged;
@@ -222,10 +285,12 @@ namespace EVEMon.Common
         private void OnAttributeChanged()
         {
             FireEvent(delegate
-            {
-                if (AttributeChanged != null)
-                    AttributeChanged(this, new EventArgs());
-            }, "attribute");
+                          {
+                              if (AttributeChanged != null)
+                              {
+                                  AttributeChanged(this, new EventArgs());
+                              }
+                          }, "attribute");
         }
 
         public event EventHandler AttributeChanged;
@@ -270,7 +335,8 @@ namespace EVEMon.Common
             return GetEffectiveAttribute(attribute, scratchpad, true, true);
         }
 
-        public double GetEffectiveAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad, bool includeLearning, bool includeImplants)
+        public double GetEffectiveAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad,
+                                            bool includeLearning, bool includeImplants)
         {
             double result = Convert.ToDouble(m_attributes[attribute]);
             double learningBonus = 1.0F;
@@ -280,7 +346,9 @@ namespace EVEMon.Common
                 foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
                 {
                     if (geab.EveAttribute == attribute)
+                    {
                         result += geab.Amount;
+                    }
                 }
             }
 
@@ -310,17 +378,21 @@ namespace EVEMon.Common
                     break;
             }
             if (scratchpad != null)
+            {
                 result += scratchpad.GetAttributeBonus(attribute);
+            }
 
             if (includeLearning)
             {
                 int learningLevel = learningSg["Learning"].Level;
                 if (scratchpad != null)
+                {
                     learningLevel += scratchpad.LearningLevelBonus;
+                }
 
-                learningBonus = 1.0 + (0.02 * learningLevel);
+                learningBonus = 1.0 + (0.02*learningLevel);
 
-                return (result * learningBonus);
+                return (result*learningBonus);
             }
             else
             {
@@ -360,19 +432,21 @@ namespace EVEMon.Common
             foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
+                {
                     result += geab.Amount;
+                }
             }
             int learningLevel = m_skillGroups["Learning"]["Learning"].Level;
-            learningBonus = 1.0 + (0.02 * learningLevel);
-            return result * learningBonus;
+            learningBonus = 1.0 + (0.02*learningLevel);
+            return result*learningBonus;
         }
 
         public IList<GrandEveAttributeBonus> AttributeBonuses
         {
-            get { return  m_attributeBonuses; }
+            get { return m_attributeBonuses; }
         }
 
-        void m_attributeBonuses_Changed(object sender, EventArgs e)
+        private void m_attributeBonuses_Changed(object sender, EventArgs e)
         {
             OnAttributeBonusChanged();
         }
@@ -381,10 +455,12 @@ namespace EVEMon.Common
         {
             OnAttributeChanged();
             FireEvent(delegate
-            {
-                if (AttributeBonusChanged != null)
-                    AttributeBonusChanged(this, new EventArgs());
-            }, "attributebonus");
+                          {
+                              if (AttributeBonusChanged != null)
+                              {
+                                  AttributeBonusChanged(this, new EventArgs());
+                              }
+                          }, "attributebonus");
         }
 
         public event EventHandler AttributeBonusChanged;
@@ -409,19 +485,23 @@ namespace EVEMon.Common
             }
 
             FireEvent(delegate
-            {
-                GrandSkill[] mySkillsChanged;
-                lock (m_skillsChanged)
-                {
-                    mySkillsChanged = new GrandSkill[m_skillsChanged.Count];
-                    m_skillsChanged.CopyTo(mySkillsChanged);
-                    m_skillsChanged.Clear();
-                }
-                if (SkillChanged != null)
-                    SkillChanged(this, new SkillChangedEventArgs(mySkillsChanged));
-            }, "skill");
+                          {
+                              GrandSkill[] mySkillsChanged;
+                              lock (m_skillsChanged)
+                              {
+                                  mySkillsChanged = new GrandSkill[m_skillsChanged.Count];
+                                  m_skillsChanged.CopyTo(mySkillsChanged);
+                                  m_skillsChanged.Clear();
+                              }
+                              if (SkillChanged != null)
+                              {
+                                  SkillChanged(this, new SkillChangedEventArgs(mySkillsChanged));
+                              }
+                          }, "skill");
             if (m_skillGroups["Learning"].Contains(gs.Name))
+            {
                 OnAttributeChanged();
+            }
         }
 
         public event SkillChangedHandler SkillChanged;
@@ -432,7 +512,9 @@ namespace EVEMon.Common
             {
                 GrandSkill gs = gsg[skillName];
                 if (gs != null)
+                {
                     return gs;
+                }
             }
             return null;
         }
@@ -449,16 +531,22 @@ namespace EVEMon.Common
                         foreach (GrandSkill gs in gsg)
                         {
                             if (!gs.InTraining)
+                            {
                                 m_cachedSkillPointTotal += gs.CurrentSkillPoints;
+                            }
                         }
                     }
                 }
 
                 GrandSkill cts = this.CurrentlyTrainingSkill;
                 if (cts == null)
+                {
                     return m_cachedSkillPointTotal;
+                }
                 else
+                {
                     return m_cachedSkillPointTotal + cts.CurrentSkillPoints;
+                }
             }
         }
 
@@ -498,7 +586,14 @@ namespace EVEMon.Common
         public bool IsCached
         {
             get { return m_isCached; }
-            set { if (m_isCached != value) { m_isCached = value; OnBioInfoChanged(); } }
+            set
+            {
+                if (m_isCached != value)
+                {
+                    m_isCached = value;
+                    OnBioInfoChanged();
+                }
+            }
         }
 
         public void AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
@@ -523,13 +618,16 @@ namespace EVEMon.Common
             foreach (GrandEveAttributeBonus tb in this.AttributeBonuses)
             {
                 if (tb.Manual)
+                {
                     manualBonuses.Add(tb);
+                }
             }
 
             this.AttributeBonuses.Clear();
             foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
             {
-                GrandEveAttributeBonus geab = new GrandEveAttributeBonus(bonus.Name, bonus.EveAttribute, bonus.Amount, bonus.Manual);
+                GrandEveAttributeBonus geab =
+                    new GrandEveAttributeBonus(bonus.Name, bonus.EveAttribute, bonus.Amount, bonus.Manual);
                 this.AttributeBonuses.Add(geab);
             }
             foreach (GrandEveAttributeBonus tb in manualBonuses)
@@ -546,8 +644,9 @@ namespace EVEMon.Common
                     if (gs == null)
                     {
                         gs = new GrandSkill(this, false,
-                            s.Name, s.Id, "Unknown Skill", EveAttribute.Intelligence, EveAttribute.Willpower,
-                            s.Rank, new List<GrandSkill.Prereq>(), new Dictionary<string, GrandSkill>());
+                                            s.Name, s.Id, "Unknown Skill", EveAttribute.Intelligence,
+                                            EveAttribute.Willpower,
+                                            s.Rank, new List<GrandSkill.Prereq>(), new Dictionary<string, GrandSkill>());
                         gs.Changed += new EventHandler(gs_Changed);
 
                         gsg.InsertSkill(gs);
@@ -562,7 +661,8 @@ namespace EVEMon.Common
                 GrandSkill newTrainingSkill = this.GetSkill(ci.SkillInTraining.SkillName);
                 if (newTrainingSkill != null)
                 {
-                    newTrainingSkill.SetTrainingInfo(ci.SkillInTraining.TrainingToLevel, ci.SkillInTraining.EstimatedCompletion);
+                    newTrainingSkill.SetTrainingInfo(ci.SkillInTraining.TrainingToLevel,
+                                                     ci.SkillInTraining.EstimatedCompletion);
                 }
             }
             this.ResumeEvents();
@@ -657,7 +757,7 @@ namespace EVEMon.Common
 
         public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<Pair<GrandSkill, int>> skills)
         {
-            Dictionary<GrandSkill, int> trainedAlready = new Dictionary<GrandSkill,int>();
+            Dictionary<GrandSkill, int> trainedAlready = new Dictionary<GrandSkill, int>();
             TimeSpan result = TimeSpan.Zero;
 
             foreach (Pair<GrandSkill, int> ts in skills)
@@ -668,7 +768,7 @@ namespace EVEMon.Common
                     int pointsReq = ts.A.GetPointsRequiredForLevel(i);
                     bool needTrain = true;
                     if ((trainedAlready.ContainsKey(ts.A) &&
-                        trainedAlready[ts.A] >= pointsReq) ||
+                         trainedAlready[ts.A] >= pointsReq) ||
                         ts.A.Level >= ts.B)
                     {
                         needTrain = false;
@@ -765,18 +865,21 @@ namespace EVEMon.Common
         private void OnChanged(T item, ChangeType changeType)
         {
             if (Changed != null)
+            {
                 Changed(this, new ChangedEventArgs<T>(item, changeType));
+            }
         }
 
         private void OnCleared(IEnumerable<T> items)
         {
             if (Cleared != null)
+            {
                 Cleared(this, new ClearedEventArgs<T>(items));
+            }
             OnChanged(null, ChangeType.Cleared);
         }
 
         #region IList<T> Members
-
         public int IndexOf(T item)
         {
             return m_inner.IndexOf(item);
@@ -797,10 +900,7 @@ namespace EVEMon.Common
 
         public T this[int index]
         {
-            get
-            {
-                return m_inner[index];
-            }
+            get { return m_inner[index]; }
             set
             {
                 bool change = false;
@@ -816,11 +916,9 @@ namespace EVEMon.Common
                 }
             }
         }
-
         #endregion
 
         #region ICollection<T> Members
-
         public void Add(T item)
         {
             m_inner.Add(item);
@@ -831,7 +929,9 @@ namespace EVEMon.Common
         {
             List<T> removed = new List<T>();
             foreach (T item in m_inner)
+            {
                 removed.Add(item);
+            }
             m_inner.Clear();
             OnCleared(removed);
         }
@@ -860,39 +960,36 @@ namespace EVEMon.Common
         {
             bool result = m_inner.Remove(item);
             if (result)
+            {
                 OnChanged(item, ChangeType.Removed);
+            }
             return result;
         }
-
         #endregion
 
         #region IEnumerable<T> Members
-
         public IEnumerator<T> GetEnumerator()
         {
             return m_inner.GetEnumerator();
         }
-
         #endregion
 
         #region IEnumerable Members
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return m_inner.GetEnumerator();
         }
-
         #endregion
     }
 
     public class GrandEveAttributes
     {
-        private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
+        private int[] m_values = new int[5] {0, 0, 0, 0, 0};
 
         public int this[EveAttribute attribute]
         {
-            get { return m_values[(int)attribute]; }
-            set { m_values[(int)attribute] = value; }
+            get { return m_values[(int) attribute]; }
+            set { m_values[(int) attribute] = value; }
         }
     }
 
@@ -937,7 +1034,7 @@ namespace EVEMon.Common
         }
     }
 
-    public class GrandSkillGroup: IEnumerable<GrandSkill>
+    public class GrandSkillGroup : IEnumerable<GrandSkill>
     {
         private string m_name;
         private Dictionary<string, GrandSkill> m_skills = new Dictionary<string, GrandSkill>();
@@ -990,7 +1087,9 @@ namespace EVEMon.Common
                     foreach (GrandSkill gs in m_skills.Values)
                     {
                         if (gs.Known)
+                        {
                             m_cachedKnownCount++;
+                        }
                     }
                 }
                 return m_cachedKnownCount;
@@ -1018,7 +1117,6 @@ namespace EVEMon.Common
         }
 
         #region IEnumerable<GrandSkill> Members
-
         public IEnumerator<GrandSkill> GetEnumerator()
         {
             foreach (GrandSkill gs in m_skills.Values)
@@ -1026,16 +1124,13 @@ namespace EVEMon.Common
                 yield return gs;
             }
         }
-
         #endregion
 
         #region IEnumerable Members
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
         #endregion
 
         internal void InsertSkill(GrandSkill gs)
@@ -1048,7 +1143,6 @@ namespace EVEMon.Common
         }
 
         #region Appearance in List box
-
         private static Image m_collapseImage = null;
         private static Image m_expandImage = null;
         private bool m_collapsed = false;
@@ -1056,12 +1150,12 @@ namespace EVEMon.Common
         public bool isCollapsed
         {
             get { return m_collapsed; }
-            set 
-            { 
+            set
+            {
                 if (m_collapsed != value)
                 {
-                    m_collapsed = value; 
-                } 
+                    m_collapsed = value;
+                }
             }
         }
 
@@ -1114,7 +1208,9 @@ namespace EVEMon.Common
             foreach (GrandSkill gs in m_skills.Values)
             {
                 if (gs.Known)
+                {
                     hastrainingskill = hastrainingskill || gs.InTraining;
+                }
             }
 
             using (Brush b = new SolidBrush(Color.FromArgb(75, 75, 75)))
@@ -1127,9 +1223,11 @@ namespace EVEMon.Common
             }
             using (Font boldf = new Font(fontr, FontStyle.Bold))
             {
-                Size titleSizeInt = TextRenderer.MeasureText(g, this.Name, boldf, new Size(0, 0), TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+                Size titleSizeInt =
+                    TextRenderer.MeasureText(g, this.Name, boldf, new Size(0, 0),
+                                             TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
                 Point titleTopLeftInt = new Point(e.Bounds.Left + 3,
-                    e.Bounds.Top + ((e.Bounds.Height / 2) - (titleSizeInt.Height / 2)));
+                                                  e.Bounds.Top + ((e.Bounds.Height/2) - (titleSizeInt.Height/2)));
                 Point detailTopLeftInt = new Point(titleTopLeftInt.X + titleSizeInt.Width, titleTopLeftInt.Y);
 
                 string trainingStr = String.Empty;
@@ -1138,35 +1236,42 @@ namespace EVEMon.Common
                     trainingStr = ", 1 training";
                 }
                 string detailText = String.Format(", {0} Skill{1}, {2} Points{3}",
-                    this.KnownCount,
-                    this.KnownCount > 1 ? "s" : "",
-                    this.GetTotalPoints().ToString("#,##0"),
-                    trainingStr);
+                                                  this.KnownCount,
+                                                  this.KnownCount > 1 ? "s" : "",
+                                                  this.GetTotalPoints().ToString("#,##0"),
+                                                  trainingStr);
                 TextRenderer.DrawText(g, this.Name, boldf, titleTopLeftInt, Color.White);
                 TextRenderer.DrawText(g, detailText, fontr, detailTopLeftInt, Color.White);
             }
             Image i;
             if (isCollapsed)
+            {
                 i = ExpandImage;
+            }
             else
+            {
                 i = CollapseImage;
+            }
             g.DrawImageUnscaled(i, new Point(e.Bounds.Right - i.Width - SG_COLLAPSER_PAD_RIGHT,
-                (SKILL_HEADER_HEIGHT / 2) - (i.Height / 2) + e.Bounds.Top));
+                                             (SKILL_HEADER_HEIGHT/2) - (i.Height/2) + e.Bounds.Top));
         }
 
-        public Rectangle GetButtonRectangle (Rectangle itemRect)
+        public Rectangle GetButtonRectangle(Rectangle itemRect)
         {
             Image btnImage;
             if (isCollapsed)
+            {
                 btnImage = ExpandImage;
+            }
             else
+            {
                 btnImage = CollapseImage;
+            }
             Size btnSize = btnImage.Size;
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - SG_COLLAPSER_PAD_RIGHT,
-                (SKILL_HEADER_HEIGHT / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       (SKILL_HEADER_HEIGHT/2) - (btnImage.Height/2) + itemRect.Top);
             return new Rectangle(btnPoint, btnSize);
         }
-
         #endregion
     }
 
@@ -1188,8 +1293,9 @@ namespace EVEMon.Common
 
         private int m_currentSkillPoints;
 
-        public GrandSkill(GrandCharacterInfo gci, bool pub, string name, int id, string description, 
-            EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs, IDictionary<string, GrandSkill> otherSkills)
+        public GrandSkill(GrandCharacterInfo gci, bool pub, string name, int id, string description,
+                          EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs,
+                          IDictionary<string, GrandSkill> otherSkills)
         {
             m_owner = gci;
             m_public = pub;
@@ -1214,7 +1320,9 @@ namespace EVEMon.Common
         internal void SetSkillGroup(GrandSkillGroup gsg)
         {
             if (m_skillGroup != null)
+            {
                 throw new InvalidOperationException("can only set skillgroup once");
+            }
 
             m_skillGroup = gsg;
         }
@@ -1227,7 +1335,9 @@ namespace EVEMon.Common
                 {
                     TimeSpan timeRemainSpan = m_estimatedCompletion - DateTime.Now;
                     if (timeRemainSpan <= TimeSpan.Zero)
+                    {
                         return GetPointsRequiredForLevel(m_trainingToLevel);
+                    }
 
                     return GetPointsRequiredForLevel(m_trainingToLevel) - GetPointsForTimeSpan(timeRemainSpan);
                 }
@@ -1236,15 +1346,16 @@ namespace EVEMon.Common
                     return m_currentSkillPoints;
                 }
             }
-            set { m_currentSkillPoints = value; OnChanged(); }
+            set
+            {
+                m_currentSkillPoints = value;
+                OnChanged();
+            }
         }
 
         public bool IsLearningSkill
         {
-            get
-            {
-                return (this.AttributeModified != EveAttribute.None);
-            }
+            get { return (this.AttributeModified != EveAttribute.None); }
         }
 
         public EveAttribute AttributeModified
@@ -1252,15 +1363,25 @@ namespace EVEMon.Common
             get
             {
                 if (m_name == "Analytical Mind" || m_name == "Logic")
+                {
                     return EveAttribute.Intelligence;
+                }
                 else if (m_name == "Empathy" || m_name == "Presence")
+                {
                     return EveAttribute.Charisma;
+                }
                 else if (m_name == "Instant Recall" || m_name == "Eidetic Memory")
+                {
                     return EveAttribute.Memory;
+                }
                 else if (m_name == "Iron Will" || m_name == "Focus")
+                {
                     return EveAttribute.Willpower;
+                }
                 else if (m_name == "Spatial Awareness" || m_name == "Clarity")
+                {
                     return EveAttribute.Perception;
+                }
                 return EveAttribute.None;
             }
         }
@@ -1270,7 +1391,11 @@ namespace EVEMon.Common
         public bool Known
         {
             get { return m_known; }
-            set { m_known = value; OnChanged();  }
+            set
+            {
+                m_known = value;
+                OnChanged();
+            }
         }
 
         private int GetPointsForTimeSpan(TimeSpan span)
@@ -1281,7 +1406,7 @@ namespace EVEMon.Common
 
             double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute);
             double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute);
-            double points = span.TotalMinutes * (primAttr + (secondaryAttr / 2));
+            double points = span.TotalMinutes*(primAttr + (secondaryAttr/2));
             return Convert.ToInt32(Math.Ceiling(points));
         }
 
@@ -1294,27 +1419,39 @@ namespace EVEMon.Common
         {
             double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad);
             double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad);
-            double minutes = Convert.ToDouble(points) / (primAttr + (secondaryAttr / 2));
+            double minutes = Convert.ToDouble(points)/(primAttr + (secondaryAttr/2));
             return TimeSpan.FromMinutes(minutes);
         }
 
         public int GetPointsRequiredForLevel(int level)
         {
             if (level == 0)
+            {
                 return 0;
-            int pointsForLevel = Convert.ToInt32(250 * m_rank * Math.Pow(32, Convert.ToDouble(level - 1) / 2));
+            }
+            int pointsForLevel = Convert.ToInt32(250*m_rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
             // There's some sort of weird rounding error
             // these values need to be corrected by one.
             if (pointsForLevel == 1414)
+            {
                 pointsForLevel = 1415;
+            }
             else if (pointsForLevel == 2828)
+            {
                 pointsForLevel = 2829;
+            }
             else if (pointsForLevel == 7071)
+            {
                 pointsForLevel = 7072;
+            }
             else if (pointsForLevel == 181019)
+            {
                 pointsForLevel = 181020;
+            }
             else if (pointsForLevel == 226274)
+            {
                 pointsForLevel = 226275;
+            }
             return pointsForLevel;
         }
 
@@ -1337,7 +1474,7 @@ namespace EVEMon.Common
         {
             get { return m_description; }
         }
-       
+
         public string DescriptionNl
         {
             //get { return m_descriptionNl.Replace(@".", ".\n"); }
@@ -1356,7 +1493,7 @@ namespace EVEMon.Common
 
             string[] Words = text.Split(' ');
             int currentLineLength = 0;
-            ArrayList Lines = new ArrayList(text.Length / maxLength);
+            ArrayList Lines = new ArrayList(text.Length/maxLength);
             string currentLine = "";
             bool InTag = false;
 
@@ -1366,7 +1503,9 @@ namespace EVEMon.Common
                 if (currentWord.Length > 0)
                 {
                     if (currentWord.Substring(0, 1) == "<")
+                    {
                         InTag = true;
+                    }
                     if (InTag)
                     {
                         //handle filenames inside html tags
@@ -1375,9 +1514,13 @@ namespace EVEMon.Common
                             currentLine += currentWord;
                         }
                         else
+                        {
                             currentLine += " " + currentWord;
+                        }
                         if (currentWord.IndexOf(">") > -1)
+                        {
                             InTag = false;
+                        }
                     }
                     else
                     {
@@ -1403,7 +1546,7 @@ namespace EVEMon.Common
             Lines.CopyTo(textLinesStr, 0);
 
             string strWrapped = "";
-            foreach(string line in textLinesStr) 
+            foreach (string line in textLinesStr)
             {
                 strWrapped += line + "\n";
             }
@@ -1428,10 +1571,7 @@ namespace EVEMon.Common
 
         public int Level
         {
-            get
-            {
-                return CalculateLevel();
-            }
+            get { return CalculateLevel(); }
         }
 
         private int CalculateLevel()
@@ -1445,7 +1585,9 @@ namespace EVEMon.Common
             for (int i = 1; i <= 5; i++)
             {
                 if (GetPointsRequiredForLevel(i) <= csp)
+                {
                     result = i;
+                }
             }
             return result;
         }
@@ -1462,7 +1604,9 @@ namespace EVEMon.Common
             get
             {
                 if (!m_prereqCooked)
+                {
                     PreparePrereqList();
+                }
                 return m_prereqs;
             }
         }
@@ -1480,7 +1624,9 @@ namespace EVEMon.Common
         private void OnChanged()
         {
             if (Changed != null)
+            {
                 Changed(this, new EventArgs());
+            }
         }
 
         public event EventHandler Changed;
@@ -1504,7 +1650,9 @@ namespace EVEMon.Common
             internal void SetSkill(GrandSkill gs)
             {
                 if (m_pointedSkill != null)
+                {
                     throw new InvalidOperationException("pointed skill can only be set once");
+                }
                 m_pointedSkill = gs;
             }
 
@@ -1561,7 +1709,9 @@ namespace EVEMon.Common
             int currentSp = this.CurrentSkillPoints;
             int desiredSp = this.GetPointsRequiredForLevel(level);
             if (desiredSp <= currentSp)
+            {
                 return TimeSpan.Zero;
+            }
             return this.GetTimeSpanForPoints(desiredSp - currentSp);
         }
 
@@ -1580,14 +1730,17 @@ namespace EVEMon.Common
             int startSp = GetPointsRequiredForLevel(level - 1);
             int endSp = GetPointsRequiredForLevel(level);
             if (includeCurrentSP)
+            {
                 startSp = Math.Max(startSp, this.CurrentSkillPoints);
+            }
             if (endSp <= startSp)
+            {
                 return TimeSpan.Zero;
+            }
             return this.GetTimeSpanForPoints(endSp - startSp, scratchpad);
         }
 
         #region GetPrerequisiteTime overloads
-
         public TimeSpan GetPrerequisiteTime()
         {
             bool junk = false;
@@ -1605,14 +1758,17 @@ namespace EVEMon.Common
             return GetPrerequisiteTime(new Dictionary<GrandSkill, int>(), ref timeIsCurrentlyTraining);
         }
 
-        public TimeSpan GetPrerequisiteTime(Dictionary<GrandSkill, int> alreadyCountedList, ref bool timeIsCurrentlyTraining)
+        public TimeSpan GetPrerequisiteTime(Dictionary<GrandSkill, int> alreadyCountedList,
+                                            ref bool timeIsCurrentlyTraining)
         {
             TimeSpan result = TimeSpan.Zero;
             foreach (Prereq pp in this.Prereqs)
             {
                 GrandSkill gs = pp.Skill;
                 if (gs.InTraining)
+                {
                     timeIsCurrentlyTraining = true;
+                }
 
                 int fromPoints = gs.CurrentSkillPoints;
                 int toPoints = gs.GetPointsRequiredForLevel(pp.RequiredLevel);
@@ -1630,7 +1786,6 @@ namespace EVEMon.Common
             }
             return result;
         }
-
         #endregion
 
         public bool PrerequisitesMet
@@ -1640,7 +1795,9 @@ namespace EVEMon.Common
                 foreach (Prereq pp in this.Prereqs)
                 {
                     if (pp.Skill.Level < pp.RequiredLevel)
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -1649,13 +1806,19 @@ namespace EVEMon.Common
         public bool HasPrerequisite(int myLevel, string skillName, int level)
         {
             if (skillName == m_name && level < myLevel)
+            {
                 return true;
+            }
             foreach (Prereq pp in this.Prereqs)
             {
                 if (skillName == pp.Skill.Name && level <= pp.RequiredLevel)
+                {
                     return true;
+                }
                 if (pp.Skill.HasPrerequisite(pp.RequiredLevel, skillName, level))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -1663,7 +1826,9 @@ namespace EVEMon.Common
         public bool IsPrerequisiteFor(int myLevel, string skillName, int level)
         {
             if (skillName == m_name && level > myLevel)
+            {
                 return true;
+            }
             GrandSkill gs = this.m_owner.GetSkill(skillName);
             return gs.HasPrerequisite(myLevel, m_name, 1);
         }
@@ -1676,28 +1841,40 @@ namespace EVEMon.Common
             BuildDescriptiveFragment(sb, ts.Minutes, dto, "minutes");
             BuildDescriptiveFragment(sb, ts.Seconds, dto, "seconds");
             if (sb.Length == 0)
+            {
                 sb.Append("(none)");
+            }
             return sb.ToString();
         }
 
         private static void BuildDescriptiveFragment(StringBuilder sb, int p, DescriptiveTextOptions dto, string dstr)
         {
             if (((dto & DescriptiveTextOptions.IncludeZeroes) == 0) && p == 0)
+            {
                 return;
+            }
             if ((dto & DescriptiveTextOptions.IncludeCommas) != 0)
             {
                 if (sb.Length > 0)
+                {
                     sb.Append(", ");
+                }
             }
             sb.Append(p.ToString());
             if ((dto & DescriptiveTextOptions.SpaceText) != 0)
+            {
                 sb.Append(' ');
+            }
             if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
+            {
                 dstr = dstr.ToUpper();
+            }
             if ((dto & DescriptiveTextOptions.FullText) != 0)
             {
                 if (p == 1)
+                {
                     dstr = dstr.Substring(0, dstr.Length - 1);
+                }
                 sb.Append(dstr);
             }
             else
@@ -1735,7 +1912,9 @@ namespace EVEMon.Common
                     return true;
                 }
                 if (pp.Skill.HasAsPrerequisite(gs, out neededLevel))
+                {
                     return true;
+                }
             }
             neededLevel = 0;
             return false;
@@ -1744,15 +1923,25 @@ namespace EVEMon.Common
         public static int GetIntForRoman(string r)
         {
             if (r == "I")
+            {
                 return 1;
+            }
             else if (r == "II")
+            {
                 return 2;
+            }
             else if (r == "III")
+            {
                 return 3;
+            }
             else if (r == "IV")
+            {
                 return 4;
+            }
             else if (r == "V")
+            {
                 return 5;
+            }
             return 0;
         }
 
@@ -1762,7 +1951,6 @@ namespace EVEMon.Common
         }
 
         #region Appearance in List Box
-
         private const int SKILL_DETAIL_HEIGHT = 31;
 
         public static int Height
@@ -1776,32 +1964,40 @@ namespace EVEMon.Common
             Graphics g = e.Graphics;
 
             if (m_inTraining)
+            {
                 g.FillRectangle(Brushes.LightSteelBlue, e.Bounds);
-            else if ((e.Index % 2) == 0)
+            }
+            else if ((e.Index%2) == 0)
+            {
                 g.FillRectangle(Brushes.White, e.Bounds);
+            }
             else
+            {
                 g.FillRectangle(Brushes.LightGray, e.Bounds);
+            }
 
-            using (Font boldf = new Font(fontr, FontStyle.Bold)) 
+            using (Font boldf = new Font(fontr, FontStyle.Bold))
             {
                 double percentComplete = 1.0f;
                 if (this.Level == 0)
                 {
                     int NextLevel = this.Level + 1;
-                    percentComplete = Convert.ToDouble(m_currentSkillPoints) / Convert.ToDouble(GetPointsRequiredForLevel(NextLevel));
+                    percentComplete = Convert.ToDouble(m_currentSkillPoints)/
+                                      Convert.ToDouble(GetPointsRequiredForLevel(NextLevel));
                 }
                 else if (this.Level < 5)
                 {
                     int pointsToNextLevel = this.GetPointsRequiredForLevel(Math.Min(this.Level + 1, 5));
                     int pointsToThisLevel = this.GetPointsRequiredForLevel(this.Level);
                     int pointsDelta = pointsToNextLevel - pointsToThisLevel;
-                    percentComplete = Convert.ToDouble(this.CurrentSkillPoints - pointsToThisLevel) / Convert.ToDouble(pointsDelta);
+                    percentComplete = Convert.ToDouble(this.CurrentSkillPoints - pointsToThisLevel)/
+                                      Convert.ToDouble(pointsDelta);
                 }
 
                 string skillName = this.Name + " " + GetRomanSkillNumber(this.Level);
                 string rankText = " (Rank " + this.Rank.ToString() + ")";
                 string spText = "SP: " + this.CurrentSkillPoints.ToString("#,##0") + "/" +
-                    this.GetPointsRequiredForLevel(Math.Min(this.Level + 1, 5)).ToString("#,##0");
+                                this.GetPointsRequiredForLevel(Math.Min(this.Level + 1, 5)).ToString("#,##0");
                 string levelText = "Level " + this.Level.ToString();
                 string pctText = percentComplete.ToString("0%") + " Done";
 
@@ -1810,15 +2006,24 @@ namespace EVEMon.Common
                 int PAD_RIGHT = 7;
                 int LINE_VPAD = 0;
 
-                Size skillNameSize = TextRenderer.MeasureText(g, skillName, boldf, new Size(0, 0), TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-                Size levelTextSize = TextRenderer.MeasureText(g, levelText, fontr, new Size(0, 0), TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-                Size pctTextSize = TextRenderer.MeasureText(g, pctText, fontr, new Size(0, 0), TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+                Size skillNameSize =
+                    TextRenderer.MeasureText(g, skillName, boldf, new Size(0, 0),
+                                             TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+                Size levelTextSize =
+                    TextRenderer.MeasureText(g, levelText, fontr, new Size(0, 0),
+                                             TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+                Size pctTextSize =
+                    TextRenderer.MeasureText(g, pctText, fontr, new Size(0, 0),
+                                             TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
 
-                TextRenderer.DrawText(g, skillName, boldf, new Point(e.Bounds.Left + PAD_LEFT, e.Bounds.Top + PAD_TOP), Color.Black);
+                TextRenderer.DrawText(g, skillName, boldf, new Point(e.Bounds.Left + PAD_LEFT, e.Bounds.Top + PAD_TOP),
+                                      Color.Black);
                 TextRenderer.DrawText(g, rankText, fontr,
-                    new Point(e.Bounds.Left + PAD_LEFT + skillNameSize.Width, e.Bounds.Top + PAD_TOP), Color.Black);
+                                      new Point(e.Bounds.Left + PAD_LEFT + skillNameSize.Width, e.Bounds.Top + PAD_TOP),
+                                      Color.Black);
                 TextRenderer.DrawText(g, spText, fontr,
-                    new Point(e.Bounds.Left + PAD_LEFT, e.Bounds.Top + PAD_TOP + skillNameSize.Height + LINE_VPAD), Color.Black);
+                                      new Point(e.Bounds.Left + PAD_LEFT,
+                                                e.Bounds.Top + PAD_TOP + skillNameSize.Height + LINE_VPAD), Color.Black);
 
                 // Boxes
                 int BOX_WIDTH = 57;
@@ -1827,40 +2032,49 @@ namespace EVEMon.Common
                 int BOX_HPAD = 6;
                 int BOX_VPAD = 2;
                 g.DrawRectangle(Pens.Black,
-                    new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT, e.Bounds.Top + PAD_TOP, BOX_WIDTH, BOX_HEIGHT));
-                int bWidth = (BOX_WIDTH - 4 - 3) / 5;
+                                new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT, e.Bounds.Top + PAD_TOP, BOX_WIDTH,
+                                              BOX_HEIGHT));
+                int bWidth = (BOX_WIDTH - 4 - 3)/5;
                 for (int bn = 1; bn <= 5; bn++)
                 {
-                    Rectangle brect = new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT + 2 + (bWidth * (bn - 1)) + (bn - 1),
-                        e.Bounds.Top + PAD_TOP + 2, bWidth, BOX_HEIGHT - 3);
+                    Rectangle brect =
+                        new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT + 2 + (bWidth*(bn - 1)) + (bn - 1),
+                                      e.Bounds.Top + PAD_TOP + 2, bWidth, BOX_HEIGHT - 3);
                     if (bn <= this.Level)
+                    {
                         g.FillRectangle(Brushes.Black, brect);
+                    }
                     else
+                    {
                         g.FillRectangle(Brushes.DarkGray, brect);
+                    }
                 }
 
                 // Percent Bar
                 g.DrawRectangle(Pens.Black,
-                    new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT, e.Bounds.Top + PAD_TOP + BOX_HEIGHT + BOX_VPAD, BOX_WIDTH, SUBBOX_HEIGHT));
+                                new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT,
+                                              e.Bounds.Top + PAD_TOP + BOX_HEIGHT + BOX_VPAD, BOX_WIDTH, SUBBOX_HEIGHT));
                 Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT + 2,
-                    e.Bounds.Top + PAD_TOP + BOX_HEIGHT + BOX_VPAD + 2,
-                    BOX_WIDTH - 3, SUBBOX_HEIGHT - 3);
+                                                     e.Bounds.Top + PAD_TOP + BOX_HEIGHT + BOX_VPAD + 2,
+                                                     BOX_WIDTH - 3, SUBBOX_HEIGHT - 3);
                 g.FillRectangle(Brushes.DarkGray, pctBarRect);
                 int fillWidth = Convert.ToInt32(
-                    Math.Round(Convert.ToDouble(pctBarRect.Width) * percentComplete));
+                    Math.Round(Convert.ToDouble(pctBarRect.Width)*percentComplete));
                 if (fillWidth > 0)
                 {
                     Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y,
-                        fillWidth, pctBarRect.Height);
+                                                       fillWidth, pctBarRect.Height);
                     g.FillRectangle(Brushes.Black, fillRect);
                 }
                 TextRenderer.DrawText(g, levelText, fontr,
-                    new Point(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT - BOX_HPAD - levelTextSize.Width, e.Bounds.Top + PAD_TOP), Color.Black);
+                                      new Point(
+                                          e.Bounds.Right - BOX_WIDTH - PAD_RIGHT - BOX_HPAD - levelTextSize.Width,
+                                          e.Bounds.Top + PAD_TOP), Color.Black);
                 TextRenderer.DrawText(g, pctText, fontr,
-                    new Point(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT - BOX_HPAD - pctTextSize.Width, e.Bounds.Top + PAD_TOP + levelTextSize.Height + LINE_VPAD), Color.Black);
+                                      new Point(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT - BOX_HPAD - pctTextSize.Width,
+                                                e.Bounds.Top + PAD_TOP + levelTextSize.Height + LINE_VPAD), Color.Black);
             }
         }
-
         #endregion
     }
 
@@ -1878,7 +2092,7 @@ namespace EVEMon.Common
     public class EveAttributeScratchpad
     {
         private int m_learningLevelBonus = 0;
-        private int[] m_attributeBonuses = new int[5] { 0, 0, 0, 0, 0 };
+        private int[] m_attributeBonuses = new int[5] {0, 0, 0, 0, 0};
 
         public int LearningLevelBonus
         {
@@ -1893,20 +2107,24 @@ namespace EVEMon.Common
 
         public int GetAttributeBonus(EveAttribute attribute)
         {
-            return m_attributeBonuses[(int)attribute];
+            return m_attributeBonuses[(int) attribute];
         }
 
         public void AdjustAttributeBonus(EveAttribute attribute, int adjustmentAmount)
         {
-            m_attributeBonuses[(int)attribute] += adjustmentAmount;
+            m_attributeBonuses[(int) attribute] += adjustmentAmount;
         }
 
         public void ApplyALevelOf(GrandSkill gs)
         {
             if (gs.Name == "Learning")
+            {
                 this.AdjustLearningLevelBonus(1);
+            }
             else if (gs.IsLearningSkill)
+            {
                 this.AdjustAttributeBonus(gs.AttributeModified, 1);
+            }
         }
     }
 }
