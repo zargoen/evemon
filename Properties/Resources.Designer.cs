@@ -62,7 +62,7 @@ namespace EVEMon.Properties {
         
         internal static System.Drawing.Bitmap default_char_pic {
             get {
-                object obj = ResourceManager.GetObject("default char pic", resourceCulture);
+                object obj = ResourceManager.GetObject("default_char_pic", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
