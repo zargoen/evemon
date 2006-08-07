@@ -26,7 +26,7 @@ namespace EVEMon
 
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://evemon.evercrest.com/");
+            Process.Start("http://evemon.battleclinic.com/");
         }
     }
 }

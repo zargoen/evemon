@@ -141,7 +141,7 @@ namespace EVEMon
             this.llHomePage.Size = new System.Drawing.Size(154, 13);
             this.llHomePage.TabIndex = 0;
             this.llHomePage.TabStop = true;
-            this.llHomePage.Text = "http://evemon.evercrest.com/";
+            this.llHomePage.Text = "http://evemon.battleclinic.com/";
             this.llHomePage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llHomePage_LinkClicked);
             // 
             // flowLayoutPanel2
