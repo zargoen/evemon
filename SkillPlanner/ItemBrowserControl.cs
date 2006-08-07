@@ -58,7 +58,20 @@ namespace EVEMon.SkillPlanner
                     lbItemProperties.Items.Clear();
                     foreach (ItemProperty ip in i.Properties)
                     {
-                        lbItemProperties.Items.Add(ip);
+                        string ItemValue = ip.Value;
+                        ItemValue = ItemValue.Replace("%", "");
+                        ItemValue = ItemValue.Replace(",", ".");
+                        if ((ip.Name.Contains("bonus") || ip.Name.Contains("multiplier")) && ip.Value.Contains("%") &&
+                           (2 > System.Convert.ToDecimal(ItemValue)))
+                        {
+                            ItemValue = ItemPropertyBonusToPercent(ItemValue);
+                        }
+                        else
+                        {
+                            ItemValue = ip.Value;
+                        }
+
+                        lbItemProperties.Items.Add(ip.Name + ": " + ItemValue);
                     }
                 }
                 finally
@@ -98,19 +111,33 @@ namespace EVEMon.SkillPlanner
                 {
                     EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
                                              delegate(EveSession sess, Image img)
-                                                 {
-                                                     this.Invoke(new MethodInvoker(delegate
+                                             {
+                                                 this.Invoke(new MethodInvoker(delegate
+                                                                                   {
+                                                                                       if (
+                                                                                           itemSelectControl1.
+                                                                                               SelectedItem == i)
                                                                                        {
-                                                                                           if (
-                                                                                               itemSelectControl1.
-                                                                                                   SelectedItem == i)
-                                                                                           {
-                                                                                               GotItemImage(i.Id, img);
-                                                                                           }
-                                                                                       }));
-                                                 });
+                                                                                           GotItemImage(img);
+                                                                                       }
+                                                                                   }));
+                                             });
                 }
             }
+        }
+
+        private static string ItemPropertyBonusToPercent(string ItemValue)
+        {
+            decimal Value = System.Convert.ToDecimal(ItemValue);
+            if (System.Convert.ToDecimal(ItemValue) > 0)
+            {
+                Value = (1 - Value) * 100;
+            }
+            else
+            {
+                Value = Value * -1;
+            }
+            return System.Convert.ToString(Math.Round(Value, 2)) + " %";
         }
 
         private bool SetSkillLabel(int skillNum, Label lblSkill, Item i)
@@ -153,21 +180,12 @@ namespace EVEMon.SkillPlanner
             return isKnown;
         }
 
-        private void GotItemImage(int itemId, Image i)
+        private void GotItemImage(Image i)
         {
-            if (i == null)
+            if (i != null)
             {
-                return;
+                pbItemIcon.Image = i;
             }
-            if (itemSelectControl1.SelectedItem == null)
-            {
-                return;
-            }
-            if (itemId != itemSelectControl1.SelectedItem.Id)
-            {
-                return;
-            }
-            pbItemIcon.Image = i;
         }
 
         private void ItemBrowserControl_Load(object sender, EventArgs e)

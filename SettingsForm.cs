@@ -63,7 +63,7 @@ namespace EVEMon
             s.EmailToAddress = tbToAddress.Text;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
-            ProxySetting httpSetting = ((ProxySetting) btnProxyHttpAuth.Tag).Clone();
+            ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
             httpSetting.Host = tbProxyHttpHost.Text;
             try
             {
@@ -77,7 +77,7 @@ namespace EVEMon
             s.HttpProxy = httpSetting;
 
             m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
-            m_settings.StatusUpdateInterval = (int) numericStatusInterval.Value;
+            m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
 
             m_settings.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
             m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
@@ -261,7 +261,7 @@ namespace EVEMon
 
         private void btnProxyHttpAuth_Click(object sender, EventArgs e)
         {
-            ProxySetting ps = ((ProxySetting) btnProxyHttpAuth.Tag).Clone();
+            ProxySetting ps = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
             using (ProxyAuthenticationWindow f = new ProxyAuthenticationWindow())
             {
                 f.ProxySetting = ps;
@@ -276,6 +276,55 @@ namespace EVEMon
         private void cbCheckTranquilityStatus_CheckedChanged(object sender, EventArgs e)
         {
             UpdateDisables();
+        }
+
+        private void cbAutomaticallySearchForNewVersions_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateManager um = UpdateManager.GetInstance();
+            if (cbAutomaticallySearchForNewVersions.Checked == false)
+            {
+                um.UpdateAvailable += new UpdateAvailableHandler(um_UpdateAvailable);
+                um.Start();
+            }
+            else
+            {
+                try
+                {
+                    um.UpdateAvailable -= new UpdateAvailableHandler(um_UpdateAvailable);
+                    um.Stop();
+                }
+                catch
+                {
+                    //We ignore this since the form may be starting up and thus 
+                    //UpdateManager has no running start method.
+                }
+            }
+            UpdateDisables();
+        }
+
+        private bool m_updateShowing = false;
+
+        private void um_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
+        {
+            if (e.NewestVersion <= new Version(m_settings.IgnoreUpdateVersion))
+                return;
+
+            this.Invoke(new MethodInvoker(delegate
+            {
+                if (!m_updateShowing)
+                {
+                    m_updateShowing = true;
+                    using (UpdateNotifyForm f = new UpdateNotifyForm(m_settings, e))
+                    {
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
+                        {
+                            this.Close();
+                        }
+                    }
+                    m_updateShowing = false;
+                }
+            }));
         }
     }
 }

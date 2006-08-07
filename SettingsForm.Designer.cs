@@ -1028,7 +1028,7 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(234, 43);
+            this.groupBox8.Size = new System.Drawing.Size(222, 43);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
@@ -1042,7 +1042,7 @@ namespace EVEMon
             this.flowLayoutPanel10.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel10.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel10.Name = "flowLayoutPanel10";
-            this.flowLayoutPanel10.Size = new System.Drawing.Size(228, 23);
+            this.flowLayoutPanel10.Size = new System.Drawing.Size(216, 23);
             this.flowLayoutPanel10.TabIndex = 0;
             // 
             // cbAutomaticallySearchForNewVersions
@@ -1050,10 +1050,11 @@ namespace EVEMon
             this.cbAutomaticallySearchForNewVersions.AutoSize = true;
             this.cbAutomaticallySearchForNewVersions.Location = new System.Drawing.Point(3, 3);
             this.cbAutomaticallySearchForNewVersions.Name = "cbAutomaticallySearchForNewVersions";
-            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(222, 17);
+            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(196, 17);
             this.cbAutomaticallySearchForNewVersions.TabIndex = 0;
-            this.cbAutomaticallySearchForNewVersions.Text = "Disable Automatic EVEMon Version Check";
+            this.cbAutomaticallySearchForNewVersions.Text = "Disable automatic EVEMon  updates";
             this.cbAutomaticallySearchForNewVersions.UseVisualStyleBackColor = true;
+            this.cbAutomaticallySearchForNewVersions.CheckedChanged += new System.EventHandler(this.cbAutomaticallySearchForNewVersions_CheckedChanged);
             // 
             // groupBox9
             // 
@@ -1064,7 +1065,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
             this.groupBox9.Location = new System.Drawing.Point(3, 52);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(234, 43);
+            this.groupBox9.Size = new System.Drawing.Size(222, 43);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
@@ -1078,7 +1079,7 @@ namespace EVEMon
             this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(228, 23);
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(216, 23);
             this.flowLayoutPanel12.TabIndex = 0;
             // 
             // cbAutomaticEOSkillUpdate
@@ -1103,7 +1104,7 @@ namespace EVEMon
             this.groupBox7.Controls.Add(this.label15);
             this.groupBox7.Location = new System.Drawing.Point(3, 101);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(234, 79);
+            this.groupBox7.Size = new System.Drawing.Size(222, 79);
             this.groupBox7.TabIndex = 8;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Tranquility Status";
