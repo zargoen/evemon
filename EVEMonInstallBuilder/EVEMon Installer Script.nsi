@@ -14,8 +14,8 @@ InstallDir "$PROGRAMFILES\EVEMon\"
 InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" "UninstallString"
 
 VIAddVersionKey "ProductName" "EVEMon Installer"
-VIAddVersionKey "CompanyName" "evercrest.com"
-VIAddVersionKey "LegalCopyright" "Copyright 2006, Timothy Fries"
+VIAddVersionKey "CompanyName" "battleclinic.com"
+VIAddVersionKey "LegalCopyright" "Copyright 2006, Timothy Fries and EVEMon Development Team"
 VIAddVersionKey "FileDescription" "Installs EVEMon on your computer"
 VIAddVersionKey "FileVersion" "${VERSION}"
 VIProductVersion ${VERSION}
@@ -197,7 +197,7 @@ Section "Installer Section"
   lbl_noLegacyUninstall:
   SetOutPath "$INSTDIR"
 ## INSTALLBUILDER: INSERT FILES HERE ##
-#  File /r /x *vshost* "..\bin\Release\*.*" 
+#  File /r /x *vshost* "..\..\..\bin\x86\Release\*.*" 
   File "..\..\..\..\eve.exe_I006b_040f.ico"
   File "..\..\..\..\EVEMon-all.ico"
   CreateDirectory "$INSTDIR\Debugging Tools"
@@ -221,11 +221,11 @@ Section "Installer Section"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
          "DisplayIcon" "$INSTDIR\eve.exe_I006b_040f.ico"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "Publisher" "evercrest.com"
+         "Publisher" "battleclinic.com"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "URLUpdateInfo" "http://evemon.evercrest.com/"
+         "URLUpdateInfo" "http://evemon.battleclinic.com/"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "URLInfoAbout" "http://evemon.evercrest.com/"
+         "URLInfoAbout" "http://evemon.battleclinic.com/"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
          "DisplayVersion" "${VERSION}"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \

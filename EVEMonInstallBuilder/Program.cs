@@ -54,11 +54,11 @@ namespace EVEMonInstallBuilder
         private static void ProcessInstallScripts(string projectDir)
         {
             List<string> filesToProcess = new List<string>();
-            foreach (string s in Directory.GetFiles(projectDir+"/bin/Release", "*.nsi"))
+            foreach (string s in Directory.GetFiles(projectDir+"/bin/x86/Release", "*.nsi"))
             {
                 filesToProcess.Add(s);
             }
-            foreach (string s in Directory.GetFiles(projectDir + "/bin/Release", "*.nsh"))
+            foreach (string s in Directory.GetFiles(projectDir + "/bin/x86/Release", "*.nsh"))
             {
                 filesToProcess.Add(s);
             }
@@ -102,7 +102,7 @@ namespace EVEMonInstallBuilder
 
         private static void InsertFiles(StreamWriter sw, string projectDir, bool adding)
         {
-            foreach (string fn in Directory.GetFiles(projectDir + "..\\bin\\Release", "*.*"))
+            foreach (string fn in Directory.GetFiles(projectDir + "..\\bin\\x86\\Release", "*.*"))
             {
                 if (adding)
                 {
