@@ -114,10 +114,10 @@ namespace EVEMon.SkillPlanner
             }
 
             tvSkillList.Nodes.Clear();
-            tvSkillList.ImageList = skill_lvl;
+            tvSkillList.ImageList = skill_lvl_v5;   // This is where you select which icon set you want.
             foreach (GrandSkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
-                TreeNode gtn = new TreeNode(gsg.Name, 6, 6);
+                TreeNode gtn = new TreeNode(gsg.Name, 0, 0);
                 foreach (GrandSkill gs in gsg)
                 {
                     if (sf(gs) && (gs.Public || cbShowNonPublic.Checked))
@@ -126,17 +126,21 @@ namespace EVEMon.SkillPlanner
                         // 'Owned' flag - for those pesky skills you can't train yet but
                         //                have gone and bought the book for already anyway.
                         TreeNode stn;
-                        //if (gs.Level == 0)
-                        //{
-                        //    if (gs.Owned)
-                        //        stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 7, 7);
-                        //    else
-                        //        stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 0, 0);
-                        //}
-                        //else
-                        //{
-                        stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", gs.Level, gs.Level);
-                        //}
+                        if (gs.Level == 0)
+                        {
+                            if (gs.IsPartiallyTrained())
+                            {
+                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 2, 2);
+                            }
+                            else
+                            {
+                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 1, 1);
+                            }
+                        }
+                        else
+                        {
+                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", gs.Level + 2, gs.Level + 2);
+                        }
                         stn.Tag = gs;
                         gtn.Nodes.Add(stn);
                     }

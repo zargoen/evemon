@@ -44,7 +44,11 @@ namespace EVEMon.SkillPlanner
             this.lvSortedSkillList = new System.Windows.Forms.ListView();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.chSortKey = new System.Windows.Forms.ColumnHeader();
-            this.skill_lvl = new System.Windows.Forms.ImageList(this.components);
+            this.skill_lvl_v5 = new System.Windows.Forms.ImageList(this.components);
+            this.skill_lvl_v4 = new System.Windows.Forms.ImageList(this.components);
+            this.skill_lvl_v1 = new System.Windows.Forms.ImageList(this.components);
+            this.skill_lvl_v2 = new System.Windows.Forms.ImageList(this.components);
+            this.skill_lvl_v3 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -200,12 +204,12 @@ namespace EVEMon.SkillPlanner
             this.chName,
             this.chSortKey});
             this.lvSortedSkillList.FullRowSelect = true;
-            this.lvSortedSkillList.LargeImageList = this.skill_lvl;
+            this.lvSortedSkillList.LargeImageList = this.skill_lvl_v5;
             this.lvSortedSkillList.Location = new System.Drawing.Point(30, 184);
             this.lvSortedSkillList.Name = "lvSortedSkillList";
             this.lvSortedSkillList.Size = new System.Drawing.Size(100, 100);
-            this.lvSortedSkillList.SmallImageList = this.skill_lvl;
-            this.lvSortedSkillList.StateImageList = this.skill_lvl;
+            this.lvSortedSkillList.SmallImageList = this.skill_lvl_v5;
+            this.lvSortedSkillList.StateImageList = this.skill_lvl_v5;
             this.lvSortedSkillList.TabIndex = 28;
             this.lvSortedSkillList.TileSize = new System.Drawing.Size(16, 16);
             this.lvSortedSkillList.UseCompatibleStateImageBehavior = false;
@@ -221,18 +225,70 @@ namespace EVEMon.SkillPlanner
             // 
             this.chSortKey.Text = "Sort";
             // 
-            // skill_lvl
+            // skill_lvl_v5
             // 
-            this.skill_lvl.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl.ImageStream")));
-            this.skill_lvl.TransparentColor = System.Drawing.Color.Transparent;
-            this.skill_lvl.Images.SetKeyName(0, "Not_own.ico");
-            this.skill_lvl.Images.SetKeyName(1, "lvl1v3.ico");
-            this.skill_lvl.Images.SetKeyName(2, "lvl2v3.ico");
-            this.skill_lvl.Images.SetKeyName(3, "lvl3v3.ico");
-            this.skill_lvl.Images.SetKeyName(4, "lvl4v3.ico");
-            this.skill_lvl.Images.SetKeyName(5, "lvl5v3.ico");
-            this.skill_lvl.Images.SetKeyName(6, "book.ico");
-            this.skill_lvl.Images.SetKeyName(7, "owned.ico");
+            this.skill_lvl_v5.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl_v5.ImageStream")));
+            this.skill_lvl_v5.TransparentColor = System.Drawing.Color.Transparent;
+            this.skill_lvl_v5.Images.SetKeyName(0, "book.ico");
+            this.skill_lvl_v5.Images.SetKeyName(1, "");
+            this.skill_lvl_v5.Images.SetKeyName(2, "");
+            this.skill_lvl_v5.Images.SetKeyName(3, "");
+            this.skill_lvl_v5.Images.SetKeyName(4, "");
+            this.skill_lvl_v5.Images.SetKeyName(5, "");
+            this.skill_lvl_v5.Images.SetKeyName(6, "");
+            this.skill_lvl_v5.Images.SetKeyName(7, "");
+            // 
+            // skill_lvl_v4
+            // 
+            this.skill_lvl_v4.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl_v4.ImageStream")));
+            this.skill_lvl_v4.TransparentColor = System.Drawing.Color.Transparent;
+            this.skill_lvl_v4.Images.SetKeyName(0, "book.ico");
+            this.skill_lvl_v4.Images.SetKeyName(1, "Not_own.ico");
+            this.skill_lvl_v4.Images.SetKeyName(2, "lvl0v4.ico");
+            this.skill_lvl_v4.Images.SetKeyName(3, "lvl1v4.ico");
+            this.skill_lvl_v4.Images.SetKeyName(4, "lvl2v4.ico");
+            this.skill_lvl_v4.Images.SetKeyName(5, "lvl3v4.ico");
+            this.skill_lvl_v4.Images.SetKeyName(6, "lvl4v4.ico");
+            this.skill_lvl_v4.Images.SetKeyName(7, "lvl5v4.ico");
+            // 
+            // skill_lvl_v1
+            // 
+            this.skill_lvl_v1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl_v1.ImageStream")));
+            this.skill_lvl_v1.TransparentColor = System.Drawing.Color.Transparent;
+            this.skill_lvl_v1.Images.SetKeyName(0, "book.ico");
+            this.skill_lvl_v1.Images.SetKeyName(1, "Not_own.ico");
+            this.skill_lvl_v1.Images.SetKeyName(2, "lvl0v1.ico");
+            this.skill_lvl_v1.Images.SetKeyName(3, "lvl1v1.ico");
+            this.skill_lvl_v1.Images.SetKeyName(4, "lvl2v1.ico");
+            this.skill_lvl_v1.Images.SetKeyName(5, "lvl3v1.ico");
+            this.skill_lvl_v1.Images.SetKeyName(6, "lvl4v1.ico");
+            this.skill_lvl_v1.Images.SetKeyName(7, "lvl5v1.ico");
+            // 
+            // skill_lvl_v2
+            // 
+            this.skill_lvl_v2.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl_v2.ImageStream")));
+            this.skill_lvl_v2.TransparentColor = System.Drawing.Color.Transparent;
+            this.skill_lvl_v2.Images.SetKeyName(0, "book.ico");
+            this.skill_lvl_v2.Images.SetKeyName(1, "Not_own.ico");
+            this.skill_lvl_v2.Images.SetKeyName(2, "owned.ico");
+            this.skill_lvl_v2.Images.SetKeyName(3, "lvl1v2.ico");
+            this.skill_lvl_v2.Images.SetKeyName(4, "lvl2v2.ico");
+            this.skill_lvl_v2.Images.SetKeyName(5, "lvl3v2.ico");
+            this.skill_lvl_v2.Images.SetKeyName(6, "lvl4v2.ico");
+            this.skill_lvl_v2.Images.SetKeyName(7, "lvl5v2.ico");
+            // 
+            // skill_lvl_v3
+            // 
+            this.skill_lvl_v3.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("skill_lvl_v3.ImageStream")));
+            this.skill_lvl_v3.TransparentColor = System.Drawing.Color.Transparent;
+            this.skill_lvl_v3.Images.SetKeyName(0, "book.ico");
+            this.skill_lvl_v3.Images.SetKeyName(1, "Not_own.ico");
+            this.skill_lvl_v3.Images.SetKeyName(2, "lvl0v3.ico");
+            this.skill_lvl_v3.Images.SetKeyName(3, "lvl1v3.ico");
+            this.skill_lvl_v3.Images.SetKeyName(4, "lvl2v3.ico");
+            this.skill_lvl_v3.Images.SetKeyName(5, "lvl3v3.ico");
+            this.skill_lvl_v3.Images.SetKeyName(6, "lvl4v3.ico");
+            this.skill_lvl_v3.Images.SetKeyName(7, "lvl5v3.ico");
             // 
             // SkillSelectControl
             // 
@@ -276,6 +332,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListView lvSortedSkillList;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chSortKey;
-        private System.Windows.Forms.ImageList skill_lvl;
+        private System.Windows.Forms.ImageList skill_lvl_v5;
+        private System.Windows.Forms.ImageList skill_lvl_v4;
+        private System.Windows.Forms.ImageList skill_lvl_v1;
+        private System.Windows.Forms.ImageList skill_lvl_v2;
+        private System.Windows.Forms.ImageList skill_lvl_v3;
     }
 }
