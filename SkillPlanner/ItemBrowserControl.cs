@@ -105,7 +105,7 @@ namespace EVEMon.SkillPlanner
                                                                                                itemSelectControl1.
                                                                                                    SelectedItem == i)
                                                                                            {
-                                                                                               GotItemImage(img);
+                                                                                               GotItemImage(i.Id, img);
                                                                                            }
                                                                                        }));
                                                  });
@@ -153,12 +153,21 @@ namespace EVEMon.SkillPlanner
             return isKnown;
         }
 
-        private void GotItemImage(Image i)
+        private void GotItemImage(int itemId, Image i)
         {
-            if (i != null)
+            if (i == null)
             {
-                pbItemIcon.Image = i;
+                return;
             }
+            if (itemSelectControl1.SelectedItem == null)
+            {
+                return;
+            }
+            if (itemId != itemSelectControl1.SelectedItem.Id)
+            {
+                return;
+            }
+            pbItemIcon.Image = i;
         }
 
         private void ItemBrowserControl_Load(object sender, EventArgs e)
