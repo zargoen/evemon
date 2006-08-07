@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Schedule;
 
 namespace EVEMon.Schedule
 {
@@ -16,6 +17,10 @@ namespace EVEMon.Schedule
             : this()
         {
             m_settings = s;
+            foreach(ScheduleEntry temp in m_settings.Schedule)
+            {
+                lbEntries.Items.Add(temp.Title);
+            }
         }
 
         private Settings m_settings;
@@ -29,6 +34,8 @@ namespace EVEMon.Schedule
                 {
                     return;
                 }
+                m_settings.Schedule.Add(f.ScheduleEntry);
+                lbEntries.Items.Add(f.ScheduleEntry.Title);
             }
         }
 
@@ -138,6 +145,23 @@ namespace EVEMon.Schedule
             nudDay.Maximum = CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(currentdate.Year, currentdate.Month) + 1;
             calControl.Date = currentdate;
             nudYear.Value = currentdate.Year;
+        }
+
+        private void tsbDeleteEntry_Click(object sender, EventArgs e)
+        {
+            if (lbEntries.SelectedIndex != -1)
+            {
+                int i = -1;
+                for (int x = 0; x < m_settings.Schedule.Count && i == -1; x++)
+                {
+                    if (m_settings.Schedule[x].Title == lbEntries.Items[lbEntries.SelectedIndex].ToString())
+                    {
+                        i = x;
+                    }
+                }
+                m_settings.Schedule.RemoveAt(i);
+                lbEntries.Items.RemoveAt(lbEntries.SelectedIndex);
+            }
         }
     }
 }

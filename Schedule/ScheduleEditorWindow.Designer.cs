@@ -37,6 +37,7 @@ namespace EVEMon.Schedule
             this.lbEntries = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblEntryDescription = new System.Windows.Forms.Label();
+            this.calControl = new EVEMon.Schedule.CalendarControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.nudMonth = new System.Windows.Forms.DomainUpDown();
             this.nudDay = new System.Windows.Forms.NumericUpDown();
@@ -45,7 +46,6 @@ namespace EVEMon.Schedule
             this.cbViewType = new System.Windows.Forms.ComboBox();
             this.ssStatusBar = new System.Windows.Forms.StatusStrip();
             this.tsslStatusBarText = new System.Windows.Forms.ToolStripStatusLabel();
-            this.calControl = new EVEMon.Schedule.CalendarControl();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -86,6 +86,7 @@ namespace EVEMon.Schedule
             this.tsbDeleteEntry.Name = "tsbDeleteEntry";
             this.tsbDeleteEntry.Size = new System.Drawing.Size(87, 22);
             this.tsbDeleteEntry.Text = "Delete Entry";
+            this.tsbDeleteEntry.Click += new System.EventHandler(this.tsbDeleteEntry_Click);
             // 
             // splitContainer1
             // 
@@ -158,6 +159,16 @@ namespace EVEMon.Schedule
             this.lblEntryDescription.Size = new System.Drawing.Size(171, 136);
             this.lblEntryDescription.TabIndex = 2;
             this.lblEntryDescription.Text = "label3";
+            // 
+            // calControl
+            // 
+            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
+            this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
+            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.calControl.Location = new System.Drawing.Point(0, 27);
+            this.calControl.Name = "calControl";
+            this.calControl.Size = new System.Drawing.Size(533, 414);
+            this.calControl.TabIndex = 0;
             // 
             // panel1
             // 
@@ -262,16 +273,6 @@ namespace EVEMon.Schedule
             this.tsslStatusBarText.Name = "tsslStatusBarText";
             this.tsslStatusBarText.Size = new System.Drawing.Size(42, 17);
             this.tsslStatusBarText.Text = "Ready.";
-            // 
-            // calControl
-            // 
-            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
-            this.calControl.Date = System.DateTime.Now;
-            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.calControl.Location = new System.Drawing.Point(0, 27);
-            this.calControl.Name = "calControl";
-            this.calControl.Size = new System.Drawing.Size(533, 414);
-            this.calControl.TabIndex = 0;
             // 
             // ScheduleEditorWindow
             // 
