@@ -1050,9 +1050,9 @@ namespace EVEMon
             this.cbAutomaticallySearchForNewVersions.AutoSize = true;
             this.cbAutomaticallySearchForNewVersions.Location = new System.Drawing.Point(3, 3);
             this.cbAutomaticallySearchForNewVersions.Name = "cbAutomaticallySearchForNewVersions";
-            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(196, 17);
+            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(193, 17);
             this.cbAutomaticallySearchForNewVersions.TabIndex = 0;
-            this.cbAutomaticallySearchForNewVersions.Text = "Disable automatic EVEMon  updates";
+            this.cbAutomaticallySearchForNewVersions.Text = "Disable automatic EVEMon updates";
             this.cbAutomaticallySearchForNewVersions.UseVisualStyleBackColor = true;
             this.cbAutomaticallySearchForNewVersions.CheckedChanged += new System.EventHandler(this.cbAutomaticallySearchForNewVersions_CheckedChanged);
             // 
@@ -1087,9 +1087,9 @@ namespace EVEMon
             this.cbAutomaticEOSkillUpdate.AutoSize = true;
             this.cbAutomaticEOSkillUpdate.Location = new System.Drawing.Point(3, 3);
             this.cbAutomaticEOSkillUpdate.Name = "cbAutomaticEOSkillUpdate";
-            this.cbAutomaticEOSkillUpdate.Size = new System.Drawing.Size(191, 17);
+            this.cbAutomaticEOSkillUpdate.Size = new System.Drawing.Size(188, 17);
             this.cbAutomaticEOSkillUpdate.TabIndex = 1;
-            this.cbAutomaticEOSkillUpdate.Text = "Disable Automatic Skill XML Update";
+            this.cbAutomaticEOSkillUpdate.Text = "Disable automatic skill XML update";
             this.cbAutomaticEOSkillUpdate.UseVisualStyleBackColor = true;
             // 
             // groupBox7
