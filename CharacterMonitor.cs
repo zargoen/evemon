@@ -418,7 +418,7 @@ namespace EVEMon
             if (m_currentlyVisible)
             {
                 lblSkillHeader.Text =
-                    String.Format("{0} Known Skills ({1} Total SP, {2} Skills at Level V):",
+                    String.Format("{0} Known Skills\n{1} Total SP, {2} Skills at Level V",
                                     m_grandCharacterInfo.KnownSkillCount,
                                     m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
                                     m_grandCharacterInfo.MaxedSkillCount);
