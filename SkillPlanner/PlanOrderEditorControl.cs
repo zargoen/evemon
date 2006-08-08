@@ -716,5 +716,18 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        // Stolen and adapted from http://dotnet.mvps.org/dotnet/faqs/?id=listviewitemtooltips&lang=en
+        private ListViewItem m_HoveredItem;
+        private void lvSkills_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ListViewItem lvi = lvSkills.GetItemAt(e.X, e.Y);
+            if (null != lvi && !lvi.Equals(m_HoveredItem))
+            {
+                m_HoveredItem = lvi;
+                lvi.ToolTipText = GetPlanEntryForListViewItem(lvi).Skill.Description;
+            }
+
+        }
     }
 }

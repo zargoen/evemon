@@ -229,12 +229,14 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.FullRowSelect = true;
             this.lvSkills.Location = new System.Drawing.Point(38, 21);
             this.lvSkills.Name = "lvSkills";
+            this.lvSkills.ShowItemToolTips = true;
             this.lvSkills.Size = new System.Drawing.Size(645, 537);
             this.lvSkills.TabIndex = 3;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
+            this.lvSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseMove);
             this.lvSkills.ListViewItemsDragging += new System.EventHandler<EVEMon.SkillPlanner.ListViewDragEventArgs>(this.lvSkills_ListViewItemsDragging);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
             // 
