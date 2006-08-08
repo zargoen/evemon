@@ -489,8 +489,6 @@ namespace EVEMon
                     }
                 }
             }
-            //            if (this.WindowState == FormWindowState.Normal)
-            //lbSkills.Width = this.ClientSize.Width - (lbSkills.Left * 2);
         }
 
         private void niMinimizeIcon_Click(object sender, EventArgs e)
@@ -704,19 +702,6 @@ namespace EVEMon
             ws.Show();
         }
 
-        private void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            foreach (TabPage p in tcCharacterTabs.TabPages)
-            {
-                bool vis = (p == tcCharacterTabs.SelectedTab);
-                CharacterMonitor cm = p.Controls[0] as CharacterMonitor;
-                if (cm != null)
-                {
-                    cm.CurrentlyVisible = vis;
-                }
-            }
-        }
-
         private int m_serverUsers = 0;
         private bool m_serverOnline = true;
 
@@ -816,6 +801,52 @@ namespace EVEMon
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void UpdateTabVisibility(object sender, EventArgs e)
+        {
+            foreach (TabPage p in tcCharacterTabs.TabPages)
+            {
+                CharacterMonitor cm = p.Controls[0] as CharacterMonitor;
+                if (p == tcCharacterTabs.SelectedTab && cm != null)
+                {
+                    cm.CurrentlyVisible = true;
+                }
+                else
+                {
+                    cm.CurrentlyVisible = false;
+                }
+            }
+        }
+
+        private void MainWindow_SizeChanged(object sender, EventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case FormWindowState.Minimized:
+                    foreach (TabPage tab in tcCharacterTabs.TabPages)
+                    {
+                        CharacterMonitor cm = tab.Controls[0] as CharacterMonitor;
+                        cm.CurrentlyVisible = false;                        
+                    }
+                    break;
+                case FormWindowState.Normal:
+                    foreach (TabPage tab in tcCharacterTabs.TabPages)
+                    {
+                        CharacterMonitor cm = tab.Controls[0] as CharacterMonitor;
+                        if (tab == tcCharacterTabs.SelectedTab && cm != null)
+                        {
+                            cm.CurrentlyVisible = true;
+                        }
+                        else
+                        {
+                            cm.CurrentlyVisible = false;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

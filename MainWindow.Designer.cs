@@ -63,7 +63,9 @@ namespace EVEMon
             this.tcCharacterTabs.SelectedIndex = 0;
             this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
             this.tcCharacterTabs.TabIndex = 0;
-            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.tcCharacterTabs_SelectedIndexChanged);
+            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
             // 
             // niMinimizeIcon
             // 
@@ -78,19 +80,19 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(153, 70);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(113, 48);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -231,6 +233,7 @@ namespace EVEMon
             this.MinimumSize = new System.Drawing.Size(425, 350);
             this.Name = "MainWindow";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
+            this.SizeChanged += new System.EventHandler(this.MainWindow_SizeChanged);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
