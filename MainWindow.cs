@@ -193,6 +193,7 @@ namespace EVEMon
             tcCharacterTabs.TabPages.Add(tp);
             SetRemoveEnable();
             return true;
+
         }
 
         private bool AddTab(CharFileInfo cfi, bool silent)
