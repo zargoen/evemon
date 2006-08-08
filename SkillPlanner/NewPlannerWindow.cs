@@ -35,6 +35,10 @@ namespace EVEMon.SkillPlanner
             skillSelectControl1.GrandCharacterInfo = m_grandCharacterInfo;
             skillSelectControl1.Plan = m_plan;
             planEditor.Plan = m_plan;
+            if (m_plan.TotalTrainingTime <= TimeSpan.Zero)
+            {
+                this.tabControl1.SelectedTab = this.tpSkillBrowser;
+            }
         }
 
         private void NewPlannerWindow_Shown(object sender, EventArgs e)
