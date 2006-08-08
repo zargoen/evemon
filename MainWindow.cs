@@ -479,8 +479,6 @@ namespace EVEMon
             }
             else
             {
-                niMinimizeIcon.Visible = false;
-
                 TabPage tp = this.tcCharacterTabs.SelectedTab;
                 if (tp != null)
                 {
@@ -503,6 +501,7 @@ namespace EVEMon
                 this.WindowState = FormWindowState.Normal;
                 this.ShowInTaskbar = true;
                 this.Activate();
+                this.niMinimizeIcon.Visible = false;
             }
 
             if (m_tooltipWindow.IsAlive && m_tooltipWindow.Target != null)
