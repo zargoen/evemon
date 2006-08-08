@@ -1028,21 +1028,22 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(222, 43);
+            this.groupBox8.Size = new System.Drawing.Size(222, 60);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
             // 
             // flowLayoutPanel10
             // 
+            this.flowLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel10.AutoSize = true;
             this.flowLayoutPanel10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel10.Controls.Add(this.cbAutomaticallySearchForNewVersions);
-            this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel10.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel10.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel10.Name = "flowLayoutPanel10";
-            this.flowLayoutPanel10.Size = new System.Drawing.Size(216, 23);
+            this.flowLayoutPanel10.Size = new System.Drawing.Size(199, 23);
             this.flowLayoutPanel10.TabIndex = 0;
             // 
             // cbAutomaticallySearchForNewVersions
@@ -1063,23 +1064,24 @@ namespace EVEMon
             this.groupBox9.AutoSize = true;
             this.groupBox9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
-            this.groupBox9.Location = new System.Drawing.Point(3, 52);
+            this.groupBox9.Location = new System.Drawing.Point(3, 69);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(222, 43);
+            this.groupBox9.Size = new System.Drawing.Size(222, 60);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
             // 
             // flowLayoutPanel12
             // 
+            this.flowLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel12.AutoSize = true;
             this.flowLayoutPanel12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel12.Controls.Add(this.cbAutomaticEOSkillUpdate);
-            this.flowLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(216, 23);
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(194, 23);
             this.flowLayoutPanel12.TabIndex = 0;
             // 
             // cbAutomaticEOSkillUpdate
@@ -1102,7 +1104,7 @@ namespace EVEMon
             this.groupBox7.Controls.Add(this.numericStatusInterval);
             this.groupBox7.Controls.Add(this.label14);
             this.groupBox7.Controls.Add(this.label15);
-            this.groupBox7.Location = new System.Drawing.Point(3, 101);
+            this.groupBox7.Location = new System.Drawing.Point(3, 135);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(222, 79);
             this.groupBox7.TabIndex = 8;

@@ -383,6 +383,7 @@ namespace EVEMon
                     {
                         m_skillTrainingName = gs.Name + " " + GrandSkill.GetRomanSkillNumber(gs.TrainingToLevel);
                         lblTrainingSkill.Text = m_skillTrainingName;
+
                         double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(gs.PrimaryAttribute) +
                                                (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
@@ -402,6 +403,7 @@ namespace EVEMon
             {
                 lbSkills.EndUpdate();
             }
+
 
             UpdateSkillHeaderStats();
             UpdateCachedCopy();
@@ -694,24 +696,36 @@ namespace EVEMon
             DateTime now = DateTime.Now;
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
-                lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
+                if (m_currentlyVisible)
+                {
+                    lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
+                }
                 if (m_estimatedCompletion > now)
                 {
-                    lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                    if (m_currentlyVisible)
+                    {
+                        lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                    }
                     SetShortData(m_cli.CharacterName + ": " +
                                  TimeSpanDescriptiveShort(m_estimatedCompletion),
                                  m_estimatedCompletion - now);
                 }
                 else
                 {
-                    lblTrainingEst.Text = String.Empty;
+                    if (m_currentlyVisible)
+                    {
+                        lblTrainingEst.Text = String.Empty;
+                    }
                     SetShortData(m_cli.CharacterName + ": Done", TimeSpan.Zero);
                 }
             }
             else
             {
-                lblTrainingRemain.Text = String.Empty;
-                lblTrainingEst.Text = String.Empty;
+                if (m_currentlyVisible)
+                {
+                    lblTrainingRemain.Text = String.Empty;
+                    lblTrainingEst.Text = String.Empty;
+                }
                 SetShortData(String.Empty, TimeSpan.Zero);
             }
         }
