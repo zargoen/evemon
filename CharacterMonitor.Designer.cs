@@ -98,6 +98,7 @@ namespace EVEMon
             this.pbCharImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.pbCharImage.MinimumSize = new System.Drawing.Size(128, 128);
             this.pbCharImage.Name = "pbCharImage";
+            this.tableLayoutPanel1.SetRowSpan(this.pbCharImage, 3);
             this.pbCharImage.Size = new System.Drawing.Size(128, 128);
             this.pbCharImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCharImage.TabIndex = 0;
@@ -332,7 +333,7 @@ namespace EVEMon
             this.pnlCharData.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCharData.Location = new System.Drawing.Point(0, 0);
             this.pnlCharData.Name = "pnlCharData";
-            this.pnlCharData.Size = new System.Drawing.Size(392, 239);
+            this.pnlCharData.Size = new System.Drawing.Size(392, 147);
             this.pnlCharData.TabIndex = 14;
             // 
             // tableLayoutPanel1
@@ -358,7 +359,7 @@ namespace EVEMon
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 239);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 147);
             this.tableLayoutPanel1.TabIndex = 19;
             // 
             // flowLayoutPanel5
@@ -437,7 +438,7 @@ namespace EVEMon
             this.flowLayoutPanel4.Controls.Add(this.lblCharisma);
             this.flowLayoutPanel4.Controls.Add(this.lblIntelligence);
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(131, 155);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(131, 63);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(74, 65);
@@ -454,7 +455,7 @@ namespace EVEMon
             this.flowLayoutPanel2.Controls.Add(this.btnSave);
             this.flowLayoutPanel2.Controls.Add(this.btnPlan);
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(326, 134);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(326, 42);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel2, 3);
@@ -555,7 +556,7 @@ namespace EVEMon
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(132, 152);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(132, 60);
             this.flowLayoutPanel1.TabIndex = 18;
             this.flowLayoutPanel1.WrapContents = false;
             this.flowLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
@@ -565,7 +566,7 @@ namespace EVEMon
             this.lblSkillHeader.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.lblSkillHeader, 2);
             this.lblSkillHeader.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSkillHeader.Location = new System.Drawing.Point(0, 223);
+            this.lblSkillHeader.Location = new System.Drawing.Point(0, 131);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblSkillHeader.Name = "lblSkillHeader";
             this.lblSkillHeader.Size = new System.Drawing.Size(148, 13);
@@ -614,16 +615,16 @@ namespace EVEMon
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
             this.lbSkills.ItemHeight = 15;
-            this.lbSkills.Location = new System.Drawing.Point(0, 239);
+            this.lbSkills.Location = new System.Drawing.Point(0, 147);
             this.lbSkills.Name = "lbSkills";
-            this.lbSkills.Size = new System.Drawing.Size(392, 218);
+            this.lbSkills.Size = new System.Drawing.Size(392, 310);
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
+            this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
-            this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
             // CharacterMonitor
