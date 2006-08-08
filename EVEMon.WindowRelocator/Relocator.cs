@@ -33,6 +33,9 @@ namespace EVEMon.WindowRelocator
         private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32")]
+        private extern static int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32")]
@@ -154,6 +157,7 @@ namespace EVEMon.WindowRelocator
             {
                 IntPtr fgWin = GetForegroundWindow();
                 StringBuilder sb = new StringBuilder(512);
+                int titleLen = GetWindowText(fgWin, sb, 512);
                 if (sb.ToString() == "EVE")
                 {
                     Rectangle r = GetWindowRect(fgWin);
