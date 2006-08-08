@@ -321,7 +321,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 lblSkillName.Text = m_selectedSkill.Name;
-                lblDescription.Text = m_selectedSkill.Description;
+                textboxDescription.Text = m_selectedSkill.Description;
                 lblAttributes.Text = "Primary: " + m_selectedSkill.PrimaryAttribute.ToString() + ", " +
                                      "Secondary: " + m_selectedSkill.SecondaryAttribute.ToString();
 
