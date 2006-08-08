@@ -10,8 +10,8 @@ namespace EVEMon
     public partial class AboutWindow : EVEMonForm
     {
         private string[] Developers = { "Six Anari", "Anders Chydenius", 
-            "Eewec", "Brad Stone", "Labogh", "mrcue", "romanl", "happyslinky", 
-            "Stevil Knevil", "Safrax" };
+            "Eewec", "Brad Stone", "mrcue", "Labogh", "romanl", "happyslinky", 
+            "Stevil Knevil", "Safrax", "Jalon Mevek" };
 
         public AboutWindow()
         {
