@@ -24,7 +24,7 @@ namespace EVEMon.Common
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
         private MonitoredList<GrandEveAttributeBonus> m_attributeBonuses = new MonitoredList<GrandEveAttributeBonus>();
         private Dictionary<string, GrandSkillGroup> m_skillGroups = new Dictionary<string, GrandSkillGroup>();
-
+        
         public GrandCharacterInfo(int characterId, string name)
         {
             m_characterId = characterId;
@@ -472,6 +472,7 @@ namespace EVEMon.Common
 
         private int m_cachedSkillPointTotal = -1;
         private int m_cachedKnownSkillCount = -1;
+        private int m_cachedMaxedSkillCount = -1;
 
         private List<GrandSkill> m_skillsChanged = new List<GrandSkill>();
 
@@ -563,6 +564,22 @@ namespace EVEMon.Common
                     }
                 }
                 return m_cachedKnownSkillCount;
+            }
+        }
+
+        public int MaxedSkillCount
+        {
+            get
+            {
+                if (m_cachedMaxedSkillCount == -1)
+                {
+                    m_cachedMaxedSkillCount = 0;
+                    foreach (GrandSkillGroup gsg in m_skillGroups.Values)
+                    {
+                        m_cachedMaxedSkillCount += gsg.MaxedCount;
+                    }
+                }
+                return m_cachedMaxedSkillCount;
             }
         }
 
@@ -1077,6 +1094,11 @@ namespace EVEMon.Common
             get { return m_skills.Count; }
         }
 
+        public int MaxedCount
+        {
+            get { return GetMaxedSkills(); }
+        }
+
         public int KnownCount
         {
             get
@@ -1112,6 +1134,16 @@ namespace EVEMon.Common
             foreach (GrandSkill gs in m_skills.Values)
             {
                 result += gs.CurrentSkillPoints;
+            }
+            return result;
+        }
+
+        public int GetMaxedSkills()
+        {
+            int result = 0;
+            foreach (GrandSkill gs in m_skills.Values)
+            {
+                if (gs.Level == 5) result++;
             }
             return result;
         }
