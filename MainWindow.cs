@@ -503,9 +503,9 @@ namespace EVEMon
                 this.niMinimizeIcon.Visible = false;
             }
 
-            if (m_tooltipWindow.IsAlive && m_tooltipWindow.Target != null)
+            if (this.m_tooltipWindow != null && (this.m_tooltipWindow.IsAlive && this.m_tooltipWindow.Target != null))
             {
-                m_tooltipWindow.Target.Visible = false;
+                this.m_tooltipWindow.Target.Visible = false;
             }
         }
 
