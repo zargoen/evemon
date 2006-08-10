@@ -53,7 +53,7 @@ namespace EVEMon.Common
         private delegate void FireEventInvoker();
 
         private object m_eventLock = new object();
-        private int m_suppression = 0;
+        private int m_suppression;
         private Queue<FireEventInvoker> m_firedEvents = new Queue<FireEventInvoker>();
         private Dictionary<string, bool> m_eventsInQueue = new Dictionary<string, bool>();
 
@@ -929,7 +929,7 @@ namespace EVEMon.Common
             }
         }
 
-        private IEnumerable<PlanEntryPrerequisite> m_prerequisiteCache = null;
+        private IEnumerable<PlanEntryPrerequisite> m_prerequisiteCache;
 
         private void m_owner_Changed(object sender, EventArgs e)
         {

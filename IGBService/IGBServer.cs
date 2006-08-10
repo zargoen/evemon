@@ -55,19 +55,20 @@ namespace EVEMon.IGBService
 
         private void cli_DataRead(object sender, IGBClientDataReadEventArgs e)
         {
+            IGBTcpClient IgbSender = (IGBTcpClient) sender;
             byte[] newBuf;
             lock (m_clients)
             {
-                byte[] existingBuf = m_clients[(IGBTcpClient) sender];
+                byte[] existingBuf = m_clients[IgbSender];
                 newBuf = new byte[existingBuf.Length + e.Count];
 
                 Array.Copy(existingBuf, newBuf, existingBuf.Length);
                 Array.Copy(e.Buffer, 0, newBuf, existingBuf.Length, e.Count);
 
-                m_clients[(IGBTcpClient) sender] = newBuf;
+                m_clients[IgbSender] = newBuf;
             }
 
-            TryProcessBuffer((IGBTcpClient) sender, newBuf, Math.Min(e.Count + 1, newBuf.Length));
+            TryProcessBuffer(IgbSender, newBuf, Math.Min(e.Count + 1, newBuf.Length));
         }
 
         private void TryProcessBuffer(IGBTcpClient client, byte[] newBuf, int tailLength)

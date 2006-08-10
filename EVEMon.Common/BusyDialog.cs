@@ -20,7 +20,7 @@ namespace EVEMon.Common
         }
 
         private static object m_lockObj = new object();
-        private static int m_displayCounter = 0;
+        private static int m_displayCounter;
         private static Thread m_runThread;
         private static BusyDialog m_instance;
 

@@ -167,7 +167,7 @@ namespace EVEMon.Common.Schedule
             set { m_overflowResolution = value; }
         }
 
-        private int m_startSecond = 0;
+        private int m_startSecond;
 
         public int StartSecond
         {
@@ -175,7 +175,7 @@ namespace EVEMon.Common.Schedule
             set { m_startSecond = value; }
         }
 
-        private int m_endSecond = 0;
+        private int m_endSecond;
 
         public int EndSecond
         {

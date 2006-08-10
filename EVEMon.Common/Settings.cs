@@ -838,7 +838,7 @@ namespace EVEMon.Common
             set { m_host = value; }
         }
 
-        private int m_port = 0;
+        private int m_port;
 
         public int Port
         {

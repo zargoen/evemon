@@ -92,32 +92,33 @@ namespace EVEMon
 
         public event SkillTrainingCompletedHandler SkillTrainingCompleted;
 
-        private void OnSkillTrainingComplete(string charName, string skillName)
+        private void OnSkillTrainingComplete(string CharacterName, string skillName)
         {
-            if (String.IsNullOrEmpty(charName) || String.IsNullOrEmpty(skillName))
+            if (String.IsNullOrEmpty(CharacterName) || String.IsNullOrEmpty(skillName))
             {
                 return;
             }
 
             if (SkillTrainingCompleted != null)
             {
-                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(charName, skillName);
+                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(CharacterName, skillName);
                 SkillTrainingCompleted(this, e);
             }
+            m_grandCharacterInfo.CancelCurrentSkillTraining();
         }
 
         public event DownloadAttemptCompletedHandler DownloadAttemptCompleted;
 
-        private void OnDownloadAttemptComplete(string charName, string skillName)
+        private void OnDownloadAttemptComplete(string CharacterName, string skillName)
         {
-            if (String.IsNullOrEmpty(charName) || String.IsNullOrEmpty(skillName))
+            if (String.IsNullOrEmpty(CharacterName) || String.IsNullOrEmpty(skillName))
             {
                 return;
             }
 
             if (DownloadAttemptCompleted != null)
             {
-                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(charName, skillName);
+                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(CharacterName, skillName);
                 DownloadAttemptCompleted(this, e);
             }
         }
@@ -404,7 +405,6 @@ namespace EVEMon
                 lbSkills.EndUpdate();
             }
 
-
             UpdateSkillHeaderStats();
             UpdateCachedCopy();
         }
@@ -420,7 +420,7 @@ namespace EVEMon
             if (m_currentlyVisible)
             {
                 lblSkillHeader.Text =
-                    String.Format("{0} Known Skills\n{1} Total SP, {2} Skills at Level V",
+                    String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
                                     m_grandCharacterInfo.KnownSkillCount,
                                     m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
                                     m_grandCharacterInfo.MaxedSkillCount);
@@ -693,40 +693,46 @@ namespace EVEMon
 
         private void CalcSkillRemainText()
         {
+            //update Short Data
             DateTime now = DateTime.Now;
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
-                if (m_currentlyVisible)
-                {
-                    lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
-                }
                 if (m_estimatedCompletion > now)
                 {
-                    if (m_currentlyVisible)
-                    {
-                        lblTrainingEst.Text = m_estimatedCompletion.ToString();
-                    }
                     SetShortData(m_cli.CharacterName + ": " +
                                  TimeSpanDescriptiveShort(m_estimatedCompletion),
                                  m_estimatedCompletion - now);
                 }
                 else
                 {
-                    if (m_currentlyVisible)
-                    {
-                        lblTrainingEst.Text = String.Empty;
-                    }
                     SetShortData(m_cli.CharacterName + ": Done", TimeSpan.Zero);
                 }
             }
             else
             {
-                if (m_currentlyVisible)
+                SetShortData(String.Empty, TimeSpan.Zero);
+            }
+        }
+
+        private void UpdateSkillLabels()
+        {
+            DateTime now = DateTime.Now;
+            if (m_estimatedCompletion != DateTime.MaxValue)
+            {
+                lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
+                if (m_estimatedCompletion > now)
                 {
-                    lblTrainingRemain.Text = String.Empty;
+                    lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                }
+                else
+                {
                     lblTrainingEst.Text = String.Empty;
                 }
-                SetShortData(String.Empty, TimeSpan.Zero);
+            }
+            else
+            {
+                lblTrainingRemain.Text = String.Empty;
+                lblTrainingEst.Text = String.Empty;
             }
         }
 
@@ -894,25 +900,22 @@ namespace EVEMon
 
         private void UpdateNextUpdateLabel()
         {
-            if (m_currentlyVisible)
+            if (m_throbberRunning)
             {
-                if (m_throbberRunning)
-                {
-                    lblUpdateTimer.Visible = false;
-                    return;
-                }
+                lblUpdateTimer.Visible = false;
+                return;
+            }
 
-                TimeSpan ts = m_nextScheduledUpdateAt - DateTime.Now;
-                if (ts < TimeSpan.Zero || ts > TimeSpan.FromMinutes(60))
-                {
-                    lblUpdateTimer.Visible = false;
-                }
-                else
-                {
-                    lblUpdateTimer.Text =
-                        String.Format("{0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
-                    lblUpdateTimer.Visible = true;
-                }
+            TimeSpan ts = m_nextScheduledUpdateAt - DateTime.Now;
+            if (ts < TimeSpan.Zero || ts > TimeSpan.FromMinutes(60))
+            {
+                lblUpdateTimer.Visible = false;
+            }
+            else
+            {
+                lblUpdateTimer.Text =
+                    String.Format("{0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
+                lblUpdateTimer.Visible = true;
             }
         }
 
@@ -928,6 +931,7 @@ namespace EVEMon
 
             if (m_currentlyVisible)
             {
+                UpdateSkillLabels();
                 UpdateNextUpdateLabel();
 
                 GrandSkill trainingSkill = m_grandCharacterInfo.CurrentlyTrainingSkill;
@@ -1952,10 +1956,10 @@ namespace EVEMon
             get { return m_characterName; }
         }
 
-        public SkillTrainingCompletedEventArgs(string charName, string skillName)
+        public SkillTrainingCompletedEventArgs(string CharacterName, string skillName)
         {
             m_skillName = skillName;
-            m_characterName = charName;
+            m_characterName = CharacterName;
         }
     }
 }

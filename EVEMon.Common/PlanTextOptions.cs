@@ -33,7 +33,7 @@ namespace EVEMon.Common
             set { m_entryTrainingTimes = value; }
         }
 
-        private bool m_entryStartDate = false;
+        private bool m_entryStartDate;
 
         [XmlAttribute]
         public bool EntryStartDate
@@ -42,7 +42,7 @@ namespace EVEMon.Common
             set { m_entryStartDate = value; }
         }
 
-        private bool m_entryFinishDate = false;
+        private bool m_entryFinishDate;
 
         [XmlAttribute]
         public bool EntryFinishDate
@@ -51,7 +51,7 @@ namespace EVEMon.Common
             set { m_entryFinishDate = value; }
         }
 
-        private bool m_footerCount = false;
+        private bool m_footerCount;
 
         [XmlAttribute]
         public bool FooterCount
@@ -60,7 +60,7 @@ namespace EVEMon.Common
             set { m_footerCount = value; }
         }
 
-        private bool m_footerTotalTime = false;
+        private bool m_footerTotalTime;
 
         [XmlAttribute]
         public bool FooterTotalTime
@@ -69,7 +69,7 @@ namespace EVEMon.Common
             set { m_footerTotalTime = value; }
         }
 
-        private bool m_footerDate = false;
+        private bool m_footerDate;
 
         [XmlAttribute]
         public bool FooterDate

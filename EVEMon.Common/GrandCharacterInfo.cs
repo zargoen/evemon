@@ -85,7 +85,7 @@ namespace EVEMon.Common
             }
         }
 
-        private int m_suppressed = 0;
+        private int m_suppressed;
         private Queue<InternalEvent> m_events = new Queue<InternalEvent>();
         private Dictionary<string, bool> m_coalescedEventTable = new Dictionary<string, bool>();
 
@@ -1175,9 +1175,9 @@ namespace EVEMon.Common
         }
 
         #region Appearance in List box
-        private static Image m_collapseImage = null;
-        private static Image m_expandImage = null;
-        private bool m_collapsed = false;
+        private static Image m_collapseImage;
+        private static Image m_expandImage;
+        private bool m_collapsed;
 
         public bool isCollapsed
         {
@@ -1321,7 +1321,7 @@ namespace EVEMon.Common
 
         private IEnumerable<Prereq> m_prereqs;
         private IDictionary<string, GrandSkill> m_otherSkills;
-        private bool m_prereqCooked = false;
+        private bool m_prereqCooked;
 
         private int m_currentSkillPoints;
 
@@ -2123,7 +2123,7 @@ namespace EVEMon.Common
 
     public class EveAttributeScratchpad
     {
-        private int m_learningLevelBonus = 0;
+        private int m_learningLevelBonus;
         private int[] m_attributeBonuses = new int[5] {0, 0, 0, 0, 0};
 
         public int LearningLevelBonus
