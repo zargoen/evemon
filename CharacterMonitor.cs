@@ -52,6 +52,17 @@ namespace EVEMon
             m_cfi = cfi;
         }
 
+        private string m_charName
+        {
+            get
+            {
+                if (m_grandCharacterInfo != null && m_grandCharacterInfo.Name != null)
+                    return m_grandCharacterInfo.Name;
+                else
+                    return "?";
+            }
+        }
+
         private static Image[] m_throbberImages = null;
 
         public static Image[] ThrobberImages
@@ -699,13 +710,13 @@ namespace EVEMon
             {
                 if (m_estimatedCompletion > now)
                 {
-                    SetShortData(m_cli.CharacterName + ": " +
-                                 TimeSpanDescriptiveShort(m_estimatedCompletion),
+                    SetShortData(m_charName + ": " +
+                             TimeSpanDescriptiveShort(m_estimatedCompletion),
                                  m_estimatedCompletion - now);
                 }
                 else
                 {
-                    SetShortData(m_cli.CharacterName + ": Done", TimeSpan.Zero);
+                    SetShortData(m_charName + ": Done", TimeSpan.Zero);
                 }
             }
             else
