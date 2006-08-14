@@ -53,7 +53,7 @@ namespace EVEMon.NetworkLogger
         private void LoggerWindow_Load(object sender, EventArgs e)
         {
             tbFilename.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                              "/EVEMon Network Log.txt";
+                              "\\EVEMon Network Log.txt";
         }
 
         private void button1_Click(object sender, EventArgs e)

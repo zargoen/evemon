@@ -27,6 +27,7 @@ namespace EVEMon
 #endif
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
 
             bool startMinimized = false;
 
@@ -52,8 +53,7 @@ namespace EVEMon
             Plan.PlannerWindowFactory = new PlannerWindowFactory();
             EveSession.MainThread = Thread.CurrentThread;
             InstallerDeleter.Schedule();
-
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+            
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 

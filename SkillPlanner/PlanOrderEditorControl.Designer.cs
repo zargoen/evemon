@@ -236,9 +236,9 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.View = System.Windows.Forms.View.Details;
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
-            this.lvSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseMove);
             this.lvSkills.ListViewItemsDragging += new System.EventHandler<EVEMon.SkillPlanner.ListViewDragEventArgs>(this.lvSkills_ListViewItemsDragging);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
+            this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             // 
             // PlanOrderEditorControl
             // 
