@@ -669,28 +669,14 @@ namespace EVEMon
                                                             this.Invoke(new MethodInvoker(delegate
                                                                                               {
                                                                                                   //m_lastUpdate = DateTime.Now;
-                                                                                                  m_nextScheduledUpdateAt
-                                                                                                      =
-                                                                                                      DateTime.Now +
-                                                                                                      TimeSpan.
-                                                                                                          FromMilliseconds
-                                                                                                          (timeLeftInCache);
-                                                                                                  ttToolTip.
-                                                                                                      SetToolTip(
-                                                                                                      pbThrobber,
-                                                                                                      "Click to update now.");
-                                                                                                  tmrUpdate.Interval
-                                                                                                      =
-                                                                                                      timeLeftInCache;
-                                                                                                  tmrUpdate.Enabled
-                                                                                                      = true;
-                                                                                                  if (old_skill != null
-                                                                                                      && m_grandCharacterInfo.
-                                                                                                      GetSkill(old_skill).
-                                                                                                      IsPartiallyTrained())
+                                                                                                  m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
+                                                                                                  ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
+                                                                                                  //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
+                                                                                                      tmrUpdate.Interval = timeLeftInCache == 0?3600000:timeLeftInCache;
+                                                                                                      tmrUpdate.Enabled = true;
+                                                                                                  if (old_skill != null && m_grandCharacterInfo. GetSkill(old_skill).IsPartiallyTrained())
                                                                                                   {
-                                                                                                      OnDownloadAttemptComplete(
-                                                                                                          m_charName, old_skill);
+                                                                                                      OnDownloadAttemptComplete( m_charName, old_skill);
                                                                                                       old_skill = null;
                                                                                                   }
                                                                                                   attempted_dl_complete = true;

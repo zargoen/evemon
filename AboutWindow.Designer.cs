@@ -43,12 +43,12 @@ namespace EVEMon
             this.verticalFlowPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.lstDevelopers = new System.Windows.Forms.ListBox();
-            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -83,21 +83,21 @@ namespace EVEMon
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 0);
+            this.label3.Location = new System.Drawing.Point(3, 13);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(169, 13);
+            this.label3.Size = new System.Drawing.Size(214, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Created by Six Anari of Goonfleet";
+            this.label3.Text = "Originally created by Six Anari of Goonfleet";
             // 
             // label4
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 13);
+            this.label4.Location = new System.Drawing.Point(3, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(296, 13);
+            this.label4.Size = new System.Drawing.Size(292, 13);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Continued by Anders Chydenius and the listed Contributors.";
+            this.label4.Text = "Continued by Anders Chydenius and the listed Contributors";
             // 
             // btnOk
             // 
@@ -209,24 +209,34 @@ namespace EVEMon
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(302, 39);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(298, 39);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.label3);
             this.flowLayoutPanel1.Controls.Add(this.label4);
+            this.flowLayoutPanel1.Controls.Add(this.label3);
             this.flowLayoutPanel1.Controls.Add(this.label7);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(302, 39);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(298, 39);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 26);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(217, 13);
+            this.label7.TabIndex = 4;
+            this.label7.Text = "Donations of ISK are always appreciated. ;)";
             // 
             // tableLayoutPanel2
             // 
@@ -294,16 +304,6 @@ namespace EVEMon
             this.lstDevelopers.Size = new System.Drawing.Size(259, 236);
             this.lstDevelopers.Sorted = true;
             this.lstDevelopers.TabIndex = 2;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 26);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(217, 13);
-            this.label7.TabIndex = 4;
-            this.label7.Text = "Donations of ISK are always appreciated. ;)";
             // 
             // AboutWindow
             // 
