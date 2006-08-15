@@ -796,7 +796,9 @@ namespace EVEMon
         {
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
             this.Activate();
+            this.niMinimizeIcon.Visible = false;
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
