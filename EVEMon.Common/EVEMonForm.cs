@@ -35,14 +35,26 @@ namespace EVEMon.Common
             }
         }
 
+        delegate void OnLayoutCallback(LayoutEventArgs levent);
+
         protected override void OnLayout(LayoutEventArgs levent)
         {
-            base.OnLayout(levent);
-
-            if (this.AutoSize && this.StartPosition == FormStartPosition.CenterScreen)
+            // If the calling thread is not the creating thread then need to be thread safe
+            if (this.InvokeRequired)
             {
-                this.CenterToScreen();
+                OnLayoutCallback d = new OnLayoutCallback(OnLayout);
+                this.Invoke(d, levent);
             }
+            else
+            {
+                base.OnLayout(levent);
+
+                if (this.AutoSize && this.StartPosition == FormStartPosition.CenterScreen)
+                {
+                    this.CenterToScreen();
+                }
+            }
+
         }
 
         //protected override void OnShown(EventArgs e)
