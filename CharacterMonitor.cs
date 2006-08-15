@@ -116,6 +116,9 @@ namespace EVEMon
                 SkillTrainingCompleted(this, e);
             }
             m_grandCharacterInfo.CancelCurrentSkillTraining();
+            GrandSkill temp = m_grandCharacterInfo.GetSkill(skillName);
+            if (temp != null)
+                temp.CurrentSkillPoints = temp.GetPointsRequiredForLevel(temp.Level + 1);
         }
 
         public event DownloadAttemptCompletedHandler DownloadAttemptCompleted;
@@ -131,6 +134,12 @@ namespace EVEMon
             {
                 SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(CharacterName, skillName);
                 DownloadAttemptCompleted(this, e);
+            }
+            GrandSkill temp = m_grandCharacterInfo.GetSkill(skillName);
+            if (temp != null && temp.GetPointsRequiredForLevel(temp.Level + 1) == temp.CurrentSkillPoints)
+            {
+                m_grandCharacterInfo.CancelCurrentSkillTraining();
+                temp.CurrentSkillPoints = temp.GetPointsRequiredForLevel(temp.Level + 1);
             }
         }
 
@@ -596,6 +605,10 @@ namespace EVEMon
 
             tmrUpdate.Enabled = false;
             StartThrobber();
+            if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
+            {
+                old_skill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
+            }
             if (m_charId < 0)
             {
                 GetCharIdAndUpdate();
@@ -671,6 +684,16 @@ namespace EVEMon
                                                                                                       timeLeftInCache;
                                                                                                   tmrUpdate.Enabled
                                                                                                       = true;
+                                                                                                  if (old_skill != null
+                                                                                                      && m_grandCharacterInfo.
+                                                                                                      GetSkill(old_skill).
+                                                                                                      IsPartiallyTrained())
+                                                                                                  {
+                                                                                                      OnDownloadAttemptComplete(
+                                                                                                          m_charName, old_skill);
+                                                                                                      old_skill = null;
+                                                                                                  }
+                                                                                                  attempted_dl_complete = true;
                                                                                                   StopThrobber();
                                                                                               }));
                                                         }));
@@ -932,7 +955,6 @@ namespace EVEMon
 
         private int m_lastTickSPPaint = 0;
 
-        private bool attempted_dl = false;
         private bool attempted_dl_complete = false;
         private String old_skill = null;
 
@@ -962,31 +984,12 @@ namespace EVEMon
                     }
                 }
             }
-            if (m_throbberRunning && !attempted_dl)
-            {
-                attempted_dl = true;
-                if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
-                {
-                    old_skill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
-                }
-            }
-            if (attempted_dl && !(m_throbberRunning))
-            {
-                if (!attempted_dl_complete)
-                {
-                    attempted_dl_complete = true;
-                }
-                if (old_skill != null && m_grandCharacterInfo.GetSkill(old_skill).IsPartiallyTrained())
-                {
-                    OnDownloadAttemptComplete(m_cli.CharacterName, old_skill);
-                }
-                attempted_dl = false;
-            }
             if (attempted_dl_complete && m_estimatedCompletion < DateTime.Now &&
-                m_skillTrainingName != m_lastCompletedSkill)
+                m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
+                m_grandCharacterInfo.CurrentlyTrainingSkill.Name != m_lastCompletedSkill)
             {
-                m_lastCompletedSkill = m_skillTrainingName;
-                OnSkillTrainingComplete(m_cli.CharacterName, m_skillTrainingName);
+                m_lastCompletedSkill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
+                OnSkillTrainingComplete(m_charName, m_lastCompletedSkill);
             }
             if (updating_pic == false && pbCharImage.Image == null)
             {
