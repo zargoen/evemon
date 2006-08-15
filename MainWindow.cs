@@ -102,13 +102,28 @@ namespace EVEMon
             m_settings_RunIGBServerChanged(null, null);
             m_settings.RelocateEveWindowChanged += new EventHandler<EventArgs>(m_settings_RelocateEveWindowChanged);
             m_settings_RelocateEveWindowChanged(null, null);
-            m_settings.StatusUpdateIntervalChanged += new EventHandler<EventArgs>(m_settings_StatusUpdateIntervalChanged);
+            m_settings.CheckTranquilityStatusChanged += new EventHandler<EventArgs>(m_settings_CheckTranquilityStatusChanged);
 
             TipWindow.ShowTip("startup",
                 "Getting Started",
                 "To begin using EVEMon, click the \"Add Character\" button in " +
                 "the upper left corner of the window, enter your login information " +
                 "and choose a character to monitor.");
+        }
+
+        void m_settings_CheckTranquilityStatusChanged(object sender, EventArgs e)
+        {
+            if (m_settings.CheckTranquilityStatus)
+            {
+                tmrTranquilityClock.Interval = 1;
+                tmrTranquilityClock.Enabled = true;
+                UpdateStatusLabel();
+            }
+            else
+            {
+                tmrTranquilityClock.Enabled = false;
+                UpdateStatusLabel();
+            }
         }
 
         void m_settings_RelocateEveWindowChanged(object sender, EventArgs e)
@@ -706,26 +721,9 @@ namespace EVEMon
         private int m_serverUsers = 0;
         private bool m_serverOnline = true;
 
-        void m_settings_StatusUpdateIntervalChanged(object sender, EventArgs e)
-        {
-            tmrServerStatus.Enabled = false;
-            if (m_settings.CheckTranquilityStatus)
-            {
-                int newInterval = m_settings.StatusUpdateInterval * 60000;
-                if (tmrServerStatus.Interval > newInterval)
-                {
-                    tmrServerStatus.Interval = newInterval;
-                }
-                tmrServerStatus.Enabled = true;
-            }
-            tmrClock.Enabled = false;
-            tmrClock.Interval = 1;
-            tmrClock.Enabled = true;
-        }
 
-        private void tmrClock_Tick(object sender, EventArgs e)
+        private void UpdateStatusLabel()
         {
-            tmrClock.Enabled = false;
             DateTime now = DateTime.Now.ToUniversalTime();
             DateTimeFormatInfo fi = CultureInfo.CurrentCulture.DateTimeFormat;
             lblStatus.Text = "Current EVE Time: " + now.ToString(fi.ShortDatePattern + " HH:mm");
@@ -739,47 +737,101 @@ namespace EVEMon
                 {
                     lblStatus.Text = lblStatus.Text + " // Tranquility Server Offline";
                 }
-                tmrClock.Interval = 1000 * 60 * 1;//1 minutes
-                tmrClock.Enabled = true;
             }
         }
 
-        private void tmrServerStatus_Tick(object sender, EventArgs e)
+        // initialize to negative to make sure the server test is performed first time through
+        int m_minutesSinceLastServerCheck = -1;
+        private void tmrClock_Tick(object sender, EventArgs e)
         {
-            tmrServerStatus.Enabled = false;
+            tmrTranquilityClock.Enabled = false;
+            UpdateStatusLabel();
+
             if (m_settings.CheckTranquilityStatus)
             {
+                // maybe we should check tranquility
+                if (m_minutesSinceLastServerCheck >= m_settings.StatusUpdateInterval || 
+                    m_minutesSinceLastServerCheck < 0)
+                {
+                    // enough minutes have passed - check the server
+                    checkServerStatus();
+                    m_minutesSinceLastServerCheck = 0;
+                }
+                else
+                {
+                    m_minutesSinceLastServerCheck++;
+                }
+                
+            }
+            tmrTranquilityClock.Interval = 60000;//1 minute
+            tmrTranquilityClock.Enabled = true;
+        }
+
+        // Semaphore to flag whether we are in the middle of an async server test
+        bool m_checkingServer = false;
+        void ConnectCallback(IAsyncResult ar)
+        {
+            TcpClient conn = (TcpClient)ar.AsyncState;
+            if (ar.IsCompleted && conn.Connected)
+            {
+                m_serverOnline = true;
+                NetworkStream stream = conn.GetStream();
+                byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
+                        0x00, 0x14, 0x06, 0x04, 0xE8, 0x99, 0x02, 0x00,
+                        0x05, 0x8B, 0x00, 0x08, 0x0A, 0xCD, 0xCC, 0xCC,
+                        0xCC, 0xCC, 0xCC, 0x00, 0x40, 0x05, 0x49, 0x0F,
+                        0x10, 0x05, 0x42, 0x6C, 0x6F, 0x6F, 0x64};
+                stream.Write(data, 0, data.Length);
+                byte[] response = new byte[256];
+                int bytes = stream.Read(response, 0, 256);
+                if (bytes > 21)
+                {
+                    m_serverUsers = response[21] * 256 + response[20];
+                }
+                else
+                {
+                    m_serverUsers = 0;
+                }
+                conn.EndConnect(ar);
+            }
+            else
+            {
+                m_serverOnline = false;
+                m_serverUsers = 0;
+            }
+
+            // Close the connection
+            conn.Close();
+
+            UpdateStatusLabel();
+
+            // switch off the semaphore
+            m_checkingServer = false;
+        }
+
+        private void checkServerStatus()
+        {
+            // Check the semaphore to see if we're mid check
+            if (m_checkingServer == true)
+                return;
+
+            // switch on the semaphore
+            m_checkingServer = true;
+
+            if (m_settings.CheckTranquilityStatus)
+            {
+                TcpClient conn = new TcpClient();
                 try
                 {
-                    //this is causing EVEMon to freeze up when Tranquility is down.
-                    TcpClient conn = new TcpClient("87.237.38.200", 26000);
-                    if (conn.Connected)
-                    {
-                        m_serverOnline = true;
-                        NetworkStream stream = conn.GetStream();
-                        byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
-                                0x00, 0x14, 0x06, 0x04, 0xE8, 0x99, 0x02, 0x00,
-                                0x05, 0x8B, 0x00, 0x08, 0x0A, 0xCD, 0xCC, 0xCC,
-                                0xCC, 0xCC, 0xCC, 0x00, 0x40, 0x05, 0x49, 0x0F,
-                                0x10, 0x05, 0x42, 0x6C, 0x6F, 0x6F, 0x64};
-                        stream.Write(data, 0, data.Length);
-                        byte[] response = new byte[256];
-                        int bytes = stream.Read(response, 0, 256);
-                        if (bytes > 21)
-                        {
-                            m_serverUsers = response[21] * 256 + response[20];
-                        }
-                        else
-                        {
-                            m_serverUsers = 0;
-                        }
-                    }
-                    conn.Close();
+                    conn.BeginConnect("87.237.38.200", 26000, this.ConnectCallback, conn);
                 }
                 catch (Exception)
                 {
+                    conn.Close();
                     m_serverOnline = false;
                     m_serverUsers = 0;
+                    // switch off the semaphore - the check failed
+                    m_checkingServer = false;
                 }
             }
             else
@@ -787,9 +839,7 @@ namespace EVEMon
                 m_serverOnline = false;
                 m_serverUsers = 0;
             }
-            tmrServerStatus.Interval = m_settings.StatusUpdateInterval * 60000;
-            tmrServerStatus.Enabled = true;
-            tmrClock.Enabled = true;
+
         }
 
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)

@@ -468,6 +468,14 @@ namespace EVEMon.Common
             }
         }
 
+        private void OnCheckTranquilityStatusChanged()
+        {
+            if (CheckTranquilityStatusChanged != null)
+                CheckTranquilityStatusChanged(this, new EventArgs());
+        }
+
+        public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
+
         private void OnRelocateEveWindowChanged()
         {
             if (RelocateEveWindowChanged != null)
@@ -512,7 +520,12 @@ namespace EVEMon.Common
         public bool CheckTranquilityStatus
         {
             get { return m_checkTranquilityStatus; }
-            set { m_checkTranquilityStatus = value; OnStatusUpdateIntervalChanged(); }
+            set {
+                if (m_checkTranquilityStatus != value)
+                {
+                m_checkTranquilityStatus = value;
+                OnCheckTranquilityStatusChanged();
+                } }
         }
 
         private int m_statusUpdateInterval = 5;
@@ -520,16 +533,8 @@ namespace EVEMon.Common
         public int StatusUpdateInterval
         {
             get { return m_statusUpdateInterval; }
-            set {m_statusUpdateInterval = value; OnStatusUpdateIntervalChanged(); }
+            set {m_statusUpdateInterval = value; }
         }
-
-        private void OnStatusUpdateIntervalChanged()
-        {
-            if (StatusUpdateIntervalChanged != null)
-                StatusUpdateIntervalChanged(this, new EventArgs());
-        }
-
-        public event EventHandler<EventArgs> StatusUpdateIntervalChanged;
 
         ////////////////////////////////////////////////////////////////////////////////////
 

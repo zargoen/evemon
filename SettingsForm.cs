@@ -195,7 +195,7 @@ namespace EVEMon
             isValid = isValid && ValidateProxySetting(tbProxyHttpHost.Text, tbProxyHttpPort.Text);
 
             btnOk.Enabled = isValid;
-            numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;
+            numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;            
         }
 
         private bool ValidateProxySetting(string host, string port)

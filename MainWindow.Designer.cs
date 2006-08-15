@@ -39,7 +39,7 @@ namespace EVEMon
             this.tmrAlertRefresh = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tmrClock = new System.Windows.Forms.Timer(this.components);
+            this.tmrTranquilityClock = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAddChar = new System.Windows.Forms.ToolStripButton();
             this.tsbRemoveChar = new System.Windows.Forms.ToolStripButton();
@@ -49,7 +49,6 @@ namespace EVEMon
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
-            this.tmrServerStatus = new System.Windows.Forms.Timer(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -80,19 +79,19 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(113, 48);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(124, 48);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -123,11 +122,11 @@ namespace EVEMon
             this.lblStatus.Size = new System.Drawing.Size(94, 17);
             this.lblStatus.Text = "Current EVE Time:";
             // 
-            // tmrClock
+            // tmrTranquilityClock
             // 
-            this.tmrClock.Enabled = true;
-            this.tmrClock.Interval = 1000;
-            this.tmrClock.Tick += new System.EventHandler(this.tmrClock_Tick);
+            this.tmrTranquilityClock.Enabled = true;
+            this.tmrTranquilityClock.Interval = 5000;
+            this.tmrTranquilityClock.Tick += new System.EventHandler(this.tmrClock_Tick);
             // 
             // toolStrip1
             // 
@@ -215,12 +214,6 @@ namespace EVEMon
             this.tsbAbout.Text = "About...";
             this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
             // 
-            // tmrServerStatus
-            // 
-            this.tmrServerStatus.Enabled = true;
-            this.tmrServerStatus.Interval = 1000;
-            this.tmrServerStatus.Tick += new System.EventHandler(this.tmrServerStatus_Tick);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,7 +249,7 @@ namespace EVEMon
         private System.Windows.Forms.Timer tmrAlertRefresh;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
-        private System.Windows.Forms.Timer tmrClock;
+        private System.Windows.Forms.Timer tmrTranquilityClock;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbAddChar;
         private System.Windows.Forms.ToolStripButton tsbRemoveChar;
@@ -266,7 +259,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton tsbAbout;
         private System.Windows.Forms.ToolStripButton tsbMineralSheet;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Timer tmrServerStatus;
         private System.Windows.Forms.ContextMenuStrip trayIconToolStrip;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;

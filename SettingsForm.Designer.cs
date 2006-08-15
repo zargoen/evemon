@@ -1120,6 +1120,7 @@ namespace EVEMon
             this.cbCheckTranquilityStatus.TabIndex = 3;
             this.cbCheckTranquilityStatus.Text = "Check for Tranquility Status";
             this.cbCheckTranquilityStatus.UseVisualStyleBackColor = true;
+            this.cbCheckTranquilityStatus.CheckedChanged += new System.EventHandler(this.cbCheckTranquilityStatus_CheckedChanged);
             // 
             // numericStatusInterval
             // 
