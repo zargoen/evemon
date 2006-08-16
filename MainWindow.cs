@@ -116,12 +116,10 @@ namespace EVEMon
             if (m_settings.CheckTranquilityStatus)
             {
                 tmrTranquilityClock.Interval = 1;
-                tmrTranquilityClock.Enabled = true;
                 UpdateStatusLabel();
             }
             else
             {
-                tmrTranquilityClock.Enabled = false;
                 UpdateStatusLabel();
             }
         }
