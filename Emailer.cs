@@ -62,7 +62,6 @@ namespace EVEMon
                 if (m_serverCredentials != null)
                 {
                     cli.Credentials = m_serverCredentials;
-                    cli.UseDefaultCredentials = false;
                 }
                 cli.EnableSsl = m_serverRequiresSsl;
                 cli.Send(msg);
