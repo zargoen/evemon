@@ -24,7 +24,7 @@ namespace EVEMon.SkillPlanner
             m_plannedSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Bold);
             m_prerequisiteSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Regular);
             m_plannedSkillColor = System.Drawing.Color.Black;
-            m_prerequisiteSkillColor = System.Drawing.Color.DarkSlateGray;
+            m_prerequisiteSkillColor = System.Drawing.Color.Black;
         }
 
         ~PlanOrderEditorControl()
@@ -639,7 +639,7 @@ namespace EVEMon.SkillPlanner
 
                 if (isSameSkill)
                 {
-                    current.BackColor = Color.LightYellow;
+                    current.BackColor = Color.LightGreen;
                 }
                 //else if (isPreRequisite)
                 //{
