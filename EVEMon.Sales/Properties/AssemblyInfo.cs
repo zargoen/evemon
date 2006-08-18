@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("EVEMon Development Team")]
 [assembly : AssemblyProduct("EVEMon")]
-[assembly : AssemblyCopyright("Copyright © 2006, Timothy Fries")]
+[assembly : AssemblyCopyright("Copyright © 2006, Nathan Acuff")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
 
