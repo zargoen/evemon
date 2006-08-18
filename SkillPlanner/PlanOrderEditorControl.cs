@@ -617,22 +617,22 @@ namespace EVEMon.SkillPlanner
             foreach (ListViewItem current in lvSkills.Items)
             {
                 bool isSameSkill = false;
-                bool isPreRequisite = false;
-                bool isPostRequisite = false;
+                //bool isPreRequisite = false;
+                //bool isPostRequisite = false;
 
                 if (lvSkills.SelectedItems.Count == 1)
                 {
                     PlanEntry currentSkill = (PlanEntry)current.Tag;
                     PlanEntry selectedSkill = (PlanEntry)lvSkills.SelectedItems[0].Tag;
                     // Single select so check for pre-requisite highlighting
-                    if (selectedSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(selectedSkill.SkillName).Level,
-                        currentSkill.SkillName,
-                        currentSkill.Level))
-                        isPostRequisite = true;
-                    if (currentSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(currentSkill.SkillName).Level,
-                        selectedSkill.SkillName,
-                        selectedSkill.Level))
-                        isPreRequisite = true;
+                    //if (selectedSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(selectedSkill.SkillName).Level,
+                    //    currentSkill.SkillName,
+                    //    currentSkill.Level))
+                    //    isPostRequisite = true;
+                    //if (currentSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(currentSkill.SkillName).Level,
+                    //    selectedSkill.SkillName,
+                    //    selectedSkill.Level))
+                    //    isPreRequisite = true;
                     if (currentSkill.SkillName == selectedSkill.SkillName)
                         isSameSkill = true;
                 }
@@ -641,14 +641,14 @@ namespace EVEMon.SkillPlanner
                 {
                     current.BackColor = Color.LightYellow;
                 }
-                else if (isPreRequisite)
-                {
-                    current.BackColor = Color.LightGreen;
-                }
-                else if (isPostRequisite)
-                {
-                    current.BackColor = Color.LightPink;
-                }
+                //else if (isPreRequisite)
+                //{
+                //    current.BackColor = Color.LightGreen;
+                //}
+                //else if (isPostRequisite)
+                //{
+                //    current.BackColor = Color.LightPink;
+                //}
                 else
                 {
                     current.BackColor = lvSkills.BackColor;
