@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="PhoenixParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\AssemblyInfo.template.cs" />
     <EmbeddedResource Include="MineralTile.resx">
       <DependentUpon>MineralTile.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -100,4 +101,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f</PreBuildEvent>
+  </PropertyGroup>
 </Project>

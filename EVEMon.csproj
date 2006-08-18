@@ -139,6 +139,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>UpdateNotifyForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -536,5 +537,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy "$(SolutionDir)EVEMon.WinHook\bin\$(ConfigurationName)\EVEMon.WinHook.dll" "$(TargetDir)EVEMon.WinHook.dll"</PostBuildEvent>
+    <PreBuildEvent>"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(SolutionDir)." "$(SolutionDir)Properties\AssemblyInfo.template.cs" "$(SolutionDir)Properties\AssemblyInfo.cs" -f</PreBuildEvent>
   </PropertyGroup>
 </Project>

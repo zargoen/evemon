@@ -42,6 +42,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CbtHook.cs" />
+    <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Relocator.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
@@ -59,4 +60,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f</PreBuildEvent>
+  </PropertyGroup>
 </Project>

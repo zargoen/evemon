@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly : AssemblyTitle("EVEMon.Common")]
-[assembly : AssemblyDescription("")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 69 Local Changes: Yes Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Common")] 
 [assembly : AssemblyConfiguration("")]
-[assembly : AssemblyCompany("")]
-[assembly : AssemblyProduct("EVEMon.Common")]
-[assembly : AssemblyCopyright("Copyright ©  2006")]
+[assembly : AssemblyCompany("EVEMon Development Team")]
+[assembly : AssemblyProduct("EVEMon")]
+[assembly : AssemblyCopyright("Copyright © 2006, Timothy Fries")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
 
@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly : ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly : Guid("6c038062-ce9e-48bc-905a-b1a98479ef23")]
+[assembly: Guid("6c038062-ce9e-48bc-905a-b1a98479ef23")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -27,6 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.25.4")]
+[assembly : AssemblyVersion("1.1.0.69")]
