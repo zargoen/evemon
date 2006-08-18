@@ -537,6 +537,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy "$(SolutionDir)EVEMon.WinHook\bin\$(ConfigurationName)\EVEMon.WinHook.dll" "$(TargetDir)EVEMon.WinHook.dll"</PostBuildEvent>
-    <PreBuildEvent>"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(SolutionDir)." "$(SolutionDir)Properties\AssemblyInfo.template.cs" "$(SolutionDir)Properties\AssemblyInfo.cs" -f</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

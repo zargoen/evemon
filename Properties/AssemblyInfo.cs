@@ -28,3 +28,6 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly : AssemblyVersion("1.1.0.73")]
+
+//BUILDERS: Add this pre-build event to ALL projects
+// "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
