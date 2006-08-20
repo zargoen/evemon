@@ -101,9 +101,9 @@ namespace EVEMon
             }
         }
 
-        public event SkillTrainingCompletedHandler SkillTrainingCompleted;
+        //public event SkillTrainingCompletedHandler SkillTrainingCompleted;
 
-        private void OnSkillTrainingComplete(string CharacterName, string skillName)
+        /*private void OnSkillTrainingComplete(string CharacterName, string skillName)
         {
             if (String.IsNullOrEmpty(CharacterName) || String.IsNullOrEmpty(skillName))
             {
@@ -119,30 +119,7 @@ namespace EVEMon
             GrandSkill temp = m_grandCharacterInfo.GetSkill(skillName);
             if (temp != null)
                 temp.CurrentSkillPoints = temp.GetPointsRequiredForLevel(temp.Level + 1);
-        }
-
-        public event DownloadAttemptCompletedHandler DownloadAttemptCompleted;
-
-        private void OnDownloadAttemptComplete(string CharacterName, string skillName)
-        {
-            if (String.IsNullOrEmpty(CharacterName) || String.IsNullOrEmpty(skillName))
-            {
-                return;
-            }
-
-            if (DownloadAttemptCompleted != null)
-            {
-                SkillTrainingCompletedEventArgs e = new SkillTrainingCompletedEventArgs(CharacterName, skillName);
-                DownloadAttemptCompleted(this, e);
-            }
-            GrandSkill temp = m_grandCharacterInfo.GetSkill(skillName);
-            if (temp != null && temp.GetPointsRequiredForLevel(temp.Level + 1) == temp.CurrentSkillPoints)
-            {
-                m_grandCharacterInfo.CancelCurrentSkillTraining();
-                temp.CurrentSkillPoints = temp.GetPointsRequiredForLevel(temp.Level + 1);
-            }
-        }
-
+        }*/
 
         public void Start()
         {
@@ -605,10 +582,6 @@ namespace EVEMon
 
             tmrUpdate.Enabled = false;
             StartThrobber();
-            if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
-            {
-                old_skill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
-            }
             if (m_charId < 0)
             {
                 GetCharIdAndUpdate();
@@ -672,14 +645,8 @@ namespace EVEMon
                                                                                                   m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
                                                                                                   ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
                                                                                                   //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
-                                                                                                      tmrUpdate.Interval = timeLeftInCache == 0?3600000:timeLeftInCache;
-                                                                                                      tmrUpdate.Enabled = true;
-                                                                                                  if (old_skill != null && m_grandCharacterInfo. GetSkill(old_skill).IsPartiallyTrained())
-                                                                                                  {
-                                                                                                      OnDownloadAttemptComplete( m_charName, old_skill);
-                                                                                                      old_skill = null;
-                                                                                                  }
-                                                                                                  attempted_dl_complete = true;
+                                                                                                  tmrUpdate.Interval = timeLeftInCache == 0?3600000:timeLeftInCache;
+                                                                                                  tmrUpdate.Enabled = true;
                                                                                                   StopThrobber();
                                                                                               }));
                                                         }));
@@ -687,7 +654,7 @@ namespace EVEMon
 
         private string m_skillTrainingName;
         private DateTime m_estimatedCompletion;
-        private string m_lastCompletedSkill = String.Empty;
+        //private string m_lastCompletedSkill = String.Empty;
 
         private GrandCharacterInfo m_grandCharacterInfo;
 
@@ -941,9 +908,6 @@ namespace EVEMon
 
         private int m_lastTickSPPaint = 0;
 
-        private bool attempted_dl_complete = false;
-        private String old_skill = null;
-
         private void tmrTick_Tick(object sender, EventArgs e)
         {
             CalcSkillRemainText();
@@ -970,12 +934,11 @@ namespace EVEMon
                     }
                 }
             }
-            if (attempted_dl_complete && m_estimatedCompletion < DateTime.Now &&
-                m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
-                m_grandCharacterInfo.CurrentlyTrainingSkill.Name != m_lastCompletedSkill)
+            if (m_grandCharacterInfo.DL_Complete && m_estimatedCompletion < DateTime.Now &&
+                m_grandCharacterInfo.CurrentlyTrainingSkill != null)
             {
-                m_lastCompletedSkill = m_grandCharacterInfo.CurrentlyTrainingSkill.Name;
-                OnSkillTrainingComplete(m_charName, m_lastCompletedSkill);
+                // Trigger event on skill completion
+                m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
             }
             if (updating_pic == false && pbCharImage.Image == null)
             {
@@ -1937,8 +1900,6 @@ namespace EVEMon
     }
 
     public delegate void SkillTrainingCompletedHandler(object sender, SkillTrainingCompletedEventArgs e);
-
-    public delegate void DownloadAttemptCompletedHandler(object sender, SkillTrainingCompletedEventArgs oldskill);
 
     public class SkillTrainingCompletedEventArgs : EventArgs
     {

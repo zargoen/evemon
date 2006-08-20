@@ -199,11 +199,11 @@ namespace EVEMon
             CharacterMonitor cm = new CharacterMonitor(m_settings, cli);
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
-            cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.DownloadAttemptCompleted += new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
             return true;
 
@@ -228,11 +228,11 @@ namespace EVEMon
             CharacterMonitor cm = new CharacterMonitor(m_settings, cfi, sci);
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
-            cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.DownloadAttemptCompleted += new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
+            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             SetRemoveEnable();
             return true;
         }
@@ -336,7 +336,7 @@ namespace EVEMon
 
         private List<string> m_completedSkills = new List<string>();
 
-        private void cm_SkillTrainingCompleted(object sender, SkillTrainingCompletedEventArgs e)
+        /*private void cm_SkillTrainingCompleted(object sender, SkillTrainingCompletedEventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
             {
@@ -365,29 +365,59 @@ namespace EVEMon
                 if (m_settings.EnableEmailAlert)
                     Emailer.SendAlertMail(m_settings, e.SkillName, e.CharacterName);
             }));
-        }
+        }*/
 
-        private void cm_DownloadAttemptCompleted(object sender, SkillTrainingCompletedEventArgs e)
+        private void cm_DownloadAttemptCompleted(object sender, GrandCharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                if (m_settings.EnableBalloonTips)
+                if (e.Complete)
                 {
-                    string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
-                    if (m_completedSkills.Contains(sa))
+                    if (m_settings.PlaySoundOnSkillComplete)
+                        MP3Player.Play("SkillTrained.mp3", true);
+
+                    if (m_settings.EnableBalloonTips)
                     {
-                        m_completedSkills.Remove(sa);
-                        if (m_completedSkills.Count == 0)
-                        {
-                            // need to disable the alert and associated stuff
-                            // Is this really as simple as:
-                            niAlertIcon.Visible = false;
-                            tmrAlertRefresh.Enabled = false;
-                        }
+                        string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
+                        m_completedSkills.Add(sa);
+
+                        niAlertIcon.Text = "Skill Training Completed";
+                        niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                         if (m_completedSkills.Count == 1)
-                            niAlertIcon.BalloonTipText = m_completedSkills[0];
+                            niAlertIcon.BalloonTipText = sa;
                         else if (m_completedSkills.Count > 1)
                             niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                        niAlertIcon.BalloonTipIcon = ToolTipIcon.Info;
+                        niAlertIcon.Visible = true;
+                        niAlertIcon.ShowBalloonTip(30000);
+                        tmrAlertRefresh.Enabled = false;
+                        tmrAlertRefresh.Interval = 60000;
+                        tmrAlertRefresh.Enabled = true;
+                    }
+
+                    if (m_settings.EnableEmailAlert)
+                        Emailer.SendAlertMail(m_settings, e.SkillName, e.CharacterName);
+                }
+                else
+                {
+                    if (m_settings.EnableBalloonTips)
+                    {
+                        string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
+                        if (m_completedSkills.Contains(sa))
+                        {
+                            m_completedSkills.Remove(sa);
+                            if (m_completedSkills.Count == 0)
+                            {
+                                // need to disable the alert and associated stuff 
+                                // Is this really as simple as: 
+                                niAlertIcon.Visible = false;
+                                tmrAlertRefresh.Enabled = false;
+                            }
+                            if (m_completedSkills.Count == 1)
+                                niAlertIcon.BalloonTipText = m_completedSkills[0];
+                            else if (m_completedSkills.Count > 1)
+                                niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                        }
                     }
                 }
             }));
@@ -406,8 +436,7 @@ namespace EVEMon
             CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
             if (cm != null)
                 cm.Stop();
-            cm.SkillTrainingCompleted -= new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.DownloadAttemptCompleted -= new DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            //cm.SkillTrainingCompleted -= new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             cm.ShortInfoChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
             if (tp.Tag is CharLoginInfo)
@@ -422,6 +451,7 @@ namespace EVEMon
                 CharFileInfo cfi = tp.Tag as CharFileInfo;
                 RemoveCharFileInfo(cfi);
             }
+            cm.GrandCharacterInfo.DownloadAttemptCompleted -= new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
         }
 

@@ -672,17 +672,151 @@ namespace EVEMon.Common
                     gs.Known = true;
                 }
             }
-            this.CancelCurrentSkillTraining();
-            if (ci.SkillInTraining != null)
+            if (this.CurrentlyTrainingSkill != null && (ci.SkillInTraining == null || (ci.SkillInTraining != null && ci.SkillInTraining.SkillName != this.CurrentlyTrainingSkill.Name) || ci.SkillInTraining.EstimatedCompletion.ToString() != this.CurrentlyTrainingSkill.EstimatedCompletion.ToString()))
+                this.CancelCurrentSkillTraining(); // Skill or current expected completion time changed since previous update.
+            if (!first_run)
             {
-                GrandSkill newTrainingSkill = this.GetSkill(ci.SkillInTraining.SkillName);
-                if (newTrainingSkill != null)
+                if (m_old_skill_completed)
                 {
-                    newTrainingSkill.SetTrainingInfo(ci.SkillInTraining.TrainingToLevel,
-                                                     ci.SkillInTraining.EstimatedCompletion);
+                    if (old_skill != null && this.GetSkill(old_skill).CurrentSkillPoints < old_Required_points)
+                    {
+                        OnDownloadAttemptComplete(this.Name, old_skill, false);
+                    }
                 }
+                else if (!m_old_skill_completed)
+                {
+                    if (old_skill != null && this.GetSkill(old_skill).CurrentSkillPoints >= old_Required_points)
+                    {// Check old skill for completion
+                        m_old_skill_completed = true;
+                    }
+                    else if (old_skill != null && this.GetSkill(old_skill).CurrentSkillPoints < old_Required_points)
+                    {// If this is literally the second pass then the old_skill values need to be checked so that the rest is consistently coded
+                        old_skill = null;
+                        old_Required_points = 0;
+                    }
+                    OnDownloadAttemptComplete(this.Name, old_skill, m_old_skill_completed);
+                }
+                if (ci.SkillInTraining != null && this.CurrentlyTrainingSkill == null)
+                {
+                    GrandSkill newTrainingSkill = this.GetSkill(ci.SkillInTraining.SkillName);
+                    if (newTrainingSkill != null)
+                    {
+                        if (ci.SkillInTraining.NeededPoints <= ci.SkillInTraining.CurrentPoints)
+                        {
+                            if (m_old_skill_completed && ci.SkillInTraining.SkillName == old_skill)
+                            {
+                                newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(ci.SkillInTraining.TrainingToLevel);
+                                m_old_skill_completed = true;
+                            }
+                            if (!m_old_skill_completed || ci.SkillInTraining.SkillName != old_skill)
+                            {
+                                OnDownloadAttemptComplete(this.Name, ci.SkillInTraining.SkillName, true);
+                                newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(ci.SkillInTraining.TrainingToLevel);
+                                old_skill = newTrainingSkill.Name;
+                                old_Required_points = ci.SkillInTraining.NeededPoints;
+                                m_old_skill_completed = true;
+                            }
+                        }
+                        else if (ci.SkillInTraining.NeededPoints > ci.SkillInTraining.CurrentPoints)
+                        {
+                            newTrainingSkill.SetTrainingInfo(ci.SkillInTraining.TrainingToLevel,
+                                                             ci.SkillInTraining.EstimatedCompletion);
+                        }
+                    }
+                }
+                m_attempted_dl_complete = true;
+            }
+            if (first_run)
+            {
+                if (ci.SkillInTraining != null)
+                {   // Initialise the old skill details...
+                    // if you save these two values (careful 'cos old_skill can be null) on program exit or whenever
+                    // they are updated then you could load them here and then you'd only have to acknowledge one alert
+                    // when a skill is detected as finished... ever!!
+                    // This may mean saving the currently un-acknowledged alerts and then 
+                    // loading them back on a restart of the client (remember to clear that list once acknowledged)!
+                    // That would be one way we might fix the constant "Skill Training Complete" messages for alts
+                    // everytime EVEMon loads. Something for the todo list.
+                    old_skill = ci.SkillInTraining.SkillName;
+                    old_Required_points = ci.SkillInTraining.NeededPoints;
+                }
+                first_run = false;
             }
             this.ResumeEvents();
+        }
+
+        private bool first_run = true;
+        private bool m_old_skill_completed = false;
+        private bool m_attempted_dl_complete = false;
+        private String old_skill = null;
+        private int old_Required_points = 0;
+
+        public bool DL_Complete
+        {
+            get { return m_attempted_dl_complete; }
+        }
+
+        public delegate void DownloadAttemptCompletedHandler(object sender, DownloadAttemptCompletedEventArgs oldskill);
+
+        public event DownloadAttemptCompletedHandler DownloadAttemptCompleted;
+
+        public class DownloadAttemptCompletedEventArgs : EventArgs
+        {
+            private string m_skillName;
+
+            public string SkillName
+            {
+                get { return m_skillName; }
+            }
+
+            private string m_characterName;
+
+            public string CharacterName
+            {
+                get { return m_characterName; }
+            }
+
+            private bool m_complete;
+
+            public bool Complete
+            {
+                get { return m_complete; }
+            }
+
+            public DownloadAttemptCompletedEventArgs(string CharacterName, string skillName, bool Complete)
+            {
+                m_skillName = skillName;
+                m_characterName = CharacterName;
+                m_complete = Complete;
+            }
+        }
+
+        public void trigger_skill_complete(string CharacterName, string skillName)
+        { // Basically trigger the event when a skill completes between downloads
+            OnDownloadAttemptComplete(CharacterName, skillName, true);
+            GrandSkill newlyCompletedSkill = this.GetSkill(skillName);
+            if (newlyCompletedSkill != null)
+            {
+                newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
+                old_skill = newlyCompletedSkill.Name;
+                old_Required_points = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
+                m_old_skill_completed = true;
+                this.CancelCurrentSkillTraining();
+            }
+        }
+
+        private void OnDownloadAttemptComplete(string CharacterName, string skillName, bool Complete)
+        {
+            if (String.IsNullOrEmpty(CharacterName) || String.IsNullOrEmpty(skillName))
+            {
+                return;
+            }
+            GrandSkill temp = this.GetSkill(skillName);
+            if (DownloadAttemptCompleted != null && temp != null)
+            {
+                DownloadAttemptCompletedEventArgs e = new DownloadAttemptCompletedEventArgs(CharacterName, skillName, Complete);
+                DownloadAttemptCompleted(this, e);
+            }
         }
 
         public SerializableCharacterInfo ExportSerializableCharacterInfo()
@@ -1624,6 +1758,13 @@ namespace EVEMon.Common
             return result;
         }
 
+        public bool IsFullyTrained()
+        {
+            int csp = this.CurrentSkillPoints;
+            int lvl = CalculateLevel();
+            return (csp == GetPointsRequiredForLevel(lvl + 1));
+        }
+        
         public bool IsPartiallyTrained()
         {
             int csp = this.CurrentSkillPoints;
