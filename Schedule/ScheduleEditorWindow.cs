@@ -36,6 +36,7 @@ namespace EVEMon.Schedule
                 }
                 m_settings.Schedule.Add(f.ScheduleEntry);
                 lbEntries.Items.Add(f.ScheduleEntry.Title);
+                m_settings.Save();
             }
         }
 
@@ -161,6 +162,7 @@ namespace EVEMon.Schedule
                 }
                 m_settings.Schedule.RemoveAt(i);
                 lbEntries.Items.RemoveAt(lbEntries.SelectedIndex);
+                m_settings.Save();
             }
         }
     }
