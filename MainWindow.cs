@@ -523,13 +523,16 @@ namespace EVEMon
             }
             else
             {
-                TabPage tp = this.tcCharacterTabs.SelectedTab;
-                if (tp != null)
+                if (this.tcCharacterTabs != null)
                 {
-                    CharacterMonitor current = tp.Controls[0] as CharacterMonitor;
-                    if (current != null)
+                    TabPage tp = this.tcCharacterTabs.SelectedTab;
+                    if (tp != null)
                     {
-                        current.ForceUpdate();
+                        CharacterMonitor current = tp.Controls[0] as CharacterMonitor;
+                        if (current != null)
+                        {
+                            current.ForceUpdate();
+                        }
                     }
                 }
             }
