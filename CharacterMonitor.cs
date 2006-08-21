@@ -622,6 +622,7 @@ namespace EVEMon
                                                       tmrUpdate.Interval = 1000 * 60 * 30;
                                                       tmrUpdate.Enabled = true;
                                                       SetErrorThrobber();
+                                                      this.m_grandCharacterInfo.check_old_skill();
                                                   }));
                 return;
             }
