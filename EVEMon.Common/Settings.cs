@@ -36,7 +36,7 @@ namespace EVEMon.Common
         {
             get { return m_character; }
             set { m_character = value; }
-        }
+        }        
 
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
 
@@ -44,6 +44,14 @@ namespace EVEMon.Common
         {
             get { return m_characterList; }
             set { m_characterList = value; }
+        }
+
+        private ToolTipDisplayOptions m_tooltipOptions = ToolTipDisplayOptions.Name | ToolTipDisplayOptions.Skill | ToolTipDisplayOptions.TimeRemaining;
+
+        public ToolTipDisplayOptions TooltipOptions
+        {
+            get { return m_tooltipOptions; }
+            set { m_tooltipOptions = value; }
         }
 
         private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
@@ -895,6 +903,16 @@ namespace EVEMon.Common
         None,
         SystemDefault,
         Specified
+    }
+
+    [Flags]
+    public enum ToolTipDisplayOptions
+    {
+        Name = 1,
+        Skill = 2,
+        TimeRemaining = 4,
+        TimeFinished = 8,
+        Blank = 16
     }
 
     [XmlRoot]

@@ -258,22 +258,52 @@ namespace EVEMon
                         }
                     }
                 }
+                
+                //there are real optimization opportunities here - this gets updated every second
                 StringBuilder sb = new StringBuilder();
                 sb.Append("EVEMon");
                 foreach (GrandCharacterInfo gci in gcis.Values)
                 {
                     sb.Append("\n");
-                    sb.Append(gci.Name);
-                    sb.Append(" - ");
-                    sb.Append(gci.CurrentlyTrainingSkill.Name);
+                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name)
+                    {
+                        sb.Append(gci.Name);
+                        sb.Append(" - "); 
+                    }
+                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill)
+                    {
+                        sb.Append(gci.CurrentlyTrainingSkill.Name);
                     sb.Append(" ");
                     sb.Append(GrandSkill.GetRomanSkillNumber(gci.CurrentlyTrainingSkill.TrainingToLevel));
-                    sb.Append(" - ");
-                    sb.Append(GrandSkill.TimeSpanToDescriptiveText(
-                        gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                        DescriptiveTextOptions.IncludeCommas));
+                        sb.Append(" - ");
+                    }
+
+                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished)
+                    {
+                        //show the time finished
+                        sb.Append(gci.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g"));      // This can probably be formatted better
+                        sb.Append(" - ");
+                        
+                    }
+
+                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining)
+                    {
+                        //show the time to completion
+                        sb.Append(GrandSkill.TimeSpanToDescriptiveText(gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now, DescriptiveTextOptions.IncludeCommas));
+                        sb.Append(" - ");                        
+                    }
+                    if (sb.Length > 7)
+                    {
+                        sb.Remove(sb.Length - 3, 3);
+                    }
                 }
-                SetMinimizedIconTooltipText(sb.ToString());
+                string sbOut;
+                if (sb.ToString().Equals("EVEMon\n"))
+                {
+                    sbOut  = sb.ToString() + "You can configure this tooltip in the options/general panel";
+                }
+                
+                SetMinimizedIconTooltipText(sbOut);
 
                 if (m_settings.TitleToTime && gcis.Count > 0)
                 {

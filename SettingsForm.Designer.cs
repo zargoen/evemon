@@ -73,6 +73,9 @@ namespace EVEMon
             this.label9 = new System.Windows.Forms.Label();
             this.cbScreenList = new System.Windows.Forms.ComboBox();
             this.btnIdentifyScreens = new System.Windows.Forms.Button();
+            this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
+            this.cbTooltipOptionDate = new System.Windows.Forms.CheckBox();
+            this.cbTooltipOptionETA = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.verticalFlowPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -115,6 +118,8 @@ namespace EVEMon
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.cbTooltipOptionSkill = new System.Windows.Forms.CheckBox();
+            this.cbTooltipOptionName = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -130,6 +135,7 @@ namespace EVEMon
             this.flowLayoutPanel1.SuspendLayout();
             this.flpScreenSelect.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.gboxTooltipOptions.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.verticalFlowPanel3.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -517,6 +523,7 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox1);
             this.verticalFlowPanel1.Controls.Add(this.groupBox2);
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
+            this.verticalFlowPanel1.Controls.Add(this.gboxTooltipOptions);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
@@ -700,6 +707,41 @@ namespace EVEMon
             this.btnIdentifyScreens.Text = "Identify Screens";
             this.btnIdentifyScreens.UseVisualStyleBackColor = true;
             this.btnIdentifyScreens.Click += new System.EventHandler(this.btnIdentifyScreens_Click);
+            // 
+            // gboxTooltipOptions
+            // 
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionName);
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionSkill);
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionDate);
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionETA);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 271);
+            this.gboxTooltipOptions.Name = "gboxTooltipOptions";
+            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 113);
+            this.gboxTooltipOptions.TabIndex = 7;
+            this.gboxTooltipOptions.TabStop = false;
+            this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
+            // 
+            // cbTooltipOptionDate
+            // 
+            this.cbTooltipOptionDate.AutoSize = true;
+            this.cbTooltipOptionDate.Location = new System.Drawing.Point(14, 88);
+            this.cbTooltipOptionDate.Name = "cbTooltipOptionDate";
+            this.cbTooltipOptionDate.Size = new System.Drawing.Size(118, 17);
+            this.cbTooltipOptionDate.TabIndex = 3;
+            this.cbTooltipOptionDate.Text = "Date of Completion";
+            this.cbTooltipOptionDate.UseVisualStyleBackColor = true;
+            // 
+            // cbTooltipOptionETA
+            // 
+            this.cbTooltipOptionETA.AutoSize = true;
+            this.cbTooltipOptionETA.Checked = true;
+            this.cbTooltipOptionETA.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTooltipOptionETA.Location = new System.Drawing.Point(14, 65);
+            this.cbTooltipOptionETA.Name = "cbTooltipOptionETA";
+            this.cbTooltipOptionETA.Size = new System.Drawing.Size(117, 17);
+            this.cbTooltipOptionETA.TabIndex = 2;
+            this.cbTooltipOptionETA.Text = "Time to Completion";
+            this.cbTooltipOptionETA.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
@@ -1235,6 +1277,26 @@ namespace EVEMon
             this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
+            // cbTooltipOptionSkill
+            // 
+            this.cbTooltipOptionSkill.AutoSize = true;
+            this.cbTooltipOptionSkill.Location = new System.Drawing.Point(14, 42);
+            this.cbTooltipOptionSkill.Name = "cbTooltipOptionSkill";
+            this.cbTooltipOptionSkill.Size = new System.Drawing.Size(101, 17);
+            this.cbTooltipOptionSkill.TabIndex = 4;
+            this.cbTooltipOptionSkill.Text = "Skill Name/Rank";
+            this.cbTooltipOptionSkill.UseVisualStyleBackColor = true;
+            // 
+            // cbTooltipOptionName
+            // 
+            this.cbTooltipOptionName.AutoSize = true;
+            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 19);
+            this.cbTooltipOptionName.Name = "cbTooltipOptionName";
+            this.cbTooltipOptionName.Size = new System.Drawing.Size(104, 17);
+            this.cbTooltipOptionName.TabIndex = 5;
+            this.cbTooltipOptionName.Text = "Character Name";
+            this.cbTooltipOptionName.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -1281,6 +1343,8 @@ namespace EVEMon
             this.flpScreenSelect.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.gboxTooltipOptions.ResumeLayout(false);
+            this.gboxTooltipOptions.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.verticalFlowPanel3.ResumeLayout(false);
             this.verticalFlowPanel3.PerformLayout();
@@ -1418,5 +1482,10 @@ namespace EVEMon
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox cbShowCompletedSkillsDialog;
+        private System.Windows.Forms.GroupBox gboxTooltipOptions;
+        private System.Windows.Forms.CheckBox cbTooltipOptionDate;
+        private System.Windows.Forms.CheckBox cbTooltipOptionETA;
+        private System.Windows.Forms.CheckBox cbTooltipOptionName;
+        private System.Windows.Forms.CheckBox cbTooltipOptionSkill;
     }
 }

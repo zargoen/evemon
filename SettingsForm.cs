@@ -62,6 +62,24 @@ namespace EVEMon
             s.EmailFromAddress = tbFromAddress.Text;
             s.EmailToAddress = tbToAddress.Text;
 
+            ToolTipDisplayOptions tipOptions = ToolTipDisplayOptions.Blank;
+
+            if (cbTooltipOptionDate.Checked)
+            {
+                tipOptions = tipOptions | ToolTipDisplayOptions.TimeFinished;
+            }
+            if (cbTooltipOptionETA.Checked)
+            {
+                tipOptions = tipOptions | ToolTipDisplayOptions.TimeRemaining;
+            } if (cbTooltipOptionName.Checked)
+            {
+                tipOptions = tipOptions | ToolTipDisplayOptions.Name;
+            } if (cbTooltipOptionSkill.Checked)
+            {
+                tipOptions = tipOptions | ToolTipDisplayOptions.Skill;
+            }
+            s.TooltipOptions = tipOptions;
+
             s.UseCustomProxySettings = rbCustomProxy.Checked;
             ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
             httpSetting.Host = tbProxyHttpHost.Text;
@@ -154,6 +172,12 @@ namespace EVEMon
 
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
+
+            cbTooltipOptionDate.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished);
+            cbTooltipOptionETA.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining);
+            cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
+            cbTooltipOptionName.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name);
+            
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (rk.GetValue("EVEMon") == null)
