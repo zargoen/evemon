@@ -228,11 +228,11 @@ namespace EVEMon
             CharacterMonitor cm = new CharacterMonitor(m_settings, cfi, sci);
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
-            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
-            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
             return true;
         }
