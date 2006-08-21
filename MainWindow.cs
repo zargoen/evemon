@@ -297,8 +297,8 @@ namespace EVEMon
                         sb.Remove(sb.Length - 3, 3);
                     }
                 }
-                string sbOut;
-                if (sb.ToString().Equals("EVEMon\n"))
+                string sbOut = sb.ToString() ;
+                if (sbOut.Equals("EVEMon\n"))
                 {
                     sbOut  = sb.ToString() + "You can configure this tooltip in the options/general panel";
                 }
