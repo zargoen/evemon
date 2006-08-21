@@ -654,7 +654,7 @@ namespace EVEMon.SkillPlanner
                     current.BackColor = lvSkills.BackColor;
                 }
             }
-            this.Refresh();
+            this.Invalidate();
         }
 
         private void lvSkills_ItemHover(object sender, ListViewItemMouseHoverEventArgs e)
