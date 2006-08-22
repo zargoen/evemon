@@ -512,6 +512,22 @@ namespace EVEMon
             {
                 SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
                 m_settings.SetCharacterCache(sci);
+                int toremove;
+                do
+                {
+                    toremove = -1;
+                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+                    {
+                        if (x.A == m_charName && (x != new Pair<string, OldSkillinfo>(m_charName,m_grandCharacterInfo.OldTrainingSkill)))
+                            toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                    }
+                    if (toremove != -1)
+                        m_settings.OldSkillLearnt.RemoveAt(toremove);
+                } while (toremove != -1);
+                if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
+                {
+                    m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
+                }
                 m_settings.Save();
             }
         }
@@ -630,8 +646,14 @@ namespace EVEMon
             m_charId = gotCharId;
             m_grandCharacterInfo.CharacterId = gotCharId;
             GetCharacterImage();
-
             UpdateGrandCharacterInfo();
+            foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+            {
+                if (x.A == m_charName)
+                {
+                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed);
+                }
+            }
         }
 
         private void UpdateGrandCharacterInfo()
