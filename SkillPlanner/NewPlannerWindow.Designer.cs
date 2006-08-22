@@ -71,8 +71,8 @@ namespace EVEMon.SkillPlanner
             this.tpShipBrowser = new System.Windows.Forms.TabPage();
             this.tpItemBrowser = new System.Windows.Forms.TabPage();
             this.planEditor = new EVEMon.SkillPlanner.PlanOrderEditorControl();
-            this.skillSelectControl1 = new EVEMon.SkillPlanner.SkillSelectControl();
-            this.skillTreeDisplay1 = new EVEMon.SkillPlanner.SkillTreeDisplay();
+            this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
+            this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplay();
             this.shipBrowser = new EVEMon.SkillPlanner.ShipBrowserControl();
             this.itemBrowser = new EVEMon.SkillPlanner.ItemBrowserControl();
             this.cmsSkillContext.SuspendLayout();
@@ -317,11 +317,11 @@ namespace EVEMon.SkillPlanner
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.skillSelectControl1);
+            this.splitContainer2.Panel1.Controls.Add(this.skillSelectControl);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.skillTreeDisplay1);
+            this.splitContainer2.Panel2.Controls.Add(this.skillTreeDisplay);
             this.splitContainer2.Panel2.Controls.Add(this.pnlPlanControl);
             this.splitContainer2.Size = new System.Drawing.Size(814, 484);
             this.splitContainer2.SplitterDistance = 158;
@@ -484,31 +484,30 @@ namespace EVEMon.SkillPlanner
             this.planEditor.Size = new System.Drawing.Size(814, 484);
             this.planEditor.TabIndex = 2;
             // 
-            // skillSelectControl1
+            // skillSelectControl
             // 
-            this.skillSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.skillSelectControl1.GrandCharacterInfo = null;
-            this.skillSelectControl1.Location = new System.Drawing.Point(0, 0);
-            this.skillSelectControl1.Name = "skillSelectControl1";
-            this.skillSelectControl1.Plan = null;
-            this.skillSelectControl1.Size = new System.Drawing.Size(158, 484);
-            this.skillSelectControl1.TabIndex = 0;
-            this.skillSelectControl1.Load += new System.EventHandler(this.skillSelectControl1_Load);
-            this.skillSelectControl1.SelectedSkillChanged += new System.EventHandler<System.EventArgs>(this.skillSelectControl1_SelectedSkillChanged);
+            this.skillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillSelectControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.skillSelectControl.GrandCharacterInfo = null;
+            this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
+            this.skillSelectControl.Name = "skillSelectControl";
+            this.skillSelectControl.Plan = null;
+            this.skillSelectControl.Size = new System.Drawing.Size(158, 484);
+            this.skillSelectControl.TabIndex = 0;
+            this.skillSelectControl.SelectedSkillChanged += new System.EventHandler<System.EventArgs>(this.skillSelectControl_SelectedSkillChanged);
             // 
-            // skillTreeDisplay1
+            // skillTreeDisplay
             // 
-            this.skillTreeDisplay1.AutoScroll = true;
-            this.skillTreeDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillTreeDisplay1.Location = new System.Drawing.Point(0, 92);
-            this.skillTreeDisplay1.Name = "skillTreeDisplay1";
-            this.skillTreeDisplay1.Plan = null;
-            this.skillTreeDisplay1.RootSkill = null;
-            this.skillTreeDisplay1.Size = new System.Drawing.Size(652, 392);
-            this.skillTreeDisplay1.TabIndex = 0;
-            this.skillTreeDisplay1.WorksafeMode = false;
-            this.skillTreeDisplay1.SkillClicked += new EVEMon.SkillPlanner.SkillClickedHandler(this.skillTreeDisplay1_SkillClicked);
+            this.skillTreeDisplay.AutoScroll = true;
+            this.skillTreeDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillTreeDisplay.Location = new System.Drawing.Point(0, 92);
+            this.skillTreeDisplay.Name = "skillTreeDisplay";
+            this.skillTreeDisplay.Plan = null;
+            this.skillTreeDisplay.RootSkill = null;
+            this.skillTreeDisplay.Size = new System.Drawing.Size(652, 392);
+            this.skillTreeDisplay.TabIndex = 0;
+            this.skillTreeDisplay.WorksafeMode = false;
+            this.skillTreeDisplay.SkillClicked += new EVEMon.SkillPlanner.SkillClickedHandler(this.skillTreeDisplay_SkillClicked);
             // 
             // shipBrowserControl
             // 
@@ -568,7 +567,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private SkillTreeDisplay skillTreeDisplay1;
+        private SkillTreeDisplay skillTreeDisplay;
         private System.Windows.Forms.ContextMenuStrip cmsSkillContext;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo1;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo2;
@@ -604,7 +603,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tpSkillBrowser;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private SkillSelectControl skillSelectControl1;
+        private SkillSelectControl skillSelectControl;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton tsbImplantCalculator;
         private System.Windows.Forms.TabPage tpItemBrowser;

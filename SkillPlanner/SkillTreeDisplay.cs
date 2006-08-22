@@ -645,7 +645,7 @@ namespace EVEMon.SkillPlanner
                             si.Left + ofsLeft, ttop, SKILLBOX_WIDTH, SKILLBOX_HEIGHT);
                         si.CurrentRectangle = rect;
 
-                        string currentLevelText = "Current Level: " + GrandSkill.GetRomanSkillNumber(si.Skill.Level);
+                        string currentLevelText = "Current Level: " + GrandSkill.GetRomanForInt(si.Skill.Level);
                         Color stdTextColor = !m_worksafeMode ? Color.Black : SystemColors.ControlText;
                         Color reqTextColor = !m_worksafeMode ? Color.Red : SystemColors.GrayText;
                         string requiredLevel = null;
@@ -656,7 +656,7 @@ namespace EVEMon.SkillPlanner
 
                         if (si.RequiredLevel > 0)
                         {
-                            requiredLevel = "Required Level: " + GrandSkill.GetRomanSkillNumber(si.RequiredLevel);
+                            requiredLevel = "Required Level: " + GrandSkill.GetRomanForInt(si.RequiredLevel);
                             if (si.RequiredLevel > si.Skill.Level)
                             {
                                 TimeSpan ts = si.Skill.GetTrainingTimeToLevel(si.RequiredLevel);

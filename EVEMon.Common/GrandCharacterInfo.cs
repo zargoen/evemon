@@ -41,10 +41,12 @@ namespace EVEMon.Common
             using (Stream s = asm.GetManifestResourceStream("EVEMon.Common.eve-skills2.xml.gz"))
             using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
             {
+                // Init the static list of all skills
+                GrandSkill.AllSkills = new Dictionary<string, GrandSkill>();
+
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.Load(zs);
 
-                Dictionary<string, GrandSkill> allSkills = new Dictionary<string, GrandSkill>();
                 foreach (XmlElement sgel in xdoc.SelectNodes("/skills/c"))
                 {
                     List<GrandSkill> skills = new List<GrandSkill>();
@@ -71,11 +73,11 @@ namespace EVEMon.Common
 
                         GrandSkill gs = new GrandSkill(
                             this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank,
-                            prereqs, allSkills);
+                            prereqs);
                         gs.Changed += new EventHandler(gs_Changed);
 
                         skills.Add(gs);
-                        allSkills[gs.Name] = gs;
+                        GrandSkill.AllSkills[gs.Name] = gs;
                     }
 
                     GrandSkillGroup gsg = new GrandSkillGroup(sgel.GetAttribute("n"),
@@ -83,6 +85,8 @@ namespace EVEMon.Common
                     this.m_skillGroups[gsg.Name] = gsg;
                 }
             }
+
+            GrandSkill.PrepareAllPrerequisites();
         }
 
         private int m_suppressed;
@@ -663,7 +667,7 @@ namespace EVEMon.Common
                         gs = new GrandSkill(this, false,
                                             s.Name, s.Id, "Unknown Skill", EveAttribute.Intelligence,
                                             EveAttribute.Willpower,
-                                            s.Rank, new List<GrandSkill.Prereq>(), new Dictionary<string, GrandSkill>());
+                                            s.Rank, new List<GrandSkill.Prereq>());
                         gs.Changed += new EventHandler(gs_Changed);
 
                         gsg.InsertSkill(gs);
@@ -1580,16 +1584,12 @@ namespace EVEMon.Common
         private EveAttribute m_primaryAttribute;
         private EveAttribute m_secondaryAttribute;
         private int m_rank;
-
         private IEnumerable<Prereq> m_prereqs;
-        private IDictionary<string, GrandSkill> m_otherSkills;
-        private bool m_prereqCooked;
-
+        private static IDictionary<string, GrandSkill> sm_allSkills;
         private int m_currentSkillPoints;
 
         public GrandSkill(GrandCharacterInfo gci, bool pub, string name, int id, string description,
-                          EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs,
-                          IDictionary<string, GrandSkill> otherSkills)
+                          EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs)
         {
             m_owner = gci;
             m_public = pub;
@@ -1601,7 +1601,6 @@ namespace EVEMon.Common
             m_secondaryAttribute = a2;
             m_rank = rank;
             m_prereqs = prereqs;
-            m_otherSkills = otherSkills;
         }
 
         private GrandSkillGroup m_skillGroup;
@@ -1904,22 +1903,33 @@ namespace EVEMon.Common
         {
             get
             {
-                if (!m_prereqCooked)
-                {
-                    PreparePrereqList();
-                }
                 return m_prereqs;
             }
         }
 
-        private void PreparePrereqList()
+        public static IDictionary<string, GrandSkill> AllSkills
         {
-            foreach (Prereq pr in m_prereqs)
+            get
             {
-                GrandSkill gs = m_otherSkills[pr.Name];
-                pr.SetSkill(gs);
+                return sm_allSkills;
             }
-            m_prereqCooked = true;
+            set
+            {
+                sm_allSkills = value;
+            }
+        }
+
+        public static void PrepareAllPrerequisites()
+        {
+            // We have loaded all skills so we can now bake in all the pre-req skills
+            foreach (GrandSkill s in GrandSkill.AllSkills.Values)
+            {
+                foreach (Prereq pr in s.Prereqs)
+                {
+                    GrandSkill gs = AllSkills[pr.Name];
+                    pr.SetSkill(gs);
+                }
+            }
         }
 
         private void OnChanged()
@@ -1947,7 +1957,7 @@ namespace EVEMon.Common
             {
                 get { return m_pointedSkill; }
             }
-
+            
             internal void SetSkill(GrandSkill gs)
             {
                 if (m_pointedSkill != null)
@@ -1956,7 +1966,7 @@ namespace EVEMon.Common
                 }
                 m_pointedSkill = gs;
             }
-
+            
             public int RequiredLevel
             {
                 get { return m_requiredLevel; }
@@ -2104,34 +2114,33 @@ namespace EVEMon.Common
             }
         }
 
-        public bool HasPrerequisite(int myLevel, string skillName, int level)
+        public bool HasAsPrerequisite(GrandSkill gs)
         {
-            if (skillName == m_name && level < myLevel)
-            {
-                return true;
-            }
-            foreach (Prereq pp in this.Prereqs)
-            {
-                if (skillName == pp.Skill.Name && level <= pp.RequiredLevel)
-                {
-                    return true;
-                }
-                if (pp.Skill.HasPrerequisite(pp.RequiredLevel, skillName, level))
-                {
-                    return true;
-                }
-            }
-            return false;
+            int neededLevel;
+            return HasAsPrerequisite(gs, out neededLevel, true);
         }
 
-        public bool IsPrerequisiteFor(int myLevel, string skillName, int level)
+        public bool HasAsPrerequisite(GrandSkill gs, out int neededLevel)
         {
-            if (skillName == m_name && level > myLevel)
+            return HasAsPrerequisite(gs, out neededLevel, true);
+        }
+
+        public bool HasAsPrerequisite(GrandSkill gs, out int neededLevel, bool recurse)
+        {
+            foreach (Prereq pp in this.Prereqs)
             {
-                return true;
+                if (pp.Skill == gs)
+                {
+                    neededLevel = pp.RequiredLevel;
+                    return true;
+                }
+                if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel))
+                {
+                    return true;
+                }
             }
-            GrandSkill gs = this.m_owner.GetSkill(skillName);
-            return gs.HasPrerequisite(myLevel, m_name, 1);
+            neededLevel = 0;
+            return false;
         }
 
         public static string TimeSpanToDescriptiveText(TimeSpan ts, DescriptiveTextOptions dto)
@@ -2184,7 +2193,7 @@ namespace EVEMon.Common
             }
         }
 
-        public static string GetRomanSkillNumber(int number)
+        public static string GetRomanForInt(int number)
         {
             switch (number)
             {
@@ -2201,24 +2210,6 @@ namespace EVEMon.Common
                 default:
                     return "(none)";
             }
-        }
-
-        public bool HasAsPrerequisite(GrandSkill gs, out int neededLevel)
-        {
-            foreach (Prereq pp in this.Prereqs)
-            {
-                if (pp.Skill == gs)
-                {
-                    neededLevel = pp.RequiredLevel;
-                    return true;
-                }
-                if (pp.Skill.HasAsPrerequisite(gs, out neededLevel))
-                {
-                    return true;
-                }
-            }
-            neededLevel = 0;
-            return false;
         }
 
         public static int GetIntForRoman(string r)
@@ -2295,7 +2286,7 @@ namespace EVEMon.Common
                                       Convert.ToDouble(pointsDelta);
                 }
 
-                string skillName = this.Name + " " + GetRomanSkillNumber(this.Level);
+                string skillName = this.Name + " " + GetRomanForInt(this.Level);
                 string rankText = " (Rank " + this.Rank.ToString() + ")";
                 string spText = "SP: " + this.CurrentSkillPoints.ToString("#,##0") + "/" +
                                 this.GetPointsRequiredForLevel(Math.Min(this.Level + 1, 5)).ToString("#,##0");

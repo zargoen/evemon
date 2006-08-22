@@ -153,7 +153,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
             sb.Append(rs.Name);
             sb.Append(' ');
-            sb.Append(GrandSkill.GetRomanSkillNumber(rs.Level));
+            sb.Append(GrandSkill.GetRomanForInt(rs.Level));
             if (m_plan != null)
             {
                 GrandCharacterInfo gci = m_plan.GrandCharacterInfo;

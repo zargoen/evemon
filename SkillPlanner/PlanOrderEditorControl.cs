@@ -27,14 +27,6 @@ namespace EVEMon.SkillPlanner
             m_prerequisiteSkillColor = System.Drawing.Color.Black;
         }
 
-        ~PlanOrderEditorControl()
-        {
-            // TODO: Not sure how to clean these up correctly in C# - should they be in Dispose()?
-            m_plannedSkillFont.Dispose();
-            m_prerequisiteSkillFont.Dispose();
-            Dispose();
-        }
-
         private GrandCharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
 
@@ -45,20 +37,48 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_plan != null)
                 {
-                    m_plan.Changed -= new EventHandler<EventArgs>(m_plan_Changed);
+                    m_plan.Changed -= new EventHandler<EventArgs>(m_plan_PlanChanged);
                 }
                 m_plan = value;
                 if (m_plan != null)
                 {
-                    m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
+                    m_plan.Changed += new EventHandler<EventArgs>(m_plan_PlanChanged);
                 }
                 UpdateListColumns();
                 PlanChanged();
             }
         }
 
-        private void m_plan_Changed(object sender, EventArgs e)
+        private void m_plan_PlanChanged(object sender, EventArgs e)
         {
+            PlanChanged();
+        }
+
+
+        Settings m_settings;
+        public Settings Settings
+        {
+            get {return m_settings;}
+            set {
+                if (m_settings != null)
+                {
+                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                }
+                m_settings = value;
+                if (m_settings != null)
+                {
+                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                }
+            }
+        }
+
+        private void SkillHighlighting_Changed(object sender, EventArgs e)
+        {
+            // Force a plan change which will entirely rebuild the list view.
             PlanChanged();
         }
 
@@ -84,13 +104,14 @@ namespace EVEMon.SkillPlanner
                 lvSkills.BeginUpdate();
                 try
                 {
-                    //lvSkills.Items.Clear();
-                    int itemIndex = 0;
-                    foreach (PlanEntry pe in m_plan.Entries)
+                    lvSkills.Items.Clear();
+                    foreach (Plan.Entry pe in m_plan.Entries)
                     {
                         ListViewItem lvi = new ListViewItem();
                         lvi.Tag = pe;
-                        if (pe.EntryType == PlanEntryType.Planned)
+                        if (!m_settings.WorksafeMode &&
+                            m_settings.SkillPlannerHighlightPlannedSkills && 
+                            pe.EntryType == Plan.Entry.Type.Planned)
                         {
                             lvi.Font = m_plannedSkillFont;
                             lvi.ForeColor = m_plannedSkillColor;
@@ -100,25 +121,14 @@ namespace EVEMon.SkillPlanner
                             lvi.Font = m_prerequisiteSkillFont;
                             lvi.ForeColor = m_prerequisiteSkillColor;
                         }
-                        if (lvSkills.Items.Count <= itemIndex)
-                        {
-                            lvSkills.Items.Add(lvi);
-                        }
-                        else
-                        {
-                            lvSkills.Items[itemIndex] = lvi;
-                        }
-                        itemIndex++;
+
+                        lvSkills.Items.Add(lvi);
 
                         GrandSkill gs = pe.Skill;
                         if (gs.InTraining)
                         {
                             tmrTick.Enabled = true;
                         }
-                    }
-                    while (itemIndex < lvSkills.Items.Count)
-                    {
-                        lvSkills.Items.RemoveAt(itemIndex);
                     }
                     UpdateListViewItems();
                 }
@@ -178,7 +188,7 @@ namespace EVEMon.SkillPlanner
                     //lvSkills.Items.Insert(lvSkills.Items.IndexOf(olvi), lvi);
                     //lvSkills.Items.Remove(olvi);
 
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
+                    Plan.Entry pe = (Plan.Entry)lvi.Tag;
                     GrandSkill gs = pe.Skill;
 
                     while (lvi.SubItems.Count < lvSkills.Columns.Count + 1)
@@ -211,7 +221,7 @@ namespace EVEMon.SkillPlanner
                         switch (ct)
                         {
                             case ColumnPreference.ColumnType.SkillName:
-                                res = gs.Name + " " + GrandSkill.GetRomanSkillNumber(pe.Level);
+                                res = gs.Name + " " + GrandSkill.GetRomanForInt(pe.Level);
                                 break;
                             case ColumnPreference.ColumnType.TrainingTime:
                                 res =
@@ -278,105 +288,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void lvSkills_ListViewItemsDragging(object sender, ListViewDragEventArgs e)
-        {
-            /*
-            List<PlanEntry> newOrder = new List<PlanEntry>();
-            List<PlanEntry> oldItems = new List<PlanEntry>();
-            List<PlanEntry> movingItems = new List<PlanEntry>();
-            foreach (ListViewItem lvi in lvSkills.Items)
-            {
-                newOrder.Add(m_plan.GetEntryWithRoman(lvi.Text));
-            }
-            for (int i = 0; i < e.MovingCount; i++)
-            {
-                PlanEntry ope = newOrder[e.MovingFrom + i];
-                PlanEntry pe = new PlanEntry();
-                pe.SkillName = ope.SkillName;
-                pe.Level = ope.Level;
-                pe.EntryType = ope.EntryType;
-                movingItems.Add(pe);
-                oldItems.Add(ope);
-            }
-            for (int i = e.MovingCount - 1; i >= 0; i--)
-            {
-                newOrder.Insert(e.MovingTo, movingItems[i]);
-            }
-            foreach (PlanEntry pe in oldItems)
-            {
-                newOrder.Remove(pe);
-            }
-
-            // TODO: test for ordering
-            Dictionary<string, int> known = new Dictionary<string,int>();
-            foreach (GrandSkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
-            {
-                foreach (GrandSkill gs in gsg)
-                {
-                    known[gs.Name] = gs.Level;
-                }
-            }
-            for (int i = 0; i < newOrder.Count; i++)
-            {
-                GrandSkill gs = m_grandCharacterInfo.GetSkill(newOrder[i].SkillName);
-                string failure = String.Empty;
-                if (!CheckPrereqs(gs, newOrder[i].Level, known, ref failure))
-                {
-                    if (e.MovingFrom > e.MovingTo)
-                    {
-                        MessageBox.Show(
-                            "You can not move " + newOrder[i].SkillName + " " +
-                            GrandSkill.GetRomanSkillNumber(newOrder[i].Level) +
-                            " before its required prerequisite skill " +
-                            failure + ".", "Failed Prerequisite", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    }
-                    else
-                    {
-                        MessageBox.Show(
-                            "You can not move " + failure + 
-                            " after " +
-                            newOrder[i].SkillName + " " + GrandSkill.GetRomanSkillNumber(newOrder[i].Level) + " which requires it as a prerequisite.", "Failed Prerequisite", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    }
-                    e.Cancel = true;
-                    return;
-                }
-                else
-                {
-                    if (!known.ContainsKey(gs.Name))
-                        known[gs.Name] = 0;
-                    if (known[gs.Name] < newOrder[i].Level)
-                        known[gs.Name] = newOrder[i].Level;
-                }
-            }
-             */
-        }
-
-        /*
-                private bool CheckPrereqs(GrandSkill gs, int checkLevel, Dictionary<string, int> known, ref string failMessage)
-                {
-                    //if (gs.PrerequisitesMet)
-                    //    return true;
-                    foreach (GrandSkill.Prereq pp in gs.Prereqs)
-                    {
-                        GrandSkill pgs = pp.Skill;
-                        if (pgs.Level < pp.RequiredLevel)
-                        {
-                            if (!(known.ContainsKey(pgs.Name) && known[pgs.Name] >= pp.RequiredLevel))
-                            {
-                                failMessage = pgs.Name + " " + GrandSkill.GetRomanSkillNumber(pp.RequiredLevel);
-                                return false;
-                            }
-                        }
-                    }
-                    if (known[gs.Name] < checkLevel - 1)
-                    {
-                        failMessage = gs.Name + " " + GrandSkill.GetRomanSkillNumber(checkLevel - 1);
-                        return false;
-                    }
-                    return true;
-                }
-        */
-
         private void lvSkills_ListViewItemsDragged(object sender, EventArgs e)
         {
             RebuildPlanFromListViewOrder();
@@ -390,12 +301,7 @@ namespace EVEMon.SkillPlanner
                 m_plan.Entries.Clear();
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
-                    PlanEntry newPe = ((PlanEntry)lvi.Tag).Clone() as PlanEntry;
-                    //PlanEntry pe = new PlanEntry();
-                    //Match m = Regex.Match(lvi.Text, "^(.*) ([IV]+)$");
-                    //pe.SkillName = m.Groups[1].Value;
-                    //pe.Level = GrandSkill.GetIntForRoman(m.Groups[2].Value);
-                    //pe.EntryType = (PlanEntryType)Enum.Parse(typeof(PlanEntryType), lvi.SubItems[lvSkills.Columns.Count].Text, true);
+                    Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
                     m_plan.Entries.Add(newPe);
                 }
                 // Enforces proper ordering too!
@@ -438,16 +344,16 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private PlanEntry GetPlanEntryForListViewItem(ListViewItem lvi)
+        private Plan.Entry GetPlanEntryForListViewItem(ListViewItem lvi)
         {
             if (lvi == null)
             {
                 return null;
             }
-            return lvi.Tag as PlanEntry;
+            return lvi.Tag as Plan.Entry;
         }
 
-        private void RemoveFromPlan(PlanEntry pe, bool includePrerequisites)
+        private void RemoveFromPlan(Plan.Entry pe, bool includePrerequisites)
         {
             bool result = m_plan.RemoveEntry(pe.Skill, includePrerequisites, false);
             if (!result)
@@ -601,60 +507,58 @@ namespace EVEMon.SkillPlanner
 
         private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSkills.SelectedIndices.Count == 0)
-            {
-                tsbMoveUp.Enabled = false;
-                tsbMoveDown.Enabled = false;
-            }
-            else
-            {
-                tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
-                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] !=
-                                       lvSkills.Items.Count - 1);
-            }
-
             // Update the colour of all items
             foreach (ListViewItem current in lvSkills.Items)
             {
                 bool isSameSkill = false;
-                //bool isPreRequisite = false;
-                //bool isPostRequisite = false;
+                bool isPreRequisite = false;
+                bool isPostRequisite = false;
 
-                if (lvSkills.SelectedItems.Count == 1)
+                if (!m_settings.WorksafeMode && 
+                    m_settings.SkillPlannerHighlightPrerequisites && 
+                    lvSkills.SelectedItems.Count == 1)
                 {
-                    PlanEntry currentSkill = (PlanEntry)current.Tag;
-                    PlanEntry selectedSkill = (PlanEntry)lvSkills.SelectedItems[0].Tag;
+                    Plan.Entry currentSkill = (Plan.Entry)current.Tag;
+                    Plan.Entry selectedSkill = (Plan.Entry)lvSkills.SelectedItems[0].Tag;
                     // Single select so check for pre-requisite highlighting
-                    //if (selectedSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(selectedSkill.SkillName).Level,
-                    //    currentSkill.SkillName,
-                    //    currentSkill.Level))
-                    //    isPostRequisite = true;
-                    //if (currentSkill.Skill.IsPrerequisiteFor(m_grandCharacterInfo.GetSkill(currentSkill.SkillName).Level,
-                    //    selectedSkill.SkillName,
-                    //    selectedSkill.Level))
-                    //    isPreRequisite = true;
+                    int neededLevel;
+                    if (currentSkill.Skill.HasAsPrerequisite(selectedSkill.Skill, out neededLevel, false))
+                    {
+                        if (currentSkill.Level == 1 && neededLevel >= selectedSkill.Level)
+                            isPostRequisite = true;
+                    }
+                    if (selectedSkill.Skill.HasAsPrerequisite(currentSkill.Skill, out neededLevel, false))
+                    {
+                        if (currentSkill.Level == neededLevel)
+                            isPreRequisite = true;
+                    }
                     if (currentSkill.SkillName == selectedSkill.SkillName)
+                    {
                         isSameSkill = true;
+                    }
                 }
 
                 if (isSameSkill)
                 {
-                    current.BackColor = Color.LightGreen;
+                    //current.BackColor = Color.LightYellow;
+                    current.StateImageIndex = 1;
                 }
-                //else if (isPreRequisite)
-                //{
-                //    current.BackColor = Color.LightGreen;
-                //}
-                //else if (isPostRequisite)
-                //{
-                //    current.BackColor = Color.LightPink;
-                //}
+                else if (isPreRequisite)
+                {
+                    //current.BackColor = Color.LightPink;
+                    current.StateImageIndex = 2;
+                }
+                else if (isPostRequisite)
+                {
+                    //current.BackColor = Color.LightGreen;
+                    current.StateImageIndex = 0;
+                }
                 else
                 {
-                    current.BackColor = lvSkills.BackColor;
+                    //current.BackColor = lvSkills.BackColor;
+                    current.StateImageIndex = -1;
                 }
             }
-            this.Invalidate();
         }
 
         private void lvSkills_ItemHover(object sender, ListViewItemMouseHoverEventArgs e)
@@ -663,94 +567,6 @@ namespace EVEMon.SkillPlanner
             if (null != lvi)
             {
                 lvi.ToolTipText = GetPlanEntryForListViewItem(lvi).Skill.Description;
-            }
-        }
-
-        private void tsbMoveUp_Click(object sender, EventArgs e)
-        {
-            Dictionary<string, bool> seld = new Dictionary<string, bool>();
-            lvSkills.BeginUpdate();
-            try
-            {
-                List<int> sel = new List<int>();
-                foreach (int si in lvSkills.SelectedIndices)
-                {
-                    ListViewItem lvi = lvSkills.Items[si];
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
-                    sel.Add(si);
-                    seld[pe.SkillName + " " + pe.Level.ToString()] = true;
-                }
-                for (int i = 0; i < lvSkills.Items.Count; i++)
-                {
-                    if (sel.Contains(i + 1))
-                    {
-                        ListViewItem lvix = lvSkills.Items[i + 1];
-                        lvSkills.Items.RemoveAt(i + 1);
-                        lvSkills.Items.Insert(i, lvix);
-                    }
-                }
-                RebuildPlanFromListViewOrder();
-            }
-            finally
-            {
-                foreach (ListViewItem lvi in lvSkills.Items)
-                {
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
-                    string k = pe.SkillName + " " + pe.Level.ToString();
-                    if (seld.ContainsKey(k))
-                    {
-                        lvi.Selected = true;
-                    }
-                    else
-                    {
-                        lvi.Selected = false;
-                    }
-                }
-                lvSkills.EndUpdate();
-            }
-        }
-
-        private void tsbMoveDown_Click(object sender, EventArgs e)
-        {
-            Dictionary<string, bool> seld = new Dictionary<string, bool>();
-            lvSkills.BeginUpdate();
-            try
-            {
-                List<int> sel = new List<int>();
-                foreach (int si in lvSkills.SelectedIndices)
-                {
-                    ListViewItem lvi = lvSkills.Items[si];
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
-                    sel.Add(si);
-                    seld[pe.SkillName + " " + pe.Level.ToString()] = true;
-                }
-                for (int i = lvSkills.Items.Count - 1; i >= 0; i--)
-                {
-                    if (sel.Contains(i - 1))
-                    {
-                        ListViewItem lvix = lvSkills.Items[i - 1];
-                        lvSkills.Items.RemoveAt(i - 1);
-                        lvSkills.Items.Insert(i, lvix);
-                    }
-                }
-                RebuildPlanFromListViewOrder();
-            }
-            finally
-            {
-                foreach (ListViewItem lvi in lvSkills.Items)
-                {
-                    PlanEntry pe = (PlanEntry)lvi.Tag;
-                    string k = pe.SkillName + " " + pe.Level.ToString();
-                    if (seld.ContainsKey(k))
-                    {
-                        lvi.Selected = true;
-                    }
-                    else
-                    {
-                        lvi.Selected = false;
-                    }
-                }
-                lvSkills.EndUpdate();
             }
         }
 
@@ -765,12 +581,12 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            PlanEntry pe = lvi.Tag as PlanEntry;
+            Plan.Entry pe = lvi.Tag as Plan.Entry;
             if (pe == null)
             {
                 return;
             }
-            string sn = pe.SkillName + " " + GrandSkill.GetRomanSkillNumber(pe.Level);
+            string sn = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
             using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
             {
                 f.NoteText = pe.Notes;

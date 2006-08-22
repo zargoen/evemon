@@ -274,7 +274,7 @@ namespace EVEMon
                     {
                         sb.Append(gci.CurrentlyTrainingSkill.Name);
                     sb.Append(" ");
-                    sb.Append(GrandSkill.GetRomanSkillNumber(gci.CurrentlyTrainingSkill.TrainingToLevel));
+                    sb.Append(GrandSkill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
                         sb.Append(" - ");
                     }
 

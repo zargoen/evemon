@@ -38,6 +38,36 @@ namespace EVEMon.Common
             set { m_character = value; }
         }        
 
+        #region Skill Planner Highlighting
+        private bool m_HighlightPlannedSkills;
+        public event EventHandler<EventArgs> HighlightPlannedSkillsChanged;
+        public bool SkillPlannerHighlightPlannedSkills
+        {
+            get { return m_HighlightPlannedSkills; }
+            set { m_HighlightPlannedSkills = value; OnHighlightPlannedSkillsChanged(); }
+        }
+
+        private void OnHighlightPlannedSkillsChanged()
+        {
+            if (HighlightPlannedSkillsChanged != null)
+                HighlightPlannedSkillsChanged(this, new EventArgs());
+        }
+
+        private bool m_HighlightPrerequisites;
+        public event EventHandler<EventArgs> HighlightPrerequisitesChanged;
+        public bool SkillPlannerHighlightPrerequisites
+        {
+            get { return m_HighlightPrerequisites; }
+            set { m_HighlightPrerequisites = value; OnHighlightPrerequisitesChanged(); }
+        }
+
+        private void OnHighlightPrerequisitesChanged()
+        {
+            if (HighlightPrerequisitesChanged != null)
+                HighlightPrerequisitesChanged(this, new EventArgs());
+        }
+        #endregion
+
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
 
         public List<CharLoginInfo> CharacterList
@@ -110,6 +140,7 @@ namespace EVEMon.Common
             set { m_closeToTray = value; }
         }
 
+        #region Email Settings
         private string m_emailServer;
 
         public string EmailServer
@@ -164,6 +195,7 @@ namespace EVEMon.Common
             get { return m_emailToAddress; }
             set { m_emailToAddress = value; }
         }
+        #endregion // Email Settings
 
         private bool m_minimizeToTray = true;
 
@@ -200,6 +232,7 @@ namespace EVEMon.Common
             set { m_titleToTime = value; }
         }
 
+        #region Plan Settings
         private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
 
         public List<Pair<string, Plan>> Plans
@@ -361,7 +394,9 @@ namespace EVEMon.Common
             }
             this.Save();
         }
+        #endregion Plan Settings
 
+        #region Character Cache
         private List<SerializableCharacterInfo> m_cachedCharacterInfo = new List<SerializableCharacterInfo>();
 
         public List<SerializableCharacterInfo> CachedCharacterInfo
@@ -430,7 +465,9 @@ namespace EVEMon.Common
             get { return m_defaultSaveOptions; }
             set { m_defaultSaveOptions = value; }
         }
+        #endregion // Character Cache
 
+        #region Worksafe Settings
         private bool m_worksafeMode = false;
 
         public bool WorksafeMode
@@ -446,6 +483,7 @@ namespace EVEMon.Common
         }
 
         public event EventHandler<EventArgs> WorksafeChanged;
+        #endregion // Worksafe Settings
 
         private bool m_playSoundOnSkillComplete = true;
 
@@ -455,6 +493,7 @@ namespace EVEMon.Common
             set { m_playSoundOnSkillComplete = value; }
         }
 
+        #region In Game Browser server
         private bool m_runIgbServer = true;
 
         public bool RunIGBServer
@@ -470,6 +509,7 @@ namespace EVEMon.Common
         }
 
         public event EventHandler<EventArgs> RunIGBServerChanged;
+        #endregion // In Game Browser server
 
         private bool m_relocateEveWindow = false;
 
@@ -482,14 +522,6 @@ namespace EVEMon.Common
                 OnRelocateEveWindowChanged();
             }
         }
-
-        private void OnCheckTranquilityStatusChanged()
-        {
-            if (CheckTranquilityStatusChanged != null)
-                CheckTranquilityStatusChanged(this, new EventArgs());
-        }
-
-        public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
 
         private void OnRelocateEveWindowChanged()
         {
@@ -530,18 +562,29 @@ namespace EVEMon.Common
             set { m_httpProxy = value; }
         }
 
+        #region Tranquility Status
         private bool m_checkTranquilityStatus = true;
 
         public bool CheckTranquilityStatus
         {
             get { return m_checkTranquilityStatus; }
-            set {
-                if (m_checkTranquilityStatus != value)
-                {
-                m_checkTranquilityStatus = value;
-                OnCheckTranquilityStatusChanged();
-                } }
+            set 
+            {
+                    if (m_checkTranquilityStatus != value)
+                    {
+                    m_checkTranquilityStatus = value;
+                    OnCheckTranquilityStatusChanged();
+                    }
+            }
         }
+
+        private void OnCheckTranquilityStatusChanged()
+        {
+            if (CheckTranquilityStatusChanged != null)
+                CheckTranquilityStatusChanged(this, new EventArgs());
+        }
+
+        public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
 
         private int m_statusUpdateInterval = 5;
 
@@ -550,9 +593,9 @@ namespace EVEMon.Common
             get { return m_statusUpdateInterval; }
             set {m_statusUpdateInterval = value; }
         }
+        #endregion // Tranquility Status
 
-        ////////////////////////////////////////////////////////////////////////////////////
-
+        #region Schedule Entries
         private List<ScheduleEntry> m_schedule = new List<ScheduleEntry>();
 
         [XmlArrayItem("simple", typeof(SimpleScheduleEntry))]
@@ -570,9 +613,9 @@ namespace EVEMon.Common
             get { return m_savedWindowLocations; }
             set { m_savedWindowLocations = value; }
         }
+        #endregion //Schedule Entries
 
-        ////////////////////////////////////////////////////////////////////////////////////
-
+        #region Settings File Save / Load
         private const string STORE_FILE_NAME = "evemon-logindata{0}.xml";
 
         private static string StoreFileName(string key)
@@ -672,13 +715,6 @@ namespace EVEMon.Common
             }
         }
 
-        private string m_key;
-
-        private void SetKey(string key)
-        {
-            m_key = key;
-        }
-
         private bool m_neverSave = false;
 
         public void NeverSave()
@@ -718,6 +754,27 @@ namespace EVEMon.Common
             }
         }
 
+        public void SaveTo(Stream s)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Settings));
+            xs.Serialize(s, this);
+        }
+
+        private string m_key;
+
+        private void SetKey(string key)
+        {
+            m_key = key;
+        }
+
+        public static void ResetKey(string p)
+        {
+            Settings s = new Settings();
+            s.SetKey(p);
+            s.Save();
+        }
+        #endregion // Settings File Save / Load
+
         public bool AddFileCharacter(CharFileInfo cfi)
         {
             // TODO:
@@ -743,18 +800,6 @@ namespace EVEMon.Common
             return true;
         }
 
-        public static void ResetKey(string p)
-        {
-            Settings s = new Settings();
-            s.SetKey(p);
-            s.Save();
-        }
-
-        public void SaveTo(Stream s)
-        {
-            XmlSerializer xs = new XmlSerializer(typeof(Settings));
-            xs.Serialize(s, this);
-        }
     }
 
     //now with encryption.  Not bulletproof by any means, but better than plaintext

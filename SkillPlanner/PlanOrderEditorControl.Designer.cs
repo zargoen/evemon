@@ -37,18 +37,11 @@ namespace EVEMon.SkillPlanner
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tmrTick = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tsbMoveUp = new System.Windows.Forms.ToolStripButton();
-            this.tsbMoveDown = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.tsbAddSkill = new System.Windows.Forms.ToolStripButton();
-            this.tsbRemoveSkill = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.tsbSort = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
             this.cmsContextMenu.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -99,93 +92,18 @@ namespace EVEMon.SkillPlanner
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.tsbMoveUp,
-            this.tsbMoveDown,
-            this.toolStripSeparator1,
-            this.toolStripLabel2,
-            this.tsbAddSkill,
-            this.tsbRemoveSkill,
-            this.toolStripSeparator2,
             this.toolStripLabel3,
             this.tsbSort});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(38, 558);
+            this.toolStrip1.Size = new System.Drawing.Size(32, 558);
             this.toolStrip1.TabIndex = 10;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(35, 13);
-            this.toolStripLabel1.Text = "Move:";
-            // 
-            // tsbMoveUp
-            // 
-            this.tsbMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMoveUp.Enabled = false;
-            this.tsbMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveUp.Image")));
-            this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbMoveUp.Name = "tsbMoveUp";
-            this.tsbMoveUp.Size = new System.Drawing.Size(35, 20);
-            this.tsbMoveUp.Text = "Move Up";
-            this.tsbMoveUp.Click += new System.EventHandler(this.tsbMoveUp_Click);
-            // 
-            // tsbMoveDown
-            // 
-            this.tsbMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMoveDown.Enabled = false;
-            this.tsbMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveDown.Image")));
-            this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbMoveDown.Name = "tsbMoveDown";
-            this.tsbMoveDown.Size = new System.Drawing.Size(35, 20);
-            this.tsbMoveDown.Text = "Move Down";
-            this.tsbMoveDown.Click += new System.EventHandler(this.tsbMoveDown_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(35, 6);
-            this.toolStripSeparator1.Visible = false;
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(35, 13);
-            this.toolStripLabel2.Text = "Add:";
-            this.toolStripLabel2.Visible = false;
-            // 
-            // tsbAddSkill
-            // 
-            this.tsbAddSkill.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddSkill.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddSkill.Image")));
-            this.tsbAddSkill.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddSkill.Name = "tsbAddSkill";
-            this.tsbAddSkill.Size = new System.Drawing.Size(35, 20);
-            this.tsbAddSkill.Text = "Add Skills...";
-            this.tsbAddSkill.Visible = false;
-            // 
-            // tsbRemoveSkill
-            // 
-            this.tsbRemoveSkill.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRemoveSkill.Enabled = false;
-            this.tsbRemoveSkill.Image = ((System.Drawing.Image)(resources.GetObject("tsbRemoveSkill.Image")));
-            this.tsbRemoveSkill.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRemoveSkill.Name = "tsbRemoveSkill";
-            this.tsbRemoveSkill.Size = new System.Drawing.Size(35, 20);
-            this.tsbRemoveSkill.Text = "Remove Skill...";
-            this.tsbRemoveSkill.Visible = false;
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(35, 6);
             // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(35, 13);
+            this.toolStripLabel3.Size = new System.Drawing.Size(29, 13);
             this.toolStripLabel3.Text = "Sort:";
             // 
             // tsbSort
@@ -194,7 +112,7 @@ namespace EVEMon.SkillPlanner
             this.tsbSort.Image = ((System.Drawing.Image)(resources.GetObject("tsbSort.Image")));
             this.tsbSort.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSort.Name = "tsbSort";
-            this.tsbSort.Size = new System.Drawing.Size(35, 20);
+            this.tsbSort.Size = new System.Drawing.Size(29, 20);
             this.tsbSort.Text = "Sort Plan Entries";
             this.tsbSort.Click += new System.EventHandler(this.tsbSort_Click);
             // 
@@ -202,22 +120,30 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel1.Controls.Add(this.linkLabel1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(38, 0);
+            this.panel1.Location = new System.Drawing.Point(32, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(645, 21);
+            this.panel1.Size = new System.Drawing.Size(651, 21);
             this.panel1.TabIndex = 11;
             // 
             // linkLabel1
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(551, 5);
+            this.linkLabel1.Location = new System.Drawing.Point(557, 5);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(91, 13);
             this.linkLabel1.TabIndex = 0;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Select Columns...";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // ilSkillDependency
+            // 
+            this.ilSkillDependency.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilSkillDependency.ImageStream")));
+            this.ilSkillDependency.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilSkillDependency.Images.SetKeyName(0, "redbutton.bmp");
+            this.ilSkillDependency.Images.SetKeyName(1, "yellowbutton.bmp");
+            this.ilSkillDependency.Images.SetKeyName(2, "greenbutton.bmp");
             // 
             // lvSkills
             // 
@@ -227,18 +153,18 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.ContextMenuStrip = this.cmsContextMenu;
             this.lvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSkills.FullRowSelect = true;
-            this.lvSkills.Location = new System.Drawing.Point(38, 21);
+            this.lvSkills.Location = new System.Drawing.Point(32, 21);
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
-            this.lvSkills.Size = new System.Drawing.Size(645, 537);
+            this.lvSkills.Size = new System.Drawing.Size(651, 537);
+            this.lvSkills.StateImageList = this.ilSkillDependency;
             this.lvSkills.TabIndex = 3;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
+            this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
-            this.lvSkills.ListViewItemsDragging += new System.EventHandler<EVEMon.SkillPlanner.ListViewDragEventArgs>(this.lvSkills_ListViewItemsDragging);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
-            this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             // 
             // PlanOrderEditorControl
             // 
@@ -268,19 +194,12 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.Timer tmrTick;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripButton tsbMoveUp;
-        private System.Windows.Forms.ToolStripButton tsbMoveDown;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripButton tsbAddSkill;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.ToolStripButton tsbRemoveSkill;
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripButton tsbSort;
+        private System.Windows.Forms.ImageList ilSkillDependency;
     }
 }

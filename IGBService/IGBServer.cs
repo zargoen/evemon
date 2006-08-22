@@ -201,7 +201,7 @@ namespace EVEMon.IGBService
                     }
                     //foreach (PlanEntry pe in p.Entries)
                     //{
-                    //    sw.WriteLine(pe.SkillName + " " + GrandSkill.GetRomanSkillNumber(pe.Level) + "<br>");
+                    //    sw.WriteLine(pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level) + "<br>");
                     //}
                 }
 

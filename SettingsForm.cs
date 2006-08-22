@@ -44,6 +44,8 @@ namespace EVEMon
 
         private void ApplyToSettings(Settings s)
         {
+            s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
+            s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
             s.MinimizeToTray = cbMinimizeToTray.Checked;
             s.CloseToTray = cbCloseToTray.Checked;
             s.TitleToTime = cbTitleToTime.Checked;
@@ -140,6 +142,7 @@ namespace EVEMon
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
+            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
@@ -173,6 +176,9 @@ namespace EVEMon
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
 
+            cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;
+            cbHighlightPrerequisites.Checked = m_settings.SkillPlannerHighlightPrerequisites;
+
             cbTooltipOptionDate.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished);
             cbTooltipOptionETA.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining);
             cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
@@ -202,6 +208,11 @@ namespace EVEMon
             {
                 rk.DeleteValue("EVEMon", false);
             }
+        }
+
+        private void cbWorksafeMode_CheckedChanged(object sender, EventArgs e)
+        {
+            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
         }
 
         private void cbSendEmail_CheckedChanged(object sender, EventArgs e)
@@ -350,5 +361,6 @@ namespace EVEMon
                 }
             }));
         }
+
     }
 }

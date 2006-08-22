@@ -260,7 +260,7 @@ namespace EVEMon.SkillPlanner
                                  {
                                      int nextLevel = gs.Level + 1;
                                      return
-                                         GrandSkill.GetRomanSkillNumber(nextLevel) + ": " +
+                                         GrandSkill.GetRomanForInt(nextLevel) + ": " +
                                          GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
                                  }
                              };
@@ -299,7 +299,7 @@ namespace EVEMon.SkillPlanner
                                  else
                                  {
                                      return
-                                         GrandSkill.GetRomanSkillNumber(5) + ": " +
+                                         GrandSkill.GetRomanForInt(5) + ": " +
                                          GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
                                  }
                              };

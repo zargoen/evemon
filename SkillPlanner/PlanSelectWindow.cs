@@ -118,7 +118,7 @@ namespace EVEMon.SkillPlanner
                 {
                     string s = (string) plan;
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
-                    foreach (PlanEntry entry in p.Entries)
+                    foreach (Plan.Entry entry in p.Entries)
                     {
                         if (m_result.GetEntry(entry.SkillName, entry.Level) == null)
                         {

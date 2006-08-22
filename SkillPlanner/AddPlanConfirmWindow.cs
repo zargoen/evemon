@@ -12,13 +12,13 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
-        public AddPlanConfirmWindow(IEnumerable<PlanEntry> entries)
+        public AddPlanConfirmWindow(IEnumerable<Plan.Entry> entries)
             : this()
         {
             m_entries = entries;
         }
 
-        private IEnumerable<PlanEntry> m_entries;
+        private IEnumerable<Plan.Entry> m_entries;
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -27,9 +27,9 @@ namespace EVEMon.SkillPlanner
         private void AddPlanConfirmWindow_Load(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            foreach (PlanEntry pe in m_entries)
+            foreach (Plan.Entry pe in m_entries)
             {
-                listBox1.Items.Add(pe.SkillName + " " + GrandSkill.GetRomanSkillNumber(pe.Level));
+                listBox1.Items.Add(pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level));
             }
         }
 
@@ -45,11 +45,11 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<PlanEntry> list)
+        private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list)
         {
             if (gs.Level < level && !p.IsPlanned(gs, level))
             {
-                foreach (PlanEntry pe in list)
+                foreach (Plan.Entry pe in list)
                 {
                     if (pe.SkillName == gs.Name && pe.Level == level)
                     {
@@ -61,7 +61,7 @@ namespace EVEMon.SkillPlanner
             return false;
         }
 
-        private static void AddPrerequisiteEntries(Plan p, GrandSkill gs, List<PlanEntry> planEntries)
+        private static void AddPrerequisiteEntries(Plan p, GrandSkill gs, List<Plan.Entry> planEntries)
         {
             foreach (GrandSkill.Prereq pp in gs.Prereqs)
             {
@@ -71,17 +71,17 @@ namespace EVEMon.SkillPlanner
                 {
                     if (ShouldAdd(p, pgs, i, planEntries))
                     {
-                        PlanEntry pe = new PlanEntry();
+                        Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
-                        pe.EntryType = PlanEntryType.Prerequisite;
+                        pe.EntryType = Plan.Entry.Type.Prerequisite;
                         planEntries.Add(pe);
                     }
                 }
             }
         }
 
-        private static void ConfirmSkillAdd(Plan p, List<PlanEntry> planEntries)
+        private static void ConfirmSkillAdd(Plan p, List<Plan.Entry> planEntries)
         {
             using (AddPlanConfirmWindow f = new AddPlanConfirmWindow(planEntries))
             {
@@ -95,7 +95,7 @@ namespace EVEMon.SkillPlanner
 
         public static void AddSkillsWithConfirm(Plan p, IEnumerable<Pair<string, int>> skillsToAdd)
         {
-            List<PlanEntry> planEntries = new List<PlanEntry>();
+            List<Plan.Entry> planEntries = new List<Plan.Entry>();
             foreach (Pair<string, int> ts in skillsToAdd)
             {
                 GrandSkill gs = p.GrandCharacterInfo.GetSkill(ts.A);
@@ -106,10 +106,10 @@ namespace EVEMon.SkillPlanner
                     {
                         if (ShouldAdd(p, gs, i, planEntries))
                         {
-                            PlanEntry pe = new PlanEntry();
+                            Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
                             pe.Level = i;
-                            pe.EntryType = (i == ts.B) ? PlanEntryType.Planned : PlanEntryType.Prerequisite;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
                             planEntries.Add(pe);
                         }
                     }

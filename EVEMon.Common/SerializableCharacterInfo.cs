@@ -545,7 +545,7 @@ namespace EVEMon.Common
             sb.Append("\t");
             sb.Append(m_name);
             sb.Append(" ");
-            sb.Append(GrandSkill.GetRomanSkillNumber(m_level));
+            sb.Append(GrandSkill.GetRomanForInt(m_level));
             sb.Append(" (Rank ");
             sb.Append(m_rank.ToString());
             sb.Append(") ");

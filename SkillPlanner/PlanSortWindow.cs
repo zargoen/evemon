@@ -182,14 +182,14 @@ namespace EVEMon.SkillPlanner
             m_learningFirst = learningFirst;
         }
 
-        private List<PlanEntry> m_originalOrder = new List<PlanEntry>();
-        private List<PlanEntry> m_skillsToInsert = new List<PlanEntry>();
+        private List<Plan.Entry> m_originalOrder = new List<Plan.Entry>();
+        private List<Plan.Entry> m_skillsToInsert = new List<Plan.Entry>();
 
         private void Sort()
         {
-            foreach (PlanEntry pe in m_plan.Entries)
+            foreach (Plan.Entry pe in m_plan.Entries)
             {
-                PlanEntry xpe = (PlanEntry) pe.Clone();
+                Plan.Entry xpe = (Plan.Entry) pe.Clone();
                 m_originalOrder.Add(xpe);
                 m_skillsToInsert.Add(xpe);
             }
@@ -207,9 +207,9 @@ namespace EVEMon.SkillPlanner
             {
                 ExceptionHandler.LogException(ex, true);
                 m_plan.Entries.Clear();
-                foreach (PlanEntry xpe in m_originalOrder)
+                foreach (Plan.Entry xpe in m_originalOrder)
                 {
-                    PlanEntry pe = (PlanEntry) xpe.Clone();
+                    Plan.Entry pe = (Plan.Entry) xpe.Clone();
                     m_plan.Entries.Add(pe);
                 }
                 MessageBox.Show("Sorting failed: " + ex.Message, "Sorting Failed",
@@ -228,7 +228,7 @@ namespace EVEMon.SkillPlanner
                 case PlanSortType.NoChange:
                     while (m_skillsToInsert.Count > 0)
                     {
-                        PlanEntry pe = (PlanEntry) m_skillsToInsert[0].Clone();
+                        Plan.Entry pe = (Plan.Entry) m_skillsToInsert[0].Clone();
                         m_plan.Entries.Add(pe);
                         m_skillsToInsert.RemoveAt(0);
                     }
@@ -246,10 +246,10 @@ namespace EVEMon.SkillPlanner
             while (m_skillsToInsert.Count > 0)
             {
                 TimeSpan fastestSpan = TimeSpan.MaxValue;
-                PlanEntry fastestPe = null;
+                Plan.Entry fastestPe = null;
                 for (int i = 0; i < m_skillsToInsert.Count; i++)
                 {
-                    PlanEntry thisPe = m_skillsToInsert[i];
+                    Plan.Entry thisPe = m_skillsToInsert[i];
                     GrandSkill thisSkill = m_plan.GrandCharacterInfo.GetSkill(thisPe.SkillName);
                     TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, true);
                     if (thisSpan < fastestSpan)
@@ -279,7 +279,7 @@ namespace EVEMon.SkillPlanner
                     throw new ApplicationException("no suitable skill -- should never happen!");
                 }
 
-                m_plan.Entries.Add((PlanEntry) fastestPe.Clone());
+                m_plan.Entries.Add((Plan.Entry) fastestPe.Clone());
                 m_skillsToInsert.Remove(fastestPe);
                 trainedLevels[fastestPe.SkillName] = fastestPe.Level;
             }
@@ -296,7 +296,7 @@ namespace EVEMon.SkillPlanner
                     if (m_skillsToInsert[z].SkillName == skillname &&
                         m_skillsToInsert[z].Level == level)
                     {
-                        PlanEntry pe = (PlanEntry) m_skillsToInsert[z].Clone();
+                        Plan.Entry pe = (Plan.Entry) m_skillsToInsert[z].Clone();
                         m_plan.Entries.Add(pe);
                         m_skillsToInsert.RemoveAt(z);
                         break;

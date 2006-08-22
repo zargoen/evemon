@@ -125,7 +125,7 @@ namespace EVEMon.SkillPlanner
                     knownText = " (Known)";
                 }
                 skillLabel.Text = list[rnum].Name + " " +
-                                  GrandSkill.GetRomanSkillNumber(list[rnum].Level) + knownText;
+                                  GrandSkill.GetRomanForInt(list[rnum].Level) + knownText;
                 return (knownText.Length > 0);
             }
             else
