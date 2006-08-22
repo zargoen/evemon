@@ -69,7 +69,6 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
             this.scShipSelect.Panel2.Controls.Add(this.pbShipImage);
-            //this.scShipSelect.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.scShipSelect_Panel2_Paint);
             this.scShipSelect.Size = new System.Drawing.Size(761, 423);
             this.scShipSelect.SplitterDistance = 193;
             this.scShipSelect.TabIndex = 1;
@@ -96,16 +95,16 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.Name = "pnlShipDescription";
             this.pnlShipDescription.Size = new System.Drawing.Size(256, 38);
             this.pnlShipDescription.TabIndex = 8;
-            this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(pnlShipDescription_ClientSizeChanged);
+            this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_ClientSizeChanged);
             // 
             // lblShipDescription
             // 
             this.lblShipDescription.AutoSize = true;
             this.lblShipDescription.Location = new System.Drawing.Point(-3, 0);
             this.lblShipDescription.Name = "lblShipDescription";
-            this.lblShipDescription.Size = new System.Drawing.Size(35, 13);
+            this.lblShipDescription.Size = new System.Drawing.Size(91, 13);
             this.lblShipDescription.TabIndex = 4;
-            this.lblShipDescription.Text = "label2";
+            this.lblShipDescription.Text = "lblShipDescription";
             // 
             // groupBox1
             // 
@@ -130,7 +129,7 @@ namespace EVEMon.SkillPlanner
             this.btnShipSkillsAdd.TabIndex = 4;
             this.btnShipSkillsAdd.Text = "Add Skills to Plan";
             this.btnShipSkillsAdd.UseVisualStyleBackColor = true;
-            this.btnShipSkillsAdd.Click += new System.EventHandler(btnShipSkillsAdd_Click);
+            this.btnShipSkillsAdd.Click += new System.EventHandler(this.btnShipSkillsAdd_Click);
             // 
             // lblShipTimeRequired
             // 
@@ -146,27 +145,27 @@ namespace EVEMon.SkillPlanner
             this.lblShipSkill3.AutoSize = true;
             this.lblShipSkill3.Location = new System.Drawing.Point(6, 43);
             this.lblShipSkill3.Name = "lblShipSkill3";
-            this.lblShipSkill3.Size = new System.Drawing.Size(35, 13);
+            this.lblShipSkill3.Size = new System.Drawing.Size(63, 13);
             this.lblShipSkill3.TabIndex = 2;
-            this.lblShipSkill3.Text = "label4";
+            this.lblShipSkill3.Text = "lblShipSkill3";
             // 
             // lblShipSkill2
             // 
             this.lblShipSkill2.AutoSize = true;
             this.lblShipSkill2.Location = new System.Drawing.Point(6, 30);
             this.lblShipSkill2.Name = "lblShipSkill2";
-            this.lblShipSkill2.Size = new System.Drawing.Size(35, 13);
+            this.lblShipSkill2.Size = new System.Drawing.Size(63, 13);
             this.lblShipSkill2.TabIndex = 1;
-            this.lblShipSkill2.Text = "label3";
+            this.lblShipSkill2.Text = "lblShipSkill2";
             // 
             // lblShipSkill1
             // 
             this.lblShipSkill1.AutoSize = true;
             this.lblShipSkill1.Location = new System.Drawing.Point(6, 17);
             this.lblShipSkill1.Name = "lblShipSkill1";
-            this.lblShipSkill1.Size = new System.Drawing.Size(35, 13);
+            this.lblShipSkill1.Size = new System.Drawing.Size(63, 13);
             this.lblShipSkill1.TabIndex = 0;
-            this.lblShipSkill1.Text = "label2";
+            this.lblShipSkill1.Text = "lblShipSkill1";
             // 
             // lbShipProperties
             // 
@@ -186,18 +185,18 @@ namespace EVEMon.SkillPlanner
             this.lblShipName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblShipName.Location = new System.Drawing.Point(3, 16);
             this.lblShipName.Name = "lblShipName";
-            this.lblShipName.Size = new System.Drawing.Size(55, 18);
+            this.lblShipName.Size = new System.Drawing.Size(88, 18);
             this.lblShipName.TabIndex = 2;
-            this.lblShipName.Text = "Raven";
+            this.lblShipName.Text = "Ship Name";
             // 
             // lblShipClass
             // 
             this.lblShipClass.AutoSize = true;
             this.lblShipClass.Location = new System.Drawing.Point(3, 3);
             this.lblShipClass.Name = "lblShipClass";
-            this.lblShipClass.Size = new System.Drawing.Size(102, 13);
+            this.lblShipClass.Size = new System.Drawing.Size(65, 13);
             this.lblShipClass.TabIndex = 1;
-            this.lblShipClass.Text = "Battleships > Caldari";
+            this.lblShipClass.Text = "Ship > Class";
             // 
             // pbShipImage
             // 
@@ -223,7 +222,6 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.Load += new System.EventHandler(this.ShipBrowserControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbShipImage)).EndInit();
             this.ResumeLayout(false);
 

@@ -31,16 +31,8 @@ namespace EVEMon.SkillPlanner
         public ShipBrowserControl()
         {
             InitializeComponent();
+            shipSelectControl_SelectedShipChanged(null, null);
         }
-
-        private void ShipBrowserControl_Load(object sender, EventArgs e)
-        {
-            if (this.DesignMode)
-                // Must return now - or the ship selector will crash
-                return;
-        }
-
-
 
         private void shipSelectControl_SelectedShipChanged(object sender, EventArgs e)
         {
@@ -122,6 +114,27 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        private bool SetShipSkillLabel(int rnum, Label skillLabel, List<ShipRequiredSkill> list)
+        {
+            if (list.Count > rnum)
+            {
+                GrandSkill gs = m_grandCharacterInfo.GetSkill(list[rnum].Name);
+                string knownText = String.Empty;
+                if (gs.Level >= list[rnum].Level)
+                {
+                    knownText = " (Known)";
+                }
+                skillLabel.Text = list[rnum].Name + " " +
+                                  GrandSkill.GetRomanSkillNumber(list[rnum].Level) + knownText;
+                return (knownText.Length > 0);
+            }
+            else
+            {
+                skillLabel.Text = String.Empty;
+                return true;
+            }
+        }
+
         private void GotShipImage(int shipId, Image i)
         {
             if (i == null)
@@ -166,27 +179,6 @@ namespace EVEMon.SkillPlanner
                 int xw = pnlShipDescription.ClientSize.Width;
                 lblShipDescription.MaximumSize = new Size(xw, Int32.MaxValue);
                 pnlShipDescription.Visible = true;
-            }
-        }
-
-        private bool SetShipSkillLabel(int rnum, Label skillLabel, List<ShipRequiredSkill> list)
-        {
-            if (list.Count > rnum)
-            {
-                GrandSkill gs = m_grandCharacterInfo.GetSkill(list[rnum].Name);
-                string knownText = String.Empty;
-                if (gs.Level >= list[rnum].Level)
-                {
-                    knownText = " (Known)";
-                }
-                skillLabel.Text = list[rnum].Name + " " +
-                                  GrandSkill.GetRomanSkillNumber(list[rnum].Level) + knownText;
-                return (knownText.Length > 0);
-            }
-            else
-            {
-                skillLabel.Text = String.Empty;
-                return true;
             }
         }
     }
