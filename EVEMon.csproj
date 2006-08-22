@@ -274,6 +274,12 @@
     <Compile Include="SkillPlanner\PlanSortWindow.Designer.cs">
       <DependentUpon>PlanSortWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\ShipBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ShipBrowserControl.Designer.cs">
+      <DependentUpon>ShipBrowserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\ShipSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -429,6 +435,10 @@
     <EmbeddedResource Include="SkillPlanner\PlanSortWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>PlanSortWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ShipBrowserControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ShipBrowserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">
       <SubType>Designer</SubType>
