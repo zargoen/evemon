@@ -57,6 +57,8 @@ namespace EVEMon.SkillPlanner
                 lblShipClass.Text = s.Type + " > " + s.Race;
                 lblShipName.Text = s.Name;
                 lblShipDescription.Text = Regex.Replace(s.Description, "<. +?>", String.Empty, RegexOptions.Singleline);
+                // force the label to fit the panel
+                pnlShipDescription_Changed(null, null);
 
                 bool allKnown = true;
                 allKnown = SetShipSkillLabel(0, lblShipSkill1, s.RequiredSkills) && allKnown;
@@ -168,7 +170,7 @@ namespace EVEMon.SkillPlanner
             AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd);
         }
 
-        private void pnlShipDescription_ClientSizeChanged(object sender, EventArgs e)
+        private void pnlShipDescription_Changed(object sender, EventArgs e)
         {
             int w = pnlShipDescription.ClientSize.Width;
             lblShipDescription.MaximumSize = new Size(w, Int32.MaxValue);

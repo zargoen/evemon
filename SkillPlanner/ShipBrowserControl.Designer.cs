@@ -95,7 +95,7 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.Name = "pnlShipDescription";
             this.pnlShipDescription.Size = new System.Drawing.Size(256, 38);
             this.pnlShipDescription.TabIndex = 8;
-            this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_ClientSizeChanged);
+            this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_Changed);
             // 
             // lblShipDescription
             // 
