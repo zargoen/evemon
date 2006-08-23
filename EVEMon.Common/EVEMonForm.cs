@@ -99,6 +99,22 @@ namespace EVEMon.Common
             base.OnSizeChanged(e);
         }
 
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(m_rememberPositionKey))
+            {
+                Settings s = Settings.GetInstance();
+                Rectangle r = new Rectangle(this.Location, this.Size);
+                if (this.WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
+                {
+                    s.SavedWindowLocations[m_rememberPositionKey] =
+                        new Rectangle(this.Location, this.Size);
+                }
+            }
+
+            base.OnLocationChanged(e);
+        }
+
         private Rectangle VerifyValidWindowLocation(Rectangle inRect)
         {
             Point p = inRect.Location;
