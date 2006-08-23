@@ -16,13 +16,9 @@ namespace EVEMon.SkillPlanner
 
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode)
-            {
-                return;
-            }
-
             m_ships = Ship.GetShips();
-            BuildTreeView();
+            if (m_ships != null)
+                BuildTreeView();
         }
 
         private void BuildTreeView()
