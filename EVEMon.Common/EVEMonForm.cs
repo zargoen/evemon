@@ -72,11 +72,31 @@ namespace EVEMon.Common
             if (!String.IsNullOrEmpty(m_rememberPositionKey))
             {
                 Settings s = Settings.GetInstance();
-                s.SavedWindowLocations[m_rememberPositionKey] =
-                    new Rectangle(this.Location, this.Size);
+                Rectangle r = new Rectangle(this.Location, this.Size);
+                if (this.WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
+                {
+                    s.SavedWindowLocations[m_rememberPositionKey] =
+                        new Rectangle(this.Location, this.Size);
+                }
             }
 
             base.OnFormClosed(e);
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(m_rememberPositionKey))
+            {
+                Settings s = Settings.GetInstance();
+                Rectangle r = new Rectangle(this.Location, this.Size);
+                if (this.WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
+                {
+                    s.SavedWindowLocations[m_rememberPositionKey] =
+                        new Rectangle(this.Location, this.Size);
+                }
+            }
+            
+            base.OnSizeChanged(e);
         }
 
         private Rectangle VerifyValidWindowLocation(Rectangle inRect)
