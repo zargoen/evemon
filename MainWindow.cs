@@ -570,7 +570,7 @@ namespace EVEMon
 
         private void niMinimizeIcon_Click(object sender, EventArgs e)
         {
-            if ((e as MouseEventArgs).Button != MouseButtons.Right)
+            if (((e as MouseEventArgs) == null) || ((e as MouseEventArgs) != null && (e as MouseEventArgs).Button != MouseButtons.Right))
             {
                 this.Visible = true;
                 this.WindowState = FormWindowState.Normal;
