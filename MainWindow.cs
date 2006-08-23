@@ -553,7 +553,7 @@ namespace EVEMon
             }
             else
             {
-                if (this.tcCharacterTabs != null)
+                if (this.tcCharacterTabs != null && this.tcCharacterTabs.CanSelect)
                 {
                     TabPage tp = this.tcCharacterTabs.SelectedTab;
                     if (tp != null)
