@@ -682,11 +682,11 @@ namespace EVEMon.Common
 
         public void check_old_skill()
         {// basically check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null && (old_skill == null || (old_skill != null && old_skill.old_SkillName != this.CurrentlyTrainingSkill.Name)))
+            if (this.CurrentlyTrainingSkill != null && old_skill != null && (old_skill.old_SkillName == null || (old_skill.old_SkillName != null && old_skill.old_SkillName != this.CurrentlyTrainingSkill.Name)))
                 this.CancelCurrentSkillTraining(); // Skill or current expected completion time changed since previous update.
-            if (!first_run)
+            if (!first_run && old_skill != null)
             {
-                if (old_skill != null && this.GetSkill(old_skill.old_SkillName) != null)
+                if (old_skill.old_SkillName != null && this.GetSkill(old_skill.old_SkillName) != null)
                 {
                     bool add = false;
                     bool check = false;
@@ -713,7 +713,7 @@ namespace EVEMon.Common
                         OnDownloadAttemptComplete(this.Name, skill_name, add);
                     }
                 }
-                if (old_skill != null && this.CurrentlyTrainingSkill == null)
+                if (old_skill.old_SkillName != null && this.CurrentlyTrainingSkill == null)
                 {
                     GrandSkill newTrainingSkill = this.GetSkill(old_skill.old_SkillName);
                     if (newTrainingSkill != null)
@@ -749,7 +749,7 @@ namespace EVEMon.Common
                 this.CancelCurrentSkillTraining(); // Skill or current expected completion time changed since previous update.
             if (!first_run)
             {
-                if (old_skill != null && this.GetSkill(old_skill.old_SkillName) != null)
+                if (old_skill != null && old_skill.old_SkillName != null && this.GetSkill(old_skill.old_SkillName) != null)
                 {
                     bool add = false;
                     bool check = false;
@@ -793,12 +793,11 @@ namespace EVEMon.Common
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
                                 old_skill.old_skill_completed = true;
                             }
-                            if (!old_skill.old_skill_completed || SkillInTraining.SkillName != old_skill.old_SkillName)
+                            if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && SkillInTraining.SkillName != old_skill.old_SkillName))
                             {
                                 OnDownloadAttemptComplete(this.Name, SkillInTraining.SkillName, true);
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
-                                old_skill = new OldSkillinfo(newTrainingSkill.Name, SkillInTraining.TrainingToLevel);
-                                old_skill.old_skill_completed = true;
+                                old_skill = new OldSkillinfo(newTrainingSkill.Name, SkillInTraining.TrainingToLevel, true);
                             }
                         }
                         else if (SkillInTraining.NeededPoints > SkillInTraining.CurrentPoints)
@@ -826,7 +825,7 @@ namespace EVEMon.Common
 
         private bool first_run = true;
         private bool m_attempted_dl_complete = false;
-        private OldSkillinfo old_skill;
+        private OldSkillinfo old_skill = new OldSkillinfo();
 
         public OldSkillinfo OldTrainingSkill
         {
@@ -881,8 +880,7 @@ namespace EVEMon.Common
             if (newlyCompletedSkill != null)
             {
                 newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
-                old_skill = new OldSkillinfo(newlyCompletedSkill.Name, newlyCompletedSkill.TrainingToLevel);
-                old_skill.old_skill_completed = true;
+                old_skill = new OldSkillinfo(newlyCompletedSkill.Name, newlyCompletedSkill.TrainingToLevel, true);
                 this.CancelCurrentSkillTraining();
             }
         }
