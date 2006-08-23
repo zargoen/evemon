@@ -734,7 +734,7 @@ namespace EVEMon
             this.cbTooltipOptionSkill.Name = "cbTooltipOptionSkill";
             this.cbTooltipOptionSkill.Size = new System.Drawing.Size(101, 17);
             this.cbTooltipOptionSkill.TabIndex = 4;
-            this.cbTooltipOptionSkill.Text = "Skill Name/Rank";
+            this.cbTooltipOptionSkill.Text = "Skill Name/Level";
             this.cbTooltipOptionSkill.UseVisualStyleBackColor = true;
             // 
             // cbTooltipOptionDate
