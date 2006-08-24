@@ -588,6 +588,8 @@ namespace EVEMon.SkillPlanner
             lvSkills.BeginUpdate();
             try
             {
+                // Store the current selection so that we can restore it later 
+                // (must be done by skill name as PlanChanged() removes and Re-adds the skills)
                 List<int> sel = new List<int>();
                 foreach (int si in lvSkills.SelectedIndices)
                 {
@@ -601,6 +603,8 @@ namespace EVEMon.SkillPlanner
                     if (sel.Contains(i + 1))
                     {
                         ListViewItem lvix = lvSkills.Items[i + 1];
+                        // Must remove any icon or we get an exception when we remove it
+                        lvix.StateImageIndex = -1;
                         lvSkills.Items.RemoveAt(i + 1);
                         lvSkills.Items.Insert(i, lvix);
                     }
@@ -609,6 +613,8 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
+                // Now reselect the skills that we had selected before
+                // the selection is lost in the call to PlanChanged()
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
@@ -632,6 +638,8 @@ namespace EVEMon.SkillPlanner
             lvSkills.BeginUpdate();
             try
             {
+                // Store the current selection so that we can restore it later 
+                // (must be done by skill name as PlanChanged() removes and Re-adds the skills)
                 List<int> sel = new List<int>();
                 foreach (int si in lvSkills.SelectedIndices)
                 {
@@ -645,6 +653,8 @@ namespace EVEMon.SkillPlanner
                     if (sel.Contains(i - 1))
                     {
                         ListViewItem lvix = lvSkills.Items[i - 1];
+                        // Must remove any icon or we get an exception when we remove it
+                        lvix.StateImageIndex = -1;
                         lvSkills.Items.RemoveAt(i - 1);
                         lvSkills.Items.Insert(i, lvix);
                     }
@@ -653,6 +663,8 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
+                // Now reselect the skills that we had selected before
+                // the selection is lost in the call to PlanChanged()
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
