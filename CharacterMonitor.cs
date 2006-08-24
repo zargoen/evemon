@@ -1013,7 +1013,8 @@ namespace EVEMon
             None = 0,
             Text = 1,
             Html = 2,
-            Xml = 3
+            Xml = 3,
+            Png = 4
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -1027,6 +1028,24 @@ namespace EVEMon
             }
         }
 
+        private void SavePNGScreenshot(string fileName)
+        {
+            int cachedHeight = lbSkills.Height;
+            lbSkills.Dock = System.Windows.Forms.DockStyle.None;
+            lbSkills.Height = lbSkills.PreferredHeight;
+            lbSkills.Update();
+
+            Bitmap bitmap = new Bitmap(lbSkills.Width, lbSkills.PreferredHeight);
+            lbSkills.DrawToBitmap(bitmap, new Rectangle(0, 0, lbSkills.Width, lbSkills.PreferredHeight));
+            bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+            lbSkills.Height = cachedHeight;
+            lbSkills.Update();
+
+            this.Invalidate();
+        }
+ 
         private void SaveTextFile(string fileName)
         {
             SerializableCharacterInfo ci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
@@ -1097,6 +1116,11 @@ namespace EVEMon
             if (saveFormat == SaveFormat.Text)
             {
                 SaveTextFile(fileName);
+                return;
+            }
+            else if (saveFormat == SaveFormat.Png)
+            {
+                SavePNGScreenshot(fileName);
                 return;
             }
             try

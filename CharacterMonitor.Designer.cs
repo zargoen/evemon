@@ -580,7 +580,7 @@ namespace EVEMon
             // 
             // sfdSaveDialog
             // 
-            this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format|*.xml";
+			this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format|*.xml|PNG Image|*.png";
             this.sfdSaveDialog.Title = "Save Character Info";
             // 
             // ttToolTip
