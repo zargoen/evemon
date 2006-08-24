@@ -49,6 +49,29 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        public ImageList GetIconSet(int index)
+        {
+            switch(index)
+            {
+                case 1:
+                    return ilSkillIcons1;
+                case 2:
+                    return ilSkillIcons2;
+                case 3:
+                    return ilSkillIcons3;
+                case 4:
+                    return ilSkillIcons4;
+                case 5:
+                    return ilSkillIcons5;
+            }
+            return null;
+        }
+        public void UseIconSet(int index)
+        {
+            tvSkillList.ImageList = GetIconSet(index);
+            UpdateSkillDisplay();
+        }
+
         private delegate bool SkillFilter(GrandSkill gs);
 
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -114,7 +137,6 @@ namespace EVEMon.SkillPlanner
             }
 
             tvSkillList.Nodes.Clear();
-            tvSkillList.ImageList = skill_lvl_v5;   // This is where you select which icon set you want.
             foreach (GrandSkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
                 TreeNode gtn = new TreeNode(gsg.Name, 0, 0);

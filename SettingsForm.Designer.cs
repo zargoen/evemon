@@ -129,6 +129,10 @@ namespace EVEMon
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.listView2 = new System.Windows.Forms.ListView();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -174,6 +178,8 @@ namespace EVEMon
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbMinimizeToTray
@@ -498,7 +504,7 @@ namespace EVEMon
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(396, 417);
+            this.tabControl1.Size = new System.Drawing.Size(396, 494);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -732,7 +738,7 @@ namespace EVEMon
             this.cbTooltipOptionSkill.AutoSize = true;
             this.cbTooltipOptionSkill.Location = new System.Drawing.Point(14, 42);
             this.cbTooltipOptionSkill.Name = "cbTooltipOptionSkill";
-            this.cbTooltipOptionSkill.Size = new System.Drawing.Size(101, 17);
+            this.cbTooltipOptionSkill.Size = new System.Drawing.Size(102, 17);
             this.cbTooltipOptionSkill.TabIndex = 4;
             this.cbTooltipOptionSkill.Text = "Skill Name/Level";
             this.cbTooltipOptionSkill.UseVisualStyleBackColor = true;
@@ -765,7 +771,7 @@ namespace EVEMon
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(388, 391);
+            this.tabPage5.Size = new System.Drawing.Size(388, 468);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Look And Feel";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -777,10 +783,11 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel16.Controls.Add(this.groupBox11);
             this.flowLayoutPanel16.Controls.Add(this.gbSkillPlannerHighlighting);
+            this.flowLayoutPanel16.Controls.Add(this.groupBox10);
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(376, 379);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(376, 456);
             this.flowLayoutPanel16.TabIndex = 10;
             // 
             // groupBox11
@@ -1365,7 +1372,7 @@ namespace EVEMon
             this.flowLayoutPanel7.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel7.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(404, 459);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(404, 574);
             this.flowLayoutPanel7.TabIndex = 6;
             this.flowLayoutPanel7.WrapContents = false;
             // 
@@ -1377,7 +1384,7 @@ namespace EVEMon
             this.flowLayoutPanel8.Controls.Add(this.btnOk);
             this.flowLayoutPanel8.Controls.Add(this.btnCancel);
             this.flowLayoutPanel8.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(237, 423);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(237, 500);
             this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(162, 29);
@@ -1428,6 +1435,56 @@ namespace EVEMon
             this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.AutoSize = true;
+            this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox10.Controls.Add(this.tableLayoutPanel4);
+            this.groupBox10.Location = new System.Drawing.Point(3, 147);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(301, 141);
+            this.groupBox10.TabIndex = 13;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Skill Browser Icon Set";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.AutoSize = true;
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.listView2, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.comboBox2, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(295, 121);
+            this.tableLayoutPanel4.TabIndex = 15;
+            // 
+            // listView2
+            // 
+            this.listView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView2.Location = new System.Drawing.Point(3, 30);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(289, 88);
+            this.listView2.TabIndex = 9;
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(3, 3);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(289, 21);
+            this.comboBox2.TabIndex = 3;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -1436,7 +1493,7 @@ namespace EVEMon
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(404, 459);
+            this.ClientSize = new System.Drawing.Size(404, 574);
             this.Controls.Add(this.flowLayoutPanel7);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -1530,6 +1587,9 @@ namespace EVEMon
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1638,5 +1698,9 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbTooltipOptionETA;
         private System.Windows.Forms.CheckBox cbTooltipOptionName;
         private System.Windows.Forms.CheckBox cbTooltipOptionSkill;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ComboBox comboBox2;
     }
 }
