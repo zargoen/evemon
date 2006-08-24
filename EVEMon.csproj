@@ -181,6 +181,12 @@
     <Compile Include="SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\SkillBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\SkillBrowserControl.Designer.cs">
+      <DependentUpon>SkillBrowserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillCompleteDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -379,6 +385,10 @@
     <EmbeddedResource Include="Schedule\ScheduleEditorWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\SkillBrowserControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SkillBrowserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\AddPlanConfirmWindow.resx">
       <SubType>Designer</SubType>
