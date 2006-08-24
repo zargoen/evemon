@@ -118,6 +118,7 @@ namespace EVEMon.SkillPlanner
         private void SelectSkill(GrandSkill gs)
         {
             m_selectedSkill = gs;
+            lblSkillClass.Text = gs.SkillGroup.Name;
             skillTreeDisplay.RootSkill = m_selectedSkill;
 
             UpdatePlanControl();
