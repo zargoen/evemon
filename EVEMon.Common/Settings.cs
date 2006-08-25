@@ -100,6 +100,7 @@ namespace EVEMon.Common
             set { m_enableEmailAlert = value; }
         }
 
+        # region XML Update
         private bool m_DisableXMLAutoUpdate;
 
         public bool DisableXMLAutoUpdate
@@ -107,6 +108,40 @@ namespace EVEMon.Common
             get { return m_DisableXMLAutoUpdate; }
             set { m_DisableXMLAutoUpdate = value; }
         }
+
+        private bool m_DeleteCharacterSilently;
+
+        public bool DeleteCharacterSilently
+        {
+            get { return m_DeleteCharacterSilently; }
+            set { m_DeleteCharacterSilently = value; }
+        }
+
+        private bool m_KeepCharacterPlans;
+
+        public bool KeepCharacterPlans
+        {
+            get { return m_KeepCharacterPlans; }
+            set { m_KeepCharacterPlans = value; }
+        }
+
+        public bool ResetCache()
+        {
+            if (File.Exists(SettingsFileName))
+            {
+                try
+                {
+                    File.Delete(SettingsFileName);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        #endregion
 
         private bool m_EnableSkillCompleteDialog;
 

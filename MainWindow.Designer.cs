@@ -48,6 +48,7 @@ namespace EVEMon
             this.tsbSchedule = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
+            this.tsbResetCache = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -138,6 +139,7 @@ namespace EVEMon
             this.tsbSchedule,
             this.toolStripSeparator2,
             this.tsbOptions,
+            this.tsbResetCache,
             this.tsbAbout});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -204,6 +206,16 @@ namespace EVEMon
             this.tsbOptions.Text = "Options...";
             this.tsbOptions.Click += new System.EventHandler(this.tsbOptions_Click);
             // 
+            // tsbResetCache
+            // 
+            this.tsbResetCache.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbResetCache.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetCache.Image")));
+            this.tsbResetCache.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbResetCache.Name = "tsbResetCache";
+            this.tsbResetCache.Size = new System.Drawing.Size(23, 22);
+            this.tsbResetCache.Text = "Reset Cache";
+            this.tsbResetCache.Click += new System.EventHandler(this.tsbResetCache_Click);
+            // 
             // tsbAbout
             // 
             this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -262,5 +274,6 @@ namespace EVEMon
         private System.Windows.Forms.ContextMenuStrip trayIconToolStrip;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton tsbResetCache;
     }
 }

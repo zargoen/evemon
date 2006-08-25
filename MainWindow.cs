@@ -64,7 +64,7 @@ namespace EVEMon
             {
                 if (cfi != null)
                 {
-                    if (!AddTab(cfi, true))
+                    if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
                     {
                         invalidFiles.Add(cfi);
                     }
@@ -488,7 +488,10 @@ namespace EVEMon
         private void RemoveCharFileInfo(CharFileInfo cfi)
         {
             m_settings.CharFileList.Remove(cfi);
-            m_settings.RemoveAllPlansFor(cfi.Filename);
+            if (!m_settings.KeepCharacterPlans)
+            {
+                m_settings.RemoveAllPlansFor(cfi.Filename);
+            }
             m_settings.Save();
         }
 
@@ -528,7 +531,7 @@ namespace EVEMon
         {
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             DialogResult dr =
-                MessageBox.Show("Are you sure you want to remove \"" + activeTab.Text + "\"?\nThis will remove all plans for this character as well!",
+                MessageBox.Show("Are you sure you want to remove \"" + activeTab.Text + "\"?\nKeep Plan Options will apply!",
                 "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.Yes)
             {
@@ -961,6 +964,37 @@ namespace EVEMon
                 default:
                     break;
             }
+        }
+
+        private void tsbResetCache_Click(object sender, EventArgs e)
+        {
+            // Manually delete the Settings file for any non-recoverble errors.
+            DialogResult dr = MessageBox.Show("Are you sure you want to reset the cache, all settings will be lost including plans?",
+                "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (dr == DialogResult.Yes)
+            {
+                // Take note of what the Keep Character Plans setting is.
+                bool tempKeepPlans = m_settings.KeepCharacterPlans;
+                m_settings.KeepCharacterPlans = false;
+                // Run through any characters that are currently loaded.
+                foreach (TabPage tab in tcCharacterTabs.TabPages)
+                {
+                    RemoveTab(tab);
+                }
+                // Reset the settings. Settings are resaved upon exiting the application, no need to 
+                // change this.
+                m_settings.KeepCharacterPlans = tempKeepPlans;
+
+                if (m_settings.ResetCache())
+                {
+                    MessageBox.Show("EVEMon cache reset successfully", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Problem resetting EVEMon cache", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
         }
     }
 }

@@ -100,6 +100,10 @@ namespace EVEMon
             m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
 
             m_settings.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
+
+            m_settings.DeleteCharacterSilently = cbDeleteCharactersSilently.Checked;
+            m_settings.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
+
             m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
 
             m_settings.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
@@ -175,6 +179,9 @@ namespace EVEMon
 
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
+
+            cbDeleteCharactersSilently.Checked = m_settings.DeleteCharacterSilently;
+            cbKeepCharacterPlans.Checked = m_settings.KeepCharacterPlans;
 
             cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;
             cbHighlightPrerequisites.Checked = m_settings.SkillPlannerHighlightPrerequisites;
