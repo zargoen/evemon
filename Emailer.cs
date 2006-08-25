@@ -18,6 +18,7 @@ namespace EVEMon
         private string m_toAddr;
         private string m_subject;
         private string m_body;
+        private int m_portNumber;
 
         public static bool SendTestMail(Settings settings)
         {
@@ -41,12 +42,16 @@ namespace EVEMon
             m.m_toAddr = settings.EmailToAddress;
             m.m_subject = subject;
             m.m_body = body;
+            m.m_portNumber = settings.PortNumber;
             if (settings.EmailAuthRequired)
             {
                 m.m_serverCredentials = new NetworkCredential(settings.EmailAuthUsername, settings.EmailAuthPassword);
             }
             m.m_serverRequiresSsl = settings.EmailServerRequiresSsl;
-            return m.Send();
+            if (settings.PortNumber > 0)
+                return m.Send(settings.PortNumber);
+            else
+                return m.Send();
         }
 
         private bool Send()
@@ -65,6 +70,32 @@ namespace EVEMon
                 }
                 cli.EnableSsl = m_serverRequiresSsl;
                 cli.Send(msg);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                return false;
+            }
+        }
+
+        private bool Send(int PortNumber)
+        {
+            try
+            {
+                MailMessage msg = new MailMessage();
+                msg.From = new MailAddress(m_fromAddr);
+                msg.To.Add(m_toAddr);
+                msg.Subject = m_subject;
+                msg.Body = m_body;
+                SmtpClient client = new SmtpClient(m_server, m_portNumber);
+
+                if (m_serverCredentials != null)
+                {
+                    client.Credentials = m_serverCredentials;
+                }
+                client.EnableSsl = m_serverRequiresSsl;
+                client.Send(msg);
                 return true;
             }
             catch (Exception e)

@@ -139,6 +139,8 @@ namespace EVEMon
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.tbPortNumber = new System.Windows.Forms.TextBox();
+            this.lblPortNumber = new System.Windows.Forms.Label();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -239,7 +241,7 @@ namespace EVEMon
             this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(12, 49);
             this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
             this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(216, 17);
-            this.cbPlaySoundOnSkillComplete.TabIndex = 5;
+            this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
             // 
@@ -257,8 +259,8 @@ namespace EVEMon
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 192F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 192F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(338, 192);
-            this.tableLayoutPanel2.TabIndex = 4;
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(338, 227);
+            this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tlpEmailSettings
             // 
@@ -268,24 +270,27 @@ namespace EVEMon
             this.tlpEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpEmailSettings.Controls.Add(this.label1, 0, 0);
-            this.tlpEmailSettings.Controls.Add(this.label2, 0, 4);
-            this.tlpEmailSettings.Controls.Add(this.label3, 0, 5);
+            this.tlpEmailSettings.Controls.Add(this.label2, 0, 5);
+            this.tlpEmailSettings.Controls.Add(this.label3, 0, 6);
             this.tlpEmailSettings.Controls.Add(this.tbMailServer, 1, 0);
-            this.tlpEmailSettings.Controls.Add(this.tbFromAddress, 1, 4);
-            this.tlpEmailSettings.Controls.Add(this.tbToAddress, 1, 5);
-            this.tlpEmailSettings.Controls.Add(this.cbEmailServerRequireSsl, 1, 1);
-            this.tlpEmailSettings.Controls.Add(this.cbEmailAuthRequired, 1, 2);
-            this.tlpEmailSettings.Controls.Add(this.tlpEmailAuthTable, 1, 3);
+            this.tlpEmailSettings.Controls.Add(this.tbFromAddress, 1, 5);
+            this.tlpEmailSettings.Controls.Add(this.tbToAddress, 1, 6);
+            this.tlpEmailSettings.Controls.Add(this.cbEmailServerRequireSsl, 1, 2);
+            this.tlpEmailSettings.Controls.Add(this.cbEmailAuthRequired, 1, 3);
+            this.tlpEmailSettings.Controls.Add(this.tlpEmailAuthTable, 1, 4);
+            this.tlpEmailSettings.Controls.Add(this.tbPortNumber, 1, 1);
+            this.tlpEmailSettings.Controls.Add(this.lblPortNumber, 0, 1);
             this.tlpEmailSettings.Location = new System.Drawing.Point(22, 3);
             this.tlpEmailSettings.Name = "tlpEmailSettings";
-            this.tlpEmailSettings.RowCount = 6;
+            this.tlpEmailSettings.RowCount = 7;
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpEmailSettings.Size = new System.Drawing.Size(294, 189);
+            this.tlpEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpEmailSettings.Size = new System.Drawing.Size(294, 216);
             this.tlpEmailSettings.TabIndex = 2;
             // 
             // label1
@@ -305,7 +310,7 @@ namespace EVEMon
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 135);
+            this.label2.Location = new System.Drawing.Point(3, 162);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 27);
             this.label2.TabIndex = 1;
@@ -317,7 +322,7 @@ namespace EVEMon
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 162);
+            this.label3.Location = new System.Drawing.Point(15, 189);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(64, 27);
             this.label3.TabIndex = 2;
@@ -329,39 +334,39 @@ namespace EVEMon
             this.tbMailServer.Location = new System.Drawing.Point(85, 3);
             this.tbMailServer.Name = "tbMailServer";
             this.tbMailServer.Size = new System.Drawing.Size(152, 21);
-            this.tbMailServer.TabIndex = 3;
+            this.tbMailServer.TabIndex = 1;
             // 
             // tbFromAddress
             // 
-            this.tbFromAddress.Location = new System.Drawing.Point(85, 138);
+            this.tbFromAddress.Location = new System.Drawing.Point(85, 165);
             this.tbFromAddress.Name = "tbFromAddress";
             this.tbFromAddress.Size = new System.Drawing.Size(206, 21);
-            this.tbFromAddress.TabIndex = 4;
+            this.tbFromAddress.TabIndex = 1;
             // 
             // tbToAddress
             // 
-            this.tbToAddress.Location = new System.Drawing.Point(85, 165);
+            this.tbToAddress.Location = new System.Drawing.Point(85, 192);
             this.tbToAddress.Name = "tbToAddress";
             this.tbToAddress.Size = new System.Drawing.Size(206, 21);
-            this.tbToAddress.TabIndex = 5;
+            this.tbToAddress.TabIndex = 1;
             // 
             // cbEmailServerRequireSsl
             // 
             this.cbEmailServerRequireSsl.AutoSize = true;
-            this.cbEmailServerRequireSsl.Location = new System.Drawing.Point(85, 30);
+            this.cbEmailServerRequireSsl.Location = new System.Drawing.Point(85, 57);
             this.cbEmailServerRequireSsl.Name = "cbEmailServerRequireSsl";
             this.cbEmailServerRequireSsl.Size = new System.Drawing.Size(114, 17);
-            this.cbEmailServerRequireSsl.TabIndex = 6;
+            this.cbEmailServerRequireSsl.TabIndex = 1;
             this.cbEmailServerRequireSsl.Text = "Connect using SSL";
             this.cbEmailServerRequireSsl.UseVisualStyleBackColor = true;
             // 
             // cbEmailAuthRequired
             // 
             this.cbEmailAuthRequired.AutoSize = true;
-            this.cbEmailAuthRequired.Location = new System.Drawing.Point(85, 53);
+            this.cbEmailAuthRequired.Location = new System.Drawing.Point(85, 80);
             this.cbEmailAuthRequired.Name = "cbEmailAuthRequired";
             this.cbEmailAuthRequired.Size = new System.Drawing.Size(125, 17);
-            this.cbEmailAuthRequired.TabIndex = 7;
+            this.cbEmailAuthRequired.TabIndex = 1;
             this.cbEmailAuthRequired.Text = "Server requires login";
             this.cbEmailAuthRequired.UseVisualStyleBackColor = true;
             this.cbEmailAuthRequired.CheckedChanged += new System.EventHandler(this.cbEmailAuthRequired_CheckedChanged);
@@ -377,7 +382,7 @@ namespace EVEMon
             this.tlpEmailAuthTable.Controls.Add(this.label4, 0, 0);
             this.tlpEmailAuthTable.Controls.Add(this.tbEmailUsername, 1, 0);
             this.tlpEmailAuthTable.Controls.Add(this.tbEmailPassword, 1, 1);
-            this.tlpEmailAuthTable.Location = new System.Drawing.Point(85, 76);
+            this.tlpEmailAuthTable.Location = new System.Drawing.Point(85, 103);
             this.tlpEmailAuthTable.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
             this.tlpEmailAuthTable.Name = "tlpEmailAuthTable";
             this.tlpEmailAuthTable.RowCount = 2;
@@ -415,7 +420,7 @@ namespace EVEMon
             this.tbEmailUsername.Location = new System.Drawing.Point(68, 3);
             this.tbEmailUsername.Name = "tbEmailUsername";
             this.tbEmailUsername.Size = new System.Drawing.Size(129, 21);
-            this.tbEmailUsername.TabIndex = 9;
+            this.tbEmailUsername.TabIndex = 1;
             // 
             // tbEmailPassword
             // 
@@ -423,15 +428,15 @@ namespace EVEMon
             this.tbEmailPassword.Name = "tbEmailPassword";
             this.tbEmailPassword.PasswordChar = '*';
             this.tbEmailPassword.Size = new System.Drawing.Size(129, 21);
-            this.tbEmailPassword.TabIndex = 10;
+            this.tbEmailPassword.TabIndex = 1;
             // 
             // btnTestEmail
             // 
             this.btnTestEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestEmail.Location = new System.Drawing.Point(240, 224);
+            this.btnTestEmail.Location = new System.Drawing.Point(240, 259);
             this.btnTestEmail.Name = "btnTestEmail";
             this.btnTestEmail.Size = new System.Drawing.Size(110, 23);
-            this.btnTestEmail.TabIndex = 3;
+            this.btnTestEmail.TabIndex = 10;
             this.btnTestEmail.Text = "Send Test Email";
             this.btnTestEmail.UseVisualStyleBackColor = true;
             this.btnTestEmail.Click += new System.EventHandler(this.btnTestEmail_Click);
@@ -442,7 +447,7 @@ namespace EVEMon
             this.cbSendEmail.Location = new System.Drawing.Point(12, 3);
             this.cbSendEmail.Name = "cbSendEmail";
             this.cbSendEmail.Size = new System.Drawing.Size(215, 17);
-            this.cbSendEmail.TabIndex = 0;
+            this.cbSendEmail.TabIndex = 1;
             this.cbSendEmail.Text = "Send email when skill training completes";
             this.cbSendEmail.UseVisualStyleBackColor = true;
             this.cbSendEmail.CheckedChanged += new System.EventHandler(this.cbSendEmail_CheckedChanged);
@@ -1171,7 +1176,7 @@ namespace EVEMon
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
             this.verticalFlowPanel2.Size = new System.Drawing.Size(382, 462);
-            this.verticalFlowPanel2.TabIndex = 9;
+            this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
             // 
@@ -1183,7 +1188,7 @@ namespace EVEMon
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(368, 89);
-            this.groupBox4.TabIndex = 7;
+            this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Alerts";
             // 
@@ -1200,7 +1205,7 @@ namespace EVEMon
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
             this.flowLayoutPanel5.Size = new System.Drawing.Size(362, 69);
-            this.flowLayoutPanel5.TabIndex = 6;
+            this.flowLayoutPanel5.TabIndex = 1;
             // 
             // cbShowBalloonTips
             // 
@@ -1208,7 +1213,7 @@ namespace EVEMon
             this.cbShowBalloonTips.Location = new System.Drawing.Point(12, 3);
             this.cbShowBalloonTips.Name = "cbShowBalloonTips";
             this.cbShowBalloonTips.Size = new System.Drawing.Size(242, 17);
-            this.cbShowBalloonTips.TabIndex = 6;
+            this.cbShowBalloonTips.TabIndex = 1;
             this.cbShowBalloonTips.Text = "Show balloon tip when skill training completes";
             this.cbShowBalloonTips.UseVisualStyleBackColor = true;
             // 
@@ -1218,7 +1223,7 @@ namespace EVEMon
             this.cbShowCompletedSkillsDialog.Location = new System.Drawing.Point(12, 26);
             this.cbShowCompletedSkillsDialog.Name = "cbShowCompletedSkillsDialog";
             this.cbShowCompletedSkillsDialog.Size = new System.Drawing.Size(159, 17);
-            this.cbShowCompletedSkillsDialog.TabIndex = 7;
+            this.cbShowCompletedSkillsDialog.TabIndex = 2;
             this.cbShowCompletedSkillsDialog.Text = "Show completed skills dialog";
             this.cbShowCompletedSkillsDialog.UseVisualStyleBackColor = true;
             // 
@@ -1231,8 +1236,8 @@ namespace EVEMon
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
             this.groupBox3.Location = new System.Drawing.Point(3, 98);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(368, 270);
-            this.groupBox3.TabIndex = 6;
+            this.groupBox3.Size = new System.Drawing.Size(368, 305);
+            this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Email Alert";
             // 
@@ -1248,8 +1253,8 @@ namespace EVEMon
             this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(362, 250);
-            this.flowLayoutPanel6.TabIndex = 5;
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(362, 285);
+            this.flowLayoutPanel6.TabIndex = 1;
             this.flowLayoutPanel6.WrapContents = false;
             // 
             // tabPage4
@@ -1505,7 +1510,7 @@ namespace EVEMon
             this.flowLayoutPanel7.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
             this.flowLayoutPanel7.Size = new System.Drawing.Size(404, 574);
-            this.flowLayoutPanel7.TabIndex = 6;
+            this.flowLayoutPanel7.TabIndex = 1;
             this.flowLayoutPanel7.WrapContents = false;
             // 
             // flowLayoutPanel8
@@ -1520,7 +1525,7 @@ namespace EVEMon
             this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(162, 29);
-            this.flowLayoutPanel8.TabIndex = 6;
+            this.flowLayoutPanel8.TabIndex = 1;
             // 
             // flowLayoutPanel9
             // 
@@ -1566,6 +1571,26 @@ namespace EVEMon
             this.checkBox3.TabIndex = 2;
             this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
             this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // tbPortNumber
+            // 
+            this.tbPortNumber.Location = new System.Drawing.Point(85, 30);
+            this.tbPortNumber.Name = "tbPortNumber";
+            this.tbPortNumber.Size = new System.Drawing.Size(152, 21);
+            this.tbPortNumber.TabIndex = 1;
+            this.tbPortNumber.Text = "25";
+            // 
+            // lblPortNumber
+            // 
+            this.lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPortNumber.AutoSize = true;
+            this.lblPortNumber.Location = new System.Drawing.Point(8, 27);
+            this.lblPortNumber.Name = "lblPortNumber";
+            this.lblPortNumber.Size = new System.Drawing.Size(71, 27);
+            this.lblPortNumber.TabIndex = 10;
+            this.lblPortNumber.Text = "Port Number:";
+            this.lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // SettingsForm
             // 
@@ -1794,5 +1819,7 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel20;
         private System.Windows.Forms.CheckBox cbKeepCharacterPlans;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
+        private System.Windows.Forms.TextBox tbPortNumber;
+        private System.Windows.Forms.Label lblPortNumber;
     }
 }

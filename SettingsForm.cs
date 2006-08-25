@@ -57,6 +57,16 @@ namespace EVEMon
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableEmailAlert = cbSendEmail.Checked;
             s.EmailServer = tbMailServer.Text;
+            try
+            {
+                s.PortNumber = Convert.ToInt16(tbPortNumber.Text);
+            }
+            catch (FormatException e)
+            {
+                ExceptionHandler.LogException(e, true);
+                tbPortNumber.Text = "25";
+                s.PortNumber = 25;
+            }
             s.EmailServerRequiresSsl = cbEmailServerRequireSsl.Checked;
             s.EmailAuthRequired = cbEmailAuthRequired.Checked;
             s.EmailAuthUsername = tbEmailUsername.Text;
@@ -161,6 +171,7 @@ namespace EVEMon
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
             tbMailServer.Text = m_settings.EmailServer;
+            tbPortNumber.Text = m_settings.PortNumber.ToString();
             cbEmailServerRequireSsl.Checked = m_settings.EmailServerRequiresSsl;
             cbEmailAuthRequired.Checked = m_settings.EmailAuthRequired;
             tbEmailUsername.Text = m_settings.EmailAuthUsername;

@@ -230,6 +230,15 @@ namespace EVEMon.Common
             get { return m_emailToAddress; }
             set { m_emailToAddress = value; }
         }
+
+        private int m_portNumber;
+
+        public int PortNumber
+        {
+            get { return m_portNumber; }
+            set { m_portNumber = value; }
+        }
+
         #endregion // Email Settings
 
         private bool m_minimizeToTray = true;
