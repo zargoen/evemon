@@ -76,6 +76,7 @@ namespace EVEMon.SkillPlanner
                               "Select skills to add to your plan using the list on the left. To " +
                               "view the list of skills you've added to your plan, choose " +
                               "\"View Plan\" from the dropdown in the upper left.");
+            UpdateStatusBar();
         }
 
         private void NewPlannerWindow_FormClosed(object sender, FormClosedEventArgs e)
