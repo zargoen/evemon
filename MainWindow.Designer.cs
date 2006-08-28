@@ -136,10 +136,10 @@ namespace EVEMon
             this.tsbRemoveChar,
             this.toolStripSeparator1,
             this.tsbMineralSheet,
+            this.tsbResetCache,
             this.tsbSchedule,
             this.toolStripSeparator2,
             this.tsbOptions,
-            this.tsbResetCache,
             this.tsbAbout});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
