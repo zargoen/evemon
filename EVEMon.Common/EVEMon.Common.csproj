@@ -104,7 +104,10 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>if errorlevel 1 goto BuildEventFailed
+"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
+:BuildEventFailed
+echo AssemblyInfo Template for $(ProjectName) not updated
+exit 0</PreBuildEvent>
   </PropertyGroup>
 </Project>
