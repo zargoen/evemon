@@ -988,6 +988,8 @@ namespace EVEMon
                 if (m_settings.ResetCache())
                 {
                     MessageBox.Show("EVEMon cache reset successfully", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Text = "EVEMon";
+                    SetMinimizedIconTooltipText(this.Text);
                 }
                 else
                 {
