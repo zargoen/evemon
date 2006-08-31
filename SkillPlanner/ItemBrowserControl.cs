@@ -210,12 +210,13 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
+            string m_note = i.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
             foreach (ItemRequiredSkill irs in i.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(irs.Name, irs.Level));
             }
-            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd);
+            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
         }
     }
 }

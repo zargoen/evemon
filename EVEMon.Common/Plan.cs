@@ -504,6 +504,20 @@ namespace EVEMon.Common
                 foreach (Plan.Entry pe in planEntries)
                 {
                     m_entries.Add(pe);
+                    if (pe.AddNoteonly)
+                    {
+                        Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
+                        if (pn != null )
+                         if (!pn.Notes.Contains(pe.Notes))
+                        {
+                            if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
+                            pn.Notes = pn.Notes + pe.Notes;
+                        }
+                    }
+                    else
+                    {
+                        m_entries.Add(pe);
+                    }
                 }
             }
             finally
@@ -913,6 +927,7 @@ namespace EVEMon.Common
             private string m_skillName;
             private int m_level;
             private Entry.Type m_entryType;
+            private bool m_addNoteonly = false;
             private string m_notes;
 
             [XmlIgnore]
@@ -963,8 +978,15 @@ namespace EVEMon.Common
 
             public string Notes
             {
-                get { return m_notes; }
+                get { return (m_notes == null ? "" : m_notes); }
                 set { m_notes = value; }
+            }
+
+            [XmlIgnore]
+            public bool AddNoteonly
+            {
+                get { return m_addNoteonly; }
+                set { m_addNoteonly = value; }
             }
 
             [XmlIgnore]

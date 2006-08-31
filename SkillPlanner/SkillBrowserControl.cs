@@ -397,19 +397,29 @@ namespace EVEMon.SkillPlanner
             UpdatePlanControl();
         }
 
-        private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list)
+        private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             if (gs.Level < level && !m_plan.IsPlanned(gs, level))
             {
                 foreach (Plan.Entry pe in list)
                 {
-                    if (pe.SkillName == gs.Name && pe.Level == level)
+                    if (pe.SkillName == gs.Name)
                     {
-                        return false;
+                        if (Note != "" && !pe.Notes.Contains(Note))
+                        {
+                            pe.Notes = pe.Notes + ", " + Note;
+                        }
+                        if (pe.Level == level)
+                        {
+                            return false;
+                        }
                     }
                 }
                 return true;
-            }
+            } else
+                {
+
+                }
             return false;
         }
 
@@ -423,13 +433,15 @@ namespace EVEMon.SkillPlanner
 
             //MessageBox.Show(this, "Planning not yet implemented.", "Not Yet Implemented", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
-            AddPrerequisiteEntries(m_selectedSkill, planEntries);
+            string Note = m_selectedSkill.Name;
+            AddPrerequisiteEntries(m_selectedSkill, planEntries,Note);
             for (int i = 1; i <= level; i++)
             {
-                if (ShouldAdd(m_selectedSkill, i, planEntries))
+                if (ShouldAdd(m_selectedSkill, i, planEntries, Note))
                 {
                     Plan.Entry pe = new Plan.Entry();
                     pe.SkillName = m_selectedSkill.Name;
+                    pe.Notes = Note;
                     if (i == level)
                     {
                         pe.EntryType = Plan.Entry.Type.Planned;
@@ -476,19 +488,20 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void AddPrerequisiteEntries(GrandSkill gs, List<Plan.Entry> planEntries)
+        private void AddPrerequisiteEntries(GrandSkill gs, List<Plan.Entry> planEntries, string Note)
         {
             foreach (GrandSkill.Prereq pp in gs.Prereqs)
             {
                 GrandSkill pgs = pp.Skill;
-                AddPrerequisiteEntries(pgs, planEntries);
+                AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
-                    if (ShouldAdd(pgs, i, planEntries))
+                    if (ShouldAdd(pgs, i, planEntries, Note))
                     {
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
+                        pe.Notes = Note;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
                         //pe.PrerequisiteForName = gs.Name;
                         //pe.PrerequisiteForLevel = 1;

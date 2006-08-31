@@ -29,7 +29,12 @@ namespace EVEMon.SkillPlanner
             listBox1.Items.Clear();
             foreach (Plan.Entry pe in m_entries)
             {
-                listBox1.Items.Add(pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level));
+                string m_skill = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
+                if (pe.addNoteonly)
+                {
+                    m_skill = m_skill + " (planned)";
+                }
+                listBox1.Items.Add(m_skill);
             }
         }
 
@@ -45,15 +50,22 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list)
+        private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             if (gs.Level < level && !p.IsPlanned(gs, level))
             {
                 foreach (Plan.Entry pe in list)
                 {
-                    if (pe.SkillName == gs.Name && pe.Level == level)
+                    if (pe.SkillName == gs.Name)
                     {
-                        return false;
+                        if (Note != "" && !pe.Notes.Contains(Note))
+                        {
+                            pe.Notes = pe.Notes + ", " + Note;
+                        }
+                        if (pe.Level == level)
+                        {
+                            return false;
+                        }
                     }
                 }
                 return true;
@@ -61,19 +73,31 @@ namespace EVEMon.SkillPlanner
             return false;
         }
 
-        private static void AddPrerequisiteEntries(Plan p, GrandSkill gs, List<Plan.Entry> planEntries)
+        private static void AddPrerequisiteEntries(Plan p, GrandSkill gs, List<Plan.Entry> planEntries, string Note)
         {
             foreach (GrandSkill.Prereq pp in gs.Prereqs)
             {
                 GrandSkill pgs = pp.Skill;
-                AddPrerequisiteEntries(p, pgs, planEntries);
+                AddPrerequisiteEntries(p, pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
-                    if (ShouldAdd(p, pgs, i, planEntries))
+                    if (p.IsPlanned(pgs, i))
                     {
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
+                        pe.Notes = Note;
+                        pe.addNoteonly = true;
+                        pe.EntryType = Plan.Entry.Type.Prerequisite;
+                        planEntries.Add(pe);
+                    } 
+                    else if (ShouldAdd(p, pgs, i, planEntries,Note))
+                    {
+                        Plan.Entry pe = new Plan.Entry();
+                        pe.SkillName = pgs.Name;
+                        pe.Level = i;
+                        pe.addNoteonly = false;
+                        pe.Notes = Note;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
                         planEntries.Add(pe);
                     }
@@ -93,22 +117,33 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        public static void AddSkillsWithConfirm(Plan p, IEnumerable<Pair<string, int>> skillsToAdd)
+        public static void AddSkillsWithConfirm(Plan p, IEnumerable<Pair<string, int>> skillsToAdd,string Note)
         {
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             foreach (Pair<string, int> ts in skillsToAdd)
             {
                 GrandSkill gs = p.GrandCharacterInfo.GetSkill(ts.A);
-                if (ShouldAdd(p, gs, ts.B, planEntries))
+                if (ShouldAdd(p, gs, ts.B, planEntries, Note))
                 {
-                    AddPrerequisiteEntries(p, gs, planEntries);
+                    AddPrerequisiteEntries(p, gs, planEntries, Note);
                     for (int i = 1; i <= ts.B; i++)
                     {
-                        if (ShouldAdd(p, gs, i, planEntries))
+                        if (p.IsPlanned(gs, i))
                         {
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
                             pe.Level = i;
+                            pe.Notes = Note;
+                            pe.addNoteonly = true;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                        else if (ShouldAdd(p, gs, i, planEntries, Note))
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
                             pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
                             planEntries.Add(pe);
                         }

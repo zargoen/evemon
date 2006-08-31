@@ -162,12 +162,13 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
+            string m_note = s.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
             foreach (ShipRequiredSkill srs in s.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }
-            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd);
+            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
         }
 
         private void pnlShipDescription_Changed(object sender, EventArgs e)

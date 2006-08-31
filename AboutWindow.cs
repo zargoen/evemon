@@ -35,12 +35,13 @@ namespace EVEMon
             slDevelopers.Add("Brad Stone", "EVEMon Developer");
             slDevelopers.Add("mrcue", "EVEMon Developer");
             slDevelopers.Add("Labogh", "EVEMon Developer");
-            slDevelopers.Add("romanl", "EVEMon Developer");
-            slDevelopers.Add("happyslinky", "EVEMon Developer");
             slDevelopers.Add("Stevil Knevil", "EVEMon Developer");
             slDevelopers.Add("Safrax", "EVEMon Developer");
             slDevelopers.Add("Jalon Mevek", "EVEMon Developer");
+            slDevelopers.Add("romanl", "EVEMon Developer");
+            slDevelopers.Add("happyslinky", "EVEMon Noob");
             slDevelopers.Add("Nascent Nimbus", "EVEMon Noob");
+            slDevelopers.Add("TheBelgarion", "EVEMon Noob");
         }
 
         private void AboutWindow_Load(object sender, EventArgs e)
