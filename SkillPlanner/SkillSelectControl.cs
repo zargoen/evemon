@@ -55,8 +55,8 @@ namespace EVEMon.SkillPlanner
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count)
-                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + index].DefaultValue.ToString();
+            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
+                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
@@ -160,8 +160,8 @@ namespace EVEMon.SkillPlanner
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count)
-                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + index].DefaultValue.ToString();
+            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
+                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");

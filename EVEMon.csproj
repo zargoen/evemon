@@ -527,7 +527,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\default_char_pic.png" />
-    <None Include="app.config" />
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>

@@ -138,9 +138,9 @@ namespace EVEMon
             }
 
             comboBox2.Items.Clear();
-            for (int i = 1; i < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count; i++)
+            for (int i = 1; i < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count; i++)
             {
-                comboBox2.Items.Add(EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + i].DefaultValue.ToString());
+                comboBox2.Items.Add(EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
             }
 
             int maxWidth = 0;
@@ -185,8 +185,8 @@ namespace EVEMon
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count - 1)
-                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
+            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
+                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
@@ -219,7 +219,7 @@ namespace EVEMon
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
             }
             tvlist.Nodes.Add(gtn);
-            
+
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
@@ -254,7 +254,7 @@ namespace EVEMon
             cbTooltipOptionETA.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining);
             cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
             cbTooltipOptionName.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name);
-            
+
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (rk.GetValue("EVEMon") == null)
@@ -301,7 +301,7 @@ namespace EVEMon
             isValid = isValid && ValidateProxySetting(tbProxyHttpHost.Text, tbProxyHttpPort.Text);
 
             btnOk.Enabled = isValid;
-            numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;            
+            numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;
         }
 
         private bool ValidateProxySetting(string host, string port)
@@ -438,8 +438,8 @@ namespace EVEMon
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count - 1)
-                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
+            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
+                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
@@ -474,8 +474,7 @@ namespace EVEMon
             tvlist.Nodes.Add(gtn);
         }
 
-        
-            private void btnResetCache_Click(object sender, EventArgs e)
+        private void btnResetCache_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverble errors.
             DialogResult dr = MessageBox.Show("Are you sure you want to reset the cache, all settings will be lost including plans?",
@@ -505,8 +504,6 @@ namespace EVEMon
                     MessageBox.Show("Problem resetting EVEMon cache", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
-        
         }
     }
 }
