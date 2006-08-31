@@ -966,38 +966,7 @@ namespace EVEMon
             }
         }
 
-        private void tsbResetCache_Click(object sender, EventArgs e)
-        {
-            // Manually delete the Settings file for any non-recoverble errors.
-            DialogResult dr = MessageBox.Show("Are you sure you want to reset the cache, all settings will be lost including plans?",
-                "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-            if (dr == DialogResult.Yes)
-            {
-                // Take note of what the Keep Character Plans setting is.
-                bool tempKeepPlans = m_settings.KeepCharacterPlans;
-                m_settings.KeepCharacterPlans = false;
-                // Run through any characters that are currently loaded.
-                foreach (TabPage tab in tcCharacterTabs.TabPages)
-                {
-                    RemoveTab(tab);
-                }
-                // Reset the settings. Settings are resaved upon exiting the application, no need to 
-                // change this.
-                m_settings.KeepCharacterPlans = tempKeepPlans;
-
-                if (m_settings.ResetCache())
-                {
-                    MessageBox.Show("EVEMon cache reset successfully", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Text = "EVEMon";
-                    SetMinimizedIconTooltipText(this.Text);
-                }
-                else
-                {
-                    MessageBox.Show("Problem resetting EVEMon cache", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-        }
+    
     }
 }
 

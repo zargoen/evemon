@@ -164,11 +164,11 @@
     <Compile Include="ProxyAuthenticationWindow.Designer.cs">
       <DependentUpon>ProxyAuthenticationWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Resources\icons\Skill_Select\Settings1.cs">
+    <Compile Include="Resources\icons\Skill_Select\IconSettings.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Resources\icons\Skill_Select\Settings1.Designer.cs">
-      <DependentUpon>Settings1.settings</DependentUpon>
+    <Compile Include="Resources\icons\Skill_Select\IconSettings.Designer.cs">
+      <DependentUpon>IconSettings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -528,9 +528,9 @@
     </Content>
     <Content Include="Resources\default_char_pic.png" />
     <None Include="app.config" />
-    <None Include="Resources\icons\Skill_Select\Settings1.settings">
+    <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+      <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
