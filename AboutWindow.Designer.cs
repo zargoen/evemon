@@ -49,6 +49,8 @@ namespace EVEMon
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.lstDevelopers = new System.Windows.Forms.ListBox();
+            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.lbColourKey = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -58,6 +60,7 @@ namespace EVEMon
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
+            this.flowLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -204,7 +207,7 @@ namespace EVEMon
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 276);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 329);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
@@ -245,14 +248,16 @@ namespace EVEMon
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.btnOk, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.btnOk, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.verticalFlowPanel1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel4, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel6, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(642, 485);
@@ -268,7 +273,7 @@ namespace EVEMon
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(377, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(265, 261);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(265, 235);
             this.flowLayoutPanel4.TabIndex = 11;
             // 
             // flowLayoutPanel5
@@ -295,15 +300,39 @@ namespace EVEMon
             // 
             this.lstDevelopers.BackColor = System.Drawing.SystemColors.Menu;
             this.lstDevelopers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstDevelopers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.lstDevelopers.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lstDevelopers.FormattingEnabled = true;
             this.lstDevelopers.Location = new System.Drawing.Point(3, 22);
-            this.lstDevelopers.MultiColumn = true;
             this.lstDevelopers.Name = "lstDevelopers";
             this.lstDevelopers.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lstDevelopers.Size = new System.Drawing.Size(259, 236);
+            this.lstDevelopers.Size = new System.Drawing.Size(259, 210);
             this.lstDevelopers.Sorted = true;
             this.lstDevelopers.TabIndex = 2;
+            this.lstDevelopers.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lstDevelopers_DrawItem);
+            // 
+            // flowLayoutPanel6
+            // 
+            this.flowLayoutPanel6.AutoSize = true;
+            this.flowLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel6.Controls.Add(this.lbColourKey);
+            this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(377, 244);
+            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(265, 73);
+            this.flowLayoutPanel6.TabIndex = 12;
+            // 
+            // lbColourKey
+            // 
+            this.lbColourKey.BackColor = System.Drawing.SystemColors.Control;
+            this.lbColourKey.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbColourKey.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.lbColourKey.FormattingEnabled = true;
+            this.lbColourKey.Location = new System.Drawing.Point(3, 3);
+            this.lbColourKey.Name = "lbColourKey";
+            this.lbColourKey.Size = new System.Drawing.Size(259, 67);
+            this.lbColourKey.TabIndex = 1;
+            this.lbColourKey.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbColourKey_DrawItem);
             // 
             // AboutWindow
             // 
@@ -338,6 +367,7 @@ namespace EVEMon
             this.flowLayoutPanel4.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
+            this.flowLayoutPanel6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -365,5 +395,7 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private System.Windows.Forms.ListBox lstDevelopers;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
+        private System.Windows.Forms.ListBox lbColourKey;
     }
 }

@@ -484,47 +484,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EVEMon.WinHook.dll">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="Resources\default char pic.png" />
-    <Content Include="SkillPlanner\icons\Default\book.ico" />
-    <Content Include="SkillPlanner\icons\Default\Not_own.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl0v1.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl1v1.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl2v1.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl3v1.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl4v1.ico" />
-    <Content Include="SkillPlanner\icons\Group1_basic\lvl5v1.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl0v2.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl1v2.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl2v2.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl3v2.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl4v2.ico" />
-    <Content Include="SkillPlanner\icons\Group2_basic\lvl5v2.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl0v3.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl1v3.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl2v3.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl3v3.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl4v3.ico" />
-    <Content Include="SkillPlanner\icons\Group3_basic\lvl5v3.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl0v4.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl1v4.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl2v4.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl3v4.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl4v4.ico" />
-    <Content Include="SkillPlanner\icons\Group4_basic\lvl5v4.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl0v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl1v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl2v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl3v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl4v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\lvl5v5.ico" />
-    <Content Include="SkillPlanner\icons\Group5_basic\Not_ownv5.ico" />
+    <Content Include="Resources\default_char_pic.png" />
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
