@@ -53,6 +53,7 @@ namespace EVEMon
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
             s.RelocateTargetScreen = cbScreenList.SelectedIndex;
+            s.SkillIconGroup = comboBox2.SelectedIndex + 1;
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -136,6 +137,12 @@ namespace EVEMon
                 cbScreenList.Items.Add(String.Format("Screen {0}", i + 1));
             }
 
+            comboBox2.Items.Clear();
+            for (int i = 1; i < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count; i++)
+            {
+                comboBox2.Items.Add(EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + i].DefaultValue.ToString());
+            }
+
             int maxWidth = 0;
             int maxHeight = 0;
             foreach (TabPage tp in tabControl1.TabPages)
@@ -167,6 +174,52 @@ namespace EVEMon
             {
                 cbScreenList.SelectedIndex = 0;
             }
+            if (m_settings.SkillIconGroup <= comboBox2.Items.Count && m_settings.SkillIconGroup > 0)
+            {
+                comboBox2.SelectedIndex = m_settings.SkillIconGroup - 1;
+            }
+            else
+            {
+                comboBox2.SelectedIndex = 0;
+            }
+            ImageList def = new ImageList();
+            def.ColorDepth = ColorDepth.Depth32Bit;
+            string groupname = null;
+            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count - 1)
+                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
+            if (groupname != null)
+            {
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
+                basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    if (def.Images.ContainsKey(basicx.Key.ToString()))
+                    {
+                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    }
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+            }
+            tvlist.Nodes.Clear();
+            tvlist.ImageList = def;
+            tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
+            gtn.Nodes.Add(new TreeNode("Not Owned (Rank)", tvlist.ImageList.Images.IndexOfKey("Not_own"), tvlist.ImageList.Images.IndexOfKey("Not_own")));
+            gtn.Nodes.Add(new TreeNode("Can Learn (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn")));
+            for (int i = 0; i < 6; i++)
+            {
+                gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
+            }
+            tvlist.Nodes.Add(gtn);
+            
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
@@ -380,5 +433,45 @@ namespace EVEMon
             }));
         }
 
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ImageList def = new ImageList();
+            def.ColorDepth = ColorDepth.Depth32Bit;
+            string groupname = null;
+            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count - 1)
+                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
+            if (groupname != null)
+            {
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
+                basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    if (def.Images.ContainsKey(basicx.Key.ToString()))
+                    {
+                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    }
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+            }
+            tvlist.Nodes.Clear();
+            tvlist.ImageList = def;
+            tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
+            gtn.Nodes.Add(new TreeNode("Not Owned (Rank)", tvlist.ImageList.Images.IndexOfKey("Not_own"), tvlist.ImageList.Images.IndexOfKey("Not_own")));
+            gtn.Nodes.Add(new TreeNode("Can Learn (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn")));
+            for (int i = 0; i < 6; i++)
+            {
+                gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
+            }
+            tvlist.Nodes.Add(gtn);
+        }
     }
 }

@@ -590,6 +590,14 @@ namespace EVEMon.Common
             }
         }
 
+        private int m_skillIconGroup = 0;
+
+        public int SkillIconGroup
+        {
+            get { return m_skillIconGroup; }
+            set { m_skillIconGroup = value; }
+        }
+
         private bool m_useCustomProxySettings = false;
 
         public bool UseCustomProxySettings

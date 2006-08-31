@@ -10,6 +10,19 @@
     <RootNamespace>EVEMon</RootNamespace>
     <AssemblyName>EVEMon</AssemblyName>
     <ApplicationIcon>EVEMon-all.ico</ApplicationIcon>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -150,6 +163,14 @@
     </Compile>
     <Compile Include="ProxyAuthenticationWindow.Designer.cs">
       <DependentUpon>ProxyAuthenticationWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\icons\Skill_Select\Settings1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resources\icons\Skill_Select\Settings1.Designer.cs">
+      <DependentUpon>Settings1.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Schedule\CalendarControl.cs">
       <SubType>UserControl</SubType>
@@ -370,6 +391,24 @@
       <SubType>Designer</SubType>
       <DependentUpon>ProxyAuthenticationWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group0\Default.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group1\Dice_Spots.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group2\Slashes.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group3\Pie_Slices.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group4\Pentagons.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\icons\Skill_Select\Group5\Pentagrams.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Schedule\CalendarControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CalendarControl.cs</DependentUpon>
@@ -488,6 +527,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\default_char_pic.png" />
+    <None Include="app.config" />
+    <None Include="Resources\icons\Skill_Select\Settings1.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+    </None>
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -509,6 +553,23 @@
       <Project>{F0627E15-E8DF-404F-BF82-C48D890F9C5C}</Project>
       <Name>EVEMon.WindowRelocator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Sql.Server.Express.1.0">
+      <Visible>False</Visible>
+      <ProductName>SQL Server 2005 Express Edition</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

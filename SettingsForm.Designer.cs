@@ -48,6 +48,8 @@ namespace EVEMon
             this.label4 = new System.Windows.Forms.Label();
             this.tbEmailUsername = new System.Windows.Forms.TextBox();
             this.tbEmailPassword = new System.Windows.Forms.TextBox();
+            this.tbPortNumber = new System.Windows.Forms.TextBox();
+            this.lblPortNumber = new System.Windows.Forms.Label();
             this.btnTestEmail = new System.Windows.Forms.Button();
             this.cbSendEmail = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -89,7 +91,7 @@ namespace EVEMon
             this.cbHighlightPrerequisites = new System.Windows.Forms.CheckBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.tvlist = new System.Windows.Forms.TreeView();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.verticalFlowPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -139,8 +141,7 @@ namespace EVEMon
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.tbPortNumber = new System.Windows.Forms.TextBox();
-            this.lblPortNumber = new System.Windows.Forms.Label();
+            this.chName = new System.Windows.Forms.ColumnHeader();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -257,8 +258,8 @@ namespace EVEMon
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 192F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 192F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 227F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 227F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(338, 227);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
@@ -429,6 +430,26 @@ namespace EVEMon
             this.tbEmailPassword.PasswordChar = '*';
             this.tbEmailPassword.Size = new System.Drawing.Size(129, 21);
             this.tbEmailPassword.TabIndex = 1;
+            // 
+            // tbPortNumber
+            // 
+            this.tbPortNumber.Location = new System.Drawing.Point(85, 30);
+            this.tbPortNumber.Name = "tbPortNumber";
+            this.tbPortNumber.Size = new System.Drawing.Size(152, 21);
+            this.tbPortNumber.TabIndex = 1;
+            this.tbPortNumber.Text = "25";
+            // 
+            // lblPortNumber
+            // 
+            this.lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPortNumber.AutoSize = true;
+            this.lblPortNumber.Location = new System.Drawing.Point(8, 27);
+            this.lblPortNumber.Name = "lblPortNumber";
+            this.lblPortNumber.Size = new System.Drawing.Size(71, 27);
+            this.lblPortNumber.TabIndex = 10;
+            this.lblPortNumber.Text = "Port Number:";
+            this.lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnTestEmail
             // 
@@ -933,7 +954,7 @@ namespace EVEMon
             this.tableLayoutPanel4.AutoSize = true;
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.listView2, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.comboBox2, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
@@ -944,16 +965,15 @@ namespace EVEMon
             this.tableLayoutPanel4.Size = new System.Drawing.Size(295, 121);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
-            // listView2
+            // tvlist
             // 
-            this.listView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView2.Location = new System.Drawing.Point(3, 30);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(289, 88);
-            this.listView2.TabIndex = 9;
-            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.tvlist.Location = new System.Drawing.Point(3, 30);
+            this.tvlist.Name = "tvlist";
+            this.tvlist.Size = new System.Drawing.Size(289, 88);
+            this.tvlist.TabIndex = 9;
             // 
             // comboBox2
             // 
@@ -963,6 +983,7 @@ namespace EVEMon
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(289, 21);
             this.comboBox2.TabIndex = 3;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // tabPage3
             // 
@@ -1291,7 +1312,7 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(239, 60);
+            this.groupBox8.Size = new System.Drawing.Size(233, 60);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
@@ -1333,7 +1354,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
             this.groupBox9.Location = new System.Drawing.Point(3, 69);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(239, 118);
+            this.groupBox9.Size = new System.Drawing.Size(233, 118);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
@@ -1443,7 +1464,7 @@ namespace EVEMon
             this.groupBox7.Controls.Add(this.label15);
             this.groupBox7.Location = new System.Drawing.Point(3, 193);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(239, 79);
+            this.groupBox7.Size = new System.Drawing.Size(233, 79);
             this.groupBox7.TabIndex = 8;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Tranquility Status";
@@ -1572,25 +1593,9 @@ namespace EVEMon
             this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
-            // tbPortNumber
+            // chName
             // 
-            this.tbPortNumber.Location = new System.Drawing.Point(85, 30);
-            this.tbPortNumber.Name = "tbPortNumber";
-            this.tbPortNumber.Size = new System.Drawing.Size(152, 21);
-            this.tbPortNumber.TabIndex = 1;
-            this.tbPortNumber.Text = "25";
-            // 
-            // lblPortNumber
-            // 
-            this.lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPortNumber.AutoSize = true;
-            this.lblPortNumber.Location = new System.Drawing.Point(8, 27);
-            this.lblPortNumber.Name = "lblPortNumber";
-            this.lblPortNumber.Size = new System.Drawing.Size(71, 27);
-            this.lblPortNumber.TabIndex = 10;
-            this.lblPortNumber.Text = "Port Number:";
-            this.lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chName.Text = "Sample";
             // 
             // SettingsForm
             // 
@@ -1811,7 +1816,7 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbTooltipOptionSkill;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.TreeView tvlist;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel17;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel18;
@@ -1821,5 +1826,6 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
         private System.Windows.Forms.TextBox tbPortNumber;
         private System.Windows.Forms.Label lblPortNumber;
+        private System.Windows.Forms.ColumnHeader chName;
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Collections;
 
 namespace EVEMon.SkillPlanner
 {
@@ -51,21 +52,39 @@ namespace EVEMon.SkillPlanner
 
         public ImageList GetIconSet(int index)
         {
-            switch(index)
+            ImageList def = new ImageList();
+            def.ColorDepth = ColorDepth.Depth32Bit;
+            string groupname = null;
+            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count)
+                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + index].DefaultValue.ToString();
+            if (groupname != null)
             {
-                case 1:
-                    return ilSkillIcons1;
-                case 2:
-                    return ilSkillIcons2;
-                case 3:
-                    return ilSkillIcons3;
-                case 4:
-                    return ilSkillIcons4;
-                case 5:
-                    return ilSkillIcons5;
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                IDictionaryEnumerator basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + index + "//" + groupname + ".resources");
+                basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    if (def.Images.ContainsKey(basicx.Key.ToString()))
+                    {
+                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    }
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+                return def;
             }
-            return null;
+            else
+            {
+                return this.ilSkillIcons1;
+            }
         }
+
         public void UseIconSet(int index)
         {
             tvSkillList.ImageList = GetIconSet(index);
@@ -135,16 +154,50 @@ namespace EVEMon.SkillPlanner
                              };
                     break;
             }
-
+            int index = Settings.GetInstance().SkillIconGroup;
+            if (index == 0)
+                index = 1;
+            ImageList def = new ImageList();
+            def.ColorDepth = ColorDepth.Depth32Bit;
+            string groupname = null;
+            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties.Count)
+                groupname = EVEMon.Resources.icons.Skill_Select.Settings1.Default.Properties["Group" + index].DefaultValue.ToString();
+            if (groupname != null)
+            {
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                IDictionaryEnumerator basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + index + "//" + groupname + ".resources");
+                basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
+                {
+                    if (def.Images.ContainsKey(basicx.Key.ToString()))
+                    {
+                        def.Images.RemoveByKey(basicx.Key.ToString());
+                    }
+                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
+                }
+                basic.Close();
+            }
+            else
+            {
+                def = this.ilSkillIcons1;
+            }
             tvSkillList.Nodes.Clear();
+            tvSkillList.ImageList = def;
+            tvSkillList.ImageList.ColorDepth = ColorDepth.Depth32Bit;
             foreach (GrandSkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
-                TreeNode gtn = new TreeNode(gsg.Name, 0, 0);
+                TreeNode gtn = new TreeNode(gsg.Name, tvSkillList.ImageList.Images.IndexOfKey("book"), tvSkillList.ImageList.Images.IndexOfKey("book"));
                 foreach (GrandSkill gs in gsg)
                 {
                     if (sf(gs) && (gs.Public || cbShowNonPublic.Checked))
                     {
-                        // The folling is here for when/if skillbooks ever get an 'Owned' flag
+                        // The following is here for when/if skillbooks ever get an 'Owned' flag
                         // 'Owned' flag - for those pesky skills you can't train yet but
                         //                have gone and bought the book for already anyway.
                         TreeNode stn;
@@ -152,16 +205,19 @@ namespace EVEMon.SkillPlanner
                         {
                             if (gs.IsPartiallyTrained())
                             {
-                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 2, 2);
+                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl0"), tvSkillList.ImageList.Images.IndexOfKey("lvl0"));
                             }
                             else
                             {
-                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", 1, 1);
+                                if (gs.PrerequisitesMet) // prereqs met
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvSkillList.ImageList.Images.IndexOfKey("lvl0CanLearn"));
+                                else
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("Not_own"), tvSkillList.ImageList.Images.IndexOfKey("Not_own"));
                             }
                         }
                         else
                         {
-                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", gs.Level + 2, gs.Level + 2);
+                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl" + gs.Level), tvSkillList.ImageList.Images.IndexOfKey("lvl" + gs.Level));
                         }
                         stn.Tag = gs;
                         gtn.Nodes.Add(stn);
