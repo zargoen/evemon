@@ -36,6 +36,8 @@ namespace EVEMon.SkillPlanner
 
             planEditor.Settings = m_settings;
             planEditor.Plan = m_plan;
+            planEditor.SkillBrowser = skillBrowser;
+            planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
             shipBrowser.GrandCharacterInfo = m_grandCharacterInfo;
@@ -52,6 +54,11 @@ namespace EVEMon.SkillPlanner
 
             // Force an update
             m_settings_WorksafeChanged(null, null);
+        }
+
+        public void ShowSkillTree()
+        {
+            tabControl1.SelectedTab = tpSkillBrowser;
         }
 
         private void NewPlannerWindow_Shown(object sender, EventArgs e)
