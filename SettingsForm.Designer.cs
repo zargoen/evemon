@@ -73,8 +73,6 @@ namespace EVEMon
             this.cbTooltipOptionSkill = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionDate = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionETA = new System.Windows.Forms.CheckBox();
-            this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.btnResetCache = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -158,7 +156,6 @@ namespace EVEMon
             this.flpScreenSelect.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.gboxTooltipOptions.SuspendLayout();
-            this.groupBox12.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -553,7 +550,6 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox2);
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
             this.verticalFlowPanel1.Controls.Add(this.gboxTooltipOptions);
-            this.verticalFlowPanel1.Controls.Add(this.groupBox12);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
@@ -742,26 +738,6 @@ namespace EVEMon
             this.cbTooltipOptionETA.TabIndex = 2;
             this.cbTooltipOptionETA.Text = "Time to Completion";
             this.cbTooltipOptionETA.UseVisualStyleBackColor = true;
-            // 
-            // groupBox12
-            // 
-            this.groupBox12.Controls.Add(this.btnResetCache);
-            this.groupBox12.Location = new System.Drawing.Point(3, 344);
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(359, 47);
-            this.groupBox12.TabIndex = 8;
-            this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "EVEMon Cache";
-            // 
-            // btnResetCache
-            // 
-            this.btnResetCache.Location = new System.Drawing.Point(15, 18);
-            this.btnResetCache.Name = "btnResetCache";
-            this.btnResetCache.Size = new System.Drawing.Size(310, 23);
-            this.btnResetCache.TabIndex = 0;
-            this.btnResetCache.Text = "Clear my EVEMon Cache (Delete all Characters and Plans)";
-            this.btnResetCache.UseVisualStyleBackColor = true;
-            this.btnResetCache.Click += new System.EventHandler(this.btnResetCache_Click);
             // 
             // tabPage5
             // 
@@ -1665,7 +1641,6 @@ namespace EVEMon
             this.flowLayoutPanel4.PerformLayout();
             this.gboxTooltipOptions.ResumeLayout(false);
             this.gboxTooltipOptions.PerformLayout();
-            this.groupBox12.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
@@ -1847,8 +1822,6 @@ namespace EVEMon
         private System.Windows.Forms.TextBox tbPortNumber;
         private System.Windows.Forms.Label lblPortNumber;
         private System.Windows.Forms.ColumnHeader chName;
-        private System.Windows.Forms.GroupBox groupBox12;
-        private System.Windows.Forms.Button btnResetCache;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.CheckBox cbMinimizeToTray;

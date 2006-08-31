@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
             foreach (Plan.Entry pe in m_entries)
             {
                 string m_skill = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
-                if (pe.addNoteonly)
+                if (pe.AddNoteonly)
                 {
                     m_skill = m_skill + " (planned)";
                 }
@@ -87,7 +87,7 @@ namespace EVEMon.SkillPlanner
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
                         pe.Notes = Note;
-                        pe.addNoteonly = true;
+                        pe.AddNoteonly = true;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
                         planEntries.Add(pe);
                     } 
@@ -96,7 +96,7 @@ namespace EVEMon.SkillPlanner
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
-                        pe.addNoteonly = false;
+                        pe.AddNoteonly = false;
                         pe.Notes = Note;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
                         planEntries.Add(pe);
@@ -134,7 +134,7 @@ namespace EVEMon.SkillPlanner
                             pe.SkillName = gs.Name;
                             pe.Level = i;
                             pe.Notes = Note;
-                            pe.addNoteonly = true;
+                            pe.AddNoteonly = true;
                             pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
                             planEntries.Add(pe);
                         }
