@@ -197,7 +197,7 @@ Section "Installer Section"
   lbl_noLegacyUninstall:
   SetOutPath "$INSTDIR"
 ## INSTALLBUILDER: INSERT FILES HERE ##
-#  File /r /x *vshost* "..\..\..\bin\x86\Release\*.*" 
+  File /r /x *vshost* "..\..\..\..\bin\x86\Release\*.*" 
   File "..\..\..\..\eve.exe_I006b_040f.ico"
   File "..\..\..\..\EVEMon-all.ico"
   CreateDirectory "$INSTDIR\Debugging Tools"
