@@ -503,7 +503,6 @@ namespace EVEMon.Common
             {
                 foreach (Plan.Entry pe in planEntries)
                 {
-                    m_entries.Add(pe);
                     if (pe.AddNoteonly)
                     {
                         Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
@@ -512,6 +511,7 @@ namespace EVEMon.Common
                         {
                             if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
                             pn.Notes = pn.Notes + pe.Notes;
+                            m_entries.ForceUpdate(pn, ChangeType.Added);
                         }
                     }
                     else

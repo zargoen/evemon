@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
 
         private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
-            if (gs.Level < level && !p.IsPlanned(gs, level))
+            if (gs.Level < level/* && !p.IsPlanned(gs, level)*/)
             {
                 foreach (Plan.Entry pe in list)
                 {
@@ -61,6 +61,8 @@ namespace EVEMon.SkillPlanner
                         if (Note != "" && !pe.Notes.Contains(Note))
                         {
                             pe.Notes = pe.Notes + ", " + Note;
+                            pe.AddNoteonly = true;
+                            return true;
                         }
                         if (pe.Level == level)
                         {

@@ -1151,6 +1151,11 @@ namespace EVEMon.Common
             }
         }
 
+        public void ForceUpdate(T item, ChangeType changeType)
+        {
+            OnChanged(item, changeType);
+        }
+
         private void OnCleared(IEnumerable<T> items)
         {
             if (Cleared != null)
