@@ -212,8 +212,8 @@ namespace EVEMon
             tvlist.ImageList = def;
             tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
-            gtn.Nodes.Add(new TreeNode("Not Owned (Rank)", tvlist.ImageList.Images.IndexOfKey("Not_own"), tvlist.ImageList.Images.IndexOfKey("Not_own")));
-            gtn.Nodes.Add(new TreeNode("Can Learn (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn")));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
             for (int i = 0; i < 6; i++)
             {
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
@@ -465,8 +465,8 @@ namespace EVEMon
             tvlist.ImageList = def;
             tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
-            gtn.Nodes.Add(new TreeNode("Not Owned (Rank)", tvlist.ImageList.Images.IndexOfKey("Not_own"), tvlist.ImageList.Images.IndexOfKey("Not_own")));
-            gtn.Nodes.Add(new TreeNode("Can Learn (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvlist.ImageList.Images.IndexOfKey("lvl0CanLearn")));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
+            gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
             for (int i = 0; i < 6; i++)
             {
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));

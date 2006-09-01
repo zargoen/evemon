@@ -210,9 +210,9 @@ namespace EVEMon.SkillPlanner
                             else
                             {
                                 if (gs.PrerequisitesMet) // prereqs met
-                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl0CanLearn"), tvSkillList.ImageList.Images.IndexOfKey("lvl0CanLearn"));
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"));
                                 else
-                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("Not_own"), tvSkillList.ImageList.Images.IndexOfKey("Not_own"));
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"));
                             }
                         }
                         else

@@ -232,7 +232,7 @@
         AAD4fwAA8H8AAMI/AADHPwAA/x8AAP+fAAD/jwAA/88AAP/HAAD/4wAA//MAAP//AAD//wAA
 </value>
   </data>
-  <data name="lvl0CanLearn" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="PrereqsMet" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAEBAAAAEAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAQP///wAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -251,7 +251,7 @@
         AAD+fwAA/D8AAPw/AADwDwAAwAMAAMADAADwDwAA/D8AAPw/AAD+fwAA/n8AAP//AAD//wAA
 </value>
   </data>
-  <data name="Not_own" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="PrereqsNOTMet" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAEBAAAAEAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
