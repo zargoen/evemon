@@ -11,37 +11,43 @@ namespace EVEMon
 {
     public partial class AboutWindow : EVEMonForm
     {
-        SortedList slColourKey;
+        SortedList slPriority;
         SortedList slDevelopers;
+        SortedList slOutput;
         public Font myFont;
+        public Font myFontbold;
 
         public AboutWindow()
         {
             InitializeComponent();
 
             myFont = new System.Drawing.Font("Tahoma", 8);
+            myFontbold = new System.Drawing.Font("Tahoma", 8, FontStyle.Bold);
 
-            slColourKey = new SortedList();
-            slColourKey.Add("EVEMon Legend", Brushes.Red);
-            slColourKey.Add("EVEMon Guru", Brushes.DarkBlue);
-            slColourKey.Add("EVEMon Developer", Brushes.Plum);
-            slColourKey.Add("EVEMon Part-timer", Brushes.Khaki);
-            slColourKey.Add("EVEMon Noob", Brushes.LightSeaGreen);
+            slPriority = new SortedList();
+            slPriority.Add("01", "EVEMon Legend");
+            slPriority.Add("02", "EVEMon Guru");
+            slPriority.Add("03", "EVEMon Developer");
+            slPriority.Add("04", "EVEMon Part-timer");
+            slPriority.Add("05", "EVEMon Noob");
 
             slDevelopers = new SortedList();
-            slDevelopers.Add("Six Anari", "EVEMon Legend");
-            slDevelopers.Add("Anders Chydenius", "EVEMon Guru");
-            slDevelopers.Add("Eewec", "EVEMon Developer");
-            slDevelopers.Add("Brad Stone", "EVEMon Developer");
-            slDevelopers.Add("mrcue", "EVEMon Developer");
-            slDevelopers.Add("Labogh", "EVEMon Developer");
-            slDevelopers.Add("Stevil Knevil", "EVEMon Developer");
-            slDevelopers.Add("Safrax", "EVEMon Developer");
-            slDevelopers.Add("Jalon Mevek", "EVEMon Developer");
-            slDevelopers.Add("romanl", "EVEMon Developer");
-            slDevelopers.Add("happyslinky", "EVEMon Noob");
-            slDevelopers.Add("Nascent Nimbus", "EVEMon Noob");
-            slDevelopers.Add("TheBelgarion", "EVEMon Noob");
+            slDevelopers.Add("Six Anari","01");
+            slDevelopers.Add("Anders Chydenius","02");
+            slDevelopers.Add("Eewec","03");
+            slDevelopers.Add("mrcue","03");
+            slDevelopers.Add("Labogh","03");
+            slDevelopers.Add("Stevil Knevil","03");
+            slDevelopers.Add("Safrax","03");
+            slDevelopers.Add("Brad Stone", "03");
+            slDevelopers.Add("Jalon Mevek", "03");
+            slDevelopers.Add("romanl","03");
+            slDevelopers.Add("TheBelgarion", "05");
+            slDevelopers.Add("happyslinky", "05");
+            slDevelopers.Add("Nascent Nimbus","05");
+ 
+            slOutput = new SortedList();
+
         }
 
         private void AboutWindow_Load(object sender, EventArgs e)
@@ -53,16 +59,28 @@ namespace EVEMon
 
         private void AddDevelopersToListBox()
         {
-            // Set up the colour key list box.
-            for (int i = 0; i < slColourKey.Count; i++)
-            {
-                lbColourKey.Items.Add(slColourKey.GetByIndex(i));
-            }
-
             // Set up the list of developers.
-            for (int i = 0; i < slDevelopers.Count; i++)
+            int iOrder = 0;
+            bool bAddGroup;
+            for (int i = 0; i < slPriority.Count; i++)
             {
-                lstDevelopers.Items.Add(slDevelopers.GetByIndex(i));
+                bAddGroup = true;
+                for (int j = 0; j < slDevelopers.Count; j++)
+                {
+                    if (slPriority.GetKey(i) == slDevelopers.GetByIndex(j))
+                    {
+                        if (bAddGroup)
+                        {
+                            slOutput.Add(iOrder++, slPriority.GetByIndex(i));
+                            bAddGroup = false;
+                        }
+                        slOutput.Add(iOrder++, slDevelopers.GetKey(j));
+                    }
+                }
+            }
+            for (int i = 0; i < slOutput.Count; i++)
+            {
+                lstDevelopers.Items.Add(slOutput.GetByIndex(i));
             }
         }
 
@@ -81,27 +99,43 @@ namespace EVEMon
         {
             if (e.Index > -1)
             {
-                Brush b = Brushes.Black;
-
-                b = (Brush)slColourKey.GetByIndex(slColourKey.IndexOfKey(slDevelopers.GetByIndex(e.Index)));
-                e.Graphics.FillRectangle(b, e.Bounds);
-                e.Graphics.DrawString(slDevelopers.GetKey(e.Index).ToString(), myFont, Brushes.White,
-                new Point(e.Bounds.X, e.Bounds.Y));
+                string sLine = slOutput.GetByIndex(e.Index).ToString();
+                if (sLine.Contains("EVEMon")) 
+                {
+                    sLine = sLine + ":";
+                    e.Graphics.DrawString(sLine, myFontbold, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
+                }
+                else
+                {
+                    sLine = "  "+sLine;
+                    e.Graphics.DrawString(sLine, myFont, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
+                }
             }
         }
 
-        private void lbColourKey_DrawItem(object sender, DrawItemEventArgs e)
+        private void label6_Click(object sender, EventArgs e)
         {
-            // Fill in the colour keys.
-            if (e.Index > -1)
-            {
-                Brush b = Brushes.Black;
 
-                b = (Brush)slColourKey.GetByIndex(e.Index);
-                e.Graphics.FillRectangle(b, e.Bounds);
-                e.Graphics.DrawString(slColourKey.GetKey(e.Index).ToString(), myFont, Brushes.White,
-                new Point(e.Bounds.X, e.Bounds.Y));
-            }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lstDevelopers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flowLayoutPanel3_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
