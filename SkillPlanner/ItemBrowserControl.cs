@@ -58,15 +58,24 @@ namespace EVEMon.SkillPlanner
                     lbItemProperties.Items.Clear();
                     foreach (ItemProperty ip in i.Properties)
                     {
-                        string ItemValue = ip.Value;
+                        decimal DecimalValue;
+                        string  ItemValue = ip.Value;
                         ItemValue = ItemValue.Replace("%", "");
                         ItemValue = ItemValue.Replace(",", ".");
-                        if ((ip.Name.Contains("bonus") || ip.Name.Contains("multiplier")) && ip.Value.Contains("%") &&
-                           (2 > System.Convert.ToDecimal(ItemValue)))
+                        try
                         {
-                            ItemValue = ItemPropertyBonusToPercent(ItemValue);
+                            DecimalValue = System.Convert.ToDecimal(ItemValue);
+                            if ((ip.Name.Contains("bonus") || ip.Name.Contains("multiplier")) && ip.Value.Contains("%") &&
+                               (2 > DecimalValue))
+                            {
+                                ItemValue = ItemPropertyBonusToPercent(DecimalValue);
+                            }
+                            else
+                            {
+                                ItemValue = ip.Value;
+                            }
                         }
-                        else
+                        catch(FormatException)
                         {
                             ItemValue = ip.Value;
                         }
@@ -126,10 +135,9 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private static string ItemPropertyBonusToPercent(string ItemValue)
+        private static string ItemPropertyBonusToPercent(Decimal Value)
         {
-            decimal Value = System.Convert.ToDecimal(ItemValue);
-            if (System.Convert.ToDecimal(ItemValue) > 0)
+            if (Value > 0)
             {
                 Value = (1 - Value) * 100;
             }

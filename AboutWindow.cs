@@ -45,6 +45,7 @@ namespace EVEMon
             slDevelopers.Add("TheBelgarion", "04");
             slDevelopers.Add("happyslinky", "04");
             slDevelopers.Add("Nascent Nimbus","04");
+            slDevelopers.Add("Lexiica", "04");
  
             slOutput = new SortedList();
 

@@ -27,7 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.1.1.$WCREV$")]
-
-//BUILDERS: Add this pre-build event to ALL projects
-// "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
+[assembly : AssemblyVersion("1.1.2.$WCREV$")]
