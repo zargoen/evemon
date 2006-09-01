@@ -28,23 +28,23 @@ namespace EVEMon
             slPriority.Add("01", "EVEMon Legend");
             slPriority.Add("02", "EVEMon Guru");
             slPriority.Add("03", "EVEMon Developer");
-            slPriority.Add("04", "EVEMon Part-timer");
-            slPriority.Add("05", "EVEMon Noob");
+            slPriority.Add("04", "EVEMon Noob");
+            slPriority.Add("05", "Past Contributor");
 
             slDevelopers = new SortedList();
             slDevelopers.Add("Six Anari","01");
             slDevelopers.Add("Anders Chydenius","02");
             slDevelopers.Add("Eewec","03");
+            slDevelopers.Add("Brad Stone", "03");
             slDevelopers.Add("mrcue","03");
             slDevelopers.Add("Labogh","03");
             slDevelopers.Add("Stevil Knevil","03");
             slDevelopers.Add("Safrax","03");
-            slDevelopers.Add("Brad Stone", "03");
             slDevelopers.Add("Jalon Mevek", "03");
             slDevelopers.Add("romanl","03");
-            slDevelopers.Add("TheBelgarion", "05");
-            slDevelopers.Add("happyslinky", "05");
-            slDevelopers.Add("Nascent Nimbus","05");
+            slDevelopers.Add("TheBelgarion", "04");
+            slDevelopers.Add("happyslinky", "04");
+            slDevelopers.Add("Nascent Nimbus","04");
  
             slOutput = new SortedList();
 
