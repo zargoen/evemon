@@ -134,7 +134,7 @@ namespace EVEMon.Common
                     File.Delete(SettingsFileName);
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }

@@ -24,7 +24,7 @@ namespace EVEMon.Common
                         XmlSerializer xs = new XmlSerializer(typeof(Ship[]));
                         sm_ships = (Ship[])xs.Deserialize(zs);
                     }
-                    catch(InvalidCastException e)
+                    catch(InvalidCastException)
                     {
                         // deserialization failed - probably in design mode
                         return null;
