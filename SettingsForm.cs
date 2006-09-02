@@ -189,14 +189,14 @@ namespace EVEMon
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(Environment.CurrentDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");
                 System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(Environment.CurrentDirectory + "//Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
@@ -442,14 +442,14 @@ namespace EVEMon
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group0//Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(Environment.CurrentDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");
                 System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader("Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(Environment.CurrentDirectory + "//Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
