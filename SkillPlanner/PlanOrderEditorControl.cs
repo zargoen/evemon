@@ -332,7 +332,7 @@ namespace EVEMon.SkillPlanner
             ListViewItem lvi = lvSkills.SelectedItems[0];
             Plan.Entry pe = (Plan.Entry)lvi.Tag;
             GrandSkill gs = pe.Skill;
-            m_plannerWindow.ShowSkillTree(gs);
+            m_plannerWindow.ShowSkillInTree(gs);
         }
 
         private void miRemoveFromPlan_Click(object sender, EventArgs e)

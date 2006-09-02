@@ -42,7 +42,7 @@ namespace EVEMon.SkillPlanner
             this.tsbDeletePlan = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl = new System.Windows.Forms.TabControl();
             this.tpPlanQueue = new System.Windows.Forms.TabPage();
             this.planEditor = new EVEMon.SkillPlanner.PlanOrderEditorControl();
             this.tpSkillBrowser = new System.Windows.Forms.TabPage();
@@ -53,7 +53,7 @@ namespace EVEMon.SkillPlanner
             this.itemBrowser = new EVEMon.SkillPlanner.ItemBrowserControl();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tabControl.SuspendLayout();
             this.tpPlanQueue.SuspendLayout();
             this.tpSkillBrowser.SuspendLayout();
             this.tpShipBrowser.SuspendLayout();
@@ -162,18 +162,18 @@ namespace EVEMon.SkillPlanner
                 "xt";
             this.sfdSave.Title = "Save to File";
             // 
-            // tabControl1
+            // tabControl
             // 
-            this.tabControl1.Controls.Add(this.tpPlanQueue);
-            this.tabControl1.Controls.Add(this.tpSkillBrowser);
-            this.tabControl1.Controls.Add(this.tpShipBrowser);
-            this.tabControl1.Controls.Add(this.tpItemBrowser);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 25);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(658, 439);
-            this.tabControl1.TabIndex = 4;
+            this.tabControl.Controls.Add(this.tpPlanQueue);
+            this.tabControl.Controls.Add(this.tpSkillBrowser);
+            this.tabControl.Controls.Add(this.tpShipBrowser);
+            this.tabControl.Controls.Add(this.tpItemBrowser);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 25);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(658, 439);
+            this.tabControl.TabIndex = 4;
             // 
             // tpPlanQueue
             // 
@@ -262,7 +262,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(658, 486);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.MinimumSize = new System.Drawing.Size(666, 353);
@@ -276,7 +276,7 @@ namespace EVEMon.SkillPlanner
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
             this.tpPlanQueue.ResumeLayout(false);
             this.tpSkillBrowser.ResumeLayout(false);
             this.tpShipBrowser.ResumeLayout(false);
@@ -298,7 +298,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbCopyForum;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.SaveFileDialog sfdSave;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton tsbImplantCalculator;
         private System.Windows.Forms.TabPage tpItemBrowser;

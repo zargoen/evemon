@@ -46,24 +46,19 @@ namespace EVEMon.SkillPlanner
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
                 // jump straight to the skill browser
-                tabControl1.SelectedTab = tpSkillBrowser;
+                tabControl.SelectedTab = tpSkillBrowser;
             else
                 // Jump to the plan queue
-                tabControl1.SelectedTab = tpPlanQueue;
+                tabControl.SelectedTab = tpPlanQueue;
 
             // Force an update
             m_settings_WorksafeChanged(null, null);
         }
 
-        public void ShowSkillTree()
-        {
-            tabControl1.SelectedTab = tpSkillBrowser;
-        }
-
-        public void ShowSkillTree(GrandSkill gs)
+        public void ShowSkillInTree(GrandSkill gs)
         {
             skillBrowser.SelectedSkill = gs;
-            ShowSkillTree();
+            tabControl.SelectedTab = tpSkillBrowser;
         }
 
         private void NewPlannerWindow_Shown(object sender, EventArgs e)
@@ -119,14 +114,6 @@ namespace EVEMon.SkillPlanner
             UpdateStatusBar();
         }
 
-        private GrandSkill m_selectedSkill = null;
-
-        private void SelectSkill(GrandSkill gs)
-        {
-            m_selectedSkill = gs;
-            skillBrowser.SelectedSkill = gs;
-        }
-
         private bool m_suggestionTipUp = false;
 
         private void UpdateStatusBar()
@@ -174,55 +161,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        /*
-        private void btnPlanTo1_Click(object sender, EventArgs e)
-        {
-            PlanTo(1);
-        }
-
-        private void btnPlanTo2_Click(object sender, EventArgs e)
-        {
-            PlanTo(2);
-        }
-
-        private void btnPlanTo3_Click(object sender, EventArgs e)
-        {
-            PlanTo(3);
-        }
-
-        private void btnPlanTo4_Click(object sender, EventArgs e)
-        {
-            PlanTo(4);
-        }
-
-        private void btnPlanTo5_Click(object sender, EventArgs e)
-        {
-            PlanTo(5);
-        }
-
-        private void btnRemoveFromPlan_Click(object sender, EventArgs e)
-        {
-            RemoveFromPlan();
-        }
-
-
-        private void miCancelAll_Click(object sender, EventArgs e)
-        {
-            RemoveFromPlan();
-        }
-
-        private void miCancelThis_Click(object sender, EventArgs e)
-        {
-            RemoveFromPlan();
-        }
-
-        private void RemoveFromPlan()
-        {
-            //m_plan.RemoveEntry(m_plan.GetEntry(m_selectedSkill,5));
-            UpdatePlanControl();
-        }
-        */
-
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show(
@@ -248,23 +186,10 @@ namespace EVEMon.SkillPlanner
                     return;
                 }
             }
-            // XXX: apply plan change
 
-            // List<Plan.Entry> nonLearningEntries = new List<Plan.Entry>();
             m_plan.SuppressEvents();
             try
             {
-                //foreach (Plan.Entry pe in m_plan.Entries)
-                //{
-                //    GrandSkill gs = pe.Skill;
-                //    if (!gs.IsLearningSkill && gs.Name != "Learning")
-                //        nonLearningEntries.Add(pe);
-                //}
-                //m_plan.ClearEntries();
-                //foreach (Plan.Entry pe in nonLearningEntries)
-                //{
-                //    m_plan.Entries.Add(pe);
-                //}
                 IEnumerable<Plan.Entry> entries = m_plan.GetSuggestions();
                 int i = 0;
                 foreach (Plan.Entry pe in entries)
@@ -286,6 +211,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #region Plan serialization
         private void tsbCopyForum_Click(object sender, EventArgs e)
         {
             PlanTextOptions pto = (PlanTextOptions) m_settings.DefaultCopyOptions.Clone();
@@ -399,7 +325,9 @@ namespace EVEMon.SkillPlanner
                 m_plan.SaveAsText(sw, pto, false);
             }
         }
+        #endregion Plan serialization
 
+        #region Implant Calculator
         private List<WeakReference<ImplantCalculator>> m_calcWindows = new List<WeakReference<ImplantCalculator>>();
 
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
@@ -425,6 +353,7 @@ namespace EVEMon.SkillPlanner
 
             ic.Show();
         }
+        #endregion Implant Calculator
 
     }
 
