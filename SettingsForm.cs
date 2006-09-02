@@ -12,9 +12,6 @@ namespace EVEMon
         public SettingsForm()
         {
             InitializeComponent();
-
-            //if (Application.RenderWithVisualStyles)
-            //    m_renderer = new VisualStyleRenderer(VisualStyleElement.Window.Dialog.Normal);
         }
 
         public SettingsForm(Settings s)
@@ -22,17 +19,6 @@ namespace EVEMon
         {
             m_settings = s;
         }
-
-        //private VisualStyleRenderer m_renderer;
-        //protected override void OnPaint(PaintEventArgs e)
-        //{
-        //    base.OnPaint(e);
-
-        //    if (!Application.RenderWithVisualStyles)
-        //        return;
-
-        //    m_renderer.DrawBackground(e.Graphics, this.ClientRectangle);
-        //}
 
         private Settings m_settings;
 
@@ -44,6 +30,7 @@ namespace EVEMon
 
         private void ApplyToSettings(Settings s)
         {
+            // Look and feel options
             s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
             s.MinimizeToTray = cbMinimizeToTray.Checked;
@@ -53,9 +40,11 @@ namespace EVEMon
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
             s.RelocateTargetScreen = cbScreenList.SelectedIndex;
-            s.SkillIconGroup = comboBox2.SelectedIndex + 1;
+            s.SkillIconGroup = cbSkillIconSet.SelectedIndex + 1;
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
+
+            // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
             s.EmailServer = tbMailServer.Text;
             try
@@ -75,22 +64,21 @@ namespace EVEMon
             s.EmailFromAddress = tbFromAddress.Text;
             s.EmailToAddress = tbToAddress.Text;
 
+            // Tooltips
             ToolTipDisplayOptions tipOptions = ToolTipDisplayOptions.Blank;
 
             if (cbTooltipOptionDate.Checked)
-            {
                 tipOptions = tipOptions | ToolTipDisplayOptions.TimeFinished;
-            }
+
             if (cbTooltipOptionETA.Checked)
-            {
                 tipOptions = tipOptions | ToolTipDisplayOptions.TimeRemaining;
-            } if (cbTooltipOptionName.Checked)
-            {
+            
+            if (cbTooltipOptionName.Checked)
                 tipOptions = tipOptions | ToolTipDisplayOptions.Name;
-            } if (cbTooltipOptionSkill.Checked)
-            {
+            
+            if (cbTooltipOptionSkill.Checked)
                 tipOptions = tipOptions | ToolTipDisplayOptions.Skill;
-            }
+
             s.TooltipOptions = tipOptions;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
@@ -137,10 +125,10 @@ namespace EVEMon
                 cbScreenList.Items.Add(String.Format("Screen {0}", i + 1));
             }
 
-            comboBox2.Items.Clear();
+            cbSkillIconSet.Items.Clear();
             for (int i = 1; i < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count; i++)
             {
-                comboBox2.Items.Add(EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
+                cbSkillIconSet.Items.Add(EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
             }
 
             int maxWidth = 0;
@@ -159,6 +147,7 @@ namespace EVEMon
             tabControl1.ClientSize = new Size(maxWidth + extraWidth, maxHeight + extraHeight);
             tabControl1.SelectedTab = tabControl1.TabPages[0];
 
+            // Look and feel options
             cbMinimizeToTray.Checked = m_settings.MinimizeToTray;
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
@@ -167,59 +156,15 @@ namespace EVEMon
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
-            {
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
-            }
             else
-            {
                 cbScreenList.SelectedIndex = 0;
-            }
-            if (m_settings.SkillIconGroup <= comboBox2.Items.Count && m_settings.SkillIconGroup > 0)
-            {
-                comboBox2.SelectedIndex = m_settings.SkillIconGroup - 1;
-            }
+
+            // Skill Icon Set
+            if (m_settings.SkillIconGroup <= cbSkillIconSet.Items.Count && m_settings.SkillIconGroup > 0)
+                cbSkillIconSet.SelectedIndex = m_settings.SkillIconGroup - 1;
             else
-            {
-                comboBox2.SelectedIndex = 0;
-            }
-            ImageList def = new ImageList();
-            def.ColorDepth = ColorDepth.Depth32Bit;
-            string groupname = null;
-            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
-                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
-            if (groupname != null)
-            {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");
-                System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
-                }
-                basic.Close();
-                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
-                basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                    {
-                        def.Images.RemoveByKey(basicx.Key.ToString());
-                    }
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
-                }
-                basic.Close();
-            }
-            tvlist.Nodes.Clear();
-            tvlist.ImageList = def;
-            tvlist.ImageList.ColorDepth = ColorDepth.Depth32Bit;
-            TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"), tvlist.ImageList.Images.IndexOfKey("book"));
-            gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
-            gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"), tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
-            for (int i = 0; i < 6; i++)
-            {
-                gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
-            }
-            gtn.Expand();
-            tvlist.Nodes.Add(gtn);
+                cbSkillIconSet.SelectedIndex = 0;
 
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
@@ -434,13 +379,13 @@ namespace EVEMon
             }));
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbSkillIconSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (comboBox2.SelectedIndex >= 0 && comboBox2.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
-                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (comboBox2.SelectedIndex + 1)].DefaultValue.ToString();
+            if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
+                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)].DefaultValue.ToString();
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");
@@ -450,7 +395,7 @@ namespace EVEMon
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group" + (comboBox2.SelectedIndex + 1) + "//" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group" + (cbSkillIconSet.SelectedIndex + 1) + "//" + groupname + ".resources");
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
