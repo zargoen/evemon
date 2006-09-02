@@ -36,7 +36,6 @@ namespace EVEMon.SkillPlanner
 
             planEditor.Settings = m_settings;
             planEditor.Plan = m_plan;
-            planEditor.SkillBrowser = skillBrowser;
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
@@ -46,7 +45,7 @@ namespace EVEMon.SkillPlanner
 
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
-                // jump straight to the skill browser, otherwis
+                // jump straight to the skill browser
                 tabControl1.SelectedTab = tpSkillBrowser;
             else
                 // Jump to the plan queue
@@ -59,6 +58,12 @@ namespace EVEMon.SkillPlanner
         public void ShowSkillTree()
         {
             tabControl1.SelectedTab = tpSkillBrowser;
+        }
+
+        public void ShowSkillTree(GrandSkill gs)
+        {
+            skillBrowser.SelectedSkill = gs;
+            ShowSkillTree();
         }
 
         private void NewPlannerWindow_Shown(object sender, EventArgs e)

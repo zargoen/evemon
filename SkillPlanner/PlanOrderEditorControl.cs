@@ -29,8 +29,7 @@ namespace EVEMon.SkillPlanner
 
         private GrandCharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
-        private SkillBrowser m_skillBrowser;
-        private NewPlannerWindow m_newPlannerWindow;
+        private NewPlannerWindow m_plannerWindow;
 
         public Plan Plan
         {
@@ -51,15 +50,9 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        public SkillBrowser SkillBrowser
-        {
-            get { return m_skillBrowser; }
-            set { m_skillBrowser = value; }
-        }
-
         public NewPlannerWindow PlannerWindow
         {
-            set { m_newPlannerWindow = value; }
+            set { m_plannerWindow = value; }
 
         }
 
@@ -339,8 +332,7 @@ namespace EVEMon.SkillPlanner
             ListViewItem lvi = lvSkills.SelectedItems[0];
             Plan.Entry pe = (Plan.Entry)lvi.Tag;
             GrandSkill gs = pe.Skill;
-            m_skillBrowser.SelectedSkill = gs;
-            m_newPlannerWindow.ShowSkillTree();
+            m_plannerWindow.ShowSkillTree(gs);
         }
 
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
