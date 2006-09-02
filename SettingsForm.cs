@@ -218,6 +218,7 @@ namespace EVEMon
             {
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
             }
+            gtn.Expand();
             tvlist.Nodes.Add(gtn);
 
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
@@ -471,6 +472,7 @@ namespace EVEMon
             {
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i), tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
             }
+            gtn.Expand();
             tvlist.Nodes.Add(gtn);
         }
 
