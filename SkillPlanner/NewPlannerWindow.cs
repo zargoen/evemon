@@ -17,9 +17,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
-        private Settings m_settings;
         private GrandCharacterInfo m_grandCharacterInfo;
-        private Plan m_plan;
 
         public NewPlannerWindow(Settings s, GrandCharacterInfo gci, Plan p)
             : this()
@@ -34,7 +32,7 @@ namespace EVEMon.SkillPlanner
             skillBrowser.Plan = m_plan;
             skillBrowser.GrandCharacterInfo = gci;
 
-            planEditor.Settings = m_settings;
+            //planEditor.Settings = m_settings;
             planEditor.Plan = m_plan;
             planEditor.PlannerWindow = this;
 
@@ -51,8 +49,22 @@ namespace EVEMon.SkillPlanner
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
 
+            m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+            m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+            m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+
+            // Watch for changes to worksafe settings and plan changes
+            m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
+
             // Force an update
             m_settings_WorksafeChanged(null, null);
+            SkillHighlighting_Changed(null, null);
+        }
+
+        private void SkillHighlighting_Changed(object sender, EventArgs e)
+        {
+            planEditor.HighlightPlannedSkills = m_settings.SkillPlannerHighlightPlannedSkills;
+            planEditor.HighlightPrerequisites = m_settings.SkillPlannerHighlightPrerequisites;
         }
 
         public void ShowSkillInTree(GrandSkill gs)
@@ -70,10 +82,6 @@ namespace EVEMon.SkillPlanner
 
         private void NewPlannerWindow_Load(object sender, EventArgs e)
         {
-            // Watch for changes to worksafe settings and plan changes
-            m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
-            m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_WorksafeChanged);
-
             // Set the title
             this.Text = m_grandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
 
@@ -103,11 +111,36 @@ namespace EVEMon.SkillPlanner
             m_calcWindows.Clear();
         }
 
+        Settings m_settings;
+        public Settings Settings
+        {
+            get { return m_settings; }
+            set
+            {
+                if (m_settings != null)
+                {
+                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                }
+                m_settings = value;
+                if (m_settings != null)
+                {
+                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                }
+            }
+        }
+
         private void m_settings_WorksafeChanged(object sender, EventArgs e)
         {
             skillBrowser.WorksafeMode = m_settings.WorksafeMode;
+            planEditor.WorksafeMode = m_settings.WorksafeMode;
         }
 
+
+        private Plan m_plan;
         private void m_plan_Changed(object sender, EventArgs e)
         {
             m_settings.Save();

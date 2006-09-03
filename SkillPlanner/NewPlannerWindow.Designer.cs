@@ -193,7 +193,6 @@ namespace EVEMon.SkillPlanner
             this.planEditor.Location = new System.Drawing.Point(3, 3);
             this.planEditor.Name = "planEditor";
             this.planEditor.Plan = null;
-            this.planEditor.Settings = null;
             this.planEditor.Size = new System.Drawing.Size(644, 407);
             this.planEditor.TabIndex = 2;
             // 

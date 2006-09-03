@@ -28,9 +28,13 @@ namespace EVEMon.SkillPlanner
         }
 
         private GrandCharacterInfo m_grandCharacterInfo;
-        private Plan m_plan;
         private NewPlannerWindow m_plannerWindow;
+        public NewPlannerWindow PlannerWindow
+        {
+            set { m_plannerWindow = value; }
+        }
 
+        private Plan m_plan;
         public Plan Plan
         {
             get { return m_plan; }
@@ -50,23 +54,18 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        public NewPlannerWindow PlannerWindow
-        {
-            set { m_plannerWindow = value; }
-
-        }
-
         private void m_plan_PlanChanged(object sender, EventArgs e)
         {
             PlanChanged();
         }
 
-
+        /*
         Settings m_settings;
         public Settings Settings
         {
             get {return m_settings;}
-            set {
+            set
+            {
                 if (m_settings != null)
                 {
                     m_settings.WorksafeChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
@@ -82,11 +81,26 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
-
-        private void SkillHighlighting_Changed(object sender, EventArgs e)
+         * */
+        private bool m_HighlightPrerequisites = false;
+        public bool HighlightPrerequisites
         {
-            // Force a plan change which will entirely rebuild the list view.
-            PlanChanged();
+            get { return m_HighlightPrerequisites; }
+            set { m_HighlightPrerequisites = value; UpdateSkillList(); }
+        }
+
+        private bool m_HighlightPlannedSkills = false;
+        public bool HighlightPlannedSkills
+        {
+            get { return m_HighlightPlannedSkills; }
+            set { m_HighlightPlannedSkills = value; UpdateSkillList(); }
+        }
+
+        private bool m_WorksafeMode = false;
+        public bool WorksafeMode
+        {
+            get { return m_WorksafeMode; }
+            set { m_WorksafeMode = value; UpdateSkillList(); }
         }
 
         private void PlanChanged()
@@ -108,44 +122,48 @@ namespace EVEMon.SkillPlanner
                     m_grandCharacterInfo = m_plan.GrandCharacterInfo;
                     m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
                 }
-                lvSkills.BeginUpdate();
-                try
-                {
-                    lvSkills.Items.Clear();
-                    foreach (Plan.Entry pe in m_plan.Entries)
-                    {
-                        ListViewItem lvi = new ListViewItem();
-                        lvi.Tag = pe;
-                        if (!m_settings.WorksafeMode &&
-                            m_settings.SkillPlannerHighlightPlannedSkills && 
-                            pe.EntryType == Plan.Entry.Type.Planned)
-                        {
-                            lvi.Font = m_plannedSkillFont;
-                            lvi.ForeColor = m_plannedSkillColor;
-                        }
-                        else
-                        {
-                            lvi.Font = m_prerequisiteSkillFont;
-                            lvi.ForeColor = m_prerequisiteSkillColor;
-                        }
-
-                        lvSkills.Items.Add(lvi);
-
-                        GrandSkill gs = pe.Skill;
-                        if (gs.InTraining)
-                        {
-                            tmrTick.Enabled = true;
-                        }
-                    }
-                    UpdateListViewItems();
-                }
-                finally
-                {
-                    lvSkills.EndUpdate();
-                }
+                UpdateSkillList();
             }
         }
 
+        private void UpdateSkillList()
+        {
+            lvSkills.BeginUpdate();
+            try
+            {
+                lvSkills.Items.Clear();
+                foreach (Plan.Entry pe in m_plan.Entries)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Tag = pe;
+                    if (!m_WorksafeMode &&
+                        m_HighlightPlannedSkills && 
+                        pe.EntryType == Plan.Entry.Type.Planned)
+                    {
+                        lvi.Font = m_plannedSkillFont;
+                        lvi.ForeColor = m_plannedSkillColor;
+                    }
+                    else
+                    {
+                        lvi.Font = m_prerequisiteSkillFont;
+                        lvi.ForeColor = m_prerequisiteSkillColor;
+                    }
+
+                    lvSkills.Items.Add(lvi);
+
+                    GrandSkill gs = pe.Skill;
+                    if (gs.InTraining)
+                    {
+                        tmrTick.Enabled = true;
+                    }
+                }
+                UpdateListViewItems();
+            }
+            finally
+            {
+                lvSkills.EndUpdate();
+            }
+        }
         private void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
             UpdateListViewItems();
@@ -542,8 +560,8 @@ namespace EVEMon.SkillPlanner
                 bool isPreRequisite = false;
                 bool isPostRequisite = false;
 
-                if (!m_settings.WorksafeMode && 
-                    m_settings.SkillPlannerHighlightPrerequisites && 
+                if (!m_WorksafeMode && 
+                    m_HighlightPrerequisites && 
                     lvSkills.SelectedItems.Count == 1)
                 {
                     Plan.Entry currentSkill = (Plan.Entry)current.Tag;
