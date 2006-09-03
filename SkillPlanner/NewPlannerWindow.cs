@@ -17,27 +17,20 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
-        private GrandCharacterInfo m_grandCharacterInfo;
-
-        public NewPlannerWindow(Settings s, GrandCharacterInfo gci, Plan p)
+        public NewPlannerWindow(Settings s, Plan p)
             : this()
         {
             m_settings = s;
-            m_grandCharacterInfo = gci;
             m_plan = p;
 
-            // Todo: The plan should already have it's character info set.
-            m_plan.GrandCharacterInfo = m_grandCharacterInfo;
-
             skillBrowser.Plan = m_plan;
-            skillBrowser.GrandCharacterInfo = gci;
+            // Shouldn't need this
+            skillBrowser.GrandCharacterInfo = m_plan.GrandCharacterInfo;
 
-            //planEditor.Settings = m_settings;
             planEditor.Plan = m_plan;
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
-            shipBrowser.GrandCharacterInfo = m_grandCharacterInfo;
 
             itemBrowser.Plan = m_plan;
 
@@ -83,7 +76,7 @@ namespace EVEMon.SkillPlanner
         private void NewPlannerWindow_Load(object sender, EventArgs e)
         {
             // Set the title
-            this.Text = m_grandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
+            this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
 
             // Show the hint tip
             TipWindow.ShowTip("planner",
@@ -206,7 +199,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            m_settings.RemovePlanFor(m_grandCharacterInfo.Name, m_plan.Name);
+            m_settings.RemovePlanFor(m_plan.GrandCharacterInfo.Name, m_plan.Name);
         }
 
         private void tslSuggestion_Click(object sender, EventArgs e)
@@ -381,7 +374,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            ImplantCalculator ic = new ImplantCalculator(m_grandCharacterInfo, m_plan);
+            ImplantCalculator ic = new ImplantCalculator(m_plan.GrandCharacterInfo, m_plan);
             m_calcWindows.Add(new WeakReference<ImplantCalculator>(ic));
 
             ic.Show();
@@ -393,9 +386,9 @@ namespace EVEMon.SkillPlanner
     public class PlannerWindowFactory : IPlannerWindowFactory
     {
         #region IPlannerWindowFactory Members
-        public Form CreateWindow(Settings s, GrandCharacterInfo gci, Plan p)
+        public Form CreateWindow(Settings s, Plan p)
         {
-            return new NewPlannerWindow(s, gci, p);
+            return new NewPlannerWindow(s, p);
         }
         #endregion
     }

@@ -681,7 +681,8 @@ namespace EVEMon.Common
                 m_plannerWindow = null;
             }
 
-            Form newWin = m_plannerWindowFactory.CreateWindow(s, gci, this);
+            m_grandCharacterInfo = gci;
+            Form newWin = m_plannerWindowFactory.CreateWindow(s, this);
             //NewPlannerWindow newWin = new NewPlannerWindow(s, gci, this);
             newWin.Show();
             m_plannerWindow = new WeakReference<Form>(newWin);
@@ -1069,7 +1070,7 @@ namespace EVEMon.Common
 
     public interface IPlannerWindowFactory
     {
-        Form CreateWindow(Settings s, GrandCharacterInfo gci, Plan p);
+        Form CreateWindow(Settings s, Plan p);
     }
 
 

@@ -12,16 +12,7 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ShipBrowserControl : UserControl
     {
-
-        private GrandCharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
-
-        public GrandCharacterInfo GrandCharacterInfo
-        {
-            get { return m_grandCharacterInfo; }
-            set { m_grandCharacterInfo = value; }
-        }
-
         public Plan Plan
         {
             get { return m_plan; }
@@ -71,11 +62,11 @@ namespace EVEMon.SkillPlanner
                     foreach (ShipRequiredSkill srs in s.RequiredSkills)
                     {
                         Pair<GrandSkill, int> p = new Pair<GrandSkill, int>();
-                        p.A = m_grandCharacterInfo.GetSkill(srs.Name);
+                        p.A = m_plan.GrandCharacterInfo.GetSkill(srs.Name);
                         p.B = srs.Level;
                         reqSkills.Add(p);
                     }
-                    TimeSpan trainTime = m_grandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
+                    TimeSpan trainTime = m_plan.GrandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
                     lblShipTimeRequired.Text = "Training Time: " +
                                                GrandSkill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
@@ -120,7 +111,7 @@ namespace EVEMon.SkillPlanner
         {
             if (list.Count > rnum)
             {
-                GrandSkill gs = m_grandCharacterInfo.GetSkill(list[rnum].Name);
+                GrandSkill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
                 string knownText = String.Empty;
                 if (gs.Level >= list[rnum].Level)
                 {
