@@ -49,19 +49,19 @@ namespace EVEMon.SkillPlanner
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
 
-            m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-            m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-            m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+            m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
 
             // Watch for changes to worksafe settings and plan changes
             m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
 
             // Force an update
             m_settings_WorksafeChanged(null, null);
-            SkillHighlighting_Changed(null, null);
+            m_settings_SkillHighlightingChanged(null, null);
         }
 
-        private void SkillHighlighting_Changed(object sender, EventArgs e)
+        private void m_settings_SkillHighlightingChanged(object sender, EventArgs e)
         {
             planEditor.HighlightPlannedSkills = m_settings.SkillPlannerHighlightPlannedSkills;
             planEditor.HighlightPrerequisites = m_settings.SkillPlannerHighlightPrerequisites;
@@ -119,16 +119,16 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_settings != null)
                 {
-                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                 }
                 m_settings = value;
                 if (m_settings != null)
                 {
-                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                 }
             }
         }
