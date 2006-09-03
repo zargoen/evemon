@@ -391,24 +391,24 @@
       <SubType>Designer</SubType>
       <DependentUpon>ProxyAuthenticationWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group0\Default.resources">
+    <None Include="Resources\icons\Skill_Select\Group0\Default.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group1\Dice_Spots.resources">
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group1\Dice_Spots.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group2\Slashes.resources">
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group2\Slashes.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group3\Pie_Slices.resources">
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group3\Pie_Slices.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group4\Pentagons.resources">
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group4\Pentagons.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\icons\Skill_Select\Group5\Pentagrams.resources">
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group5\Pentagrams.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </None>
     <EmbeddedResource Include="Schedule\CalendarControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CalendarControl.cs</DependentUpon>
