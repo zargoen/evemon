@@ -451,13 +451,28 @@ namespace EVEMon
             sb.Append(eveAttribute.ToString());
             sb.Append(": ");
             sb.Append(m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute).ToString("0.00"));
-            double fromImplants = m_grandCharacterInfo.GetAttributeBonusFromImplants(eveAttribute);
-            if (fromImplants > 0)
+
+            int baseAtt=m_grandCharacterInfo.GetBaseAttribute(eveAttribute);
+            double fromSkills=m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute,null,false,false)-baseAtt;
+            double learning = m_grandCharacterInfo.LearningBonus;
+            double implant = m_grandCharacterInfo.getImplantValue(eveAttribute);
+
+            sb.Append(" [");
+            if (learning > 0.0) sb.Append("(");
+            sb.Append(baseAtt.ToString("0"));
+            sb.Append(" base + ");
+            sb.Append(fromSkills.ToString("0"));
+            sb.Append(" skills + ");
+            sb.Append(implant.ToString("0"));
+            if (learning > 0.0) 
             {
-                sb.Append(" (+");
-                sb.Append(fromImplants.ToString("0.00"));
-                sb.Append(" from implants)");
+                sb.Append(" implants) * ");
+                sb.Append(learning.ToString("0.00"));
+                sb.Append(" from learning bonus");
             }
+            sb.Append("]");
+
+            
             lblWillpower.Text = sb.ToString();
         }
 

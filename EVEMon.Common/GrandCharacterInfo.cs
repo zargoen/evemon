@@ -404,6 +404,24 @@ namespace EVEMon.Common
             }
         }
 
+        public double getImplantValue(EveAttribute eveAttribute)
+        {
+            double result = 0.0;
+            foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+            {
+                if (geab.EveAttribute == eveAttribute)
+                {
+                    result += geab.Amount;
+                }
+            }
+            return result;
+        }
+
+        public double LearningBonus
+        {
+            get { return 1 + (m_skillGroups["Learning"]["Learning"].Level * 0.02); }
+        }
+
         public double EffectiveIntelligence
         {
             get { return GetEffectiveAttribute(EveAttribute.Intelligence); }
