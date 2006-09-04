@@ -52,7 +52,8 @@ namespace EVEMon.SkillPlanner
 
         private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
-            if (gs.Level < level/* && !p.IsPlanned(gs, level)*/)
+ // yes isPlanned is checked outbound already so should be ok!
+            if (gs.Level < level /*&& !p.IsPlanned(gs, level)*/)
             {
                 foreach (Plan.Entry pe in list)
                 {
@@ -61,8 +62,10 @@ namespace EVEMon.SkillPlanner
                         if (Note != "" && !pe.Notes.Contains(Note))
                         {
                             pe.Notes = pe.Notes + ", " + Note;
-                            pe.AddNoteonly = true;
-                            return true;
+//   dont change AddNoteonly here
+//                          pe.AddNoteonly = true;
+//  dont return true here before you have checked pe.Level == level
+//                          return true;
                         }
                         if (pe.Level == level)
                         {
@@ -71,6 +74,16 @@ namespace EVEMon.SkillPlanner
                     }
                 }
                 return true;
+            }
+            return false;
+        }
+
+        private static bool ExistinPlan(List<Plan.Entry> planEntries, string eSkillName, int eSkillLevel)
+        {
+            foreach (Plan.Entry pe in planEntries)
+            {
+                if (pe.SkillName == eSkillName && pe.Level == eSkillLevel) return true;
+
             }
             return false;
         }
@@ -85,20 +98,23 @@ namespace EVEMon.SkillPlanner
                 {
                     if (p.IsPlanned(pgs, i))
                     {
-                        Plan.Entry pe = new Plan.Entry();
-                        pe.SkillName = pgs.Name;
-                        pe.Level = i;
-                        pe.Notes = Note;
-                        pe.AddNoteonly = true;
-                        pe.EntryType = Plan.Entry.Type.Prerequisite;
-                        planEntries.Add(pe);
+// Need to check if the Skills is in planEntries now too [ changed due to the notes patch ]
+                        if (!ExistinPlan(planEntries, pgs.Name, i))
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = pgs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.AddNoteonly = true;
+                            pe.EntryType = Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
                     } 
                     else if (ShouldAdd(p, pgs, i, planEntries,Note))
                     {
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
-                        pe.AddNoteonly = false;
                         pe.Notes = Note;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
                         planEntries.Add(pe);

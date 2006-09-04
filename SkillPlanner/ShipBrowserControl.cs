@@ -112,14 +112,18 @@ namespace EVEMon.SkillPlanner
             if (list.Count > rnum)
             {
                 GrandSkill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
-                string knownText = String.Empty;
+                string addText = String.Empty;
                 if (gs.Level >= list[rnum].Level)
                 {
-                    knownText = " (Known)";
+                    addText = " (Known)";
+                }
+                else if (Plan.IsPlanned(gs))
+                {
+                    addText = " (planned)";
                 }
                 skillLabel.Text = list[rnum].Name + " " +
-                                  GrandSkill.GetRomanForInt(list[rnum].Level) + knownText;
-                return (knownText.Length > 0);
+                                  GrandSkill.GetRomanForInt(list[rnum].Level) + addText;
+                return (addText.Length > 0);
             }
             else
             {
