@@ -66,8 +66,7 @@ namespace EVEMon.Common
         {
             get
             {
-                string cacheDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                  "\\EVEMon\\cache\\images";
+                string cacheDir = Settings.EveMonData + "\\cache\\images";
                 if (!Directory.Exists(cacheDir))
                 {
                     Directory.CreateDirectory(cacheDir);

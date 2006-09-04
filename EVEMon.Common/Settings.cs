@@ -775,17 +775,32 @@ namespace EVEMon.Common
         }
 
         [XmlIgnore]
+
+        public static string EveMonData
+        {
+            get
+            {   
+                string m_DataDir = Directory.GetCurrentDirectory();
+                string fn = m_DataDir + "/settings.xml";
+                if (!File.Exists(fn))
+                {
+                    m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
+                 }
+                 if (!Directory.Exists(m_DataDir))
+                     Directory.CreateDirectory(m_DataDir);
+                 if (!Directory.Exists(m_DataDir+"\\cache"))
+                     Directory.CreateDirectory(m_DataDir+"\\cache");
+                 return m_DataDir;
+            }
+        }
+
         public static string SettingsFileName
         {
             get
             {
-                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                        + "/EVEMon";
-                if (!Directory.Exists(appDataDir))
-                    Directory.CreateDirectory(appDataDir);
-                string fn = appDataDir + "/settings.xml";
+                string fn = EveMonData + "/settings.xml";
 #if DEBUG
-                fn = appDataDir + "/settings-debug.xml";
+                fn = EveMonData + "/settings-debug.xml";
 #endif
                 return fn;
             }

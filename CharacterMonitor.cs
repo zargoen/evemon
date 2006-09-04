@@ -534,9 +534,8 @@ namespace EVEMon
 
         private void GotCharacterImage(EveSession sender, Image i)
         {
-            string cacheDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EVEMon";
-            string cacheFileName = cacheDir + "\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-            if (i == null)
+        string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+        if (i == null)
             {
                 if (File.Exists(cacheFileName))
                 {
@@ -976,8 +975,7 @@ namespace EVEMon
         {
             if (pbCharImage.Image == null)
             {
-                string cacheDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EVEMon";
-                string cacheFileName = cacheDir + "\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png"; 
                 if (File.Exists(cacheFileName))
                 {
                     try
