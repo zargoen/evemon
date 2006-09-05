@@ -445,12 +445,15 @@ namespace EVEMon
             UpdateCachedCopy();
         }
 
-        private void SetAttributeLabel(Label lblWillpower, EveAttribute eveAttribute)
+        private void SetAttributeLabel(Label lblAttrib, EveAttribute eveAttribute)
         {
             StringBuilder sb = new StringBuilder();
+            
             sb.Append(eveAttribute.ToString());
+            
             sb.Append(": ");
             sb.Append(m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute).ToString("0.00"));
+            lblAttrib.Text = sb.ToString();
 
             int baseAtt=m_grandCharacterInfo.GetBaseAttribute(eveAttribute);
             double fromSkills=m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute,null,false,false)-baseAtt;
@@ -472,8 +475,11 @@ namespace EVEMon
             }
             sb.Append("]");
 
+            ttToolTip.SetToolTip(lblAttrib, sb.ToString());
+            ttToolTip.Active = true;
+
             
-            lblWillpower.Text = sb.ToString();
+            //lblAttrib.Text = sb.ToString();
         }
 
         private void m_grandCharacterInfo_BalanceChanged(object sender, EventArgs e)
@@ -1479,8 +1485,8 @@ namespace EVEMon
                                           percentDonePoints.ToString("N3"), sg.KnownCount.ToString("#"),
                                           sg.Count.ToString("#"), percentDoneSkills.ToString("P0"));
 
-                        ttToolTip.Active = true;
                         ttToolTip.SetToolTip(lbSkills, SkillGroupStats);
+                        ttToolTip.Active = true;
                     }
                     else // we must have learned all the skills in this group to level 5
                     {
@@ -1956,6 +1962,51 @@ namespace EVEMon
         private void pbCharImage_Click(object sender, EventArgs e)
         {
             cmsPictureOptions.Show(MousePosition);
+        }
+
+        private void lblAttribute_MouseHover(object sender, EventArgs e)
+        {
+            Label lblAttrib = (Label)sender;
+            EveAttribute eveAttribute = EveAttribute.None;
+            switch(lblAttrib.Name)
+            {
+                case "lblIntelligence": eveAttribute = EveAttribute.Intelligence; break;
+                case "lblCharisma": eveAttribute = EveAttribute.Charisma; break;
+                case "lblMemory": eveAttribute = EveAttribute.Memory; break;
+                case "lblWillpower": eveAttribute = EveAttribute.Willpower; break;
+                case "lblPerception": eveAttribute = EveAttribute.Perception; break;
+                default: break;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(eveAttribute.ToString());
+
+            sb.Append(": ");
+            sb.Append(m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute).ToString("0.00"));
+
+            int baseAtt = m_grandCharacterInfo.GetBaseAttribute(eveAttribute);
+            double fromSkills = m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute, null, false, false) - baseAtt;
+            double learning = m_grandCharacterInfo.LearningBonus;
+            double implant = m_grandCharacterInfo.getImplantValue(eveAttribute);
+
+            sb.Append(" [");
+            if (learning > 0.0) sb.Append("(");
+            sb.Append(baseAtt.ToString("0"));
+            sb.Append(" base + ");
+            sb.Append(fromSkills.ToString("0"));
+            sb.Append(" skills + ");
+            sb.Append(implant.ToString("0"));
+            if (learning > 0.0)
+            {
+                sb.Append(" implants) * ");
+                sb.Append(learning.ToString("0.00"));
+                sb.Append(" from learning bonus");
+            }
+            sb.Append("]");
+
+            ttToolTip.SetToolTip(lblAttrib, sb.ToString());
+            ttToolTip.Active = true;
         }
     }
 

@@ -157,6 +157,7 @@ namespace EVEMon
             this.lblWillpower.Size = new System.Drawing.Size(62, 13);
             this.lblWillpower.TabIndex = 7;
             this.lblWillpower.Text = "0 Willpower";
+            this.lblWillpower.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
             // 
             // lblMemory
             // 
@@ -169,6 +170,7 @@ namespace EVEMon
             this.lblMemory.Size = new System.Drawing.Size(54, 13);
             this.lblMemory.TabIndex = 8;
             this.lblMemory.Text = "0 Memory";
+            this.lblMemory.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
             // 
             // lblPerception
             // 
@@ -181,6 +183,7 @@ namespace EVEMon
             this.lblPerception.Size = new System.Drawing.Size(67, 13);
             this.lblPerception.TabIndex = 9;
             this.lblPerception.Text = "0 Perception";
+            this.lblPerception.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
             // 
             // lblCharisma
             // 
@@ -193,6 +196,7 @@ namespace EVEMon
             this.lblCharisma.Size = new System.Drawing.Size(60, 13);
             this.lblCharisma.TabIndex = 10;
             this.lblCharisma.Text = "0 Charisma";
+            this.lblCharisma.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
             // 
             // lblIntelligence
             // 
@@ -205,6 +209,7 @@ namespace EVEMon
             this.lblIntelligence.Size = new System.Drawing.Size(71, 13);
             this.lblIntelligence.TabIndex = 11;
             this.lblIntelligence.Text = "0 Intelligence";
+            this.lblIntelligence.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
             // 
             // pnlTraining
             // 
@@ -398,19 +403,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -498,12 +503,12 @@ namespace EVEMon
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miManualImplants});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(165, 26);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(176, 26);
             // 
             // miManualImplants
             // 
             this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(164, 22);
+            this.miManualImplants.Size = new System.Drawing.Size(175, 22);
             this.miManualImplants.Text = "Manual Implants...";
             this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
             // 
@@ -580,7 +585,7 @@ namespace EVEMon
             // 
             // sfdSaveDialog
             // 
-			this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format|*.xml|PNG Image|*.png";
+            this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format|*.xml|PNG Image|*.png";
             this.sfdSaveDialog.Title = "Save Character Info";
             // 
             // ttToolTip
@@ -599,12 +604,12 @@ namespace EVEMon
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updatePicture});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(146, 26);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(157, 26);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(145, 22);
+            this.updatePicture.Size = new System.Drawing.Size(156, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
             // 
@@ -621,10 +626,10 @@ namespace EVEMon
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
-            this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
+            this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
             // CharacterMonitor
