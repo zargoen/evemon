@@ -35,7 +35,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.miRemoveFromPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
-            this.tmrTick = new System.Windows.Forms.Timer(this.components);
+            this.tmrAutoRefresh = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tsbMoveUp = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +44,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.tsbSort = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.llSuggestionLink = new System.Windows.Forms.LinkLabel();
             this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
             this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
@@ -91,8 +91,8 @@ namespace EVEMon.SkillPlanner
             // 
             // tmrTick
             // 
-            this.tmrTick.Interval = 30000;
-            this.tmrTick.Tick += new System.EventHandler(this.tmrTick_Tick);
+            this.tmrAutoRefresh.Interval = 30000;
+            this.tmrAutoRefresh.Tick += new System.EventHandler(this.tmrAutoRefresh_Tick);
             // 
             // toolStrip1
             // 
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Controls.Add(this.llSuggestionLink);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(38, 0);
             this.panel1.Name = "panel1";
@@ -171,15 +171,15 @@ namespace EVEMon.SkillPlanner
             // 
             // linkLabel1
             // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(551, 5);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(91, 13);
-            this.linkLabel1.TabIndex = 0;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Select Columns...";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.llSuggestionLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.llSuggestionLink.AutoSize = true;
+            this.llSuggestionLink.Location = new System.Drawing.Point(551, 5);
+            this.llSuggestionLink.Name = "linkLabel1";
+            this.llSuggestionLink.Size = new System.Drawing.Size(91, 13);
+            this.llSuggestionLink.TabIndex = 0;
+            this.llSuggestionLink.TabStop = true;
+            this.llSuggestionLink.Text = "Select Columns...";
+            this.llSuggestionLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llSuggestionLink_LinkClicked);
             // 
             // ilSkillDependency
             // 
@@ -243,14 +243,14 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ContextMenuStrip cmsContextMenu;
         private System.Windows.Forms.ToolStripMenuItem miRemoveFromPlan;
         private System.Windows.Forms.SaveFileDialog sfdSave;
-        private System.Windows.Forms.Timer tmrTick;
+        private System.Windows.Forms.Timer tmrAutoRefresh;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton tsbMoveUp;
         private System.Windows.Forms.ToolStripButton tsbMoveDown;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel llSuggestionLink;
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;

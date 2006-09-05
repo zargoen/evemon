@@ -27,7 +27,6 @@ namespace EVEMon.SkillPlanner
             m_prerequisiteSkillColor = System.Drawing.Color.Black;
         }
 
-        private GrandCharacterInfo m_grandCharacterInfo;
         private NewPlannerWindow m_plannerWindow;
         public NewPlannerWindow PlannerWindow
         {
@@ -42,46 +41,54 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_plan != null)
                 {
-                    m_plan.Changed -= new EventHandler<EventArgs>(m_plan_PlanChanged);
+                    m_plan.Changed -= new EventHandler<EventArgs>(OnPlanChanged);
+                    m_plan.GrandCharacterInfo.SkillChanged -= new SkillChangedHandler(OnSkillChanged);
                 }
                 m_plan = value;
                 if (m_plan != null)
                 {
-                    m_plan.Changed += new EventHandler<EventArgs>(m_plan_PlanChanged);
+                    m_plan.Changed += new EventHandler<EventArgs>(OnPlanChanged);
+                    m_plan.GrandCharacterInfo.SkillChanged += new SkillChangedHandler(OnSkillChanged);
                 }
                 UpdateListColumns();
-                PlanChanged();
+                OnPlanChanged(null, null);
             }
         }
 
-        private void m_plan_PlanChanged(object sender, EventArgs e)
+        private void OnPlanChanged(object sender, EventArgs e)
         {
-            PlanChanged();
+            tmrAutoRefresh.Enabled = false;
+            if (m_plan == null)
+                lvSkills.Items.Clear();
+            else
+                UpdateSkillList();
         }
 
-        /*
-        Settings m_settings;
-        public Settings Settings
+        private void OnSkillChanged(object sender, SkillChangedEventArgs e)
         {
-            get {return m_settings;}
-            set
+            UpdateListViewItems();
+        }
+
+        private void tmrAutoRefresh_Tick(object sender, EventArgs e)
+        {
+            UpdateListViewItems();
+        }
+
+        private void llSuggestionLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ColumnPreference pref = m_plan.ColumnPreference;
+            using (PlanOrderEditorColumnSelectWindow f = new PlanOrderEditorColumnSelectWindow(pref))
             {
-                if (m_settings != null)
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.OK)
                 {
-                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                }
-                m_settings = value;
-                if (m_settings != null)
-                {
-                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
-                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(SkillHighlighting_Changed);
+                    UpdateListColumns();
+                    Program.Settings.Save();
                 }
             }
         }
-         * */
+
+        #region Look and Feel
         private bool m_HighlightPrerequisites = false;
         public bool HighlightPrerequisites
         {
@@ -102,30 +109,9 @@ namespace EVEMon.SkillPlanner
             get { return m_WorksafeMode; }
             set { m_WorksafeMode = value; UpdateSkillList(); }
         }
+        #endregion Look and Feel
 
-        private void PlanChanged()
-        {
-            tmrTick.Enabled = false;
-            if (m_plan == null)
-            {
-                if (m_grandCharacterInfo != null)
-                {
-                    m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
-                }
-                m_grandCharacterInfo = null;
-                lvSkills.Items.Clear();
-            }
-            else
-            {
-                if (m_grandCharacterInfo != m_plan.GrandCharacterInfo)
-                {
-                    m_grandCharacterInfo = m_plan.GrandCharacterInfo;
-                    m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
-                }
-                UpdateSkillList();
-            }
-        }
-
+        #region Skill List View
         private void UpdateSkillList()
         {
             lvSkills.BeginUpdate();
@@ -154,7 +140,8 @@ namespace EVEMon.SkillPlanner
                     GrandSkill gs = pe.Skill;
                     if (gs.InTraining)
                     {
-                        tmrTick.Enabled = true;
+                        // This skill is currently in training so (re)start the auto refresh timer
+                        tmrAutoRefresh.Enabled = true;
                     }
                 }
                 UpdateListViewItems();
@@ -164,26 +151,8 @@ namespace EVEMon.SkillPlanner
                 lvSkills.EndUpdate();
             }
         }
-        private void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
-        {
-            UpdateListViewItems();
-        }
-
-        private void tmrTick_Tick(object sender, EventArgs e)
-        {
-            UpdateListViewItems();
-        }
-
-        //private const int SUBITEM_SKILLNAME = 0;
-        //private const int SUBITEM_TRAININGTIME = 1;
-        //private const int SUBITEM_EARLIESTSTART = 2;
-        //private const int SUBITEM_EARLIESTEND = 3;
-        //private const int SUBITEM_ENTRYTYPE = 4;
-        //private const int SUBITEM_LEVELNUMERIC = 5;
-        //private const int SUBITEM_MAX = 6;
 
         private const int MAX_NOTES_PREVIEW_CHARS = 60;
-
         private void UpdateListViewItems()
         {
             if (this.InvokeRequired)
@@ -207,12 +176,6 @@ namespace EVEMon.SkillPlanner
                 for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
                     ListViewItem lvi = lvSkills.Items[i];
-                    //ListViewItem olvi = lvSkills.Items[i];
-                    //ListViewItem lvi = new ListViewItem();
-                    //lvi.Tag = olvi.Tag;
-                    //lvSkills.Items.Insert(lvSkills.Items.IndexOf(olvi), lvi);
-                    //lvSkills.Items.Remove(olvi);
-
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
                     GrandSkill gs = pe.Skill;
 
@@ -318,172 +281,6 @@ namespace EVEMon.SkillPlanner
             RebuildPlanFromListViewOrder();
         }
 
-        private void RebuildPlanFromListViewOrder()
-        {
-            m_plan.SuppressEvents();
-            try
-            {
-                m_plan.Entries.Clear();
-                foreach (ListViewItem lvi in lvSkills.Items)
-                {
-                    Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
-                    m_plan.Entries.Add(newPe);
-                }
-                // Enforces proper ordering too!
-                m_plan.CheckForMissingPrerequisites();
-            }
-            finally
-            {
-                m_plan.ResumeEvents();
-            }
-        }
-
-        private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
-            miChangeNote.Enabled = (lvSkills.SelectedItems.Count == 1);
-            miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
-        }
-
-        private void miShowInSkillBrowser_Click(object sender, EventArgs e)
-        {
-            ListViewItem lvi = lvSkills.SelectedItems[0];
-            Plan.Entry pe = (Plan.Entry)lvi.Tag;
-            GrandSkill gs = pe.Skill;
-            m_plannerWindow.ShowSkillInTree(gs);
-        }
-
-        private void miRemoveFromPlan_Click(object sender, EventArgs e)
-        {
-            if (lvSkills.SelectedItems.Count != 1)
-            {
-                return;
-            }
-
-            using (CancelChoiceWindow f = new CancelChoiceWindow())
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
-                if (dr == DialogResult.Yes)
-                {
-                    RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), true);
-                }
-                if (dr == DialogResult.No)
-                {
-                    RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), false);
-                }
-            }
-        }
-
-        private Plan.Entry GetPlanEntryForListViewItem(ListViewItem lvi)
-        {
-            if (lvi == null)
-            {
-                return null;
-            }
-            return lvi.Tag as Plan.Entry;
-        }
-
-        private void RemoveFromPlan(Plan.Entry pe, bool includePrerequisites)
-        {
-            bool result = m_plan.RemoveEntry(pe.Skill, includePrerequisites, false);
-            if (!result)
-            {
-                MessageBox.Show(this,
-                                "The plan for this skill could not be cancelled because this skill is " +
-                                "required for another skill you have planned.",
-                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ColumnPreference pref = m_plan.ColumnPreference;
-            using (PlanOrderEditorColumnSelectWindow f = new PlanOrderEditorColumnSelectWindow(pref))
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    UpdateListColumns();
-                    Program.Settings.Save();
-                }
-            }
-        }
-
-        private void UpdateListColumns()
-        {
-            if (m_plan != null)
-            {
-                lvSkills.BeginUpdate();
-                try
-                {
-                    lvSkills.Columns.Clear();
-                    List<ColumnPreference.ColumnType> alreadyAdded = new List<ColumnPreference.ColumnType>();
-
-                    foreach (string ts in m_plan.ColumnPreference.Order.Split(','))
-                    {
-                        try
-                        {
-                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(
-                                                                                               typeof(
-                                                                                                   ColumnPreference.
-                                                                                                   ColumnType), ts, true);
-                            if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
-                            {
-                                ColumnHeader ch = new ColumnHeader();
-                                ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
-                                ch.Text = cda.Header;
-                                ch.Tag = ct;
-                                lvSkills.Columns.Add(ch);
-                                alreadyAdded.Add(ct);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, false);
-                        }
-                    }
-
-                    for (int i = 0; i < ColumnPreference.ColumnCount; i++)
-                    {
-                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)i;
-                        if (m_plan.ColumnPreference[i] && !alreadyAdded.Contains(ct))
-                        {
-                            ColumnHeader ch = new ColumnHeader();
-                            ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
-                            ch.Text = cda.Header;
-                            ch.Tag = ct;
-                            lvSkills.Columns.Add(ch);
-                            alreadyAdded.Add(ct);
-                        }
-                    }
-                    //}
-                    //finally
-                    //{
-                    //    lvSkills.EndUpdate();
-                    //}
-                    UpdateListViewItems();
-                    //lvSkills.BeginUpdate();
-                    //try
-                    //{
-                    for (int i = 0; i < lvSkills.Columns.Count; i++)
-                    {
-                        ColumnHeader ch = lvSkills.Columns[i];
-                        ColumnPreference.ColumnDisplayAttribute cda =
-                            ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
-                        ch.Width = cda.Width;
-                    }
-                }
-                finally
-                {
-                    lvSkills.EndUpdate();
-                }
-            }
-        }
-
         private void lvSkills_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             // Because this occurs before the reordering happens, we have to delay the
@@ -560,8 +357,8 @@ namespace EVEMon.SkillPlanner
                 bool isPreRequisite = false;
                 bool isPostRequisite = false;
 
-                if (!m_WorksafeMode && 
-                    m_HighlightPrerequisites && 
+                if (!m_WorksafeMode &&
+                    m_HighlightPrerequisites &&
                     lvSkills.SelectedItems.Count == 1)
                 {
                     Plan.Entry currentSkill = (Plan.Entry)current.Tag;
@@ -616,6 +413,172 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        private void RebuildPlanFromListViewOrder()
+        {
+            m_plan.SuppressEvents();
+            try
+            {
+                m_plan.Entries.Clear();
+                foreach (ListViewItem lvi in lvSkills.Items)
+                {
+                    Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
+                    m_plan.Entries.Add(newPe);
+                }
+                // Enforces proper ordering too!
+                m_plan.CheckForMissingPrerequisites();
+            }
+            finally
+            {
+                m_plan.ResumeEvents();
+            }
+        }
+
+        private void UpdateListColumns()
+        {
+            if (m_plan != null)
+            {
+                lvSkills.BeginUpdate();
+                try
+                {
+                    lvSkills.Columns.Clear();
+                    List<ColumnPreference.ColumnType> alreadyAdded = new List<ColumnPreference.ColumnType>();
+
+                    foreach (string ts in m_plan.ColumnPreference.Order.Split(','))
+                    {
+                        try
+                        {
+                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(
+                                                                                               typeof(
+                                                                                                   ColumnPreference.
+                                                                                                   ColumnType), ts, true);
+                            if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
+                            {
+                                ColumnHeader ch = new ColumnHeader();
+                                ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
+                                ch.Text = cda.Header;
+                                ch.Tag = ct;
+                                lvSkills.Columns.Add(ch);
+                                alreadyAdded.Add(ct);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, false);
+                        }
+                    }
+
+                    for (int i = 0; i < ColumnPreference.ColumnCount; i++)
+                    {
+                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)i;
+                        if (m_plan.ColumnPreference[i] && !alreadyAdded.Contains(ct))
+                        {
+                            ColumnHeader ch = new ColumnHeader();
+                            ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
+                            ch.Text = cda.Header;
+                            ch.Tag = ct;
+                            lvSkills.Columns.Add(ch);
+                            alreadyAdded.Add(ct);
+                        }
+                    }
+                    //}
+                    //finally
+                    //{
+                    //    lvSkills.EndUpdate();
+                    //}
+                    UpdateListViewItems();
+                    //lvSkills.BeginUpdate();
+                    //try
+                    //{
+                    for (int i = 0; i < lvSkills.Columns.Count; i++)
+                    {
+                        ColumnHeader ch = lvSkills.Columns[i];
+                        ColumnPreference.ColumnDisplayAttribute cda =
+                            ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
+                        ch.Width = cda.Width;
+                    }
+                }
+                finally
+                {
+                    lvSkills.EndUpdate();
+                }
+            }
+        }
+        #endregion Skill List View
+
+        #region Context Menu
+        private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miChangeNote.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
+        }
+
+        private void miShowInSkillBrowser_Click(object sender, EventArgs e)
+        {
+            ListViewItem lvi = lvSkills.SelectedItems[0];
+            Plan.Entry pe = (Plan.Entry)lvi.Tag;
+            GrandSkill gs = pe.Skill;
+            m_plannerWindow.ShowSkillInTree(gs);
+        }
+
+        private void miRemoveFromPlan_Click(object sender, EventArgs e)
+        {
+            if (lvSkills.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            using (CancelChoiceWindow f = new CancelChoiceWindow())
+            {
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+                if (dr == DialogResult.Yes)
+                {
+                    RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), true);
+                }
+                if (dr == DialogResult.No)
+                {
+                    RemoveFromPlan(GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]), false);
+                }
+            }
+        }
+
+        private void miChangeNote_Click(object sender, EventArgs e)
+        {
+            if (lvSkills.SelectedItems.Count < 0)
+            {
+                return;
+            }
+            ListViewItem lvi = lvSkills.SelectedItems[0];
+            if (lvi == null)
+            {
+                return;
+            }
+            Plan.Entry pe = lvi.Tag as Plan.Entry;
+            if (pe == null)
+            {
+                return;
+            }
+            string sn = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
+            using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
+            {
+                f.NoteText = pe.Notes;
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+                pe.Notes = f.NoteText;
+                UpdateListViewItems();
+                Program.Settings.Save();
+            }
+        }
+        #endregion Context Menu
+
+        #region Plan Re-Ordering
         private void tsbMoveUp_Click(object sender, EventArgs e)
         {
             Dictionary<string, bool> seld = new Dictionary<string, bool>();
@@ -716,37 +679,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void miChangeNote_Click(object sender, EventArgs e)
-        {
-            if (lvSkills.SelectedItems.Count < 0)
-            {
-                return;
-            }
-            ListViewItem lvi = lvSkills.SelectedItems[0];
-            if (lvi == null)
-            {
-                return;
-            }
-            Plan.Entry pe = lvi.Tag as Plan.Entry;
-            if (pe == null)
-            {
-                return;
-            }
-            string sn = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
-            using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
-            {
-                f.NoteText = pe.Notes;
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
-                pe.Notes = f.NoteText;
-                UpdateListViewItems();
-                Program.Settings.Save();
-            }
-        }
-
         private void tsbSort_Click(object sender, EventArgs e)
         {
             using (PlanSortWindow f = new PlanSortWindow())
@@ -758,6 +690,27 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+        #endregion Plan Re-Ordering
 
+        private Plan.Entry GetPlanEntryForListViewItem(ListViewItem lvi)
+        {
+            if (lvi == null)
+            {
+                return null;
+            }
+            return lvi.Tag as Plan.Entry;
+        }
+
+        private void RemoveFromPlan(Plan.Entry pe, bool includePrerequisites)
+        {
+            bool result = m_plan.RemoveEntry(pe.Skill, includePrerequisites, false);
+            if (!result)
+            {
+                MessageBox.Show(this,
+                                "The plan for this skill could not be cancelled because this skill is " +
+                                "required for another skill you have planned.",
+                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
     }
 }
