@@ -248,8 +248,8 @@ namespace EVEMon.Common
         private static string sm_appVersion;
         private static string sm_userAgent;
 
-        private const string USER_AGENT_BASE =
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1";
+        private const string USER_AGENT_BASE = "";
+            //"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1";
 
         private string m_userAgent;
         private string m_referer = "http://myeve.eve-online.com/news.asp";
