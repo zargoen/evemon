@@ -37,6 +37,7 @@ namespace EVEMon
 #endif
             this.RememberPositionKey = "MainWindow";
             Program.MainWindow = this;
+            niMinimizeIcon.Text = Application.ProductName;
 
             if (!String.IsNullOrEmpty(m_settings.Username) &&
                 !String.IsNullOrEmpty(m_settings.Password) &&
@@ -378,7 +379,7 @@ namespace EVEMon
                     string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
                     m_completedSkills.Add(sa);
 
-                    niAlertIcon.Text = "Skill Training Completed";
+                    niAlertIcon.Text = "EVEMon - Skill Training Completed";
                     niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                     if (m_completedSkills.Count == 1)
                         niAlertIcon.BalloonTipText = sa;
@@ -411,7 +412,7 @@ namespace EVEMon
                         string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
                         m_completedSkills.Add(sa);
 
-                        niAlertIcon.Text = "Skill Training Completed";
+                        niAlertIcon.Text = "EVEMon - Skill Training Completed";
                         niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                         if (m_completedSkills.Count == 1)
                             niAlertIcon.BalloonTipText = sa;
@@ -699,10 +700,17 @@ namespace EVEMon
 
                     if (ttw == null)
                     {
+                        // Prevent the icon's text property from showing in a default tooltip
+                        niMinimizeIcon.Text = "";
+
                         ttw = new TrayTooltipWindow();
                         m_tooltipWindow = new WeakReference<TrayTooltipWindow>(ttw);
                         ttw.FormClosed += delegate
                         {
+                            // Restore the icon's text since we need it there normally in order to allow the icon to
+                            // be shown or hidden via the "Customize Notifications..." Windows setting
+                            niMinimizeIcon.Text = Application.ProductName;
+
                             m_tooltipWindow = null;
                             ttw.Dispose();
                         };
