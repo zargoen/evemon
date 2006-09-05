@@ -260,7 +260,13 @@ namespace EVEMon
         public bool CurrentlyVisible
         {
             get { return m_currentlyVisible; }
-            set { m_currentlyVisible = value; }
+            set
+            { 
+                bool old_value = m_currentlyVisible;
+                m_currentlyVisible = value;
+                if (m_currentlyVisible != old_value && m_currentlyVisible)
+                    UpdateSkillHeaderStats();
+            }
         }
 
         private void m_settings_WorksafeChanged(object sender, EventArgs e)

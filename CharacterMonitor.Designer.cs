@@ -338,7 +338,7 @@ namespace EVEMon
             this.pnlCharData.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCharData.Location = new System.Drawing.Point(0, 0);
             this.pnlCharData.Name = "pnlCharData";
-            this.pnlCharData.Size = new System.Drawing.Size(392, 147);
+            this.pnlCharData.Size = new System.Drawing.Size(392, 173);
             this.pnlCharData.TabIndex = 14;
             // 
             // tableLayoutPanel1
@@ -364,7 +364,7 @@ namespace EVEMon
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 147);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 173);
             this.tableLayoutPanel1.TabIndex = 19;
             // 
             // flowLayoutPanel5
@@ -403,19 +403,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -460,7 +460,7 @@ namespace EVEMon
             this.flowLayoutPanel2.Controls.Add(this.btnSave);
             this.flowLayoutPanel2.Controls.Add(this.btnPlan);
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(326, 42);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(326, 68);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel2, 3);
@@ -503,12 +503,12 @@ namespace EVEMon
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miManualImplants});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(176, 26);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(165, 26);
             // 
             // miManualImplants
             // 
             this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(175, 22);
+            this.miManualImplants.Size = new System.Drawing.Size(164, 22);
             this.miManualImplants.Text = "Manual Implants...";
             this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
             // 
@@ -574,9 +574,9 @@ namespace EVEMon
             this.lblSkillHeader.Location = new System.Drawing.Point(0, 131);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblSkillHeader.Name = "lblSkillHeader";
-            this.lblSkillHeader.Size = new System.Drawing.Size(148, 13);
+            this.lblSkillHeader.Size = new System.Drawing.Size(104, 39);
             this.lblSkillHeader.TabIndex = 14;
-            this.lblSkillHeader.Text = "Known Skills (0 Total SP):";
+            this.lblSkillHeader.Text = "0 Known Skills\r\n0 Total SP\r\n0 Skills at Level V";
             // 
             // tmrTick
             // 
@@ -604,12 +604,12 @@ namespace EVEMon
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updatePicture});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(157, 26);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(146, 26);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(156, 22);
+            this.updatePicture.Size = new System.Drawing.Size(145, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
             // 
@@ -620,9 +620,9 @@ namespace EVEMon
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
             this.lbSkills.ItemHeight = 15;
-            this.lbSkills.Location = new System.Drawing.Point(0, 147);
+            this.lbSkills.Location = new System.Drawing.Point(0, 173);
             this.lbSkills.Name = "lbSkills";
-            this.lbSkills.Size = new System.Drawing.Size(392, 310);
+            this.lbSkills.Size = new System.Drawing.Size(392, 284);
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
