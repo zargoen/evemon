@@ -68,7 +68,6 @@
     <Compile Include="Item.cs" />
     <Compile Include="NewEveSession.cs" />
     <Compile Include="PlanTextOptions.cs" />
-    <Compile Include="EveSession.cs" />
     <Compile Include="GrandCharacterInfo.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

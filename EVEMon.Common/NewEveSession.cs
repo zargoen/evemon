@@ -527,4 +527,359 @@ namespace EVEMon.Common
         }
         #endregion
     }
+    [XmlRoot("pair")]
+    public class Pair<TypeA, TypeB>
+    {
+        private TypeA m_a;
+        private TypeB m_b;
+
+        public TypeA A
+        {
+            get { return m_a; }
+            set { m_a = value; }
+        }
+
+        public TypeB B
+        {
+            get { return m_b; }
+            set { m_b = value; }
+        }
+
+        public Pair()
+        {
+        }
+
+        public Pair(TypeA a, TypeB b)
+        {
+            m_a = a;
+            m_b = b;
+        }
+    }
+
+    public delegate void UpdateGrandCharacterInfoCallback(EveSession sender, int timeLeftInCache);
+
+    public delegate void GetImageCallback(EveSession sender, Image i);
+
+    public delegate void GetCharacterInfoCallback(EveSession sender, SerializableCharacterInfo ci);
+
+    [XmlRoot("attributes")]
+    public class EveAttributes
+    {
+        private SerializableCharacterInfo m_owner;
+
+        internal void SetOwner(SerializableCharacterInfo ci)
+        {
+            m_owner = ci;
+        }
+
+        private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
+
+        [XmlElement("intelligence")]
+        public int BaseIntelligence
+        {
+            get { return m_values[(int)EveAttribute.Intelligence]; }
+            set { m_values[(int)EveAttribute.Intelligence] = value; }
+        }
+
+        [XmlElement("charisma")]
+        public int BaseCharisma
+        {
+            get { return m_values[(int)EveAttribute.Charisma]; }
+            set { m_values[(int)EveAttribute.Charisma] = value; }
+        }
+
+        [XmlElement("perception")]
+        public int BasePerception
+        {
+            get { return m_values[(int)EveAttribute.Perception]; }
+            set { m_values[(int)EveAttribute.Perception] = value; }
+        }
+
+        [XmlElement("memory")]
+        public int BaseMemory
+        {
+            get { return m_values[(int)EveAttribute.Memory]; }
+            set { m_values[(int)EveAttribute.Memory] = value; }
+        }
+
+        [XmlElement("willpower")]
+        public int BaseWillpower
+        {
+            get { return m_values[(int)EveAttribute.Willpower]; }
+            set { m_values[(int)EveAttribute.Willpower] = value; }
+        }
+
+        [XmlIgnore]
+        public double AdjustedIntelligence
+        {
+            get { return GetAdjustedAttribute(EveAttribute.Intelligence); }
+        }
+
+        [XmlIgnore]
+        public double AdjustedCharisma
+        {
+            get { return GetAdjustedAttribute(EveAttribute.Charisma); }
+        }
+
+        [XmlIgnore]
+        public double AdjustedPerception
+        {
+            get { return GetAdjustedAttribute(EveAttribute.Perception); }
+        }
+
+        [XmlIgnore]
+        public double AdjustedMemory
+        {
+            get { return GetAdjustedAttribute(EveAttribute.Memory); }
+        }
+
+        [XmlIgnore]
+        public double AdjustedWillpower
+        {
+            get { return GetAdjustedAttribute(EveAttribute.Willpower); }
+        }
+
+        [XmlElement("adjustedIntelligence")]
+        public string _adjustedIntelligence
+        {
+            get { return this.AdjustedIntelligence.ToString("#.00"); }
+        }
+
+        [XmlElement("adjustedCharisma")]
+        public string _adjustedCharisma
+        {
+            get { return this.AdjustedCharisma.ToString("#.00"); }
+        }
+
+        [XmlElement("adjustedPerception")]
+        public string _adjustedPerception
+        {
+            get { return this.AdjustedPerception.ToString("#.00"); }
+        }
+
+        [XmlElement("adjustedMemory")]
+        public string _adjustedMemory
+        {
+            get { return this.AdjustedMemory.ToString("#.00"); }
+        }
+
+        [XmlElement("adjustedWillpower")]
+        public string _adjustedWillpower
+        {
+            get { return this.AdjustedWillpower.ToString("#.00"); }
+        }
+
+        public double GetAttributeAdjustment(EveAttribute eveAttribute, SerializableEveAttributeAdjustment adjustment)
+        {
+            double result = 0.0;
+            double learningBonus = 1.0;
+            if ((adjustment & SerializableEveAttributeAdjustment.Base) != 0)
+            {
+                result += m_values[(int)eveAttribute];
+            }
+            if ((adjustment & SerializableEveAttributeAdjustment.Implants) != 0)
+            {
+                foreach (SerializableEveAttributeBonus eab in m_owner.AttributeBonuses.Bonuses)
+                {
+                    if (eab.EveAttribute == eveAttribute)
+                    {
+                        result += eab.Amount;
+                    }
+                }
+            }
+            if (((adjustment & SerializableEveAttributeAdjustment.Skills) != 0) ||
+                ((adjustment & SerializableEveAttributeAdjustment.Learning) != 0))
+            {
+                foreach (SerializableSkillGroup sg in m_owner.SkillGroups)
+                {
+                    if (sg.Name == "Learning")
+                    {
+                        foreach (SerializableSkill s in sg.Skills)
+                        {
+                            if ((adjustment & SerializableEveAttributeAdjustment.Skills) != 0)
+                            {
+                                switch (eveAttribute)
+                                {
+                                    case EveAttribute.Intelligence:
+                                        if (s.Name == "Analytical Mind" || s.Name == "Logic")
+                                        {
+                                            result += s.Level;
+                                        }
+                                        break;
+                                    case EveAttribute.Charisma:
+                                        if (s.Name == "Empathy" || s.Name == "Presence")
+                                        {
+                                            result += s.Level;
+                                        }
+                                        break;
+                                    case EveAttribute.Memory:
+                                        if (s.Name == "Instant Recall" || s.Name == "Eidetic Memory")
+                                        {
+                                            result += s.Level;
+                                        }
+                                        break;
+                                    case EveAttribute.Willpower:
+                                        if (s.Name == "Iron Will" || s.Name == "Focus")
+                                        {
+                                            result += s.Level;
+                                        }
+                                        break;
+                                    case EveAttribute.Perception:
+                                        if (s.Name == "Spatial Awareness" || s.Name == "Clarity")
+                                        {
+                                            result += s.Level;
+                                        }
+                                        break;
+                                }
+                            }
+                            if (s.Name == "Learning")
+                            {
+                                learningBonus = 1.0 + (0.02 * s.Level);
+                            }
+                        }
+                    }
+                }
+            }
+            if ((adjustment & SerializableEveAttributeAdjustment.Learning) != 0)
+            {
+                result = result * learningBonus;
+            }
+            return result;
+        }
+
+        private double GetAdjustedAttribute(EveAttribute eveAttribute)
+        {
+            return GetAttributeAdjustment(eveAttribute, SerializableEveAttributeAdjustment.AllWithLearning);
+        }
+    }
+
+    public enum NetworkLogEventType
+    {
+        BeginGetUrl,
+        Redirected,
+        ParsedRedirect,
+        GotUrlSuccess,
+        GotUrlFailure
+    }
+
+    public class NetworkLogEventArgs : EventArgs
+    {
+        internal NetworkLogEventArgs()
+        {
+        }
+
+        private NetworkLogEventType m_type;
+
+        public NetworkLogEventType NetworkLogEventType
+        {
+            get { return m_type; }
+            set { m_type = value; }
+        }
+
+        private string m_url;
+
+        public string Url
+        {
+            get { return m_url; }
+            set { m_url = value; }
+        }
+
+        private string m_referer;
+
+        public string Referer
+        {
+            get { return m_referer; }
+            set { m_referer = value; }
+        }
+
+        private CookieCollection m_cookies;
+
+        [XmlIgnore]
+        public CookieCollection Cookies
+        {
+            get { return m_cookies; }
+            set { m_cookies = value; }
+        }
+
+        public List<string> CookieList
+        {
+            get
+            {
+                if (m_cookies == null)
+                {
+                    return null;
+                }
+                List<string> cook = new List<string>();
+                foreach (Cookie c in m_cookies)
+                {
+                    cook.Add(c.ToString());
+                }
+                return cook;
+            }
+        }
+
+        private Exception m_exception;
+
+        [XmlIgnore]
+        public Exception Exception
+        {
+            get { return m_exception; }
+            set { m_exception = value; }
+        }
+
+        public string ExceptionText
+        {
+            get
+            {
+                if (m_exception != null)
+                {
+                    return m_exception.ToString();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private string m_redirectTo;
+
+        public string RedirectTo
+        {
+            get { return m_redirectTo; }
+            set { m_redirectTo = value; }
+        }
+
+        private HttpStatusCode m_statusCode = HttpStatusCode.OK;
+
+        public HttpStatusCode StatusCode
+        {
+            get { return m_statusCode; }
+            set { m_statusCode = value; }
+        }
+
+        private string m_data;
+
+        public string Data
+        {
+            get { return m_data; }
+            set { m_data = value; }
+        }
+    }
+
+    public enum EveAttribute
+    {
+        [XmlEnum("intelligence")]
+        Intelligence,
+        [XmlEnum("charisma")]
+        Charisma,
+        [XmlEnum("perception")]
+        Perception,
+        [XmlEnum("memory")]
+        Memory,
+        [XmlEnum("willpower")]
+        Willpower,
+        [XmlEnum("none")]
+        None
+    }
 }
