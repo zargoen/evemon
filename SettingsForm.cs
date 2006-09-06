@@ -43,6 +43,7 @@ namespace EVEMon
             s.SkillIconGroup = cbSkillIconSet.SelectedIndex + 1;
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
+            s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -168,6 +169,8 @@ namespace EVEMon
 
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
+            cbShowCompletedSkillsDialog.Checked = m_settings.EnableSkillCompleteDialog;
+
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
             tbMailServer.Text = m_settings.EmailServer;
             tbPortNumber.Text = m_settings.PortNumber.ToString();

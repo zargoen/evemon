@@ -141,7 +141,7 @@ namespace EVEMon.Common
             }
             return true;
         }
-        #endregion
+       
 
         private bool m_EnableSkillCompleteDialog;
 
@@ -150,7 +150,8 @@ namespace EVEMon.Common
             get { return m_EnableSkillCompleteDialog; }
             set { m_EnableSkillCompleteDialog = value; }
         }
-	
+        #endregion
+
         private bool m_DisableEVEMonVersionCheck;
 
         public bool DisableEVEMonVersionCheck
