@@ -482,6 +482,7 @@ namespace EVEMon
             sb.Append("]");
 
             ttToolTip.SetToolTip(lblAttrib, sb.ToString());
+            ttToolTip.IsBalloon = false;
             ttToolTip.Active = true;
 
             
@@ -661,6 +662,7 @@ namespace EVEMon
                                                   {
                                                       ttToolTip.SetToolTip(pbThrobber,
                                                                            "Could not get character data!\nClick to try again.");
+                                                      ttToolTip.IsBalloon = true;
                                                       tmrUpdate.Interval = 1000 * 60 * 30;
                                                       tmrUpdate.Enabled = true;
                                                       SetErrorThrobber();
@@ -693,6 +695,7 @@ namespace EVEMon
                                                                                                   //m_lastUpdate = DateTime.Now;
                                                                                                   m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
                                                                                                   ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
+                                                                                                  ttToolTip.IsBalloon = true;
                                                                                                   //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
                                                                                                   tmrUpdate.Interval = timeLeftInCache == 0?3600000:timeLeftInCache;
                                                                                                   tmrUpdate.Enabled = true;
@@ -1398,38 +1401,7 @@ namespace EVEMon
                                 btnMoreOptions.PointToClient(MousePosition), ToolStripDropDownDirection.Default);
         }
 
-        private void lbSkills_MouseMove(object sender, MouseEventArgs e)
-        {
-            /*int index = lbSkills.IndexFromPoint(e.X, e.Y);
-            object item;
-            if (index < 0 || index >= lbSkills.Items.Count)
-                item = null;
-            else
-                item = lbSkills.Items[index];
 
-            ttToolTip.IsBalloon = true;
-
-            if (item is GrandSkillGroup)
-            {
-                //GrandSkillGroup sg = (GrandSkillGroup)item;
-                //SkillGroup description is not in the skills.xml
-                //They do exist though, see: http://www.eve-online.com/itemdatabase/skillsaccessories/skills/default.asp
-                
-                //nothing to display in the tooltip, turn it off
-                ttToolTip.Active = false;
-            }
-            else if (item is GrandSkill)
-            {
-                GrandSkill s = (GrandSkill)item;
-
-                ttToolTip.Active = true;
-                ttToolTip.SetToolTip(lbSkills, s.Description.ToString());
-            }
-            else
-            {
-                ttToolTip.Active = false;
-            }*/
-        }
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1758,6 +1730,7 @@ namespace EVEMon
             m_throbberRunning = true;
             tmrThrobber.Enabled = true;
             ttToolTip.SetToolTip(pbThrobber, "Retrieving data from EVE Online...");
+            ttToolTip.IsBalloon = true;
         }
 
         private void StopThrobber()
@@ -1823,21 +1796,6 @@ namespace EVEMon
             }
         }
 
-        private void ttToolTip_Popup(object sender, PopupEventArgs e)
-        {
-            //if (e.AssociatedControl == pbThrobber)
-            //{
-            //    if (!m_throbberRunning && !m_throbberError)
-            //    {
-            //        ttToolTip.SetToolTip(pbThrobber,
-            //            String.Format("Last update: {0}\nNext update in: {1}\nClick to update now.",
-            //            m_lastUpdate.ToString(),
-            //            GrandSkill.TimeSpanToDescriptiveText(m_nextScheduledUpdateAt - DateTime.Now, DescriptiveTextOptions.Default)
-            //        ));
-            //    }
-            //}
-        }
-
         private void lbSkills_MouseEnter(object sender, EventArgs e)
         {
             ttToolTip.Active = false;
@@ -1850,6 +1808,7 @@ namespace EVEMon
 
         private void pbThrobber_MouseEnter(object sender, EventArgs e)
         {
+            ttToolTip.IsBalloon = true;
             ttToolTip.Active = true;
         }
 
@@ -2012,7 +1971,14 @@ namespace EVEMon
             sb.Append("]");
 
             ttToolTip.SetToolTip(lblAttrib, sb.ToString());
+            ttToolTip.IsBalloon = false;
             ttToolTip.Active = true;
+            
+        }
+
+        private void pbThrobber_Hover(object sender, EventArgs e)
+        {
+
         }
     }
 

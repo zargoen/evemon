@@ -403,19 +403,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -503,12 +503,12 @@ namespace EVEMon
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miManualImplants});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(165, 26);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(176, 26);
             // 
             // miManualImplants
             // 
             this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(164, 22);
+            this.miManualImplants.Size = new System.Drawing.Size(175, 22);
             this.miManualImplants.Text = "Manual Implants...";
             this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
             // 
@@ -592,8 +592,8 @@ namespace EVEMon
             // 
             this.ttToolTip.AutoPopDelay = 5000000;
             this.ttToolTip.InitialDelay = 500;
+            this.ttToolTip.IsBalloon = true;
             this.ttToolTip.ReshowDelay = 100;
-            this.ttToolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.ttToolTip_Popup);
             // 
             // tmrThrobber
             // 
@@ -604,12 +604,12 @@ namespace EVEMon
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updatePicture});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(146, 26);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(157, 26);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(145, 22);
+            this.updatePicture.Size = new System.Drawing.Size(156, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
             // 
@@ -628,7 +628,6 @@ namespace EVEMon
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
-            this.lbSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
