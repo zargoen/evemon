@@ -194,10 +194,24 @@ namespace EVEMon.Common
         {
             m_username = username;
             m_password = password;
-
-            ReLogin();
-            GetCharacterList();
-        }
+            try
+            {
+                ReLogin();
+            }
+            // Just trying to track a bug somewhere in here.
+            catch (Exception ex)
+            {
+                throw new ApplicationException("ReLogin() issue:" + ex.Message);
+            }
+            try
+            {
+                GetCharacterList();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("GetCharacterList() issue:" + ex.Message);
+            }
+    }
 
         private List<Pair<string, int>> m_storedCharacterList = null;
 
