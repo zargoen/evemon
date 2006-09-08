@@ -82,19 +82,22 @@ namespace EVEMon.SkillPlanner
 
             ArrayList insertItems =
                 new ArrayList(base.SelectedItems.Count);
+            // Make a copy of all the selected items
             foreach (ListViewItem item in base.SelectedItems)
             {
                 insertItems.Add(item.Clone());
             }
-            for (int i = insertItems.Count - 1; i >= 0; i--)
+            // insert the copied items
+            foreach (ListViewItem item in insertItems)
             {
-                ListViewItem insertItem =
-                    (ListViewItem) insertItems[i];
-                base.Items.Insert(dropIndex, insertItem);
+                base.Items.Insert(dropIndex, item);
             }
-            foreach (ListViewItem removeItem in base.SelectedItems)
+            // remove the selected items
+            foreach (ListViewItem item in base.SelectedItems)
             {
-                base.Items.Remove(removeItem);
+                // must clear the items icon index or an exception is thrown when it is removed
+                item.StateImageIndex = -1;
+                base.Items.Remove(item);
             }
 
             if (ListViewItemsDragged != null)
