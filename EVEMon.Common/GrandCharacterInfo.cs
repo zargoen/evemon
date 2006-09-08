@@ -806,12 +806,12 @@ namespace EVEMon.Common
                     {
                         if (SkillInTraining.NeededPoints <= SkillInTraining.CurrentPoints)
                         {
-                            if (old_skill.old_skill_completed && SkillInTraining.SkillName == old_skill.old_SkillName)
+                            if (old_skill.old_skill_completed && SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel == old_skill.old_TrainingToLevel)
                             {
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
                                 old_skill.old_skill_completed = true;
                             }
-                            if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && SkillInTraining.SkillName != old_skill.old_SkillName))
+                            if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (SkillInTraining.SkillName != old_skill.old_SkillName || (SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel != old_skill.old_TrainingToLevel))))
                             {
                                 OnDownloadAttemptComplete(this.Name, SkillInTraining.SkillName, true);
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
