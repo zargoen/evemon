@@ -57,6 +57,7 @@ namespace EVEMon.Common
         private Queue<FireEventInvoker> m_firedEvents = new Queue<FireEventInvoker>();
         private Dictionary<string, bool> m_eventsInQueue = new Dictionary<string, bool>();
 
+        #region Event suppression
         public void SuppressEvents()
         {
             lock (m_eventLock)
@@ -104,6 +105,7 @@ namespace EVEMon.Common
                 }
             }
         }
+        #endregion Event suppression
 
         private void OnChange()
         {
@@ -124,6 +126,7 @@ namespace EVEMon.Common
             get { return m_entries; }
         }
 
+        #region Suggestions
         private bool? m_attributeSuggestion = null;
 
         [XmlIgnore]
@@ -155,7 +158,7 @@ namespace EVEMon.Common
 
         private void CheckForAttributeSuggestion()
         {
-            if (m_grandCharacterInfo == null)
+            if (GrandCharacterInfo == null)
             {
                 m_attributeSuggestion = false;
                 return;
@@ -193,8 +196,8 @@ namespace EVEMon.Common
 
         private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime, List<Plan.Entry> entries)
         {
-            GrandSkill gsa = m_grandCharacterInfo.SkillGroups["Learning"][skillA];
-            GrandSkill gsb = m_grandCharacterInfo.SkillGroups["Learning"][skillB];
+            GrandSkill gsa = GrandCharacterInfo.SkillGroups["Learning"][skillA];
+            GrandSkill gsb = GrandCharacterInfo.SkillGroups["Learning"][skillB];
 
             TimeSpan bestTime = baseTime;
             TimeSpan addedTrainingTime = TimeSpan.Zero;
@@ -265,6 +268,7 @@ namespace EVEMon.Common
 
             return (bestGs != null);
         }
+        #endregion Suggestions
 
         [XmlIgnore]
         public TimeSpan TotalTrainingTime
@@ -330,12 +334,12 @@ namespace EVEMon.Common
                     m_attributeSuggestion = null;
                     if (m_grandCharacterInfo != null)
                     {
-                        m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+                        m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
                     }
                     m_grandCharacterInfo = value;
                     if (m_grandCharacterInfo != null)
                     {
-                        m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+                        m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
                     }
                     CheckForCompletedSkills();
                     CheckForMissingPrerequisites();
@@ -449,7 +453,7 @@ namespace EVEMon.Common
                 for (int i = 0; i < m_entries.Count; i++)
                 {
                     Plan.Entry pe = m_entries[i];
-                    GrandSkill gs = m_grandCharacterInfo.GetSkill(pe.SkillName);
+                    GrandSkill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
                     if (gs == null || pe.Level > 5 || pe.Level < 1)
                     {
                         throw new ApplicationException("The plan contains invalid skills.");
@@ -467,7 +471,7 @@ namespace EVEMon.Common
             }
         }
 
-        private void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
             CheckForCompletedSkills();
         }
@@ -681,7 +685,7 @@ namespace EVEMon.Common
                 m_plannerWindow = null;
             }
 
-            m_grandCharacterInfo = gci;
+            GrandCharacterInfo = gci;
             Form newWin = m_plannerWindowFactory.CreateWindow(s, this);
             //NewPlannerWindow newWin = new NewPlannerWindow(s, gci, this);
             newWin.Show();
