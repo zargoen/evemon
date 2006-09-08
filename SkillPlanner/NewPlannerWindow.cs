@@ -77,6 +77,7 @@ namespace EVEMon.SkillPlanner
         {
             // Set the title
             this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
+            this.RememberPositionKey = "SkillPlannerWindow"; 
 
             // Show the hint tip
             TipWindow.ShowTip("planner",
