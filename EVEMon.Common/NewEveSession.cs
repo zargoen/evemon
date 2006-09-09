@@ -198,10 +198,9 @@ namespace EVEMon.Common
             {
                 ReLogin();
             }
-            // Just trying to track a bug somewhere in here.
             catch (Exception ex)
             {
-                throw new ApplicationException("ReLogin() issue:" + ex.Message);
+                throw new ApplicationException("ReLogin() issue: " + ex.Message);
             }
             try
             {
@@ -209,7 +208,7 @@ namespace EVEMon.Common
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("GetCharacterList() issue:" + ex.Message);
+                throw new ApplicationException("GetCharacterList() issue: " + ex.Message);
             }
     }
 
@@ -452,7 +451,6 @@ namespace EVEMon.Common
             {
                 m_cookies = new CookieContainer();
             }
-
             WebRequestState wrs = new WebRequestState();
             wrs.CookieContainer = m_cookies;
             wrs.LogDelegate = NetworkLogEvent;
@@ -464,7 +462,15 @@ namespace EVEMon.Common
                 "&password=" +
                 HttpUtility.UrlEncode(m_password, Encoding.GetEncoding("iso-8859-1")) +
                 "&login=Login&Check=OK&r=&t=/ingameboard.asp&remember=1", wrs, out resp);
-            string loc = resp.Headers[HttpResponseHeader.Location];
+            string loc = null;
+            if (resp != null)
+            {
+                loc = resp.Headers[HttpResponseHeader.Location];
+            }
+            else
+            {
+                throw new ApplicationException(wrs.WebException.Message);
+            }
             Match sidm = null;
             if (!String.IsNullOrEmpty(loc))
             {
