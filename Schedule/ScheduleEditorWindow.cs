@@ -165,5 +165,27 @@ namespace EVEMon.Schedule
                 m_settings.Save();
             }
         }
+
+        private void lbEntries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string label_text = m_settings.Schedule[lbEntries.SelectedIndex].Title;
+            ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+            if (temp.GetType() == typeof (SimpleScheduleEntry))
+            {
+                SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                label_text = label_text + "\nOne Off Entry\n Start: " + x.StartDateTime + "\n End: " + x.EndDateTime + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
+            }
+            else if (temp.GetType() == typeof (RecurringScheduleEntry))
+            {
+                RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                label_text = label_text + "\nRecurring Entry:\n Start: " + x.RecurStart + "\n End: " + x.RecurEnd + "\n Frequency: " + x.RecurFrequency;
+            }
+            else
+            {
+                // ?? Wha...
+                label_text = "What the Smeg is this?";
+            }
+            lblEntryDescription.Text = label_text;
+        }
     }
 }

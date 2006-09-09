@@ -141,6 +141,7 @@ namespace EVEMon.Schedule
             this.lbEntries.Name = "lbEntries";
             this.lbEntries.Size = new System.Drawing.Size(168, 274);
             this.lbEntries.TabIndex = 1;
+            this.lbEntries.SelectedIndexChanged += new System.EventHandler(this.lbEntries_SelectedIndexChanged);
             // 
             // label1
             // 
