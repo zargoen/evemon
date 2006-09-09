@@ -12,11 +12,66 @@ namespace EVEMon.Common
         public Plan()
         {
             //m_entries = new MonitoredList<Plan.Entry>();
-            m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(m_entries_Changed);
-            m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(m_entries_Cleared);
+            m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
+            m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
         }
 
-        private void m_entries_Cleared(object sender, ClearedEventArgs<Plan.Entry> e)
+        #region Members
+        // Plan Name
+        private string m_planName;
+        [XmlIgnore]
+        public string Name
+        {
+            get { return m_planName; }
+            set { m_planName = value; }
+        }
+
+        // The Character
+        private GrandCharacterInfo m_grandCharacterInfo = null;
+        [XmlIgnore]
+        public GrandCharacterInfo GrandCharacterInfo
+        {
+            get { return m_grandCharacterInfo; }
+            set
+            {
+                this.SuppressEvents();
+                try
+                {
+                    m_attributeSuggestion = null;
+                    if (m_grandCharacterInfo != null)
+                    {
+                        m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
+                    }
+                    m_grandCharacterInfo = value;
+                    if (m_grandCharacterInfo != null)
+                    {
+                        m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
+                    }
+                    CheckForCompletedSkills();
+                    CheckForMissingPrerequisites();
+                }
+                finally
+                {
+                    this.ResumeEvents();
+                }
+            }
+        }
+
+        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        {
+            CheckForCompletedSkills();
+        }
+
+        // The Plan Entries
+        private MonitoredList<Plan.Entry> m_entries = new MonitoredList<Plan.Entry>();
+        [XmlArrayItem("entry")]
+        public MonitoredList<Plan.Entry> Entries
+        {
+            get { return m_entries; }
+        }
+
+        // Handle Events on the monitored list
+        private void Entries_Cleared(object sender, ClearedEventArgs<Plan.Entry> e)
         {
             foreach (Plan.Entry pe in e.Items)
             {
@@ -24,7 +79,8 @@ namespace EVEMon.Common
             }
         }
 
-        private void m_entries_Changed(object sender, ChangedEventArgs<Plan.Entry> e)
+        // Handle Events on the monitored list
+        private void Entries_Changed(object sender, ChangedEventArgs<Plan.Entry> e)
         {
             m_uniqueSkillCount = -1;
             m_attributeSuggestion = null;
@@ -40,6 +96,20 @@ namespace EVEMon.Common
             OnChange();
         }
 
+        // Generate events when the plan changes
+        public event EventHandler<EventArgs> Changed;
+        private void OnChange()
+        {
+            FireEvent(delegate
+                          {
+                              if (Changed != null)
+                              {
+                                  Changed(this, new EventArgs());
+                              }
+                          }, "change");
+        }
+        #endregion Members
+                
         private ColumnPreference m_columnPreference = new ColumnPreference();
 
         public ColumnPreference ColumnPreference
@@ -48,16 +118,13 @@ namespace EVEMon.Common
             set { m_columnPreference = value; }
         }
 
-        public event EventHandler<EventArgs> Changed;
-
-        private delegate void FireEventInvoker();
-
+        #region Event suppression
         private object m_eventLock = new object();
         private int m_suppression;
+        private delegate void FireEventInvoker();
         private Queue<FireEventInvoker> m_firedEvents = new Queue<FireEventInvoker>();
         private Dictionary<string, bool> m_eventsInQueue = new Dictionary<string, bool>();
 
-        #region Event suppression
         public void SuppressEvents()
         {
             lock (m_eventLock)
@@ -106,26 +173,7 @@ namespace EVEMon.Common
             }
         }
         #endregion Event suppression
-
-        private void OnChange()
-        {
-            FireEvent(delegate
-                          {
-                              if (Changed != null)
-                              {
-                                  Changed(this, new EventArgs());
-                              }
-                          }, "change");
-        }
-
-        private MonitoredList<Plan.Entry> m_entries = new MonitoredList<Plan.Entry>();
-
-        [XmlArrayItem("entry")]
-        public MonitoredList<Plan.Entry> Entries
-        {
-            get { return m_entries; }
-        }
-
+        
         #region Suggestions
         private bool? m_attributeSuggestion = null;
 
@@ -270,6 +318,7 @@ namespace EVEMon.Common
         }
         #endregion Suggestions
 
+        #region Statistics
         [XmlIgnore]
         public TimeSpan TotalTrainingTime
         {
@@ -319,37 +368,8 @@ namespace EVEMon.Common
                 }
             }
         }
+        #endregion Statistics
 
-        private GrandCharacterInfo m_grandCharacterInfo = null;
-
-        [XmlIgnore]
-        public GrandCharacterInfo GrandCharacterInfo
-        {
-            get { return m_grandCharacterInfo; }
-            set
-            {
-                this.SuppressEvents();
-                try
-                {
-                    m_attributeSuggestion = null;
-                    if (m_grandCharacterInfo != null)
-                    {
-                        m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
-                    }
-                    m_grandCharacterInfo = value;
-                    if (m_grandCharacterInfo != null)
-                    {
-                        m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
-                    }
-                    CheckForCompletedSkills();
-                    CheckForMissingPrerequisites();
-                }
-                finally
-                {
-                    this.ResumeEvents();
-                }
-            }
-        }
 
         public void CheckForMissingPrerequisites()
         {
@@ -436,15 +456,6 @@ namespace EVEMon.Common
             return -1;
         }
 
-        private string m_planName;
-
-        [XmlIgnore]
-        public string Name
-        {
-            get { return m_planName; }
-            set { m_planName = value; }
-        }
-
         private void CheckForCompletedSkills()
         {
             this.SuppressEvents();
@@ -471,11 +482,6 @@ namespace EVEMon.Common
             }
         }
 
-        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
-        {
-            CheckForCompletedSkills();
-        }
-
         public bool IsPlanned(GrandSkill gs)
         {
             foreach (Plan.Entry pe in m_entries)
@@ -498,6 +504,110 @@ namespace EVEMon.Common
                 }
             }
             return false;
+        }
+
+        #region remove this if possible, comment if not
+        private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
+        {
+            // check that the current level is less than the planned level and not planned
+            if (gs.Level < level && !IsPlanned(gs, level))
+            {
+                foreach (Plan.Entry pe in list)
+                {
+                    if (pe.SkillName == gs.Name)
+                    {
+                        // If we don't have a note, use the one provided
+                        if (Note != "" && !pe.Notes.Contains(Note))
+                            pe.Notes = pe.Notes + ", " + Note;
+                        if (pe.Level == level)
+                            return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private void AddPrerequisiteEntries(GrandSkill gs, List<Plan.Entry> planEntries, string Note)
+        {
+            foreach (GrandSkill.Prereq pp in gs.Prereqs)
+            {
+                GrandSkill pgs = pp.Skill;
+                AddPrerequisiteEntries(pgs, planEntries, Note);
+                for (int i = 1; i <= pp.RequiredLevel; i++)
+                {
+                    if (ShouldAdd(pgs, i, planEntries, Note))
+                    {
+                        Plan.Entry pe = new Plan.Entry();
+                        pe.SkillName = pgs.Name;
+                        pe.Level = i;
+                        pe.Notes = Note;
+                        pe.EntryType = Plan.Entry.Type.Prerequisite;
+                        planEntries.Add(pe);
+                    }
+                }
+            }
+        }
+        #endregion remove this if possible, comment if not
+
+        public void PlanTo(GrandSkill gs, int level)
+        {
+            if (level == 0)
+            {
+                //RemoveFromPlan();
+                RemoveEntry(GetEntry(gs.Name, level));
+                return;
+            }
+
+            // NOTE: This block is magic IMHO
+            // TODO: Comment this section and it's calls
+            List<Plan.Entry> planEntries = new List<Plan.Entry>();
+            // Store a note?
+            string Note = gs.Name;
+            // Add the pre-reqs?
+            AddPrerequisiteEntries(gs, planEntries, Note);
+
+            for (int i = 1; i <= level; i++)
+            {
+                if (ShouldAdd(gs, i, planEntries, Note))
+                {
+                    Plan.Entry pe = new Plan.Entry();
+                    pe.SkillName = gs.Name;
+                    pe.Notes = Note;
+                    if (i == level)
+                        pe.EntryType = Plan.Entry.Type.Planned;
+                    else
+                        pe.EntryType = Plan.Entry.Type.Prerequisite;
+
+                    pe.Level = i;
+                    planEntries.Add(pe);
+                }
+            }
+            // TODO END
+            // NOTE END
+
+            // See if we need to add or remove entries
+            if (planEntries.Count > 0)
+            {
+                // we're increasing the level, so add the entries
+                AddList(planEntries);
+            }
+            else
+            {
+                // remove all levels of the skill higher than the one planned
+                for (int i = 5; i > level; i--)
+                {
+                    Plan.Entry pe = GetEntry(gs.Name, i);
+                    if (pe != null)
+                        RemoveEntry(pe);
+                }
+            }
+
+            // Now make the planned level a planned rather than a pre-req skill
+            {
+                Plan.Entry pe = GetEntry(gs.Name, level);
+                pe.EntryType = Entry.Type.Planned;
+            }
         }
 
         public void AddList(List<Plan.Entry> planEntries)
@@ -646,6 +756,7 @@ namespace EVEMon.Common
             return GetEntry(name, level);
         }
 
+        #region Planner Window
         private static IPlannerWindowFactory m_plannerWindowFactory;
 
         [XmlIgnore]
@@ -711,35 +822,7 @@ namespace EVEMon.Common
                 m_plannerWindow = null;
             }
         }
-
-        internal void ClearEntries()
-        {
-            this.SuppressEvents();
-            try
-            {
-                while (m_entries.Count > 0)
-                {
-                    m_entries.RemoveAt(m_entries.Count - 1);
-                }
-            }
-            finally
-            {
-                this.ResumeEvents();
-            }
-        }
-
-        public bool VerifySkills()
-        {
-            foreach (Plan.Entry pe in m_entries)
-            {
-                GrandSkill gs = pe.Skill;
-                if (gs == null)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        #endregion Planner Window
 
         public void SaveAsText(StreamWriter sw, PlanTextOptions pto, bool includeForumMarkup)
         {
@@ -1062,7 +1145,6 @@ namespace EVEMon.Common
             }
             #endregion
         }
-
     }
 
     public enum MarkupType

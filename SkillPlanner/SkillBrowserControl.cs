@@ -397,6 +397,7 @@ namespace EVEMon.SkillPlanner
             UpdatePlanControl();
         }
 
+        #region Replace all this with calls to Plan.PlanTo()
         private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             if (gs.Level < level && !m_plan.IsPlanned(gs, level))
@@ -405,21 +406,15 @@ namespace EVEMon.SkillPlanner
                 {
                     if (pe.SkillName == gs.Name)
                     {
+                        // If we don't have a note, use the one provided
                         if (Note != "" && !pe.Notes.Contains(Note))
-                        {
                             pe.Notes = pe.Notes + ", " + Note;
-                        }
                         if (pe.Level == level)
-                        {
                             return false;
-                        }
                     }
                 }
                 return true;
-            } else
-                {
-
-                }
+            }
             return false;
         }
 
@@ -431,7 +426,6 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            //MessageBox.Show(this, "Planning not yet implemented.", "Not Yet Implemented", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             string Note = m_selectedSkill.Name;
             AddPrerequisiteEntries(m_selectedSkill, planEntries,Note);
@@ -503,13 +497,12 @@ namespace EVEMon.SkillPlanner
                         pe.Level = i;
                         pe.Notes = Note;
                         pe.EntryType = Plan.Entry.Type.Prerequisite;
-                        //pe.PrerequisiteForName = gs.Name;
-                        //pe.PrerequisiteForLevel = 1;
                         planEntries.Add(pe);
                     }
                 }
             }
         }
+        #endregion Replace all this with calls to Plan.PlanTo()
 
     }
 }
