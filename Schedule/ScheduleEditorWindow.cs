@@ -160,32 +160,48 @@ namespace EVEMon.Schedule
                         i = x;
                     }
                 }
-                m_settings.Schedule.RemoveAt(i);
                 lbEntries.Items.RemoveAt(lbEntries.SelectedIndex);
+                m_settings.Schedule.RemoveAt(i);
                 m_settings.Save();
             }
         }
 
         private void lbEntries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string label_text = m_settings.Schedule[lbEntries.SelectedIndex].Title;
-            ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
-            if (temp.GetType() == typeof (SimpleScheduleEntry))
+            if (lbEntries.SelectedIndex != -1)
             {
-                SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                label_text = label_text + "\nOne Off Entry\n Start: " + x.StartDateTime + "\n End: " + x.EndDateTime + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
-            }
-            else if (temp.GetType() == typeof (RecurringScheduleEntry))
-            {
-                RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                label_text = label_text + "\nRecurring Entry:\n Start: " + x.RecurStart + "\n End: " + x.RecurEnd + "\n Frequency: " + x.RecurFrequency;
+                string label_text = "Title: " + m_settings.Schedule[lbEntries.SelectedIndex].Title;
+                ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+                if (temp.GetType() == typeof(SimpleScheduleEntry))
+                {
+                    SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                    label_text = label_text + "\nOne Off Entry\n Start: " + x.StartDateTime + "\n End: " + x.EndDateTime + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
+                }
+                else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                {
+                    RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                    label_text = label_text + "\nRecurring Entry:\n Start: " + x.RecurStart + "\n End: " + x.RecurEnd + "\n Frequency: " + x.RecurFrequency;
+                    if (x.RecurFrequency == RecurFrequency.Monthly)
+                    {
+                        label_text = label_text + "\n Day of Month: " + x.RecurDayOfMonth + "\n On Overflow: " + x.OverflowResolution;
+                    }
+                    else if (x.RecurFrequency == RecurFrequency.Weekly)
+                    {
+                        label_text = label_text + "\n Day of Week: " + x.RecurDayOfWeek;
+                    }
+                    label_text = label_text + "\n Start Time: " + TimeSpan.FromSeconds(x.StartSecond).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndSecond).ToString() + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
+                }
+                else
+                {
+                    // ?? Wha...
+                    label_text = "What the Smeg is this?";
+                }
+                lblEntryDescription.Text = label_text;
             }
             else
             {
-                // ?? Wha...
-                label_text = "What the Smeg is this?";
+                lblEntryDescription.Text = "";
             }
-            lblEntryDescription.Text = label_text;
         }
     }
 }

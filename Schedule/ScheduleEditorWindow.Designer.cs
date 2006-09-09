@@ -159,7 +159,7 @@ namespace EVEMon.Schedule
             this.lblEntryDescription.Name = "lblEntryDescription";
             this.lblEntryDescription.Size = new System.Drawing.Size(171, 136);
             this.lblEntryDescription.TabIndex = 2;
-            this.lblEntryDescription.Text = "label3";
+            this.lblEntryDescription.Text = "";
             // 
             // calControl
             // 
