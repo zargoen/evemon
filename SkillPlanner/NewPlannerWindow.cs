@@ -35,7 +35,7 @@ namespace EVEMon.SkillPlanner
             itemBrowser.Plan = m_plan;
 
             // See if this is a new plan
-            if (m_plan.Entries.Count == 0)
+            if (m_plan.NumberOfEntries == 0)
                 // jump straight to the skill browser
                 tabControl.SelectedTab = tpSkillBrowser;
             else
@@ -156,8 +156,8 @@ namespace EVEMon.SkillPlanner
 
             TimeSpan res = m_plan.GetTotalTime(null);
             slblStatusText.Text = String.Format("{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}",
-                                                m_plan.Entries.Count,
-                                                m_plan.Entries.Count == 1 ? "" : "s",
+                                                m_plan.NumberOfEntries,
+                                                m_plan.NumberOfEntries == 1 ? "" : "s",
                                                 m_plan.UniqueSkillCount,
                                                 m_plan.UniqueSkillCount == 1 ? "" : "s",
                                                 GrandSkill.TimeSpanToDescriptiveText(res,
@@ -166,7 +166,7 @@ namespace EVEMon.SkillPlanner
                                                                                          IncludeCommas |
                                                                                      DescriptiveTextOptions.SpaceText));
 
-            if (m_plan.HasAttributeSuggestion)
+            if (m_plan.HasSuggestion)
             {
                 tslSuggestion.Visible = true;
                 if (m_showing && !m_suggestionTipUp)
@@ -214,6 +214,8 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
+            m_plan.ApplySuggestion();
+            /*
             m_plan.SuppressEvents();
             try
             {
@@ -227,7 +229,7 @@ namespace EVEMon.SkillPlanner
 
                 //Ensures any existing learning skills in the plan get moved to
                 //account for higher levels being inserted at the front...
-                m_plan.CheckForMissingPrerequisites();
+                m_plan.Validate();
 
                 // Arrange the learning skills in the plan in optimal order
                 PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true);
@@ -236,6 +238,7 @@ namespace EVEMon.SkillPlanner
             {
                 m_plan.ResumeEvents();
             }
+             * */
         }
 
         #region Plan serialization

@@ -120,9 +120,9 @@ namespace EVEMon.SkillPlanner
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
                     foreach (Plan.Entry entry in p.Entries)
                     {
-                        if (m_result.GetEntry(entry.SkillName, entry.Level) == null)
+                        if (!m_result.IsPlanned(entry.Skill, entry.Level))
                         {
-                            m_result.Entries.Add(entry);
+                            m_result.AddEntry(entry);
                         }
                     }
                 }

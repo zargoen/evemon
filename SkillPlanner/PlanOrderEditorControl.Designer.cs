@@ -32,7 +32,14 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanOrderEditorControl));
             this.cmsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.miPlanToLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.miLevel1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miLevel2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miLevel3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miLevel4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miLevel5 = new System.Windows.Forms.ToolStripMenuItem();
             this.miRemoveFromPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tmrAutoRefresh = new System.Windows.Forms.Timer(this.components);
@@ -46,7 +53,6 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.llSuggestionLink = new System.Windows.Forms.LinkLabel();
             this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
-            this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
             this.cmsContextMenu.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -59,28 +65,83 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote,
             this.miShowInSkillBrowser,
             this.toolStripMenuItem1,
+            this.miPlanToLevel,
             this.miRemoveFromPlan});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(197, 98);
+            this.cmsContextMenu.Size = new System.Drawing.Size(187, 120);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
             // 
             this.miChangeNote.Name = "miChangeNote";
-            this.miChangeNote.Size = new System.Drawing.Size(196, 22);
+            this.miChangeNote.Size = new System.Drawing.Size(186, 22);
             this.miChangeNote.Text = "View/Change Note...";
             this.miChangeNote.Click += new System.EventHandler(this.miChangeNote_Click);
+            // 
+            // miShowInSkillBrowser
+            // 
+            this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
+            this.miShowInSkillBrowser.Size = new System.Drawing.Size(186, 22);
+            this.miShowInSkillBrowser.Text = "Show in Skill Browser";
+            this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(193, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(183, 6);
+            // 
+            // miPlanToLevel
+            // 
+            this.miPlanToLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miLevel1,
+            this.miLevel2,
+            this.miLevel3,
+            this.miLevel4,
+            this.miLevel5});
+            this.miPlanToLevel.Name = "miPlanToLevel";
+            this.miPlanToLevel.Size = new System.Drawing.Size(186, 22);
+            this.miPlanToLevel.Text = "Plan To Level";
+            // 
+            // miLevel1
+            // 
+            this.miLevel1.Name = "miLevel1";
+            this.miLevel1.Size = new System.Drawing.Size(152, 22);
+            this.miLevel1.Text = "I";
+            this.miLevel1.Click += new System.EventHandler(this.miLevel1_Click);
+            // 
+            // miLevel2
+            // 
+            this.miLevel2.Name = "miLevel2";
+            this.miLevel2.Size = new System.Drawing.Size(152, 22);
+            this.miLevel2.Text = "II";
+            this.miLevel2.Click += new System.EventHandler(this.miLevel2_Click);
+            // 
+            // miLevel3
+            // 
+            this.miLevel3.Name = "miLevel3";
+            this.miLevel3.Size = new System.Drawing.Size(152, 22);
+            this.miLevel3.Text = "III";
+            this.miLevel3.Click += new System.EventHandler(this.miLevel3_Click);
+            // 
+            // miLevel4
+            // 
+            this.miLevel4.Name = "miLevel4";
+            this.miLevel4.Size = new System.Drawing.Size(152, 22);
+            this.miLevel4.Text = "IV";
+            this.miLevel4.Click += new System.EventHandler(this.miLevel4_Click);
+            // 
+            // miLevel5
+            // 
+            this.miLevel5.Name = "miLevel5";
+            this.miLevel5.Size = new System.Drawing.Size(152, 22);
+            this.miLevel5.Text = "V";
+            this.miLevel5.Click += new System.EventHandler(this.miLevel5_Click);
             // 
             // miRemoveFromPlan
             // 
             this.miRemoveFromPlan.Name = "miRemoveFromPlan";
-            this.miRemoveFromPlan.Size = new System.Drawing.Size(196, 22);
-            this.miRemoveFromPlan.Text = "Remove from Plan...";
+            this.miRemoveFromPlan.Size = new System.Drawing.Size(186, 22);
+            this.miRemoveFromPlan.Text = "Remove from Plan";
             this.miRemoveFromPlan.Click += new System.EventHandler(this.miRemoveFromPlan_Click);
             // 
             // sfdSave
@@ -89,7 +150,7 @@ namespace EVEMon.SkillPlanner
                 "xt";
             this.sfdSave.Title = "Save Plan As...";
             // 
-            // tmrTick
+            // tmrAutoRefresh
             // 
             this.tmrAutoRefresh.Interval = 30000;
             this.tmrAutoRefresh.Tick += new System.EventHandler(this.tmrAutoRefresh_Tick);
@@ -169,12 +230,12 @@ namespace EVEMon.SkillPlanner
             this.panel1.Size = new System.Drawing.Size(645, 21);
             this.panel1.TabIndex = 11;
             // 
-            // linkLabel1
+            // llSuggestionLink
             // 
             this.llSuggestionLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llSuggestionLink.AutoSize = true;
             this.llSuggestionLink.Location = new System.Drawing.Point(551, 5);
-            this.llSuggestionLink.Name = "linkLabel1";
+            this.llSuggestionLink.Name = "llSuggestionLink";
             this.llSuggestionLink.Size = new System.Drawing.Size(91, 13);
             this.llSuggestionLink.TabIndex = 0;
             this.llSuggestionLink.TabStop = true;
@@ -188,13 +249,6 @@ namespace EVEMon.SkillPlanner
             this.ilSkillDependency.Images.SetKeyName(0, "redbutton.bmp");
             this.ilSkillDependency.Images.SetKeyName(1, "yellowbutton.bmp");
             this.ilSkillDependency.Images.SetKeyName(2, "greenbutton.bmp");
-            // 
-            // miShowInSkillBrowser
-            // 
-            this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
-            this.miShowInSkillBrowser.Size = new System.Drawing.Size(196, 22);
-            this.miShowInSkillBrowser.Text = "Show in Skill Browser...";
-            this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // lvSkills
             // 
@@ -257,5 +311,11 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbSort;
         private System.Windows.Forms.ImageList ilSkillDependency;
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
+        private System.Windows.Forms.ToolStripMenuItem miPlanToLevel;
+        private System.Windows.Forms.ToolStripMenuItem miLevel1;
+        private System.Windows.Forms.ToolStripMenuItem miLevel2;
+        private System.Windows.Forms.ToolStripMenuItem miLevel3;
+        private System.Windows.Forms.ToolStripMenuItem miLevel4;
+        private System.Windows.Forms.ToolStripMenuItem miLevel5;
     }
 }

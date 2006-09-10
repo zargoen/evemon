@@ -34,14 +34,14 @@ namespace EVEMon.SkillPlanner
 
         private void SuggestionWindow_Load(object sender, EventArgs e)
         {
-            IEnumerable<Plan.Entry> entries = m_plan.GetSuggestions();
+            IEnumerable<Plan.Entry> suggestion = m_plan.Suggestion;
 
             GrandCharacterInfo gci = m_plan.GrandCharacterInfo;
             EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
             TimeSpan postTime = TimeSpan.Zero;
 
             lbSkills.Items.Clear();
-            foreach (Plan.Entry pe in entries)
+            foreach (Plan.Entry pe in suggestion)
             {
                 lbSkills.Items.Add(pe.SkillName + " " +
                                    GrandSkill.GetRomanForInt(pe.Level));

@@ -101,22 +101,14 @@ namespace EVEMon.SkillPlanner
 // Need to check if the Skills is in planEntries now too [ changed due to the notes patch ]
                         if (!ExistinPlan(planEntries, pgs.Name, i))
                         {
-                            Plan.Entry pe = new Plan.Entry();
-                            pe.SkillName = pgs.Name;
-                            pe.Level = i;
-                            pe.Notes = Note;
+                            Plan.Entry pe = new Plan.Entry(pgs.Name, i, Plan.Entry.Type.Prerequisite, Note);
                             pe.AddNoteonly = true;
-                            pe.EntryType = Plan.Entry.Type.Prerequisite;
                             planEntries.Add(pe);
                         }
                     } 
                     else if (ShouldAdd(p, pgs, i, planEntries,Note))
                     {
-                        Plan.Entry pe = new Plan.Entry();
-                        pe.SkillName = pgs.Name;
-                        pe.Level = i;
-                        pe.Notes = Note;
-                        pe.EntryType = Plan.Entry.Type.Prerequisite;
+                        Plan.Entry pe = new Plan.Entry(pgs.Name, i, Plan.Entry.Type.Prerequisite, Note);
                         planEntries.Add(pe);
                     }
                 }
@@ -130,7 +122,7 @@ namespace EVEMon.SkillPlanner
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    p.AddList(planEntries);
+                    p.AddEntries(planEntries);
                 }
             }
         }
@@ -148,21 +140,15 @@ namespace EVEMon.SkillPlanner
                     {
                         if (p.IsPlanned(gs, i))
                         {
-                            Plan.Entry pe = new Plan.Entry();
-                            pe.SkillName = gs.Name;
-                            pe.Level = i;
-                            pe.Notes = Note;
+                            Plan.Entry.Type t = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            Plan.Entry pe = new Plan.Entry(gs.Name, i, t, Note);
                             pe.AddNoteonly = true;
-                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
                             planEntries.Add(pe);
                         }
                         else if (ShouldAdd(p, gs, i, planEntries, Note))
                         {
-                            Plan.Entry pe = new Plan.Entry();
-                            pe.SkillName = gs.Name;
-                            pe.Level = i;
-                            pe.Notes = Note;
-                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            Plan.Entry.Type t = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            Plan.Entry pe = new Plan.Entry(gs.Name, i, t, Note);
                             planEntries.Add(pe);
                         }
                     }
