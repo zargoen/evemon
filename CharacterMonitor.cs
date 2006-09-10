@@ -1846,18 +1846,6 @@ namespace EVEMon
             }
         }
 
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
-        private void flowLayoutPanel5_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
-        private void CharacterMonitor_Load(object sender, EventArgs e)
-        {
-        }
-
         private void miHitEveO_Click(object sender, EventArgs e)
         {
             tmrUpdate_Tick(this, new EventArgs());

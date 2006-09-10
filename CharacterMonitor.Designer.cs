@@ -381,7 +381,6 @@ namespace EVEMon
             this.flowLayoutPanel5.Size = new System.Drawing.Size(59, 24);
             this.flowLayoutPanel5.TabIndex = 15;
             this.flowLayoutPanel5.WrapContents = false;
-            this.flowLayoutPanel5.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel5_Paint);
             // 
             // pbThrobber
             // 
@@ -564,7 +563,6 @@ namespace EVEMon
             this.flowLayoutPanel1.Size = new System.Drawing.Size(132, 60);
             this.flowLayoutPanel1.TabIndex = 18;
             this.flowLayoutPanel1.WrapContents = false;
-            this.flowLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
             // 
             // lblSkillHeader
             // 
@@ -642,7 +640,6 @@ namespace EVEMon
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "CharacterMonitor";
             this.Size = new System.Drawing.Size(392, 499);
-            this.Load += new System.EventHandler(this.CharacterMonitor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).EndInit();
             this.pnlTraining.ResumeLayout(false);
             this.pnlTraining.PerformLayout();
