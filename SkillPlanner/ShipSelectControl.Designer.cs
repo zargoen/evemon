@@ -35,16 +35,21 @@ namespace EVEMon.SkillPlanner
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbShipResults = new System.Windows.Forms.ListBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbSearchImage
             // 
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(0, 0);
+            this.pbSearchImage.Location = new System.Drawing.Point(4, 1);
+            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pbSearchImage.Name = "pbSearchImage";
-            this.pbSearchImage.Size = new System.Drawing.Size(16, 21);
+            this.pbSearchImage.Size = new System.Drawing.Size(13, 17);
             this.pbSearchImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbSearchImage.TabIndex = 20;
             this.pbSearchImage.TabStop = false;
@@ -54,8 +59,9 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(22, 0);
+            this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tbSearchText.Name = "tbSearchText";
-            this.tbSearchText.Size = new System.Drawing.Size(175, 21);
+            this.tbSearchText.Size = new System.Drawing.Size(163, 21);
             this.tbSearchText.TabIndex = 21;
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
@@ -63,12 +69,11 @@ namespace EVEMon.SkillPlanner
             // 
             // tvShips
             // 
-            this.tvShips.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvShips.Location = new System.Drawing.Point(0, 27);
+            this.tvShips.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvShips.Location = new System.Drawing.Point(0, 0);
+            this.tvShips.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tvShips.Name = "tvShips";
-            this.tvShips.Size = new System.Drawing.Size(197, 471);
+            this.tvShips.Size = new System.Drawing.Size(185, 376);
             this.tvShips.TabIndex = 22;
             this.tvShips.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvShips_AfterSelect);
             // 
@@ -78,9 +83,9 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
             this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbSearchTextHint.Location = new System.Drawing.Point(24, 2);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(23, 4);
             this.lbSearchTextHint.Name = "lbSearchTextHint";
-            this.lbSearchTextHint.Size = new System.Drawing.Size(171, 17);
+            this.lbSearchTextHint.Size = new System.Drawing.Size(47, 14);
             this.lbSearchTextHint.TabIndex = 23;
             this.lbSearchTextHint.Text = "Search Text";
             this.lbSearchTextHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -92,9 +97,10 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbNoMatches.BackColor = System.Drawing.SystemColors.Window;
             this.lbNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbNoMatches.Location = new System.Drawing.Point(3, 39);
+            this.lbNoMatches.Location = new System.Drawing.Point(9, 9);
+            this.lbNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbNoMatches.Name = "lbNoMatches";
-            this.lbNoMatches.Size = new System.Drawing.Size(191, 54);
+            this.lbNoMatches.Size = new System.Drawing.Size(168, 40);
             this.lbNoMatches.TabIndex = 24;
             this.lbNoMatches.Text = "No ships match your search.";
             this.lbNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -103,28 +109,55 @@ namespace EVEMon.SkillPlanner
             // lbShipResults
             // 
             this.lbShipResults.FormattingEnabled = true;
-            this.lbShipResults.Location = new System.Drawing.Point(40, 76);
+            this.lbShipResults.Location = new System.Drawing.Point(50, 18);
+            this.lbShipResults.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lbShipResults.Name = "lbShipResults";
-            this.lbShipResults.Size = new System.Drawing.Size(72, 82);
+            this.lbShipResults.Size = new System.Drawing.Size(86, 30);
             this.lbShipResults.TabIndex = 25;
             this.lbShipResults.Visible = false;
             this.lbShipResults.SelectedIndexChanged += new System.EventHandler(this.lbShipResults_SelectedIndexChanged);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.pbSearchImage);
+            this.panel1.Controls.Add(this.lbSearchTextHint);
+            this.panel1.Controls.Add(this.tbSearchText);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(185, 22);
+            this.panel1.TabIndex = 26;
+            // 
+            // panel2
+            // 
+            this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.tvShips);
+            this.panel2.Controls.Add(this.lbShipResults);
+            this.panel2.Controls.Add(this.lbNoMatches);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 22);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(185, 376);
+            this.panel2.TabIndex = 27;
+            // 
             // ShipSelectControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lbNoMatches);
-            this.Controls.Add(this.lbShipResults);
-            this.Controls.Add(this.lbSearchTextHint);
-            this.Controls.Add(this.tvShips);
-            this.Controls.Add(this.tbSearchText);
-            this.Controls.Add(this.pbSearchImage);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ShipSelectControl";
-            this.Size = new System.Drawing.Size(197, 498);
+            this.Size = new System.Drawing.Size(185, 398);
             this.Load += new System.EventHandler(this.ShipSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,5 +171,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lbSearchTextHint;
         private System.Windows.Forms.Label lbNoMatches;
         private System.Windows.Forms.ListBox lbShipResults;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }
