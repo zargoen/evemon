@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.pnlPlanControl = new System.Windows.Forms.Panel();
             this.lblSkillClass = new System.Windows.Forms.Label();
             this.textboxDescription = new System.Windows.Forms.TextBox();
@@ -77,8 +77,8 @@ namespace EVEMon.SkillPlanner
             // 
             this.splitContainer2.Panel2.Controls.Add(this.pnlPlanControl);
             this.splitContainer2.Panel2.Controls.Add(this.skillTreeDisplay);
-            this.splitContainer2.Size = new System.Drawing.Size(686, 542);
-            this.splitContainer2.SplitterDistance = 158;
+            this.splitContainer2.Size = new System.Drawing.Size(650, 413);
+            this.splitContainer2.SplitterDistance = 163;
             this.splitContainer2.TabIndex = 1;
             // 
             // pnlPlanControl
@@ -97,7 +97,7 @@ namespace EVEMon.SkillPlanner
             this.pnlPlanControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlPlanControl.Location = new System.Drawing.Point(0, 0);
             this.pnlPlanControl.Name = "pnlPlanControl";
-            this.pnlPlanControl.Size = new System.Drawing.Size(524, 106);
+            this.pnlPlanControl.Size = new System.Drawing.Size(483, 106);
             this.pnlPlanControl.TabIndex = 3;
             this.pnlPlanControl.Visible = false;
             // 
@@ -122,7 +122,7 @@ namespace EVEMon.SkillPlanner
             this.textboxDescription.Name = "textboxDescription";
             this.textboxDescription.ReadOnly = true;
             this.textboxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textboxDescription.Size = new System.Drawing.Size(232, 57);
+            this.textboxDescription.Size = new System.Drawing.Size(191, 57);
             this.textboxDescription.TabIndex = 17;
             this.textboxDescription.Text = "textbox1";
             // 
@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(375, 82);
+            this.label1.Location = new System.Drawing.Point(334, 82);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 16;
@@ -148,7 +148,7 @@ namespace EVEMon.SkillPlanner
             "Level III",
             "Level IV",
             "Level V"});
-            this.cbPlanSelect.Location = new System.Drawing.Point(412, 79);
+            this.cbPlanSelect.Location = new System.Drawing.Point(371, 79);
             this.cbPlanSelect.Name = "cbPlanSelect";
             this.cbPlanSelect.Size = new System.Drawing.Size(100, 21);
             this.cbPlanSelect.TabIndex = 15;
@@ -156,7 +156,7 @@ namespace EVEMon.SkillPlanner
             // lblAttributes
             // 
             this.lblAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAttributes.Location = new System.Drawing.Point(286, 4);
+            this.lblAttributes.Location = new System.Drawing.Point(245, 4);
             this.lblAttributes.Name = "lblAttributes";
             this.lblAttributes.Size = new System.Drawing.Size(235, 13);
             this.lblAttributes.TabIndex = 14;
@@ -300,7 +300,7 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Name = "skillSelectControl";
             this.skillSelectControl.Plan = null;
-            this.skillSelectControl.Size = new System.Drawing.Size(158, 542);
+            this.skillSelectControl.Size = new System.Drawing.Size(163, 413);
             this.skillSelectControl.TabIndex = 0;
             this.skillSelectControl.SelectedSkillChanged += new System.EventHandler<System.EventArgs>(this.skillSelectControl_SelectedSkillChanged);
             // 
@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
             this.skillTreeDisplay.Name = "skillTreeDisplay";
             this.skillTreeDisplay.Plan = null;
             this.skillTreeDisplay.RootSkill = null;
-            this.skillTreeDisplay.Size = new System.Drawing.Size(515, 427);
+            this.skillTreeDisplay.Size = new System.Drawing.Size(474, 298);
             this.skillTreeDisplay.TabIndex = 0;
             this.skillTreeDisplay.Visible = false;
             this.skillTreeDisplay.WorksafeMode = false;
@@ -326,7 +326,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer2);
             this.Name = "SkillBrowser";
-            this.Size = new System.Drawing.Size(686, 542);
+            this.Size = new System.Drawing.Size(650, 413);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private EVEMon.SkillPlanner.PersistentSplitContainer splitContainer2;
         private EVEMon.SkillPlanner.SkillSelectControl skillSelectControl;
         private System.Windows.Forms.ContextMenuStrip cmsSkillContext;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo1;

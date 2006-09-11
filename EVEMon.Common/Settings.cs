@@ -658,7 +658,16 @@ namespace EVEMon.Common
             get { return m_schedule; }
             set { m_schedule = value; }
         }
+        #endregion //Schedule Entries
 
+        private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();
+
+        public SerializableDictionary<string, int> SavedSplitterDistances
+        {
+            get { return m_savedSplitterDistances; }
+            set { m_savedSplitterDistances = value; }
+        }
+	
         private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
 
         public SerializableDictionary<string, Rectangle> SavedWindowLocations
@@ -666,7 +675,6 @@ namespace EVEMon.Common
             get { return m_savedWindowLocations; }
             set { m_savedWindowLocations = value; }
         }
-        #endregion //Schedule Entries
 
         #region Settings File Save / Load
         private const string STORE_FILE_NAME = "evemon-logindata{0}.xml";
@@ -1067,6 +1075,7 @@ namespace EVEMon.Common
                 reader.ReadEndElement();
                 reader.MoveToContent();
             }
+            reader.ReadEndElement();
             reader.ReadEndElement();
         }
 

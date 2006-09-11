@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            this.scShipSelect = new System.Windows.Forms.SplitContainer();
+            this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
             this.pnlShipDescription = new System.Windows.Forms.Panel();
             this.lblShipDescription = new System.Windows.Forms.Label();
@@ -69,19 +69,17 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
             this.scShipSelect.Panel2.Controls.Add(this.pbShipImage);
-            this.scShipSelect.Size = new System.Drawing.Size(761, 423);
-            this.scShipSelect.SplitterDistance = 193;
+            this.scShipSelect.Size = new System.Drawing.Size(650, 413);
+            this.scShipSelect.SplitterDistance = 163;
             this.scShipSelect.TabIndex = 1;
             // 
             // shipSelectControl
             // 
-            this.shipSelectControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.shipSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.shipSelectControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.shipSelectControl.Location = new System.Drawing.Point(3, 3);
+            this.shipSelectControl.Location = new System.Drawing.Point(0, 0);
             this.shipSelectControl.Name = "shipSelectControl";
-            this.shipSelectControl.Size = new System.Drawing.Size(187, 417);
+            this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedShipChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
             // 
@@ -91,9 +89,9 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlShipDescription.AutoScroll = true;
             this.pnlShipDescription.Controls.Add(this.lblShipDescription);
-            this.pnlShipDescription.Location = new System.Drawing.Point(305, 265);
+            this.pnlShipDescription.Location = new System.Drawing.Point(224, 265);
             this.pnlShipDescription.Name = "pnlShipDescription";
-            this.pnlShipDescription.Size = new System.Drawing.Size(256, 38);
+            this.pnlShipDescription.Size = new System.Drawing.Size(256, 28);
             this.pnlShipDescription.TabIndex = 8;
             this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_Changed);
             // 
@@ -114,7 +112,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox1.Controls.Add(this.lblShipSkill3);
             this.groupBox1.Controls.Add(this.lblShipSkill2);
             this.groupBox1.Controls.Add(this.lblShipSkill1);
-            this.groupBox1.Location = new System.Drawing.Point(305, 309);
+            this.groupBox1.Location = new System.Drawing.Point(224, 299);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(256, 111);
             this.groupBox1.TabIndex = 5;
@@ -176,7 +174,7 @@ namespace EVEMon.SkillPlanner
             this.lbShipProperties.IntegralHeight = false;
             this.lbShipProperties.Location = new System.Drawing.Point(3, 37);
             this.lbShipProperties.Name = "lbShipProperties";
-            this.lbShipProperties.Size = new System.Drawing.Size(296, 383);
+            this.lbShipProperties.Size = new System.Drawing.Size(215, 373);
             this.lbShipProperties.TabIndex = 3;
             // 
             // lblShipName
@@ -201,7 +199,7 @@ namespace EVEMon.SkillPlanner
             // pbShipImage
             // 
             this.pbShipImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbShipImage.Location = new System.Drawing.Point(305, 3);
+            this.pbShipImage.Location = new System.Drawing.Point(224, 3);
             this.pbShipImage.Name = "pbShipImage";
             this.pbShipImage.Size = new System.Drawing.Size(256, 256);
             this.pbShipImage.TabIndex = 0;
@@ -213,7 +211,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.scShipSelect);
             this.Name = "ShipBrowserControl";
-            this.Size = new System.Drawing.Size(761, 423);
+            this.Size = new System.Drawing.Size(650, 413);
             this.scShipSelect.Panel1.ResumeLayout(false);
             this.scShipSelect.Panel2.ResumeLayout(false);
             this.scShipSelect.Panel2.PerformLayout();
@@ -229,8 +227,8 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer scShipSelect;
-        private ShipSelectControl shipSelectControl;
+        private EVEMon.SkillPlanner.PersistentSplitContainer scShipSelect;
+        private EVEMon.SkillPlanner.ShipSelectControl shipSelectControl;
         private System.Windows.Forms.Panel pnlShipDescription;
         private System.Windows.Forms.Label lblShipDescription;
         private System.Windows.Forms.GroupBox groupBox1;

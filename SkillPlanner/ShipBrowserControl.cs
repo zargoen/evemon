@@ -22,6 +22,7 @@ namespace EVEMon.SkillPlanner
         public ShipBrowserControl()
         {
             InitializeComponent();
+            this.scShipSelect.RememberDistanceKey = "ShipBrowser";
             shipSelectControl_SelectedShipChanged(null, null);
         }
 

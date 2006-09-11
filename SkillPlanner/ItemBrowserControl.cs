@@ -12,6 +12,7 @@ namespace EVEMon.SkillPlanner
         public ItemBrowserControl()
         {
             InitializeComponent();
+            this.splitContainer1.RememberDistanceKey = "ItemBrowser";
         }
 
         private Plan m_plan = null;
