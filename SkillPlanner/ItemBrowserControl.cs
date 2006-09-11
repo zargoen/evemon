@@ -122,15 +122,12 @@ namespace EVEMon.SkillPlanner
                     EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
                                              delegate(EveSession sess, Image img)
                                              {
-                                                 this.Invoke(new MethodInvoker(delegate
-                                                                                   {
-                                                                                       if (
-                                                                                           itemSelectControl1.
-                                                                                               SelectedItem == i)
-                                                                                       {
-                                                                                           GotItemImage(i.Id, img);
-                                                                                       }
-                                                                                   }));
+                                                 if (
+                                                     itemSelectControl1.
+                                                         SelectedItem == i)
+                                                 {
+                                                     GotItemImage(i.Id, img);
+                                                 }
                                              });
                 }
             }
