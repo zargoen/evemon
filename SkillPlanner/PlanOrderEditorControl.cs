@@ -418,14 +418,14 @@ namespace EVEMon.SkillPlanner
             m_plan.SuppressEvents();
             try
             {
-                m_plan.ClearEntries();
+                m_plan.Entries.Clear();
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
                     Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
-                    m_plan.AddEntry(newPe);
+                    m_plan.Entries.Add(newPe);
                 }
                 // Enforces proper ordering too!
-                //m_plan.Validate();
+                m_plan.CheckForMissingPrerequisites();
             }
             finally
             {
@@ -508,35 +508,9 @@ namespace EVEMon.SkillPlanner
         #region Context Menu
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (lvSkills.SelectedItems.Count == 1)
-            {
-                miRemoveFromPlan.Enabled = true;
-                miChangeNote.Enabled = true;
-                miShowInSkillBrowser.Enabled = true;
-                miPlanToLevel.Enabled = true;
-
-                // Decide which level this skill can be advanced / reduced to
-                ListViewItem lvi = lvSkills.SelectedItems[0];
-                Plan.Entry pe = (Plan.Entry)lvi.Tag;
-                GrandSkill gs = pe.Skill;
-
-                // Initialise to all enabled:
-                foreach (ToolStripItem item in this.miPlanToLevel.DropDownItems)
-                    item.Enabled = true;
-
-                // cannot reduce to less than current known level
-                for (int i = 0; i < gs.Level; i++)
-                {
-                    this.miPlanToLevel.DropDownItems[i].Enabled = false;
-                }
-            }
-            else
-            {
-                miRemoveFromPlan.Enabled = false;
-                miChangeNote.Enabled = false;
-                miShowInSkillBrowser.Enabled = false;
-                miPlanToLevel.Enabled = false;
-            }
+            miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miChangeNote.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
         }
 
         private void miShowInSkillBrowser_Click(object sender, EventArgs e)
@@ -547,35 +521,12 @@ namespace EVEMon.SkillPlanner
             m_plannerWindow.ShowSkillInTree(gs);
         }
 
-        private void miLevel1_Click(object sender, EventArgs e)
-        {
-            m_plan.ChangePlannedLevel(((Plan.Entry)lvSkills.SelectedItems[0].Tag).Skill, 1);
-        }
-
-        private void miLevel2_Click(object sender, EventArgs e)
-        {
-            m_plan.ChangePlannedLevel(((Plan.Entry)lvSkills.SelectedItems[0].Tag).Skill, 2);
-        }
-
-        private void miLevel3_Click(object sender, EventArgs e)
-        {
-            m_plan.ChangePlannedLevel(((Plan.Entry)lvSkills.SelectedItems[0].Tag).Skill, 3);
-        }
-
-        private void miLevel4_Click(object sender, EventArgs e)
-        {
-            m_plan.ChangePlannedLevel(((Plan.Entry)lvSkills.SelectedItems[0].Tag).Skill, 4);
-        }
-
-        private void miLevel5_Click(object sender, EventArgs e)
-        {
-            m_plan.ChangePlannedLevel(((Plan.Entry)lvSkills.SelectedItems[0].Tag).Skill, 5);
-        }
-
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             if (lvSkills.SelectedItems.Count != 1)
+            {
                 return;
+            }
 
             using (CancelChoiceWindow f = new CancelChoiceWindow())
             {
@@ -735,16 +686,7 @@ namespace EVEMon.SkillPlanner
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    try
-                    {
-                        PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Sorting failed: " + ex.Message, "Sorting Failed",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
+                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst);
                 }
             }
         }
@@ -761,8 +703,14 @@ namespace EVEMon.SkillPlanner
 
         private void RemoveFromPlan(Plan.Entry pe, bool includePrerequisites)
         {
-            m_plan.RemoveSkill(pe.Skill, includePrerequisites);
+            bool result = m_plan.RemoveEntry(pe.Skill, includePrerequisites, false);
+            if (!result)
+            {
+                MessageBox.Show(this,
+                                "The plan for this skill could not be cancelled because this skill is " +
+                                "required for another skill you have planned.",
+                                "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
         }
-
     }
 }

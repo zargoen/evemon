@@ -7,15 +7,16 @@ using System.Xml.Serialization;
 namespace EVEMon.Common
 {
     [XmlRoot("plan")]
-    public class Plan// : System.Collections.Generic.IList<Plan.Entry>
+    public class Plan
     {
         public Plan()
         {
+            //m_entries = new MonitoredList<Plan.Entry>();
             m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
             m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
         }
 
-        #region Properties
+        #region Members
         // Plan Name
         private string m_planName;
         [XmlIgnore]
@@ -36,7 +37,7 @@ namespace EVEMon.Common
                 this.SuppressEvents();
                 try
                 {
-                    m_suggestion.Clear();
+                    m_attributeSuggestion = null;
                     if (m_grandCharacterInfo != null)
                     {
                         m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
@@ -46,8 +47,8 @@ namespace EVEMon.Common
                     {
                         m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
                     }
-                    RemoveCompletedSkills();
-                    AddMissingPrerequisites();
+                    CheckForCompletedSkills();
+                    CheckForMissingPrerequisites();
                 }
                 finally
                 {
@@ -58,13 +59,13 @@ namespace EVEMon.Common
 
         private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
-            Validate();
+            CheckForCompletedSkills();
         }
 
         // The Plan Entries
         private MonitoredList<Plan.Entry> m_entries = new MonitoredList<Plan.Entry>();
         [XmlArrayItem("entry")]
-        public IEnumerable<Plan.Entry> Entries
+        public MonitoredList<Plan.Entry> Entries
         {
             get { return m_entries; }
         }
@@ -82,7 +83,7 @@ namespace EVEMon.Common
         private void Entries_Changed(object sender, ChangedEventArgs<Plan.Entry> e)
         {
             m_uniqueSkillCount = -1;
-            m_suggestion.Clear();
+            m_attributeSuggestion = null;
             switch (e.ChangeType)
             {
                 case ChangeType.Added:
@@ -107,10 +108,8 @@ namespace EVEMon.Common
                               }
                           }, "change");
         }
-
-        #endregion Properties
-
-        #region TODO: Remove this and store this data elsewhere. This is to do with the display of the plan, not the contents of the plan
+        #endregion Members
+                
         private ColumnPreference m_columnPreference = new ColumnPreference();
 
         public ColumnPreference ColumnPreference
@@ -118,7 +117,6 @@ namespace EVEMon.Common
             get { return m_columnPreference; }
             set { m_columnPreference = value; }
         }
-        #endregion
 
         #region Event suppression
         private object m_eventLock = new object();
@@ -177,56 +175,71 @@ namespace EVEMon.Common
         #endregion Event suppression
         
         #region Suggestions
-        List<Entry> m_suggestion = new List<Plan.Entry>();
+        private bool? m_attributeSuggestion = null;
+
         [XmlIgnore]
-        public IEnumerable<Entry> Suggestion
+        public bool HasAttributeSuggestion
         {
-            get { return m_suggestion; }
-        }
-        [XmlIgnore]
-        public bool HasSuggestion
-        {
-            get{return (m_suggestion.Count > 0);}
-        }
-
-        public void UpdateSuggestion()
-        {
-            m_suggestion.Clear();
-            TimeSpan baseTime = GetTotalTime(null);
-            CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime, m_suggestion);
-            CheckForTimeBenefit("Analytical Mind", "Logic", baseTime, m_suggestion);
-            CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime, m_suggestion);
-            CheckForTimeBenefit("Iron Will", "Focus", baseTime, m_suggestion);
-            CheckForTimeBenefit("Empathy", "Presence", baseTime, m_suggestion);
-        }
-
-
-        public void ApplySuggestion()
-        {
-            if (m_suggestion.Count == 0)
-                return;
-
-            SuppressEvents();
-            try
+            get
             {
-                int i = 0;
-                foreach (Plan.Entry pe in m_suggestion)
+                if (m_attributeSuggestion == null)
                 {
-                    m_entries.Insert(i, pe);
-                    i++;
+                    CheckForAttributeSuggestion();
                 }
-
-                //Ensures any existing learning skills in the plan get moved to
-                //account for higher levels being inserted at the front...
-                Validate();
-
-                // Arrange the learning skills in the plan in optimal order
-                PlanSorter.SortPlan(this, PlanSortType.NoChange, true);
+                return m_attributeSuggestion.Value;
             }
-            finally
+        }
+
+        public IEnumerable<Plan.Entry> GetSuggestions()
+        {
+            List<Plan.Entry> result = new List<Plan.Entry>();
+
+            TimeSpan baseTime = GetTotalTime(null);
+            CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime, result);
+            CheckForTimeBenefit("Analytical Mind", "Logic", baseTime, result);
+            CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime, result);
+            CheckForTimeBenefit("Iron Will", "Focus", baseTime, result);
+            CheckForTimeBenefit("Empathy", "Presence", baseTime, result);
+
+            return result;
+        }
+
+        private void CheckForAttributeSuggestion()
+        {
+            if (GrandCharacterInfo == null)
             {
-                ResumeEvents();
+                m_attributeSuggestion = false;
+                return;
             }
+
+            TimeSpan baseTime = GetTotalTime(null);
+
+            m_attributeSuggestion = CheckForTimeBenefit("Analytical Mind", "Logic", baseTime);
+            if (m_attributeSuggestion == true)
+            {
+                return;
+            }
+            m_attributeSuggestion = CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime);
+            if (m_attributeSuggestion == true)
+            {
+                return;
+            }
+            m_attributeSuggestion = CheckForTimeBenefit("Iron Will", "Focus", baseTime);
+            if (m_attributeSuggestion == true)
+            {
+                return;
+            }
+            m_attributeSuggestion = CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime);
+            if (m_attributeSuggestion == true)
+            {
+                return;
+            }
+            m_attributeSuggestion = CheckForTimeBenefit("Empathy", "Presence", baseTime);
+        }
+
+        private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime)
+        {
+            return CheckForTimeBenefit(skillA, skillB, baseTime, null);
         }
 
         private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime, List<Plan.Entry> entries)
@@ -291,7 +304,10 @@ namespace EVEMon.Common
                     {
                         if ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa))
                         {
-                            Plan.Entry pe = new Plan.Entry(gs.Name, level, Plan.Entry.Type.Planned);
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = level;
+                            pe.EntryType = Plan.Entry.Type.Planned;
                             entries.Add(pe);
                         }
                     }
@@ -324,12 +340,8 @@ namespace EVEMon.Common
             return ts;
         }
 
-        public int NumberOfEntries
-        {
-            get { return m_entries.Count; }
-        }
-
         private int m_uniqueSkillCount = -1;
+
         [XmlIgnore]
         public int UniqueSkillCount
         {
@@ -358,161 +370,8 @@ namespace EVEMon.Common
         }
         #endregion Statistics
 
-        #region NEW API
 
-        // Grand Skill API
-        private int GetPlannedLevel(GrandSkill gs)
-        {
-            int level = 0;
-            foreach (Plan.Entry pe in m_entries)
-            {
-                if (pe.Skill == gs && pe.Level > level)
-                    // This is the highest found level so far
-                    level = pe.Level;
-            }
-            return level;
-        }
-
-        public bool IsPlanned(GrandSkill gs)
-        {
-            return GetPlannedLevel(gs) > 0;
-        }
-
-        public bool IsPlanned(GrandSkill gs, int level)
-        {
-            return GetPlannedLevel(gs) >= level;
-        }
-
-        public void ChangePlannedLevel(GrandSkill gs, int level)
-        {
-            if (!IsPlanned(gs) || IsPlanned(gs, level))
-                // either not in the plan or allready planned to this level
-                return;
-
-            int currentLevel = GetPlannedLevel(gs);
-            if (currentLevel > level)
-            {
-                // make the desired level a planned skill
-                GetEntry(gs, level).EntryType = Entry.Type.Planned;
-                // remove all entries above this
-                for (int i = level + 1; i <= currentLevel; i++)
-                {
-                    m_entries.Remove(GetEntry(gs,i));
-                }
-            }
-            if (currentLevel < level)
-            {
-                // The previous entry is now a pre-requisite for the new level
-                Entry e = GetEntry(gs, currentLevel);
-                e.EntryType = Entry.Type.Prerequisite;
-                // Now add the new level - based on the copy of the old entry
-                Entry ne = new Entry(e);
-                ne.Level = level;
-                m_entries.Add(ne);
-            }
-            // We've added/removed skills so let's make sure everything is upto date
-            Validate();
-        }
-
-        public void RemoveSkill(GrandSkill gs, bool removePreReqs)
-        {
-            if (!IsPlanned(gs))
-                // not in the plan
-                return;
-
-            Entry pe = null;
-
-            // Remove all levels of this skill
-            for (int i = 5; i > 0; i--)
-            {
-                if (IsPlanned(gs, i))
-                {
-                    pe = GetEntry(gs, i);
-                    RemoveEntry(pe, false);
-                }
-            }
-
-        }
-
-        private Entry GetEntry(GrandSkill gs, int level)
-        {
-            foreach (Entry pe in m_entries)
-            {
-                if (pe.Skill == gs && pe.Level == level)
-                {
-                    return pe;
-                }
-            }
-            return null;
-        }
-
-        // Entry API
-        // Adds an entry at the bottom of the plan and adds any pre-requisites necessary
-        public void AddEntry(Entry pe)
-        {
-            if (IsPlanned(pe.Skill, pe.Level))
-            {
-                // Merge this entry with the one currently in the plan
-                Entry.Merge(GetEntry(pe.Skill, pe.Level), pe);
-            }
-            else
-            {
-                m_entries.Add(pe);
-                pe.m_RefCount++;
-            }
-            Validate();
-        }
-        
-        public void AddEntries(IEnumerable<Entry> l)
-        {
-            foreach (Entry e in l)
-            {
-                m_entries.Add(e);
-            }
-            Validate();
-        }
-
-        public void RemoveEntry(Entry pe, bool removePreReqs)
-        {
-            if (pe.Plan != this)
-                throw new ApplicationException("Entry is not in this plan");
-
-            if (pe.m_RefCount > 1)
-                pe.m_RefCount--;
-            else
-                m_entries.Remove(pe);
-
-            if (removePreReqs)
-            {
-                foreach (Entry prereq in pe.Prerequisites)
-                    RemoveEntry(prereq, true);
-            }
-        }
-
-        public void ClearEntries()
-        {
-            m_entries.Clear();
-        }
-
-        // Update the validity of the list.
-        private void Validate()
-        {
-            RemoveCompletedSkills();
-            AddMissingPrerequisites();
-        }
-
-        private void AddMissingPrerequisites()
-        {}
-
-        private void RemoveCompletedSkills()
-        {}
-
-
-        #endregion
-
-        // clean up this entire API to make it easier
-#if poo
-        public void AddMissingPrerequisites()
+        public void CheckForMissingPrerequisites()
         {
             this.SuppressEvents();
             try
@@ -597,7 +456,7 @@ namespace EVEMon.Common
             return -1;
         }
 
-        private void RemoveCompletedSkills()
+        private void CheckForCompletedSkills()
         {
             this.SuppressEvents();
             try
@@ -628,7 +487,9 @@ namespace EVEMon.Common
             foreach (Plan.Entry pe in m_entries)
             {
                 if (pe.Skill == gs)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -637,8 +498,10 @@ namespace EVEMon.Common
         {
             foreach (Plan.Entry pe in m_entries)
             {
-                if (pe.Skill == gs && pe.Level == level)
+                if (pe.SkillName == gs.Name && pe.Level == level)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -877,7 +740,21 @@ namespace EVEMon.Common
             return null;
         }
 
-#endif
+        public Plan.Entry GetEntryWithRoman(string name)
+        {
+            int level = 0;
+            for (int i = 1; i <= 5; i++)
+            {
+                string tRomanSuffix = " " + GrandSkill.GetRomanForInt(i);
+                if (name.EndsWith(tRomanSuffix))
+                {
+                    level = i;
+                    name = name.Substring(0, name.Length - tRomanSuffix.Length);
+                    break;
+                }
+            }
+            return GetEntry(name, level);
+        }
 
         #region Planner Window
         private static IPlannerWindowFactory m_plannerWindowFactory;
@@ -947,7 +824,6 @@ namespace EVEMon.Common
         }
         #endregion Planner Window
 
-        #region I/O
         public void SaveAsText(StreamWriter sw, PlanTextOptions pto, bool includeForumMarkup)
         {
             SaveAsText(sw, pto, includeForumMarkup ? MarkupType.Forum : MarkupType.None);
@@ -1110,60 +986,40 @@ namespace EVEMon.Common
                 writeLine();
             }
         }
-        #endregion I/O
 
         [XmlRoot("Plan.Entry")]
         public class Entry : ICloneable
         {
-            public Entry(Entry e) : 
-                this(e.SkillName, e.Level, e.EntryType, e.Notes)
-            {
-            }
-
-            internal Entry(string skillName, int level, Type type) :
-                this(skillName, level, type, null)
-            {
-            }
-
-            public Entry(string skillName, int level, Type type, string notes)
-            {
-                m_skillName = skillName;
-                m_level = level;
-                m_entryType = type;
-                m_notes = notes;
-                m_addNoteonly = false;
-                m_RefCount = 0;
-            }
-
-            // This is probably temporary funtion. Either it should be removed or should be made much more rigorous
-            // The source entry will be merged onto the dest Entry
-            internal static void Merge(Entry dest, Entry source)
-            {
-                if ((dest.Skill != source.Skill) || 
-                    (dest.Level != source.Level) || 
-                    (dest.Plan != source.Plan))
-                    throw new ApplicationException("These skills cannot be merged");
-
-                // Append the notes
-                dest.Notes += source.Notes;
-
-                // See if this skill is nowplanned
-                if (dest.EntryType != Type.Planned && source.EntryType == Type.Planned)
-                    // The new skill is planned, but the old one isn't, so
-                    source.EntryType = Type.Planned;
-
-                // Another skill is using this, so inc the ref count
-                source.m_RefCount++;
-            }
             public enum Type
             {
                 Planned,
                 Prerequisite
             }
 
+            public class Prerequisite
+            {
+                private Entry m_entry;
+
+                public Entry PlanEntry
+                {
+                    get { return m_entry; }
+                }
+
+                internal Prerequisite(Entry entry)
+                {
+                    m_entry = entry;
+                }
+            }
+
             private Plan m_owner;
+            private string m_skillName;
+            private int m_level;
+            private Entry.Type m_entryType;
+            private bool m_addNoteonly = false;
+            private string m_notes;
+
             [XmlIgnore]
-            internal Plan Plan
+            public Plan Plan
             {
                 get { return m_owner; }
                 set
@@ -1183,45 +1039,37 @@ namespace EVEMon.Common
                 }
             }
 
+            private IEnumerable<Prerequisite> m_prerequisiteCache;
+
             private void m_owner_Changed(object sender, EventArgs e)
             {
                 m_prerequisiteCache = null;
             }
 
-            #region Public Properties
-
-            private string m_skillName;
             public string SkillName
             {
                 get { return m_skillName; }
-                //set { m_skillName = value; }
+                set { m_skillName = value; }
             }
 
-            private int m_level;
             public int Level
             {
                 get { return m_level; }
                 set { m_level = value; }
             }
 
-            private Entry.Type m_entryType;
             public Type EntryType
             {
                 get { return m_entryType; }
                 set { m_entryType = value; }
             }
 
-            private string m_notes;
             public string Notes
             {
                 get { return (m_notes == null ? "" : m_notes); }
                 set { m_notes = value; }
             }
 
-            #endregion Public Properties
-
-            // TODO: Does this need to be here
-            private bool m_addNoteonly = false;
             [XmlIgnore]
             public bool AddNoteonly
             {
@@ -1242,25 +1090,23 @@ namespace EVEMon.Common
                 }
             }
 
-            internal int m_RefCount = 0;
-            
             [XmlIgnore]
-            private IEnumerable<Entry> m_prerequisiteCache;
-            public IEnumerable<Entry> Prerequisites
+            public IEnumerable<Prerequisite> Prerequisites
             {
                 get
                 {
                     if (m_prerequisiteCache == null)
                     {
                         Dictionary<string, bool> contains = new Dictionary<string, bool>();
-                        List<Entry> result = new List<Entry>();
+                        List<Prerequisite> result = new List<Prerequisite>();
                         BuildPrereqs(this.Skill, this.Level, result, contains);
                         m_prerequisiteCache = result;
                     }
                     return m_prerequisiteCache;
                 }
             }
-            private void BuildPrereqs(GrandSkill gs, int level, List<Entry> result,
+
+            private void BuildPrereqs(GrandSkill gs, int level, List<Prerequisite> result,
                                       Dictionary<string, bool> contains)
             {
                 for (int l = level; l >= 1; l--)
@@ -1268,7 +1114,7 @@ namespace EVEMon.Common
                     string tSkill = gs.Name + " " + GrandSkill.GetRomanForInt(l);
                     if (!contains.ContainsKey(tSkill))
                     {
-                        Entry pep = new Entry(m_owner.GetEntry(gs, l));
+                        Plan.Entry.Prerequisite pep = new Plan.Entry.Prerequisite(m_owner.GetEntry(gs.Name, l));
                         contains[tSkill] = true;
                         result.Insert(0, pep);
                     }
@@ -1278,7 +1124,8 @@ namespace EVEMon.Common
                     string tSkill = pp.Skill + " " + GrandSkill.GetRomanForInt(pp.RequiredLevel);
                     if (!contains.ContainsKey(tSkill))
                     {
-                        Entry pep = new Entry(m_owner.GetEntry(pp.Skill, pp.RequiredLevel));
+                        Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Skill.Name,
+                                                                                               pp.RequiredLevel));
                         contains[tSkill] = true;
                         result.Insert(0, pep);
                         BuildPrereqs(pp.Skill, pp.RequiredLevel, result, contains);
@@ -1286,55 +1133,14 @@ namespace EVEMon.Common
                 }
             }
 
-#if poo
-            [XmlIgnore]
-            private IEnumerable<Entry> m_dependentCache;
-            public IEnumerable<Entry> Dependents
-            {
-                get
-                {
-                    if (m_dependentCache == null)
-                    {
-                        Dictionary<string, bool> contains = new Dictionary<string, bool>();
-                        List<Entry> result = new List<Entry>();
-                        BuildDependents(this.Skill, this.Level, result, contains);
-                        m_dependentCache = result;
-                    }
-                    return m_dependentCache;
-                }
-            }
-            private void BuildDependents(GrandSkill gs, int level, List<Entry> result,
-                                      Dictionary<string, bool> contains)
-            {
-
-                for (int l = level; l >= 1; l--)
-                {
-                    string tSkill = gs.Name + " " + GrandSkill.GetRomanForInt(l);
-                    if (!contains.ContainsKey(tSkill))
-                    {
-                        Entry pep = new Entry(m_owner.GetEntry(gs, l));
-                        contains[tSkill] = true;
-                        result.Insert(0, pep);
-                    }
-                }
-                foreach (GrandSkill.Prereq pp in gs.Prereqs)
-                {
-                    string tSkill = pp.Skill + " " + GrandSkill.GetRomanForInt(pp.RequiredLevel);
-                    if (!contains.ContainsKey(tSkill))
-                    {
-                        Entry pep = new Entry(m_owner.GetEntry(pp.Skill, pp.RequiredLevel));
-                        contains[tSkill] = true;
-                        result.Insert(0, pep);
-                        BuildDependents(pp.Skill, pp.RequiredLevel, result, contains);
-                    }
-                }
-            }
-#endif
-
             #region ICloneable Members
             public object Clone()
             {
-                Plan.Entry pe = new Plan.Entry(this);
+                Plan.Entry pe = new Plan.Entry();
+                pe.SkillName = this.SkillName;
+                pe.Level = this.Level;
+                pe.EntryType = this.EntryType;
+                pe.Notes = this.Notes;
                 return pe;
             }
             #endregion
@@ -1352,4 +1158,6 @@ namespace EVEMon.Common
     {
         Form CreateWindow(Settings s, Plan p);
     }
+
+
 }
