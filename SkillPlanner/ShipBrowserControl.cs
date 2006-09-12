@@ -19,6 +19,9 @@ namespace EVEMon.SkillPlanner
             set { m_plan = value; }
         }
 
+        private bool m_allSkillsKnown;
+        private bool m_skillsUnplanned;
+
         public ShipBrowserControl()
         {
             InitializeComponent();
@@ -52,12 +55,14 @@ namespace EVEMon.SkillPlanner
                 // force the label to fit the panel
                 pnlShipDescription_Changed(null, null);
 
-                bool allKnown = true;
-                allKnown = SetShipSkillLabel(0, lblShipSkill1, s.RequiredSkills) && allKnown;
-                allKnown = SetShipSkillLabel(1, lblShipSkill2, s.RequiredSkills) && allKnown;
-                allKnown = SetShipSkillLabel(2, lblShipSkill3, s.RequiredSkills) && allKnown;
+                m_allSkillsKnown = true;
+                m_skillsUnplanned = false;
 
-                if (!allKnown)
+                SetShipSkillLabel(0, lblShipSkill1, s.RequiredSkills);
+                SetShipSkillLabel(1, lblShipSkill2, s.RequiredSkills);
+                SetShipSkillLabel(2, lblShipSkill3, s.RequiredSkills);
+
+                if (! m_allSkillsKnown)
                 {
                     List<Pair<GrandSkill, int>> reqSkills = new List<Pair<GrandSkill, int>>();
                     foreach (ShipRequiredSkill srs in s.RequiredSkills)
@@ -72,11 +77,18 @@ namespace EVEMon.SkillPlanner
                                                GrandSkill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                     DescriptiveTextOptions.SpaceText);
-                    btnShipSkillsAdd.Enabled = true;
+                    
                 }
                 else
                 {
                     lblShipTimeRequired.Text = String.Empty;
+                }
+                if (m_skillsUnplanned)
+                {
+                    btnShipSkillsAdd.Enabled = true;
+                }
+                else
+                {
                     btnShipSkillsAdd.Enabled = false;
                 }
 
@@ -108,7 +120,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private bool SetShipSkillLabel(int rnum, Label skillLabel, List<ShipRequiredSkill> list)
+        private void SetShipSkillLabel(int rnum, Label skillLabel, List<ShipRequiredSkill> list)
         {
             if (list.Count > rnum)
             {
@@ -120,16 +132,20 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (Plan.IsPlanned(gs))
                 {
-                    addText = " (planned)";
+                    addText = " (Planned)";
+                    m_allSkillsKnown = false;
+                }
+                else
+                {
+                    m_allSkillsKnown = false;
+                    m_skillsUnplanned = true;
                 }
                 skillLabel.Text = list[rnum].Name + " " +
                                   GrandSkill.GetRomanForInt(list[rnum].Level) + addText;
-                return (addText.Length > 0);
             }
             else
             {
                 skillLabel.Text = String.Empty;
-                return true;
             }
         }
 
@@ -165,6 +181,7 @@ namespace EVEMon.SkillPlanner
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }
             AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
+            shipSelectControl_SelectedShipChanged(new Object(), new EventArgs());
         }
 
         private void pnlShipDescription_Changed(object sender, EventArgs e)
