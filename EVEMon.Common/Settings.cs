@@ -1083,7 +1083,8 @@ namespace EVEMon.Common
                 reader.ReadEndElement();
                 reader.MoveToContent();
             }
-            reader.ReadEndElement();
+            if(this.Count != 0)
+                reader.ReadEndElement();
             reader.ReadEndElement();
         }
 
