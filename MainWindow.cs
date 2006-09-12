@@ -243,12 +243,15 @@ namespace EVEMon
             this.Invoke(new MethodInvoker(delegate
             {
                 SortedList<TimeSpan, GrandCharacterInfo> gcis = new SortedList<TimeSpan, GrandCharacterInfo>();
+                int selectedCharId = 0; 
                 foreach (TabPage tp in tcCharacterTabs.TabPages)
                 {
                     CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
                     if (cm != null && cm.GrandCharacterInfo != null && cm.GrandCharacterInfo.CurrentlyTrainingSkill != null)
                     {
                         GrandCharacterInfo gci = cm.GrandCharacterInfo;
+                        // Remember the Char ID of the currently selected TabPage
+                        if (tcCharacterTabs.SelectedTab.Text.Equals(tp.Text)) selectedCharId = gci.CharacterId;
                         GrandSkill gs = gci.CurrentlyTrainingSkill;
                         TimeSpan ts = gs.EstimatedCompletion - DateTime.Now;
                         if (ts > TimeSpan.Zero)
@@ -259,9 +262,9 @@ namespace EVEMon
                         }
                     }
                 }
-                
                 //there are real optimization opportunities here - this gets updated every second
                 StringBuilder sb = new StringBuilder();
+                StringBuilder tsb = new StringBuilder();
                 sb.Append("EVEMon");
                 foreach (GrandCharacterInfo gci in gcis.Values)
                 {
@@ -281,12 +284,9 @@ namespace EVEMon
 
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished)
                     {
-                        //show the time finished
                         sb.Append(gci.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g"));      // This can probably be formatted better
                         sb.Append(" - ");
-                        
                     }
-
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining)
                     {
                         //show the time to completion
@@ -297,6 +297,46 @@ namespace EVEMon
                     {
                         sb.Remove(sb.Length - 3, 3);
                     }
+                    if (m_settings.TitleToTime && gcis.Count > 0)
+                    {
+                        switch(m_settings.TitleToTimeLayout)
+                        {
+                            case 1: // single Char - finishing skill next
+                                if (tsb.Length == 0)
+                                {
+                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
+                                    DescriptiveTextOptions.Default) + " " + gci.Name);
+                                }
+                                break;
+                            case 2: // single Char - selected char
+                                if (selectedCharId == gci.CharacterId)
+                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
+                                    DescriptiveTextOptions.Default) + " " + gci.Name);
+                                break;
+                            case 3: // multi Char - finishing skill next first
+                                tsb.Append( (tsb.Length > 0 ? " | " : "") + GrandSkill.TimeSpanToDescriptiveText(
+                                gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
+                                DescriptiveTextOptions.Default) + " " + gci.Name );
+                                break;
+                            case 4: // multi Char - selected char first 
+                                if (selectedCharId == gci.CharacterId)
+                                {
+                                    tsb.Insert(0, GrandSkill.TimeSpanToDescriptiveText(
+                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
+                                    DescriptiveTextOptions.Default) + " " + gci.Name + (tsb.Length > 0 ? " | " : ""));
+                                }
+                                else
+                                {
+                                    if (tsb.Length > 0) tsb.Append(" | ");
+                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
+                                    DescriptiveTextOptions.Default) + " " + gci.Name);
+                                }
+                                break;
+                        }
+                    }
                 }
                 string sbOut = sb.ToString() ;
                 if (sbOut.Equals("EVEMon\n"))
@@ -305,19 +345,8 @@ namespace EVEMon
                 }
                 
                 SetMinimizedIconTooltipText(sbOut);
-
-                if (m_settings.TitleToTime && gcis.Count > 0)
-                {
-                    StringBuilder tsb = new StringBuilder();
-                    GrandCharacterInfo gci = gcis.Values[0];
-                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
-                        gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                        DescriptiveTextOptions.Default));
-                    tsb.Append(" - ");
-                    tsb.Append(gci.Name);
-                    tsb.Append(" - EVEMon");
-                    this.Text = tsb.ToString();
-                }
+                tsb.Append(" - EVEMon");
+                this.Text = tsb.ToString();
 
                 //SortedList<TimeSpan, string> shortInfos = new SortedList<TimeSpan, string>();
                 //foreach (TabPage tp in tcCharacterTabs.TabPages)

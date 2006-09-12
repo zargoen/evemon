@@ -36,6 +36,7 @@ namespace EVEMon
             s.MinimizeToTray = cbMinimizeToTray.Checked;
             s.CloseToTray = cbCloseToTray.Checked;
             s.TitleToTime = cbTitleToTime.Checked;
+            s.TitleToTimeLayout = cbWindowsTitleList.SelectedIndex + 1;
             s.WorksafeMode = cbWorksafeMode.Checked;
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
@@ -152,6 +153,7 @@ namespace EVEMon
             cbMinimizeToTray.Checked = m_settings.MinimizeToTray;
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
+            cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout -1;
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
@@ -422,6 +424,11 @@ namespace EVEMon
             }
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
+        }
+
+        private void cbTitleToTime_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         

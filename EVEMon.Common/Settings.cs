@@ -277,6 +277,14 @@ namespace EVEMon.Common
             set { m_titleToTime = value; }
         }
 
+        private int m_titleToTimeLayout = 0;
+
+        public int TitleToTimeLayout 
+        {
+            get { return m_titleToTimeLayout; }
+            set { m_titleToTimeLayout = value; }
+        }
+
         #region Plan Settings
         private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
 
