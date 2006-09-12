@@ -15,6 +15,9 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.RememberDistanceKey = "ItemBrowser";
         }
 
+        private bool m_allSkillsKnown;
+        private bool m_skillsUnplanned;
+
         private Plan m_plan = null;
 
         public Plan Plan
@@ -89,12 +92,14 @@ namespace EVEMon.SkillPlanner
                     lbItemProperties.EndUpdate();
                 }
 
-                bool allKnown = true;
-                allKnown = SetSkillLabel(0, lblItemSkill1, i) && allKnown;
-                allKnown = SetSkillLabel(1, lblItemSkill2, i) && allKnown;
-                allKnown = SetSkillLabel(2, lblItemSkill3, i) && allKnown;
+                m_allSkillsKnown = true;
+                m_skillsUnplanned = false;
 
-                if (!allKnown)
+                SetSkillLabel(0, lblItemSkill1, i);
+                SetSkillLabel(1, lblItemSkill2, i);
+                SetSkillLabel(2, lblItemSkill3, i);
+
+                if (!m_allSkillsKnown)
                 {
                     List<Pair<GrandSkill, int>> reqSkills = new List<Pair<GrandSkill, int>>();
                     foreach (ItemRequiredSkill irs in i.RequiredSkills)
@@ -109,11 +114,18 @@ namespace EVEMon.SkillPlanner
                                                GrandSkill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                     DescriptiveTextOptions.SpaceText);
+                }
+                else 
+                {
+                    lblItemTimeRequired.Text = String.Empty;
+                    btnItemSkillsAdd.Enabled = false;
+                }
+                if (m_skillsUnplanned)
+                {
                     btnItemSkillsAdd.Enabled = true;
                 }
                 else
                 {
-                    lblItemTimeRequired.Text = String.Empty;
                     btnItemSkillsAdd.Enabled = false;
                 }
 
@@ -146,13 +158,12 @@ namespace EVEMon.SkillPlanner
             return System.Convert.ToString(Math.Round(Value, 2)) + " %";
         }
 
-        private bool SetSkillLabel(int skillNum, Label lblSkill, Item i)
+        private void SetSkillLabel(int skillNum, Label lblSkill, Item i)
         {
-            bool isKnown = true;
             if (i.RequiredSkills.Count <= skillNum)
             {
                 lblSkill.Text = String.Empty;
-                return isKnown;
+                return;
             }
 
             ItemRequiredSkill rs = i.RequiredSkills[skillNum];
@@ -167,23 +178,22 @@ namespace EVEMon.SkillPlanner
                 if (gs.Level >= rs.Level)
                 {
                     sb.Append(" (Known)");
-                    isKnown = true;
                 }
                 else
                 {
                     if (m_plan.IsPlanned(gs, rs.Level))
                     {
                         sb.Append(" (Planned)");
-                        isKnown = true;
+                        m_allSkillsKnown = false;
                     }
                     else
                     {
-                        isKnown = false;
+                        m_allSkillsKnown = false;
+                        m_skillsUnplanned = true;
                     }
                 }
             }
             lblSkill.Text = sb.ToString();
-            return isKnown;
         }
 
         private void GotItemImage(int itemId, Image i)
@@ -223,6 +233,7 @@ namespace EVEMon.SkillPlanner
                 skillsToAdd.Add(new Pair<string, int>(irs.Name, irs.Level));
             }
             AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
+            itemSelectControl1_SelectedItemChanged(new Object(), new EventArgs());
         }
     }
 }
