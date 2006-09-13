@@ -131,16 +131,53 @@ namespace EVEMon.SkillPlanner
 
                 if (!String.IsNullOrEmpty(i.Icon))
                 {
-                    EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
-                                             delegate(EveSession sess, Image img)
-                                             {
-                                                 if (
-                                                     itemSelectControl1.
-                                                         SelectedItem == i)
+                    bool pic_got = false;
+                    System.Resources.IResourceReader basic;
+                    if (i.ParentCategory != null && i.ParentCategory.Name != "Drone Upgrades" && i.ParentCategory.ParentCategory != null && ((i.ParentCategory.ParentCategory.Name == "Drones") || (i.ParentCategory.ParentCategory.ParentCategory != null && i.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
+                    {
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Drones64_64.resources"))
+                        {
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Drones64_64.resources");
+                            System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                            while (basicx.MoveNext())
+                            {
+                                if (basicx.Key.ToString() == "_" + i.Id)
+                                {
+                                    pbItemIcon.Image = (System.Drawing.Image)basicx.Value;
+                                    pic_got = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Items64_64.resources"))
+                        {
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Items64_64.resources");
+                            System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                            while (basicx.MoveNext())
+                            {
+                                if (basicx.Key.ToString() == i.Icon.ToString().Substring(i.Icon.ToString().LastIndexOf('/') + 1, i.Icon.ToString().Substring(i.Icon.ToString().LastIndexOf('/') + 1).Length - 4))
+                                {
+                                    pbItemIcon.Image = (System.Drawing.Image)basicx.Value;
+                                    pic_got = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!pic_got)
+                    {
+                        EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
+                                                 delegate(EveSession sess, Image img)
                                                  {
-                                                     GotItemImage(i.Id, img);
-                                                 }
-                                             });
+                                                     if (
+                                                         itemSelectControl1.
+                                                             SelectedItem == i)
+                                                     {
+                                                         GotItemImage(i.Id, img);
+                                                     }
+                                                 });
+                    }
                 }
             }
         }

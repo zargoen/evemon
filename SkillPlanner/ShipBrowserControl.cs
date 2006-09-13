@@ -42,12 +42,29 @@ namespace EVEMon.SkillPlanner
             {
                 Ship s = shipSelectControl.SelectedShip;
                 int shipId = s.Id;
-                EveSession.GetImageAsync(
-                    "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
-                    shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
-                                                          {
-                                                              GotShipImage(shipId, i);
-                                                          });
+
+                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Ships256_256.resources"))
+                {
+                    System.Resources.IResourceReader basic;
+                    basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Ships256_256.resources");
+                    System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                    while (basicx.MoveNext())
+                    {
+                        if (basicx.Key.ToString() == "_" + s.Id)
+                        {
+                            pbShipImage.Image = (System.Drawing.Image)basicx.Value;
+                        }
+                    }
+                }
+                else
+                {
+                    EveSession.GetImageAsync(
+                        "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
+                        shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
+                                                              {
+                                                                  GotShipImage(shipId, i);
+                                                              });
+                }
 
                 lblShipClass.Text = s.Type + " > " + s.Race;
                 lblShipName.Text = s.Name;
