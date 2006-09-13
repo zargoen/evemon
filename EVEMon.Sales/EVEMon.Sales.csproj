@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CXIParser.cs" />
     <Compile Include="IMineralParser.cs" />
     <Compile Include="MatariParser.cs" />
     <Compile Include="MineralTile.cs">
