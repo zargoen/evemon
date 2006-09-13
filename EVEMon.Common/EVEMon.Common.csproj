@@ -71,7 +71,6 @@
     <Compile Include="GrandCharacterInfo.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="App.config" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Schedule\ScheduleItem.cs" />
     <Compile Include="SerializableCharacterInfo.cs" />

@@ -210,7 +210,7 @@ namespace EVEMon.Common
             {
                 throw new ApplicationException("GetCharacterList() issue: " + ex.Message);
             }
-    }
+        }
 
         private List<Pair<string, int>> m_storedCharacterList = null;
 
