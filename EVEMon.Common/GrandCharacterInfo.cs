@@ -694,6 +694,11 @@ namespace EVEMon.Common
                     gs.Known = true;
                 }
             }
+            // You need to trigger the plans to update here before the following line executes...
+            // ...this is the only time the plans should remove items due to the skill completing.
+            // If the update to the plans runs after the next line here or there is any concern
+            // about timing issues then you need to harvest the skill info for the character first
+            // and pass that to the event
             this.check_training_skills(ci.SkillInTraining);
             this.ResumeEvents();
         }
