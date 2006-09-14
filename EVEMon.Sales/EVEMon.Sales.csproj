@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BattleclinicParser.cs" />
     <Compile Include="CXIParser.cs" />
     <Compile Include="IMineralParser.cs" />
     <Compile Include="MatariParser.cs" />
