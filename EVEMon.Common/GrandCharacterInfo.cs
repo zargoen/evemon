@@ -692,13 +692,9 @@ namespace EVEMon.Common
                     }
                     gs.CurrentSkillPoints = s.SkillPoints;
                     gs.Known = true;
+                    gs.LvlisChanged = false;
                 }
             }
-            // You need to trigger the plans to update here before the following line executes...
-            // ...this is the only time the plans should remove items due to the skill completing.
-            // If the update to the plans runs after the next line here or there is any concern
-            // about timing issues then you need to harvest the skill info for the character first
-            // and pass that to the event
             this.check_training_skills(ci.SkillInTraining);
             this.ResumeEvents();
         }
@@ -745,18 +741,21 @@ namespace EVEMon.Common
                         {
                             if (old_skill.old_skill_completed)
                             {
+                                newTrainingSkill.LvlisChanged = true; ;
                                 newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
                                 old_skill.old_skill_completed = true;
                             }
                             if (!old_skill.old_skill_completed)
                             {
                                 OnDownloadAttemptComplete(this.Name, old_skill.old_SkillName, true);
+                                newTrainingSkill.LvlisChanged = true;
                                 newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
                                 old_skill.old_skill_completed = true;
                             }
                         }
                         else if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {
+                            newTrainingSkill.LvlisChanged = true;
                             newTrainingSkill.SetTrainingInfo(old_skill.old_TrainingToLevel,
                                                              DateTime.Now + this.GetSkill(old_skill.old_SkillName).GetTrainingTimeToLevel(old_skill.old_TrainingToLevel));
                         }
@@ -813,18 +812,21 @@ namespace EVEMon.Common
                         {
                             if (old_skill.old_skill_completed && SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel == old_skill.old_TrainingToLevel)
                             {
+                                newTrainingSkill.LvlisChanged = true;
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
                                 old_skill.old_skill_completed = true;
                             }
                             if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (SkillInTraining.SkillName != old_skill.old_SkillName || (SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel != old_skill.old_TrainingToLevel))))
                             {
                                 OnDownloadAttemptComplete(this.Name, SkillInTraining.SkillName, true);
+                                newTrainingSkill.LvlisChanged = true;
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
                                 old_skill = new OldSkillinfo(newTrainingSkill.Name, SkillInTraining.TrainingToLevel, true);
                             }
                         }
                         else if (SkillInTraining.NeededPoints > SkillInTraining.CurrentPoints)
                         {
+                            newTrainingSkill.LvlisChanged = true;
                             newTrainingSkill.SetTrainingInfo(SkillInTraining.TrainingToLevel,
                                                              SkillInTraining.EstimatedCompletion);
                         }
@@ -902,6 +904,7 @@ namespace EVEMon.Common
             GrandSkill newlyCompletedSkill = this.GetSkill(skillName);
             if (newlyCompletedSkill != null)
             {
+                newlyCompletedSkill.LvlisChanged = true;
                 newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
                 old_skill = new OldSkillinfo(newlyCompletedSkill.Name, newlyCompletedSkill.TrainingToLevel, true);
                 this.CancelCurrentSkillTraining();
@@ -1613,6 +1616,7 @@ namespace EVEMon.Common
         private IEnumerable<Prereq> m_prereqs;
         private static IDictionary<string, GrandSkill> sm_allSkills;
         private int m_currentSkillPoints;
+        private bool m_changed;
 
         public GrandSkill(GrandCharacterInfo gci, bool pub, string name, int id, string description,
                           EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs)
@@ -1627,6 +1631,13 @@ namespace EVEMon.Common
             m_secondaryAttribute = a2;
             m_rank = rank;
             m_prereqs = prereqs;
+            m_changed = false;
+        }
+
+        public bool LvlisChanged
+        {
+            get { return m_changed; }
+            set { m_changed = value; }
         }
 
         private GrandSkillGroup m_skillGroup;
