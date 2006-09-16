@@ -469,7 +469,7 @@ namespace EVEMon.Common
                     {
                         throw new ApplicationException("The plan contains invalid skills.");
                     }
-                    if (gs.Level >= pe.Level)
+                    if (gs.LastConfirmedLvl >= pe.Level)
                     {
                         m_entries.RemoveAt(i);
                         i--;
