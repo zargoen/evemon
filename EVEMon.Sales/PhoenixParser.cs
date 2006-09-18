@@ -32,7 +32,7 @@ namespace EVEMon.Sales
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
         {
-            string data = null;
+            string data;
             try
             {
                 data = EVEMonWebRequest.GetUrlString("http://www.phoenix-industries.org/");
@@ -59,13 +59,10 @@ namespace EVEMon.Sales
             mLine = mLine.Replace("Morp", "Morphite");
 
             MatchCollection mc = mineralTokenizer.Matches(mLine);
-            Decimal price = 0;
             foreach (Match mineral in mc)
             {
                 string name = mineral.Groups["name"].Value;
-                CultureInfo culture = new CultureInfo("en-US");
-                NumberFormatInfo numInfo = culture.NumberFormat;
-                price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, numInfo);
+                Decimal price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture);
                 yield return new Pair<string, Decimal>(name, price);
             }
         }

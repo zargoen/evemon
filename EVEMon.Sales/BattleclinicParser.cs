@@ -19,7 +19,7 @@ namespace EVEMon.Sales
         #region BattleclinicParser Members
         public string Title
         {
-            get { return "Battleclinic.com EVE Wide Averages"; }
+            get { return "Battleclinic.com EVE Averages"; }
         }
 
         public string CourtesyUrl
@@ -29,12 +29,12 @@ namespace EVEMon.Sales
 
         public string CourtesyText
         {
-            get { return "Battleclinic.com EVE Wide Averages"; }
+            get { return "Battleclinic.com"; }
         }
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
         {
-            string content = null;
+            string content;
             try
             {
                 content = EVEMonWebRequest.GetUrlString("http://eve.battleclinic.com/eve_online/market.php?feed=xml");
@@ -49,22 +49,11 @@ namespace EVEMon.Sales
             
             MatchCollection mc = mineralTokenizer.Matches(content);
 
-            Decimal price = 0;
             foreach (Match mineral in mc)
             {
                 string name = mineral.Groups["name"].Value;
 
-                try
-                {
-                    CultureInfo culture = new CultureInfo("en-US");
-                    NumberFormatInfo numInfo = culture.NumberFormat;
-                    price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, numInfo);
-                }
-                catch (FormatException fe)
-                {
-                    ExceptionHandler.LogException(fe, true);
-                    throw new MineralParserException(fe.Message + " (value was : " + mineral.Groups["price"].Value + ")");
-                }
+                Decimal price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture);
                 yield return new Pair<string, Decimal>(name, price);
             }
         }

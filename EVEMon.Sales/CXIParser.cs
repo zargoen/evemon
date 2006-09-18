@@ -32,7 +32,7 @@ namespace EVEMon.Sales
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
         {
-            string content = null;
+            string content;
             try
             {
                 content = EVEMonWebRequest.GetUrlString("http://cxi-minerals.fallenreality.net/cxi-eve-mon-prices.txt");
@@ -47,22 +47,11 @@ namespace EVEMon.Sales
             
             MatchCollection mc = mineralTokenizer.Matches(content);
 
-            Decimal price = 0;
             foreach (Match mineral in mc)
             {
                 string name = mineral.Groups["name"].Value;
 
-                try
-                {
-                    CultureInfo culture = new CultureInfo("en-US");
-                    NumberFormatInfo numInfo = culture.NumberFormat;
-                    price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, numInfo);
-                }
-                catch (FormatException fe)
-                {
-                    ExceptionHandler.LogException(fe, true);
-                    throw new MineralParserException(fe.Message + " (value was : " + mineral.Groups["price"].Value + ")");
-                }
+                Decimal price = Decimal.Parse(mineral.Groups["price"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture);
                 yield return new Pair<string, Decimal>(name, price);
             }
         }
