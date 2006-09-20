@@ -19,12 +19,14 @@ namespace EVEMon
 
         private Settings m_settings;
         private bool startMinimized;
+        private bool updateFlag;
 
         public MainWindow(Settings s, bool startMinimized)
             : this()
         {
             m_settings = s;
             this.startMinimized = startMinimized;
+            this.updateFlag = false;
         }
 
         private IGBService.IGBServer m_igbServer;
@@ -183,6 +185,7 @@ namespace EVEMon
                         f.ShowDialog();
                         if (f.DialogResult == DialogResult.OK)
                         {
+                            this.updateFlag = true;
                             this.Close();
                         }
                     }
@@ -670,7 +673,7 @@ namespace EVEMon
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (m_settings.CloseToTray && this.Visible)
+            if (m_settings.CloseToTray && this.Visible && this.updateFlag == false)
             {
                 e.Cancel = true;
                 niMinimizeIcon.Visible = true;
