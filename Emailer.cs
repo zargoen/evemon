@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using EVEMon.Common;
+using System.Text;
 
 namespace EVEMon
 {
@@ -29,9 +30,25 @@ namespace EVEMon
 
         public static bool SendAlertMail(Settings settings, string skillName, string charName)
         {
-            return SendMail(settings,
-                            charName + " skill " + skillName + " complete",
-                            charName + " has finished training " + skillName);
+            StringBuilder messageText = charName + " has finished training " + skillName + "\r\n\r\nNext skills listed in plans:\r\n\r\n";
+            foreach (string planName in settings.GetPlansForCharacter(charName))
+            {
+                Plan p = settings.GetPlanByName(charName, planName);
+                if (p.Entries.Count > 0)
+                {
+                    int i = 0;
+                    while (i < p.Entries.Count && p.Entries[i].Skill.Known)
+                    {
+                        if (!p.Entries[i].Skill.Known)
+                        {
+                            messageText.Append(planName + ":\r\n\t" + p.Entries[i].SkillName + " " + p.Entries[i].Level + "\r\n\r\n");
+                            i = p.Entries.Count;
+                        }
+                        i++;
+                    }
+                }
+            }
+            return SendMail(settings, charName + " skill " + skillName + " complete", messageText.ToString());
         }
 
         private static bool SendMail(Settings settings, string subject, string body)
