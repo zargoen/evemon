@@ -391,6 +391,8 @@ namespace EVEMon
             string groupname = null;
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)].DefaultValue.ToString();
+            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group" + (cbSkillIconSet.SelectedIndex + 1) + "//" + groupname + ".resources")) || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources"))
+                groupname = null;
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");

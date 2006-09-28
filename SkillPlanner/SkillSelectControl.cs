@@ -162,6 +162,8 @@ namespace EVEMon.SkillPlanner
             string groupname = null;
             if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group" + index + "//" + groupname + ".resources")) || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources"))
+                groupname = null;
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//icons//Skill_Select//Group0//Default.resources");

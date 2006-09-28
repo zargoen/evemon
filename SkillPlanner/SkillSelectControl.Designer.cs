@@ -234,15 +234,15 @@ namespace EVEMon.SkillPlanner
             // 
             this.ilSkillIcons1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilSkillIcons1.ImageStream")));
             this.ilSkillIcons1.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilSkillIcons1.Images.SetKeyName(0, "book.ico");
-            this.ilSkillIcons1.Images.SetKeyName(1, "PrereqsNOTMet.ico");
-            this.ilSkillIcons1.Images.SetKeyName(2, "PrereqsMet.ico");
-            this.ilSkillIcons1.Images.SetKeyName(3, "lvl0.ico");
-            this.ilSkillIcons1.Images.SetKeyName(4, "lvl1.ico");
-            this.ilSkillIcons1.Images.SetKeyName(5, "lvl2.ico");
-            this.ilSkillIcons1.Images.SetKeyName(6, "lvl3.ico");
-            this.ilSkillIcons1.Images.SetKeyName(7, "lvl4.ico");
-            this.ilSkillIcons1.Images.SetKeyName(8, "lvl5.ico");
+            this.ilSkillIcons1.Images.SetKeyName(0, "book");
+            this.ilSkillIcons1.Images.SetKeyName(1, "PrereqsNOTMet");
+            this.ilSkillIcons1.Images.SetKeyName(2, "PrereqsMet");
+            this.ilSkillIcons1.Images.SetKeyName(3, "lvl0");
+            this.ilSkillIcons1.Images.SetKeyName(4, "lvl1");
+            this.ilSkillIcons1.Images.SetKeyName(5, "lvl2");
+            this.ilSkillIcons1.Images.SetKeyName(6, "lvl3");
+            this.ilSkillIcons1.Images.SetKeyName(7, "lvl4");
+            this.ilSkillIcons1.Images.SetKeyName(8, "lvl5");
             // 
             // panel1
             // 
