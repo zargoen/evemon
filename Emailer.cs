@@ -30,22 +30,56 @@ namespace EVEMon
 
         public static bool SendAlertMail(Settings settings, string skillName, string charName)
         {
-            StringBuilder messageText = charName + " has finished training " + skillName + "\r\n\r\nNext skills listed in plans:\r\n\r\n";
-            foreach (string planName in settings.GetPlansForCharacter(charName))
+            StringBuilder messageText = new StringBuilder();
+            messageText.Append(charName + " has finished training " + skillName + "\r\n\r\nNext skills listed in plans:\r\n\r\n");
+            
+            foreach (string  planName in settings.GetPlansForCharacter(charName))
             {
+                
                 Plan p = settings.GetPlanByName(charName, planName);
                 if (p.Entries.Count > 0)
                 {
+                    EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                    messageText.Append(planName + ":\r\n");
                     int i = 0;
-                    while (i < p.Entries.Count && p.Entries[i].Skill.Known)
+                    int minDays = 1;                    
+                    foreach (Plan.Entry entry in p.Entries)
                     {
-                        if (!p.Entries[i].Skill.Known)
+                        
+                        if (entry.Level > entry.Skill.LastConfirmedLvl)
                         {
-                            messageText.Append(planName + ":\r\n\t" + p.Entries[i].SkillName + " " + p.Entries[i].Level + "\r\n\r\n");
-                            i = p.Entries.Count;
+                            TimeSpan trainTime = entry.Skill.GetTrainingTimeOfLevelOnly(entry.Level, true, scratchpad);
+                            //show 5 skills + day epoch skills
+                            if (++i <= 3 || trainTime.Days > minDays)
+                            {
+                                if (i > 3)
+                                {
+                                    //print long message once
+                                    if(minDays == 1)
+                                        messageText.Append("\r\n" + "Longer skills from "+planName+":\r\n");
+
+                                    minDays = trainTime.Days + minDays;
+                                }
+                                messageText.Append("\t" + entry.SkillName +
+                                    " " + entry.Level);
+
+                                if (entry.Notes != null && entry.Notes.Length > 0)
+                                {
+                                    messageText.Append(" (" + entry.Notes + ")");
+                                }
+                                
+                                string timeText = String.Format("{0:00}:{1:00}:{2:00}", trainTime.Hours, trainTime.Minutes, trainTime.Seconds);
+
+                                if(trainTime.Days > 0)
+                                    messageText.Append(" - " + trainTime.Days + "d, " + timeText);
+                                else
+                                    messageText.Append(" - " + timeText);
+                                
+                                messageText.Append("\r\n");
+                            }
                         }
-                        i++;
                     }
+                    messageText.Append("\r\n");
                 }
             }
             return SendMail(settings, charName + " skill " + skillName + " complete", messageText.ToString());

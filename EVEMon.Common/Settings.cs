@@ -308,20 +308,28 @@ namespace EVEMon.Common
 
         public Plan GetPlanByName(string charName, string planName)
         {
+            Plan p = null;
             foreach (Pair<string, Plan> x in m_plans)
             {
                 if (planName == PLAN_DEFAULT && x.A == charName)
                 {
                     x.B.Name = PLAN_DEFAULT;
-                    return x.B;
+                    p =  x.B;
+                    break;
                 }
                 else if (x.A == charName + "::" + planName)
                 {
                     x.B.Name = planName;
-                    return x.B;
+                    p =  x.B;
+                    break;
                 }
             }
-            return null;
+           
+            GrandCharacterInfo gci = new GrandCharacterInfo(this.GetCharacterInfo(charName).CharacterId, charName);
+            gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
+
+            p.GrandCharacterInfo = gci;
+            return p;
         }
 
         public void AddPlanFor(string charName, Plan plan, string planName)
