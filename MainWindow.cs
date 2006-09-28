@@ -695,7 +695,7 @@ namespace EVEMon
 
         private void tsbAbout_Click(object sender, EventArgs e)
         {
-            Emailer.SendAlertMail(m_settings, "Battleships omg", "Anders Chydenius");
+            //Debugging Purposes Emailer.SendAlertMail(m_settings, "Battleships omg", "Anders Chydenius");
             using (AboutWindow f = new AboutWindow())
             {
                 f.ShowDialog();
