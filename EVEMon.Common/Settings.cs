@@ -324,6 +324,8 @@ namespace EVEMon.Common
                     break;
                 }
             }
+            if (p == null)
+                return p;
            
             GrandCharacterInfo gci = new GrandCharacterInfo(this.GetCharacterInfo(charName).CharacterId, charName);
             gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
