@@ -68,7 +68,7 @@ namespace EVEMon.SkillPlanner
 
                 lblShipClass.Text = s.Type + " > " + s.Race;
                 lblShipName.Text = s.Name;
-                lblShipDescription.Text = Regex.Replace(s.Description, "<. +?>", String.Empty, RegexOptions.Singleline);
+                lblShipDescription.Text = Regex.Replace(s.Description, "<.+?>", String.Empty, RegexOptions.Singleline);
                 // force the label to fit the panel
                 pnlShipDescription_Changed(null, null);
 
