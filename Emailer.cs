@@ -31,8 +31,24 @@ namespace EVEMon
         public static bool SendAlertMail(Settings settings, string skillName, string charName)
         {
             StringBuilder messageText = new StringBuilder();
-            messageText.Append(charName + " has finished training " + skillName + "\r\n\r\nNext skills listed in plans:\r\n\r\n");
+            int skillLevel = settings.GetCharacterInfo(charName).GetSkill(skillName).Level;
+
+            messageText.Append(charName + " has finished training " + skillName + " ");
+            string skillLevelString;
+
+            switch (skillLevel)
+            {
+                case 1: skillLevelString = "I"; break;
+                case 2: skillLevelString="II"; break;
+                case 3: skillLevelString="III"; break;
+                case 4: skillLevelString="IV"; break;
+                case 5: skillLevelString="V"; break;
+                default: skillLevelString = "0"; break;
+            }
+
+            messageText.Append("\r\n\r\nNext skills listed in plans:\r\n\r\n");           
             
+
             foreach (string  planName in settings.GetPlansForCharacter(charName))
             {
                 
@@ -82,7 +98,8 @@ namespace EVEMon
                     messageText.Append("\r\n");
                 }
             }
-            return SendMail(settings, charName + " skill " + skillName + " complete", messageText.ToString());
+            return SendMail(settings, charName + " has finished training " + skillName + " " + skillLevelString, messageText.ToString());
+            //return SendMail(settings, charName + " skill " + skillName + " " + skillLevelString + " complete", messageText.ToString());
         }
 
         private static bool SendMail(Settings settings, string subject, string body)
