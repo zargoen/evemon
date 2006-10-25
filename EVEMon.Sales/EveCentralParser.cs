@@ -1,35 +1,36 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
+using System.Text;
 using EVEMon.Common;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace EVEMon.Sales
 {
-    [DefaultMineralParser("battleclinic")]
-    public class BattleclinicParser : IMineralParser
+    [DefaultMineralParser("evecentral")]
+    class EveCentralParser:IMineralParser
     {
 
         private static Regex mineralTokenizer =
             new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
-                      RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline 
+                      RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline
                         | RegexOptions.Multiline
                         | RegexOptions.IgnoreCase);
 
-        #region BattleclinicParser Members
+        #region Parser Information
         public string Title
         {
-            get { return "Battleclinic.com EVE Averages"; }
+            get { return "EVE-Central Mineral Feed"; }
         }
 
         public string CourtesyUrl
         {
-            get { return "http://eve.battleclinic.com/eve_online/market.php"; }
+            get { return "http://eve-central.com"; }
         }
 
         public string CourtesyText
         {
-            get { return "Battleclinic.com"; }
+            get { return "Eve-Central"; }
         }
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
@@ -37,7 +38,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://eve.battleclinic.com/eve_online/market.php?feed=xml");
+                content = EVEMonWebRequest.GetUrlString("http://eve-central.com/home/marketstat_xml.html?evemon=1");
             }
             catch (EVEMonNetworkException ne)
             {
@@ -46,7 +47,6 @@ namespace EVEMon.Sales
             }
 
             //scan for prices
-            
             MatchCollection mc = mineralTokenizer.Matches(content);
 
             foreach (Match mineral in mc)
