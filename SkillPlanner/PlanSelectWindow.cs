@@ -54,7 +54,16 @@ namespace EVEMon.SkillPlanner
 
                 foreach (string planName in m_settings.GetPlansForCharacter(m_charKey))
                 {
-                    lbPlanList.Items.Add(planName);
+					Plan tmp_plan = m_settings.GetPlanByName(m_charKey, planName);
+					TimeSpan ts_plan = tmp_plan.GetTotalTime(null);
+					ListViewItem lvi = new ListViewItem(planName);
+					lvi.Text = planName;
+					lvi.SubItems.Add(GrandSkill.TimeSpanToDescriptiveText(	ts_plan,
+                                                                            DescriptiveTextOptions.FullText |
+                                                                            DescriptiveTextOptions.IncludeCommas |
+                                                                            DescriptiveTextOptions.SpaceText));
+					lvi.SubItems.Add(tmp_plan.UniqueSkillCount.ToString());
+					lbPlanList.Items.Add(lvi);
                 }
             }
             finally
@@ -65,37 +74,33 @@ namespace EVEMon.SkillPlanner
 
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbPlanList.SelectionMode == SelectionMode.MultiExtended)
+            if (lbPlanList.SelectedIndices.Contains(0))
             {
-                if (lbPlanList.SelectedIndices.Contains(0))
-                {
-                    lbPlanList.SelectionMode = SelectionMode.One;
-                    lbPlanList.SelectedIndex = 0;
-                }
-            }
-            else
-            {
-                if (lbPlanList.SelectedIndex != 0)
-                {
-                    lbPlanList.SelectionMode = SelectionMode.MultiExtended;
-                }
+				for (int i = 1; i < lbPlanList.SelectedIndices.Count; i++) {
+					lbPlanList.SelectedIndices.Remove(i);
+				}
             }
 
-            btnOpen.Enabled = (lbPlanList.SelectedItem != null);
-            tsbRenamePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 &&
-                                     lbPlanList.SelectedItems.Count == 1);
-            tsbDeletePlan.Enabled = (lbPlanList.SelectedItem != null && lbPlanList.SelectedIndex > 0 &&
-                                     lbPlanList.SelectedItems.Count == 1);
-            btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
+			if( lbPlanList.SelectedItems != null ) {
+				btnOpen.Enabled=true;
+				if (lbPlanList.SelectedItems.Count == 1) {
+					tsbRenamePlan.Enabled = (lbPlanList.SelectedIndices[0] != 0);
+					tsbDeletePlan.Enabled = (lbPlanList.SelectedIndices[0] != 0);
+				}
+			} else {
+				btnOpen.Enabled=false;
+			}
 
-            if (lbPlanList.SelectedItem == null || lbPlanList.SelectedItems.Count > 1)
+			btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
+
+            if (lbPlanList.SelectedItems == null || lbPlanList.SelectedItems.Count != 1)
             {
                 tsbMoveUp.Enabled = false;
                 tsbMoveDown.Enabled = false;
             }
-            else
+            else 
             {
-                int idx = lbPlanList.SelectedIndex;
+                int idx = lbPlanList.SelectedIndices[0];
                 tsbMoveUp.Enabled = (idx > 1);
                 tsbMoveDown.Enabled = (idx < lbPlanList.Items.Count - 1 && idx > 0);
             }
@@ -114,9 +119,9 @@ namespace EVEMon.SkillPlanner
             {
                 m_result = new Plan();
 
-                foreach (object plan in lbPlanList.SelectedItems)
+                foreach (ListViewItem plan in lbPlanList.SelectedItems)
                 {
-                    string s = (string) plan;
+                    string s = (string) plan.Text;
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
                     foreach (Plan.Entry entry in p.Entries)
                     {
@@ -127,13 +132,13 @@ namespace EVEMon.SkillPlanner
                     }
                 }
             }
-            else if (lbPlanList.SelectedIndex == 0)
+            else if (lbPlanList.SelectedIndices[0] == 0)
             {
                 m_result = null;
             }
             else
             {
-                string s = (string) lbPlanList.SelectedItem;
+                string s = (string) lbPlanList.SelectedItems[0].Text;
                 m_result = m_settings.GetPlanByName(m_charKey, s);
             }
             DialogResult = DialogResult.OK;
@@ -285,7 +290,7 @@ namespace EVEMon.SkillPlanner
                 {
                     return;
                 }
-                string oldName = (string) lbPlanList.SelectedItem;
+                string oldName = (string) lbPlanList.SelectedItems[0].Text;
                 string newName = f.Result;
                 if (oldName == newName)
                 {
@@ -306,17 +311,17 @@ namespace EVEMon.SkillPlanner
 
         private void tsbMoveUp_Click(object sender, EventArgs e)
         {
-            int idx = lbPlanList.SelectedIndex;
+            int idx = lbPlanList.SelectedIndices[0];
             List<string> newOrder = new List<string>();
             for (int i = 1; i < lbPlanList.Items.Count; i++)
             {
                 if (i == idx - 1)
                 {
-                    newOrder.Add((string) lbPlanList.SelectedItem);
+                    newOrder.Add((string) lbPlanList.SelectedItems[0].Text);
                 }
                 if (i != idx)
                 {
-                    newOrder.Add((string) lbPlanList.Items[i]);
+                    newOrder.Add((string) lbPlanList.Items[i].Text);
                 }
             }
             FinalizePlanReorder(idx - 1, newOrder);
@@ -330,7 +335,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 PopulatePlanList();
-                lbPlanList.SelectedIndex = idx;
+				lbPlanList.SelectedIndices.Clear();
             }
             finally
             {
@@ -340,17 +345,17 @@ namespace EVEMon.SkillPlanner
 
         private void tsbMoveDown_Click(object sender, EventArgs e)
         {
-            int idx = lbPlanList.SelectedIndex;
+            int idx = lbPlanList.SelectedIndices[0];
             List<string> newOrder = new List<string>();
             for (int i = 1; i < lbPlanList.Items.Count; i++)
             {
                 if (i != idx)
                 {
-                    newOrder.Add((string) lbPlanList.Items[i]);
+                    newOrder.Add((string) lbPlanList.Items[i].Text);
                 }
                 if (i == idx + 1)
                 {
-                    newOrder.Add((string) lbPlanList.SelectedItem);
+                    newOrder.Add((string) lbPlanList.SelectedItems[0].Text);
                 }
             }
             FinalizePlanReorder(idx + 1, newOrder);
@@ -358,7 +363,7 @@ namespace EVEMon.SkillPlanner
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            string planName = (string) lbPlanList.SelectedItem;
+            string planName = (string) lbPlanList.SelectedItems[0].Text;
 
             DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + planName +
                                               "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
@@ -375,5 +380,9 @@ namespace EVEMon.SkillPlanner
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
         }
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e) {
+
+		}
     }
 }
