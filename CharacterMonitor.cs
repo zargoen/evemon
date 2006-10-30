@@ -536,28 +536,62 @@ namespace EVEMon
 
         private void UpdateCachedCopy()
         {
-            if (m_session != null)
+            //if (m_session != null)
+            //{
+            SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+            m_settings.SetCharacterCache(sci);
+            if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
             {
-                SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
-                m_settings.SetCharacterCache(sci);
                 int toremove;
+                bool add = true;
                 do
                 {
                     toremove = -1;
                     foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
                     {
-                        if (x.A == m_charName && (x != new Pair<string, OldSkillinfo>(m_charName,m_grandCharacterInfo.OldTrainingSkill)))
-                            toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                        if (x.A == m_charName)
+                        {
+                            if (x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
+                            {
+                                add = false;
+                                x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
+                                x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
+                                if (!x.B.old_skill_completed)
+                                    toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                            }
+                            else
+                                toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                        }
                     }
                     if (toremove != -1)
                         m_settings.OldSkillLearnt.RemoveAt(toremove);
                 } while (toremove != -1);
-                if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
-                {
+                if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
                     m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
+            }
+            m_settings.Save();
+            /*}
+            else
+            {
+                SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+                m_settings.SetCharacterCache(sci);
+                if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
+                {
+                    bool add = true;
+                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+                    {
+                        if (x.A == m_charName && x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
+                        {
+                            add = false;
+                            x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
+                            x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
+                        }
+                    }
+                    if (add)
+                        m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
                 }
                 m_settings.Save();
-            }
+            }*/
         }
 
         private void GotCharacterImage(EveSession sender, Image i)
@@ -679,7 +713,7 @@ namespace EVEMon
             {
                 if (x.A == m_charName)
                 {
-                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed);
+                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
                 }
             }
         }
