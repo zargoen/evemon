@@ -1764,29 +1764,12 @@ namespace EVEMon.Common
             {
                 return 0;
             }
-            int pointsForLevel = Convert.ToInt32(250*m_rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
-            // There's some sort of weird rounding error
-            // these values need to be corrected by one.
-            if (pointsForLevel == 1414)
-            {
-                pointsForLevel = 1415;
-            }
-            else if (pointsForLevel == 2828)
-            {
-                pointsForLevel = 2829;
-            }
-            else if (pointsForLevel == 7071)
-            {
-                pointsForLevel = 7072;
-            }
-            else if (pointsForLevel == 181019)
-            {
-                pointsForLevel = 181020;
-            }
-            else if (pointsForLevel == 226274)
-            {
-                pointsForLevel = 226275;
-            }
+           
+            /* original formula is not accurate and required lots of tweaks. The new formula is accurate and matches other skill
+               point formulae both on forums and in other skill tools */
+            //int pointsForLevel = Convert.ToInt32(250*m_rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
+            
+            int pointsForLevel = Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * m_rank));
             return pointsForLevel;
         }
 
