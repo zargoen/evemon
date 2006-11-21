@@ -31,7 +31,7 @@ namespace EVEMon
         public static bool SendAlertMail(Settings settings, string skillName, string charName)
         {
             StringBuilder messageText = new StringBuilder();
-            int skillLevel = settings.GetCharacterInfo(charName).GetSkill(skillName).Level;
+            int skillLevel = settings.GetCharacterInfo(charName).GetSkill(skillName).Level+1;
 
             messageText.Append(charName + " has finished training " + skillName + " ");
             string skillLevelString;

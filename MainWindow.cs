@@ -441,9 +441,23 @@ namespace EVEMon
 
                     if (m_settings.EnableBalloonTips)
                     {
-                        string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
-                        m_completedSkills.Add(sa);
+                        //level + 1 is a fairly safe assumption here... the order of operations on this thing is all noodled up.
+                        int skillLevel = m_settings.GetCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level+1;
+                        string skillLevelString;
 
+                        switch (skillLevel)
+                        {
+                            case 1: skillLevelString = "I"; break;
+                            case 2: skillLevelString = "II"; break;
+                            case 3: skillLevelString = "III"; break;
+                            case 4: skillLevelString = "IV"; break;
+                            case 5: skillLevelString = "V"; break;
+                            default: skillLevelString = "0"; break;
+                        }
+                        string sa = e.CharacterName + " has finished learning " + e.SkillName + " " + skillLevelString + ".";
+
+                        m_completedSkills.Add(sa);
+                        
                         niAlertIcon.Text = "EVEMon - Skill Training Completed";
                         niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                         if (m_completedSkills.Count == 1)
