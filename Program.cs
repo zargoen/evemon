@@ -59,6 +59,35 @@ namespace EVEMon
 
             //Application.Run(new Form1(ca));
             s_settings = Settings.LoadFromKey(m_settingKey);
+            if (s_settings.UseLogitechG15Display) {
+                try
+                {
+                    LCD = EVEMon.LogitechG15.Lcdisplay.Instance();
+                    LcdThread = new Thread(LCD.Start);
+                   LcdThread.Name = "LCD Thread";
+                    LcdThread.Start();
+                }
+                catch (Exception exx)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Debugger.Break();
+                    }
+                    else
+                    {
+                        LcdErrorsEncountered = true;
+                        if (LcdThread != null && LcdThread.IsAlive && LCD != null)
+                        {
+                            LCD.Stop();
+                            LcdThread.Join();
+                            LCD.Dispose();
+                        }
+                        LCD = null;
+                        LcdThread = null;
+                    }
+                }
+            }            
+
             Application.Run(new MainWindow(s_settings, startMinimized));
             s_settings.Save();
 
@@ -67,6 +96,18 @@ namespace EVEMon
             {
                 m_logger.Dispose();
             }
+            if (LcdThread != null && LcdThread.IsAlive)
+            {
+                if (LCD != null)
+                {
+                    LCD.Stop();
+                    LcdThread.Join();
+                    LCD.Dispose();
+                }
+                LCD = null;
+                LcdThread = null;
+            }
+
         }
 
         private static MainWindow m_mainWindow;
@@ -94,6 +135,39 @@ namespace EVEMon
             }
             InternalSetRelocatorState(state);
         }
+
+        public static EVEMon.LogitechG15.Lcdisplay LCD;
+        private static Thread LcdThread;
+        private static bool LcdErrorsEncountered = false;
+        private static void UseLogitechG15DisplayChanged(object sender, EventArgs e)
+        {
+            if (LcdErrorsEncountered)
+                return;
+            if (s_settings.UseLogitechG15Display)
+            {
+                LCD = EVEMon.LogitechG15.Lcdisplay.Instance();
+                LcdThread = new Thread(LCD.Start);
+                LcdThread.Name = "LCD Thread";
+                LcdThread.Start();
+                s_settings.UseLogitechG15Display = true;
+                s_settings.Save();
+            }
+            else
+            {
+                if (LcdThread != null && LcdThread.IsAlive)
+                {
+                    if (LCD != null)
+                    {
+                        LCD.Stop();
+                        LcdThread.Join();
+                        LCD.Dispose();
+                    }
+                }
+                LCD = null;
+                LcdThread = null;
+            }
+        }
+
 
         private static void InternalSetRelocatorState(bool state)
         {

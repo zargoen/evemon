@@ -38,6 +38,33 @@ namespace EVEMon.Common
             set { m_character = value; }
         }        
 
+        private bool m_useLogitechG15Display = false;
+        public bool UseLogitechG15Display {
+            get { return m_useLogitechG15Display; }
+            set { m_useLogitechG15Display = value; OnUseLogitechG15DisplayChanged(); }
+        }
+
+        public bool m_g15acycle = false;
+        public bool G15ACycle
+        {
+            get { return m_g15acycle; }
+            set { m_g15acycle = value; }
+        }
+
+        public int m_g15acycleint = 20;
+        public int G15ACycleint
+        {
+            get { return m_g15acycleint; }
+            set { m_g15acycleint = value; }
+        }
+
+        private void OnUseLogitechG15DisplayChanged() {
+            if (UseLogitechG15DisplayChanged != null)
+                UseLogitechG15DisplayChanged(this, new EventArgs());
+        }
+
+        public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
+
         #region Skill Planner Highlighting
         private bool m_HighlightPlannedSkills;
         public event EventHandler<EventArgs> HighlightPlannedSkillsChanged;

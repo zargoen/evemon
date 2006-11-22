@@ -45,6 +45,15 @@ namespace EVEMon
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
+            s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
+            s.G15ACycle = cbG15ACycle.Checked;
+            s.G15ACycleint = (int)ACycleInterval.Value;
+            if (Program.LCD != null)
+            {
+                Program.LCD.cycle = cbG15ACycle.Checked;
+                Program.LCD.cycleint = (int)ACycleInterval.Value;
+            }
+
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -158,6 +167,10 @@ namespace EVEMon
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
+            cbG15ACycle.Checked = m_settings.G15ACycle;
+            cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
+            ACycleInterval.Value = m_settings.G15ACycleint;
+
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
             else
@@ -427,12 +440,5 @@ namespace EVEMon
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
         }
-
-        private void cbTitleToTime_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        
     }
 }

@@ -95,6 +95,12 @@ namespace EVEMon
             this.cbTooltipOptionSkill = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionDate = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionETA = new System.Windows.Forms.CheckBox();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
+            this.cbG15ACycle = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -152,9 +158,9 @@ namespace EVEMon
             this.cbAutomaticEOSkillUpdate = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.cbCheckTranquilityStatus = new System.Windows.Forms.CheckBox();
-            this.numericStatusInterval = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.numericStatusInterval = new System.Windows.Forms.NumericUpDown();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
@@ -178,6 +184,9 @@ namespace EVEMon
             this.flpScreenSelect.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.gboxTooltipOptions.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.flowLayoutPanel23.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -571,6 +580,7 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox2);
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
             this.verticalFlowPanel1.Controls.Add(this.gboxTooltipOptions);
+            this.verticalFlowPanel1.Controls.Add(this.groupBox12);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
@@ -773,7 +783,7 @@ namespace EVEMon
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionETA);
             this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 225);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
-            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 113);
+            this.gboxTooltipOptions.Size = new System.Drawing.Size(362, 110);
             this.gboxTooltipOptions.TabIndex = 7;
             this.gboxTooltipOptions.TabStop = false;
             this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
@@ -781,7 +791,7 @@ namespace EVEMon
             // cbTooltipOptionName
             // 
             this.cbTooltipOptionName.AutoSize = true;
-            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 19);
+            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 20);
             this.cbTooltipOptionName.Name = "cbTooltipOptionName";
             this.cbTooltipOptionName.Size = new System.Drawing.Size(104, 17);
             this.cbTooltipOptionName.TabIndex = 5;
@@ -819,6 +829,86 @@ namespace EVEMon
             this.cbTooltipOptionETA.TabIndex = 2;
             this.cbTooltipOptionETA.Text = "Time to Completion";
             this.cbTooltipOptionETA.UseVisualStyleBackColor = true;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.AutoSize = true;
+            this.groupBox12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox12.Controls.Add(this.flowLayoutPanel23);
+            this.groupBox12.Controls.Add(this.label17);
+            this.groupBox12.Controls.Add(this.ACycleInterval);
+            this.groupBox12.Location = new System.Drawing.Point(3, 341);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(362, 84);
+            this.groupBox12.TabIndex = 5;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "G15 Display";
+            // 
+            // flowLayoutPanel23
+            // 
+            this.flowLayoutPanel23.AutoSize = true;
+            this.flowLayoutPanel23.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel23.Controls.Add(this.cbUseLogitechG15Display);
+            this.flowLayoutPanel23.Controls.Add(this.cbG15ACycle);
+            this.flowLayoutPanel23.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel23.Location = new System.Drawing.Point(3, 17);
+            this.flowLayoutPanel23.Name = "flowLayoutPanel23";
+            this.flowLayoutPanel23.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.flowLayoutPanel23.Size = new System.Drawing.Size(138, 46);
+            this.flowLayoutPanel23.TabIndex = 4;
+            // 
+            // cbUseLogitechG15Display
+            // 
+            this.cbUseLogitechG15Display.AutoSize = true;
+            this.cbUseLogitechG15Display.Location = new System.Drawing.Point(12, 3);
+            this.cbUseLogitechG15Display.Name = "cbUseLogitechG15Display";
+            this.cbUseLogitechG15Display.Size = new System.Drawing.Size(103, 17);
+            this.cbUseLogitechG15Display.TabIndex = 3;
+            this.cbUseLogitechG15Display.Text = "Use G15 Display";
+            this.cbUseLogitechG15Display.UseVisualStyleBackColor = true;
+            // 
+            // cbG15ACycle
+            // 
+            this.cbG15ACycle.AutoSize = true;
+            this.cbG15ACycle.Location = new System.Drawing.Point(12, 26);
+            this.cbG15ACycle.Name = "cbG15ACycle";
+            this.cbG15ACycle.Size = new System.Drawing.Size(114, 17);
+            this.cbG15ACycle.TabIndex = 3;
+            this.cbG15ACycle.Text = "Cycle Chars every";
+            this.cbG15ACycle.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(200, 47);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(46, 13);
+            this.label17.TabIndex = 10;
+            this.label17.Text = "seconds";
+            // 
+            // ACycleInterval
+            // 
+            this.ACycleInterval.Location = new System.Drawing.Point(147, 43);
+            this.ACycleInterval.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            this.ACycleInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ACycleInterval.Name = "ACycleInterval";
+            this.ACycleInterval.Size = new System.Drawing.Size(47, 21);
+            this.ACycleInterval.TabIndex = 8;
+            this.ACycleInterval.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // tabPage5
             // 
@@ -919,7 +1009,6 @@ namespace EVEMon
             this.cbTitleToTime.TabIndex = 6;
             this.cbTitleToTime.Text = "Set titlebar to : ";
             this.cbTitleToTime.UseVisualStyleBackColor = true;
-            this.cbTitleToTime.CheckedChanged += new System.EventHandler(this.cbTitleToTime_CheckedChanged);
             // 
             // cbWindowsTitleList
             // 
@@ -1541,9 +1630,9 @@ namespace EVEMon
             this.groupBox7.AutoSize = true;
             this.groupBox7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox7.Controls.Add(this.cbCheckTranquilityStatus);
-            this.groupBox7.Controls.Add(this.numericStatusInterval);
             this.groupBox7.Controls.Add(this.label14);
             this.groupBox7.Controls.Add(this.label15);
+            this.groupBox7.Controls.Add(this.numericStatusInterval);
             this.groupBox7.Location = new System.Drawing.Point(3, 193);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(222, 79);
@@ -1562,9 +1651,27 @@ namespace EVEMon
             this.cbCheckTranquilityStatus.UseVisualStyleBackColor = true;
             this.cbCheckTranquilityStatus.CheckedChanged += new System.EventHandler(this.cbCheckTranquilityStatus_CheckedChanged);
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 40);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(107, 13);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Update Status Every";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(172, 40);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(44, 13);
+            this.label15.TabIndex = 2;
+            this.label15.Text = "minutes";
+            // 
             // numericStatusInterval
             // 
-            this.numericStatusInterval.Location = new System.Drawing.Point(119, 38);
+            this.numericStatusInterval.Location = new System.Drawing.Point(118, 38);
             this.numericStatusInterval.Maximum = new decimal(new int[] {
             60,
             0,
@@ -1583,24 +1690,6 @@ namespace EVEMon
             0,
             0,
             0});
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 40);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(107, 13);
-            this.label14.TabIndex = 1;
-            this.label14.Text = "Update Status Every";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(172, 40);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(44, 13);
-            this.label15.TabIndex = 2;
-            this.label15.Text = "minutes";
             // 
             // flowLayoutPanel7
             // 
@@ -1727,6 +1816,11 @@ namespace EVEMon
             this.flowLayoutPanel4.PerformLayout();
             this.gboxTooltipOptions.ResumeLayout(false);
             this.gboxTooltipOptions.PerformLayout();
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
+            this.flowLayoutPanel23.ResumeLayout(false);
+            this.flowLayoutPanel23.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
@@ -1914,5 +2008,11 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel22;
         private System.Windows.Forms.CheckBox cbTitleToTime;
         private System.Windows.Forms.ComboBox cbWindowsTitleList;
+        private System.Windows.Forms.CheckBox cbG15ACycle;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel23;
+        private System.Windows.Forms.CheckBox cbUseLogitechG15Display;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown ACycleInterval;
     }
 }
