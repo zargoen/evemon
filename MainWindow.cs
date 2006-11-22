@@ -40,6 +40,7 @@ namespace EVEMon
             this.RememberPositionKey = "MainWindow";
             Program.MainWindow = this;
             niMinimizeIcon.Text = Application.ProductName;
+            niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
 
             if (!String.IsNullOrEmpty(m_settings.Username) &&
                 !String.IsNullOrEmpty(m_settings.Password) &&
@@ -598,11 +599,12 @@ namespace EVEMon
             {
                 sf.ShowDialog();
             }
+            niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
         }
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized && m_settings.MinimizeToTray)
+            if (this.WindowState == FormWindowState.Minimized && !m_settings.SystemTrayOptionsIsNever)
             {
                 niMinimizeIcon.Visible = true;
                 this.Visible = false;
@@ -632,7 +634,7 @@ namespace EVEMon
                 this.WindowState = FormWindowState.Normal;
                 this.ShowInTaskbar = true;
                 this.Activate();
-                this.niMinimizeIcon.Visible = false;
+                this.niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
             }
 
             if (this.m_tooltipWindow != null && (this.m_tooltipWindow.IsAlive && this.m_tooltipWindow.Target != null))
@@ -693,7 +695,7 @@ namespace EVEMon
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (m_settings.CloseToTray && this.Visible && this.updateFlag == false)
+            if (!m_settings.SystemTrayOptionsIsNever && m_settings.CloseToTray && this.Visible && !this.updateFlag)
             {
                 e.Cancel = true;
                 niMinimizeIcon.Visible = true;
@@ -988,7 +990,7 @@ namespace EVEMon
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
             this.Activate();
-            this.niMinimizeIcon.Visible = false;
+            this.niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1075,4 +1077,5 @@ namespace EVEMon
     
     }
 }
+
 

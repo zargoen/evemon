@@ -269,12 +269,27 @@ namespace EVEMon.Common
 
         #endregion // Email Settings
 
-        private bool m_minimizeToTray = true;
+        private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;
 
-        public bool MinimizeToTray
+        public SystemTrayDisplayOptions SystemTrayOptions
         {
-            get { return m_minimizeToTray; }
-            set { m_minimizeToTray = value; }
+            get { return m_systemTrayOptions; }
+            set { m_systemTrayOptions = value; }
+        }
+
+        public bool SystemTrayOptionsIsNever
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Never; }
+        }
+
+        public bool SystemTrayOptionsIsMinimized
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Minimized; }
+        }
+
+        public bool SystemTrayOptionsIsAlways
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Always; }
         }
 
         private string m_ignoreUpdateVersion = "0.0.0.0";
@@ -1094,6 +1109,13 @@ namespace EVEMon.Common
         TimeRemaining = 4,
         TimeFinished = 8,
         Blank = 16
+    }
+
+    public enum SystemTrayDisplayOptions
+    {
+        Never = 1,
+        Minimized = 2,
+        Always = 3
     }
 
     [XmlRoot]

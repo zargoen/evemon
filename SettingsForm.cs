@@ -33,7 +33,14 @@ namespace EVEMon
             // Look and feel options
             s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
-            s.MinimizeToTray = cbMinimizeToTray.Checked;
+
+            if (rbSystemTrayOptionsNever.Checked)
+                s.SystemTrayOptions = SystemTrayDisplayOptions.Never;
+            else if (rbSystemTrayOptionsMinimized.Checked)
+                s.SystemTrayOptions = SystemTrayDisplayOptions.Minimized;
+            else if (rbSystemTrayOptionsAlways.Checked)
+                s.SystemTrayOptions = SystemTrayDisplayOptions.Always;
+
             s.CloseToTray = cbCloseToTray.Checked;
             s.TitleToTime = cbTitleToTime.Checked;
             s.TitleToTimeLayout = cbWindowsTitleList.SelectedIndex + 1;
@@ -159,7 +166,11 @@ namespace EVEMon
             tabControl1.SelectedTab = tabControl1.TabPages[0];
 
             // Look and feel options
-            cbMinimizeToTray.Checked = m_settings.MinimizeToTray;
+
+            rbSystemTrayOptionsNever.Checked = m_settings.SystemTrayOptionsIsNever;
+            rbSystemTrayOptionsMinimized.Checked = m_settings.SystemTrayOptionsIsMinimized;
+            rbSystemTrayOptionsAlways.Checked = m_settings.SystemTrayOptionsIsAlways;
+
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
             cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout -1;
@@ -439,6 +450,12 @@ namespace EVEMon
             }
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
+        }
+
+        private void rbSystemTrayOptionsNever_CheckedChanged(object sender, EventArgs e)
+        {
+            cbCloseToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
+            gboxTooltipOptions.Enabled = !rbSystemTrayOptionsNever.Checked;
         }
     }
 }

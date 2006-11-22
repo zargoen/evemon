@@ -77,7 +77,12 @@ namespace EVEMon
             this.verticalFlowPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbMinimizeToTray = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label18 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel24 = new System.Windows.Forms.FlowLayoutPanel();
+            this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
+            this.rbSystemTrayOptionsMinimized = new System.Windows.Forms.RadioButton();
+            this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
             this.cbCloseToTray = new System.Windows.Forms.CheckBox();
             this.cbRunAtStartup = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -177,6 +182,8 @@ namespace EVEMon
             this.verticalFlowPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.flowLayoutPanel24.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -597,7 +604,7 @@ namespace EVEMon
             this.groupBox1.Controls.Add(this.flowLayoutPanel2);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(362, 89);
+            this.groupBox1.Size = new System.Drawing.Size(362, 91);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Window Settings";
@@ -606,7 +613,7 @@ namespace EVEMon
             // 
             this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel2.Controls.Add(this.cbMinimizeToTray);
+            this.flowLayoutPanel2.Controls.Add(this.panel1);
             this.flowLayoutPanel2.Controls.Add(this.cbCloseToTray);
             this.flowLayoutPanel2.Controls.Add(this.cbRunAtStartup);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -614,23 +621,82 @@ namespace EVEMon
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(356, 69);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(356, 71);
             this.flowLayoutPanel2.TabIndex = 3;
             // 
-            // cbMinimizeToTray
+            // panel1
             // 
-            this.cbMinimizeToTray.AutoSize = true;
-            this.cbMinimizeToTray.Location = new System.Drawing.Point(12, 3);
-            this.cbMinimizeToTray.Name = "cbMinimizeToTray";
-            this.cbMinimizeToTray.Size = new System.Drawing.Size(103, 17);
-            this.cbMinimizeToTray.TabIndex = 0;
-            this.cbMinimizeToTray.Text = "Minimize to Tray";
-            this.cbMinimizeToTray.UseVisualStyleBackColor = true;
+            this.panel1.Controls.Add(this.label18);
+            this.panel1.Controls.Add(this.flowLayoutPanel24);
+            this.panel1.Location = new System.Drawing.Point(12, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(328, 25);
+            this.panel1.TabIndex = 8;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(-1, 5);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(73, 13);
+            this.label18.TabIndex = 0;
+            this.label18.Text = "Show in Tray:";
+            // 
+            // flowLayoutPanel24
+            // 
+            this.flowLayoutPanel24.Controls.Add(this.rbSystemTrayOptionsNever);
+            this.flowLayoutPanel24.Controls.Add(this.rbSystemTrayOptionsMinimized);
+            this.flowLayoutPanel24.Controls.Add(this.rbSystemTrayOptionsAlways);
+            this.flowLayoutPanel24.Location = new System.Drawing.Point(78, 0);
+            this.flowLayoutPanel24.Name = "flowLayoutPanel24";
+            this.flowLayoutPanel24.Size = new System.Drawing.Size(250, 25);
+            this.flowLayoutPanel24.TabIndex = 5;
+            // 
+            // rbSystemTrayOptionsNever
+            // 
+            this.rbSystemTrayOptionsNever.AutoSize = true;
+            this.rbSystemTrayOptionsNever.Location = new System.Drawing.Point(3, 3);
+            this.rbSystemTrayOptionsNever.Name = "rbSystemTrayOptionsNever";
+            this.rbSystemTrayOptionsNever.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsNever.Size = new System.Drawing.Size(57, 17);
+            this.rbSystemTrayOptionsNever.TabIndex = 1;
+            this.rbSystemTrayOptionsNever.TabStop = true;
+            this.rbSystemTrayOptionsNever.Tag = "";
+            this.rbSystemTrayOptionsNever.Text = "Never";
+            this.rbSystemTrayOptionsNever.UseVisualStyleBackColor = true;
+            this.rbSystemTrayOptionsNever.CheckedChanged += new System.EventHandler(this.rbSystemTrayOptionsNever_CheckedChanged);
+            // 
+            // rbSystemTrayOptionsMinimized
+            // 
+            this.rbSystemTrayOptionsMinimized.AutoSize = true;
+            this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(66, 3);
+            this.rbSystemTrayOptionsMinimized.Name = "rbSystemTrayOptionsMinimized";
+            this.rbSystemTrayOptionsMinimized.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(104, 17);
+            this.rbSystemTrayOptionsMinimized.TabIndex = 2;
+            this.rbSystemTrayOptionsMinimized.TabStop = true;
+            this.rbSystemTrayOptionsMinimized.Tag = "";
+            this.rbSystemTrayOptionsMinimized.Text = "When Minimized";
+            this.rbSystemTrayOptionsMinimized.UseVisualStyleBackColor = true;
+            // 
+            // rbSystemTrayOptionsAlways
+            // 
+            this.rbSystemTrayOptionsAlways.AutoSize = true;
+            this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(176, 3);
+            this.rbSystemTrayOptionsAlways.Name = "rbSystemTrayOptionsAlways";
+            this.rbSystemTrayOptionsAlways.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(62, 17);
+            this.rbSystemTrayOptionsAlways.TabIndex = 3;
+            this.rbSystemTrayOptionsAlways.TabStop = true;
+            this.rbSystemTrayOptionsAlways.Tag = "";
+            this.rbSystemTrayOptionsAlways.Text = "Always";
+            this.rbSystemTrayOptionsAlways.UseVisualStyleBackColor = true;
             // 
             // cbCloseToTray
             // 
             this.cbCloseToTray.AutoSize = true;
-            this.cbCloseToTray.Location = new System.Drawing.Point(12, 26);
+            this.cbCloseToTray.Location = new System.Drawing.Point(12, 28);
             this.cbCloseToTray.Name = "cbCloseToTray";
             this.cbCloseToTray.Size = new System.Drawing.Size(90, 17);
             this.cbCloseToTray.TabIndex = 3;
@@ -640,7 +706,7 @@ namespace EVEMon
             // cbRunAtStartup
             // 
             this.cbRunAtStartup.AutoSize = true;
-            this.cbRunAtStartup.Location = new System.Drawing.Point(12, 49);
+            this.cbRunAtStartup.Location = new System.Drawing.Point(12, 51);
             this.cbRunAtStartup.Name = "cbRunAtStartup";
             this.cbRunAtStartup.Size = new System.Drawing.Size(138, 17);
             this.cbRunAtStartup.TabIndex = 4;
@@ -655,7 +721,7 @@ namespace EVEMon
             this.groupBox2.AutoSize = true;
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 98);
+            this.groupBox2.Location = new System.Drawing.Point(3, 100);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(362, 43);
             this.groupBox2.TabIndex = 5;
@@ -682,7 +748,7 @@ namespace EVEMon
             this.groupBox5.AutoSize = true;
             this.groupBox5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox5.Controls.Add(this.flowLayoutPanel1);
-            this.groupBox5.Location = new System.Drawing.Point(3, 147);
+            this.groupBox5.Location = new System.Drawing.Point(3, 149);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(362, 72);
             this.groupBox5.TabIndex = 6;
@@ -781,7 +847,7 @@ namespace EVEMon
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionSkill);
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionDate);
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionETA);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 225);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 227);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
             this.gboxTooltipOptions.Size = new System.Drawing.Size(362, 110);
             this.gboxTooltipOptions.TabIndex = 7;
@@ -1802,6 +1868,10 @@ namespace EVEMon
             this.groupBox1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.flowLayoutPanel24.ResumeLayout(false);
+            this.flowLayoutPanel24.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -2001,7 +2071,6 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.CheckBox cbMinimizeToTray;
         private System.Windows.Forms.CheckBox cbCloseToTray;
         private System.Windows.Forms.CheckBox cbRunAtStartup;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel21;
@@ -2014,5 +2083,11 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbUseLogitechG15Display;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.NumericUpDown ACycleInterval;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel24;
+        private System.Windows.Forms.RadioButton rbSystemTrayOptionsNever;
+        private System.Windows.Forms.RadioButton rbSystemTrayOptionsMinimized;
+        private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
+        private System.Windows.Forms.Panel panel1;
     }
 }
