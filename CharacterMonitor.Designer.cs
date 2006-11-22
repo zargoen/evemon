@@ -73,6 +73,8 @@ namespace EVEMon
             this.tmrThrobber = new System.Windows.Forms.Timer(this.components);
             this.cmsPictureOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.updatePicture = new System.Windows.Forms.ToolStripMenuItem();
+            this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
+            this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
@@ -601,6 +603,11 @@ namespace EVEMon
             // 
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updatePicture});
+            this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.updatePictureFromEVECache});
+            this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.setEVEFolder});
+
             this.cmsPictureOptions.Name = "contextMenuStrip1";
             this.cmsPictureOptions.Size = new System.Drawing.Size(157, 26);
             // 
@@ -610,6 +617,20 @@ namespace EVEMon
             this.updatePicture.Size = new System.Drawing.Size(156, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
+            // 
+            // updatePictureFromEVECache
+            // 
+            this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(156, 22);
+            this.updatePictureFromEVECache.Text = "Update Picture From EVE Cache";
+            this.updatePictureFromEVECache.Click += new System.EventHandler(this.mi_UpdatePictureFromEVECache_Click);
+            // 
+            // setEVEFolder
+            // 
+            this.setEVEFolder.Name = "setEVEFolder";
+            this.setEVEFolder.Size = new System.Drawing.Size(156, 22);
+            this.setEVEFolder.Text = "Set EVE Folder";
+            this.setEVEFolder.Click += new System.EventHandler(this.mi_setEVEFolder_Click);
             // 
             // lbSkills
             // 
@@ -716,6 +737,8 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
         private System.Windows.Forms.Label lblSPPerHour;
         private System.Windows.Forms.ToolStripMenuItem updatePicture;
+        private System.Windows.Forms.ToolStripMenuItem updatePictureFromEVECache;
+        private System.Windows.Forms.ToolStripMenuItem setEVEFolder;
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
     }
 }

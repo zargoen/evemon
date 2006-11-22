@@ -76,6 +76,12 @@
       <DependentUpon>CharSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="Emailer.cs" />
+    <Compile Include="EVEFolderWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EVEFolderWindow.Designer.cs">
+      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="IGBService\IGBServer.cs" />
     <Compile Include="InstallerDeleter.cs" />
     <Compile Include="InstanceManager.cs" />
@@ -380,6 +386,10 @@
     <EmbeddedResource Include="ChangeLoginWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ChangeLoginWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EVEFolderWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManualImplantDetailWindow.resx">
       <SubType>Designer</SubType>

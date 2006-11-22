@@ -20,6 +20,7 @@ namespace EVEMon.Common
         private string m_bloodLine;
         private string m_gender;
         private string m_corporationName;
+        private string m_EVEFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
         private MonitoredList<GrandEveAttributeBonus> m_attributeBonuses = new MonitoredList<GrandEveAttributeBonus>();
@@ -248,6 +249,18 @@ namespace EVEMon.Common
         }
 
         public event EventHandler BioInfoChanged;
+
+        public string EVEFolder
+        {
+            get { return m_EVEFolder; }
+            set
+            {
+                if (m_EVEFolder != value)
+                {
+                    m_EVEFolder = value;
+                }
+            }
+        }
 
         public Decimal Balance
         {
@@ -645,6 +658,10 @@ namespace EVEMon.Common
             this.Race = ci.Race;
             this.Bloodline = ci.BloodLine;
             this.CorporationName = ci.CorpName;
+            if (ci.IsCached == true)
+            {
+                this.EVEFolder = ci.EVEFolder;
+            }
             this.Balance = ci.Balance;
 
             this.BaseIntelligence = ci.Attributes.BaseIntelligence;
@@ -927,6 +944,7 @@ namespace EVEMon.Common
             ci.Race = this.Race;
             ci.BloodLine = this.Bloodline;
             ci.CorpName = this.CorporationName;
+            ci.EVEFolder = this.EVEFolder; // to CI
             ci.Balance = this.Balance;
 
             ci.Attributes.BaseIntelligence = this.BaseIntelligence;

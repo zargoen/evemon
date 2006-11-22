@@ -39,6 +39,12 @@
                   <xsl:value-of select="corporationName/child::text()"/>
                 </span>
               </div>
+              <div class="EVEFolder">
+                EVEFolder
+                <span class="EVEFolder">
+                  <xsl:value-of select="EVEFolder/child::text()"/>
+                </span>
+              </div>
               <div class="balanceInfo">
                 Balance:
                 <span class="balance">

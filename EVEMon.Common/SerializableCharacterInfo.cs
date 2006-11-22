@@ -201,6 +201,15 @@ namespace EVEMon.Common
             set { m_corpName = value; }
         }
 
+        private string m_EVEFolder = String.Empty;
+
+        [XmlElement("EVEFolder")]
+        public string EVEFolder
+        {
+            get { return m_EVEFolder; }
+            set { m_EVEFolder = value; }
+        }
+
         private Decimal m_balance;
 
         [XmlElement("balance")]

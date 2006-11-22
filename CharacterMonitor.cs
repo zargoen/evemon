@@ -543,6 +543,11 @@ namespace EVEMon
             UpdateCachedCopy();
         }
 
+        private void m_grandCharacterInfo_EVEFolderChanged(object sender, EventArgs e)
+        {
+            UpdateCachedCopy();
+        }
+
         private void UpdateCachedCopy()
         {
             //if (m_session != null)
@@ -1157,6 +1162,54 @@ namespace EVEMon
             pbCharImage.Image = null;
             EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId,
                                               new GetImageCallback(GotCharacterImage));
+        }
+
+        private void UpdateCharacterImageFromEVECache()
+        {
+            pbCharImage.Image = null;
+            Image i = null;
+            string[] imageSizeArray = { "772", "656", "612", "256", "128", "64" };
+            string eveCacheFileNameStub = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\" + this.GrandCharacterInfo.CharacterId.ToString();
+            string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+            foreach (string size in imageSizeArray)
+            {
+                string eveCacheFileName = eveCacheFileNameStub + "_" + size + ".png";
+                if (File.Exists(eveCacheFileName))
+                {
+                    try
+                    {
+                        FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
+                        FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
+                        i = Image.FromStream(fs1, true);
+                        i.Save(fs2, ImageFormat.Png);
+                        fs1.Close();
+                        fs1.Dispose();
+                        fs2.Close();
+                        fs2.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHandler.LogException(e, false);
+                    }
+                    break;
+                }
+            }
+            pbCharImage.Image = i;
+            updating_pic = false;
+        }
+
+        private void SetCharacterEVEFolder()
+        {
+            using (EVEFolderWindow f = new EVEFolderWindow())
+            {
+                f.EVEFolder = m_grandCharacterInfo.EVEFolder;
+                f.ShowDialog();
+                if (f.DialogResult == DialogResult.OK)
+                {
+                    m_grandCharacterInfo.EVEFolder = f.EVEFolder;
+                    UpdateCachedCopy();
+                }
+            }
         }
 
         private enum SaveFormat
@@ -2033,6 +2086,16 @@ namespace EVEMon
         private void mi_UpdatePicture_Click(object sender, EventArgs e)
         {
             UpdateCharacterImage();
+        }
+
+        private void mi_UpdatePictureFromEVECache_Click(object sender, EventArgs e)
+        {
+            UpdateCharacterImageFromEVECache();
+        }
+
+        private void mi_setEVEFolder_Click(object sender, EventArgs e)
+        {
+            SetCharacterEVEFolder();
         }
 
         private void pbCharImage_Click(object sender, EventArgs e)
