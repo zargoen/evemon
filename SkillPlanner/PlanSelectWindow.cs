@@ -335,7 +335,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 PopulatePlanList();
-				lbPlanList.SelectedIndices.Clear();
+                lbPlanList.Items[idx].Selected = true;
             }
             finally
             {

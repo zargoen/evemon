@@ -687,6 +687,8 @@ namespace EVEMon.SkillPlanner
                 if (dr == DialogResult.OK)
                 {
                     PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst);
+                    tsbMoveDown.Enabled = false;
+                    tsbMoveUp.Enabled = false;
                 }
             }
         }
