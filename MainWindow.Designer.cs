@@ -46,10 +46,10 @@ namespace EVEMon
             this.tsbRemoveChar = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbMineralSheet = new System.Windows.Forms.ToolStripButton();
-            this.tsbResetCache = new System.Windows.Forms.ToolStripButton();
             this.tsbSchedule = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
+            this.tsbResetCache = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -81,19 +81,19 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(124, 48);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(113, 48);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -129,9 +129,9 @@ namespace EVEMon
             this.tmrTranquilityClock.Enabled = true;
             this.tmrTranquilityClock.Interval = 5000;
             this.tmrTranquilityClock.Tick += new System.EventHandler(this.tmrClock_Tick);
-            //
+            // 
             // tmrLCDClock
-            //
+            // 
             this.tmrLCDClock.Enabled = true;
             this.tmrLCDClock.Interval = 50;
             this.tmrLCDClock.Tick += new System.EventHandler(this.tmrLCD_Tick);
@@ -188,16 +188,6 @@ namespace EVEMon
             this.tsbMineralSheet.Text = "Mineral Worksheet";
             this.tsbMineralSheet.Click += new System.EventHandler(this.tsbMineralSheet_Click);
             // 
-            // tsbResetCache
-            // 
-            this.tsbResetCache.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbResetCache.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetCache.Image")));
-            this.tsbResetCache.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbResetCache.Name = "tsbResetCache";
-            this.tsbResetCache.Size = new System.Drawing.Size(23, 22);
-            this.tsbResetCache.Text = "tsbResetCache";
-            this.tsbResetCache.Click += new System.EventHandler(this.btnResetCache_Click);
-            // 
             // tsbSchedule
             // 
             this.tsbSchedule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -222,6 +212,16 @@ namespace EVEMon
             this.tsbOptions.Size = new System.Drawing.Size(76, 22);
             this.tsbOptions.Text = "Options...";
             this.tsbOptions.Click += new System.EventHandler(this.tsbOptions_Click);
+            // 
+            // tsbResetCache
+            // 
+            this.tsbResetCache.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbResetCache.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetCache.Image")));
+            this.tsbResetCache.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbResetCache.Name = "tsbResetCache";
+            this.tsbResetCache.Size = new System.Drawing.Size(23, 22);
+            this.tsbResetCache.Text = "Reset Cache";
+            this.tsbResetCache.Click += new System.EventHandler(this.btnResetCache_Click);
             // 
             // tsbAbout
             // 
