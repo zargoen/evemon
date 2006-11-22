@@ -353,11 +353,19 @@ namespace EVEMon.Common
             }
             if (p == null)
                 return p;
-           
-            GrandCharacterInfo gci = new GrandCharacterInfo(this.GetCharacterInfo(charName).CharacterId, charName);
-            gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
 
-            p.GrandCharacterInfo = gci;
+            SerializableCharacterInfo sci = this.GetCharacterInfo(charName);
+            if (sci != null)
+            {
+                GrandCharacterInfo gci = new GrandCharacterInfo(sci.CharacterId, charName);
+                gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
+
+                p.GrandCharacterInfo = gci;
+            }
+            else
+            {
+                p.GrandCharacterInfo = null;
+            }
             return p;
         }
 

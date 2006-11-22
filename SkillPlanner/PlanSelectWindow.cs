@@ -55,6 +55,10 @@ namespace EVEMon.SkillPlanner
                 foreach (string planName in m_settings.GetPlansForCharacter(m_charKey))
                 {
 					Plan tmp_plan = m_settings.GetPlanByName(m_charKey, planName);
+                    if (tmp_plan.GrandCharacterInfo == null)
+                    {
+                        tmp_plan.GrandCharacterInfo = m_grandCharacterInfo;
+                    }
 					TimeSpan ts_plan = tmp_plan.GetTotalTime(null);
 					ListViewItem lvi = new ListViewItem(planName);
 					lvi.Text = planName;

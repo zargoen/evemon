@@ -46,9 +46,10 @@ namespace EVEMon.Common
                     if (m_grandCharacterInfo != null)
                     {
                         m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
+
+                        CheckForCompletedSkills();
+                        CheckForMissingPrerequisites();
                     }
-                    CheckForCompletedSkills();
-                    CheckForMissingPrerequisites();
                 }
                 finally
                 {
