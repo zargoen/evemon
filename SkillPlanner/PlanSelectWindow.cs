@@ -85,7 +85,8 @@ namespace EVEMon.SkillPlanner
 				}
             }
 
-			if( lbPlanList.SelectedItems != null ) {
+            if (lbPlanList.SelectedItems != null && lbPlanList.SelectedItems.Count != 0)
+            {
 				btnOpen.Enabled=true;
 				if (lbPlanList.SelectedItems.Count == 1) {
 					tsbRenamePlan.Enabled = (lbPlanList.SelectedIndices[0] != 0);
@@ -93,6 +94,8 @@ namespace EVEMon.SkillPlanner
 				}
 			} else {
 				btnOpen.Enabled=false;
+                tsbRenamePlan.Enabled = false;
+                tsbDeletePlan.Enabled = false;
 			}
 
 			btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
@@ -308,7 +311,7 @@ namespace EVEMon.SkillPlanner
                 }
                 m_settings.RenamePlanFor(m_charKey,
                                          oldName, f.Result);
-
+                lbPlanList.SelectedItems.Clear();
                 PopulatePlanList();
             }
         }
@@ -378,6 +381,7 @@ namespace EVEMon.SkillPlanner
             }
 
             m_settings.RemovePlanFor(m_charKey, planName);
+            lbPlanList.SelectedItems.Clear();
             PopulatePlanList();
         }
 
