@@ -78,40 +78,36 @@ namespace EVEMon.SkillPlanner
 
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbPlanList.SelectedIndices.Contains(0))
+            // If we have selected the <New Plan> (index 0) and any others then make it so we've
+            // selected only <New Plan>
+            if (lbPlanList.SelectedIndices.Contains(0) && lbPlanList.SelectedIndices.Count > 1)
             {
-				for (int i = 1; i < lbPlanList.SelectedIndices.Count; i++) {
-					lbPlanList.SelectedIndices.Remove(i);
-				}
+                lbPlanList.SelectedIndices.Clear();
+                lbPlanList.Items[0].Selected = true;
             }
 
-            if (lbPlanList.SelectedItems != null && lbPlanList.SelectedItems.Count != 0)
-            {
-				btnOpen.Enabled=true;
-				if (lbPlanList.SelectedItems.Count == 1) {
-					tsbRenamePlan.Enabled = (lbPlanList.SelectedIndices[0] != 0);
-					tsbDeletePlan.Enabled = (lbPlanList.SelectedIndices[0] != 0);
-				}
-			} else {
-				btnOpen.Enabled=false;
-                tsbRenamePlan.Enabled = false;
-                tsbDeletePlan.Enabled = false;
-			}
-
-			btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
-
-            if (lbPlanList.SelectedItems == null || lbPlanList.SelectedItems.Count != 1)
-            {
-                tsbMoveUp.Enabled = false;
-                tsbMoveDown.Enabled = false;
-            }
-            else 
+            // If we have 1 and only 1 plan selected, and it isn't the <New Plan> we 
+            // can move it, rename it or delete it.
+            if (lbPlanList.SelectedItems.Count == 1 && !lbPlanList.SelectedIndices.Contains(0))
             {
                 int idx = lbPlanList.SelectedIndices[0];
                 tsbMoveUp.Enabled = (idx > 1);
-                tsbMoveDown.Enabled = (idx < lbPlanList.Items.Count - 1 && idx > 0);
+                tsbMoveDown.Enabled = (idx < lbPlanList.Items.Count - 1);
+                tsbRenamePlan.Enabled = true;
+				tsbDeletePlan.Enabled = true;
+            } else {
+                tsbMoveUp.Enabled = false;
+                tsbMoveDown.Enabled = false;
+                tsbRenamePlan.Enabled = false;
+                tsbDeletePlan.Enabled = false;
             }
+
+            // The Open button in enabled if there is at least 1 selected item
+            // and the Open button is called "Merge" if more than 1 plan is selected.
+            btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
+            btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
         }
+
 
         private Plan m_result;
 
