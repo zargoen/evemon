@@ -1168,7 +1168,7 @@ namespace EVEMon
         {
             pbCharImage.Image = null;
             Image i = null;
-            string[] imageSizeArray = { "772", "656", "612", "256", "128", "64" };
+            string[] imageSizeArray = { "772", "656", "612", "548", "484", "452", "362", "304", "282", "256", "128", "64" };
             string eveCacheFileNameStub = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\" + this.GrandCharacterInfo.CharacterId.ToString();
             string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
             foreach (string size in imageSizeArray)
