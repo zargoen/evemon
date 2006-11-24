@@ -1168,32 +1168,46 @@ namespace EVEMon
         {
             pbCharImage.Image = null;
             Image i = null;
-            string[] imageSizeArray = { "772", "656", "612", "548", "484", "452", "362", "304", "282", "256", "128", "64" };
-            string eveCacheFileNameStub = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\" + this.GrandCharacterInfo.CharacterId.ToString();
+            string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
             string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-            foreach (string size in imageSizeArray)
+            int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
+            
+            // create a pattern that matches anything "<characterId>*.png"
+            string filePattern = this.GrandCharacterInfo.CharacterId.ToString() + "*.png";
+
+            // enumerate files in the EVE cache directory
+            DirectoryInfo di = new DirectoryInfo(eveCacheFolder);
+            FileInfo[] filesInEveCache = di.GetFiles(filePattern);
+
+            // add each file to a sorted list
+            SortedList<int, string> sl = new SortedList<int, string>();
+
+            foreach (FileInfo file in filesInEveCache)
             {
-                string eveCacheFileName = eveCacheFileNameStub + "_" + size + ".png";
-                if (File.Exists(eveCacheFileName))
-                {
-                    try
-                    {
-                        FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
-                        FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
-                        i = Image.FromStream(fs1, true);
-                        i.Save(fs2, ImageFormat.Png);
-                        fs1.Close();
-                        fs1.Dispose();
-                        fs2.Close();
-                        fs2.Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
-                    break;
-                }
+                int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
+                sl.Add(imageSize, file.FullName);
             }
+
+            // pick the largest image
+            string eveCacheFileName = sl.Values[sl.Count - 1];
+
+            try
+            {
+                FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
+                FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
+                i = Image.FromStream(fs1, true);
+                i.Save(fs2, ImageFormat.Png);
+                fs1.Close();
+                fs1.Dispose();
+                fs2.Close();
+                fs2.Dispose();
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+
             pbCharImage.Image = i;
             updating_pic = false;
         }
