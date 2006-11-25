@@ -154,6 +154,7 @@ namespace EVEMon.SkillPlanner
             this.PlanDate,
             this.PlanSkills});
 			this.lbPlanList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbPlanList.FullRowSelect = true;
 			this.lbPlanList.Location = new System.Drawing.Point(0, 0);
 			this.lbPlanList.Name = "lbPlanList";
 			this.lbPlanList.Size = new System.Drawing.Size(435, 326);
