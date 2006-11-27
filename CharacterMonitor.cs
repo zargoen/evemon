@@ -1168,40 +1168,63 @@ namespace EVEMon
         {
             pbCharImage.Image = null;
             Image i = null;
-            string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
-            string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-            int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
-            
-            // create a pattern that matches anything "<characterId>*.png"
-            string filePattern = this.GrandCharacterInfo.CharacterId.ToString() + "*.png";
 
-            // enumerate files in the EVE cache directory
-            DirectoryInfo di = new DirectoryInfo(eveCacheFolder);
-            FileInfo[] filesInEveCache = di.GetFiles(filePattern);
-
-            // add each file to a sorted list
-            SortedList<int, string> sl = new SortedList<int, string>();
-
-            foreach (FileInfo file in filesInEveCache)
+            // test to see if an EVE Folder has been selected
+            if (this.GrandCharacterInfo.EVEFolder == "")
             {
-                int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
-                int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
-                sl.Add(imageSize, file.FullName);
+                // if the folder has not been selected, ask the user to select it
+                SetCharacterEVEFolder();
             }
-
-            // pick the largest image
-            string eveCacheFileName = sl.Values[sl.Count - 1];
 
             try
             {
-                FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
-                FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
-                i = Image.FromStream(fs1, true);
-                i.Save(fs2, ImageFormat.Png);
-                fs1.Close();
-                fs1.Dispose();
-                fs2.Close();
-                fs2.Dispose();
+                // generate paths and file patterns required for 
+                string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
+                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
+                
+                // create a pattern that matches anything "<characterId>*.png"
+                string filePattern = this.GrandCharacterInfo.CharacterId.ToString() + "*.png";
+
+                // enumerate files in the EVE cache directory
+                DirectoryInfo di = new DirectoryInfo(eveCacheFolder);
+                FileInfo[] filesInEveCache = di.GetFiles(filePattern);
+
+                if (filesInEveCache.Length > 0)
+                {
+                    // add each file to a sorted list
+                    SortedList<int, string> sl = new SortedList<int, string>();
+
+                    foreach (FileInfo file in filesInEveCache)
+                    {
+                        int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                        int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
+                        sl.Add(imageSize, file.FullName);
+                    }
+
+                    // pick the largest image
+                    string eveCacheFileName = sl.Values[sl.Count - 1];
+
+                    FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
+                    FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
+                    i = Image.FromStream(fs1, true);
+                    i.Save(fs2, ImageFormat.Png);
+                    fs1.Close();
+                    fs1.Dispose();
+                    fs2.Close();
+                    fs2.Dispose();
+                }
+                else
+                {
+                    String message;
+
+                    message = "No portraits for your character were found in the folder you selected." + Environment.NewLine + Environment.NewLine;
+                    message += "Ensure that you have checked the following" + Environment.NewLine;
+                    message += " - You have selected a valid EVE Folder (i.e. C:\\Program Files\\CCP\\EVE\\)" + Environment.NewLine;
+                    message += " - You have logged into EVE using this folder";
+
+                    MessageBox.Show(message, "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
             }
             catch (Exception e)
             {

@@ -64,6 +64,10 @@ namespace EVEMon
             this.tbFilename.Size = new System.Drawing.Size(219, 20);
             this.tbFilename.TabIndex = 4;
             // 
+            // fbdOpenDir
+            // 
+            this.fbdOpenDir.Description = "Select the folder where EVE is installed.";
+            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
