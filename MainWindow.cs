@@ -226,6 +226,7 @@ namespace EVEMon
                 }
                 return false;
             }
+            cfi.CharacterName = sci.Name;
             TabPage tp = new TabPage("(File) " + sci.Name);
             tp.UseVisualStyleBackColor = true;
             tp.Tag = cfi;

@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="ICharacterSettings.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="NewEveSession.cs" />
     <Compile Include="PlanTextOptions.cs" />

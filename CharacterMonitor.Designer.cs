@@ -63,6 +63,7 @@ namespace EVEMon
             this.btnMoreOptions = new System.Windows.Forms.Button();
             this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miManualImplants = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnPlan = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -502,16 +503,26 @@ namespace EVEMon
             // cmsMoreOptions
             // 
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miManualImplants});
+            this.miManualImplants,
+            this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(176, 26);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
             // 
             // miManualImplants
             // 
             this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(175, 22);
+            this.miManualImplants.Size = new System.Drawing.Size(220, 22);
             this.miManualImplants.Text = "Manual Implants...";
             this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
+            // 
+            // tsbIneveSync
+            // 
+            this.tsbIneveSync.CheckOnClick = true;
+            this.tsbIneveSync.Name = "tsbIneveSync";
+            this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
+            this.tsbIneveSync.Text = "Synchronize with inEve.net?";
+            this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
+            this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
             // 
             // btnSave
             // 
@@ -602,33 +613,30 @@ namespace EVEMon
             // cmsPictureOptions
             // 
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.updatePicture});
-            this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.updatePictureFromEVECache});
-            this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.setEVEFolder});
-
+            this.updatePicture,
+            this.updatePictureFromEVECache,
+            this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(157, 26);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(238, 70);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(156, 22);
+            this.updatePicture.Size = new System.Drawing.Size(237, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
             // 
             // updatePictureFromEVECache
             // 
             this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
-            this.updatePictureFromEVECache.Size = new System.Drawing.Size(156, 22);
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(237, 22);
             this.updatePictureFromEVECache.Text = "Update Picture From EVE Cache";
             this.updatePictureFromEVECache.Click += new System.EventHandler(this.mi_UpdatePictureFromEVECache_Click);
             // 
             // setEVEFolder
             // 
             this.setEVEFolder.Name = "setEVEFolder";
-            this.setEVEFolder.Size = new System.Drawing.Size(156, 22);
+            this.setEVEFolder.Size = new System.Drawing.Size(237, 22);
             this.setEVEFolder.Text = "Set EVE Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.mi_setEVEFolder_Click);
             // 
@@ -740,5 +748,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem updatePictureFromEVECache;
         private System.Windows.Forms.ToolStripMenuItem setEVEFolder;
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
+        private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
     }
 }

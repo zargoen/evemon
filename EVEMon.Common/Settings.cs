@@ -941,97 +941,30 @@ namespace EVEMon.Common
             return true;
         }
 
-    }
-
-    //now with encryption.  Not bulletproof by any means, but better than plaintext
-    public class CharLoginInfo
-    {
-        private string m_username;
-
-        public string Username
+        #region Character Settings
+        public ICharacterSettings GetCharacterSettings(string userName)
         {
-            get { return m_username; }
-            set { m_username = value; }
-        }
-
-        private const string ENCRYPTED_PREFIX = "ENCRYPTED::";
-
-        private string m_encryptedPassword = String.Empty;
-        private string m_password = String.Empty;
-
-        [XmlElement("Password")]
-        public string EncryptedPassword
-        {
-            get {
-                if (String.IsNullOrEmpty(m_encryptedPassword))
-                    m_encryptedPassword = EncryptionHelper.Encrypt(m_username, m_password);
-                StringBuilder sb = new StringBuilder();
-                sb.Append(ENCRYPTED_PREFIX);
-                sb.Append(m_encryptedPassword);
-                return sb.ToString();
-            }
-            set {
-                if (!value.StartsWith(ENCRYPTED_PREFIX))
+            foreach (ICharacterSettings guy in m_characterList)
+            {
+                if (guy.CharacterName.Equals(userName))
                 {
-                    m_encryptedPassword = String.Empty;
-                    m_password = value;
-                }
-                else
-                {
-                    m_encryptedPassword = value.Substring(ENCRYPTED_PREFIX.Length);
-                    m_password = String.Empty;
+                    return guy;
                 }
             }
-        }
-
-        [XmlIgnore]
-        public string Password
-        {
-            get {
-                if (String.IsNullOrEmpty(m_password) && !String.IsNullOrEmpty(m_encryptedPassword))
+            foreach (ICharacterSettings guy in m_charFileList)
+            {
+                if (guy.CharacterName.Equals(userName))
                 {
-                    m_password = EncryptionHelper.Decrypt(m_username, m_encryptedPassword);
+                    return guy;
                 }
-                return m_password;
             }
-            set {
-                m_password = value;
-                m_encryptedPassword = String.Empty;
-            }
+            return null;
         }
+        #endregion
 
-        private string m_characterName;
-
-        public string CharacterName
-        {
-            get { return m_characterName; }
-            set { m_characterName = value; }
-        }
-
-        public bool Validate()
-        {
-            EveSession s = EveSession.GetSession(m_username, m_password);
-            return (s.GetCharacterId(m_characterName) > 0);
-        }
     }
 
-    public class CharFileInfo
-    {
-        private string m_filename;
-        private bool m_monitorFile;
-
-        public string Filename
-        {
-            get { return m_filename; }
-            set { m_filename = value; }
-        }
-
-        public bool MonitorFile
-        {
-            get { return m_monitorFile; }
-            set { m_monitorFile = value; }
-        }
-    }
+    
 
     [XmlRoot("proxySetting")]
     public class ProxySetting: ICloneable

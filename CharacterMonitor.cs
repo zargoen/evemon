@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common;
 using EVEMon.SkillPlanner;
+using System.Web;
 
 namespace EVEMon
 {
@@ -21,6 +22,7 @@ namespace EVEMon
         public CharacterMonitor()
         {
             InitializeComponent();
+           
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
         }
 
@@ -207,6 +209,12 @@ namespace EVEMon
 
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_WorksafeChanged);
             m_settings_WorksafeChanged(null, null);
+
+            if (m_settings != null)
+            {
+                //set up individual character settings
+                tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
+            }
         }
 
         private void m_fsw_Created(object sender, FileSystemEventArgs e)
@@ -2098,9 +2106,9 @@ namespace EVEMon
             
         }
 
-        private void pbThrobber_Hover(object sender, EventArgs e)
+        private void tsbIneveSync_CheckedChanged(object sender, EventArgs e)
         {
-
+            m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
         }
     }
 

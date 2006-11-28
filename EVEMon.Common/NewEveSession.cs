@@ -12,6 +12,7 @@ using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace EVEMon.Common
 {
@@ -309,6 +310,12 @@ namespace EVEMon.Common
                                              });
         }
 
+
+        /// <summary>
+        /// Gets the character info from the myeve website.  Also updates ineve.net, if applicable.
+        /// </summary>
+        /// <param name="charId">The char id.</param>
+        /// <returns>The SerializableCharacterInfo, fully populated</returns>
         private SerializableCharacterInfo GetCharacterInfo(int charId)
         {
             try
@@ -342,6 +349,7 @@ namespace EVEMon.Common
                 SerializableCharacterInfo sci = ProcessCharacterXml(xdoc, charId, out timeLeftInCache);
                 sci.TimeLeftInCache = timeLeftInCache;
                 sci.SkillInTraining = sit;
+                
                 return sci;
             }
             catch (Exception e)
@@ -349,6 +357,28 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(e, true);
                 return null;
             }
+        }
+
+        public void UpdateIneve(XmlDocument xdoc)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ineve.net/skills/upload.php");
+            request.Timeout = 10000;
+            Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            request.UserAgent = "EVEMon/" + currentVersion.ToString();
+            string boundary=Guid.NewGuid().ToString().Replace("-", "");
+            request.ContentType = "multipart/form-data; boundary=" + boundary;
+            request.Method = "POST";
+
+            string spacer = "--" + boundary + "\r\n";
+            spacer += "Content-Disposition: form-data;\r\nname=\"upload\";\r\nfilename=\"character.xml\"\r\n";
+            spacer += "Content-Type:text/xml\r\n\r\n";
+            byte[] bytes = Encoding.UTF8.GetBytes(spacer);
+            using (Stream s = request.GetRequestStream())
+            {
+                s.Write(bytes, 0, bytes.Length);
+                xdoc.WriteTo(new XmlTextWriter(s, Encoding.UTF8));
+            }
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();            
         }
 
         private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int charId, out int cacheExpires)
