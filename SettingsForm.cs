@@ -52,15 +52,6 @@ namespace EVEMon
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
-            s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
-            s.G15ACycle = cbG15ACycle.Checked;
-            s.G15ACycleint = (int)ACycleInterval.Value;
-            if (Program.LCD != null)
-            {
-                Program.LCD.cycle = cbG15ACycle.Checked;
-                Program.LCD.cycleint = (int)ACycleInterval.Value;
-            }
-
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -113,6 +104,16 @@ namespace EVEMon
             }
             s.HttpProxy = httpSetting;
 
+            #region G15 Settings
+            s.G15Static = chkCDisplay.Checked;
+            s.G15StaticSkill = chkSDisplay.Checked;
+            s.G15UseG15Display = chkG15Enabled.Checked;
+
+            s.G15Interval = TimeSpan.FromSeconds((double)nmCCycle.Value);
+            s.G15SkillInterval = TimeSpan.FromSeconds((double)nmSCycle.Value);
+            s.G15UpdateSpeedDbl = (double)nmUpdateSpd.Value;
+            #endregion
+
             m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
             m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
 
@@ -130,6 +131,7 @@ namespace EVEMon
         {
             ApplyToSettings(m_settings);
             m_settings.Save();
+            G15Interface.ResetOptions();
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -178,10 +180,6 @@ namespace EVEMon
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
-            cbG15ACycle.Checked = m_settings.G15ACycle;
-            cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
-            ACycleInterval.Value = m_settings.G15ACycleint;
-
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
             else
@@ -230,6 +228,23 @@ namespace EVEMon
             cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
             cbTooltipOptionName.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name);
 
+            #region G15 Settings
+            if ((double)nmUpdateSpd.Maximum > m_settings.G15UpdateSpeedDbl)
+                nmUpdateSpd.Maximum = (decimal)m_settings.G15UpdateSpeedDbl;
+            nmUpdateSpd.Value = (decimal)m_settings.G15UpdateSpeedDbl;
+            if ((double)nmSCycle.Maximum < m_settings.G15SkillInterval.TotalSeconds)
+                nmSCycle.Maximum = (decimal)m_settings.G15SkillInterval.TotalSeconds;
+            nmSCycle.Value = (decimal)m_settings.G15SkillInterval.TotalSeconds;
+            if ((double)nmCCycle.Maximum < m_settings.G15Interval.TotalSeconds)
+                nmCCycle.Maximum = (decimal)m_settings.G15Interval.TotalSeconds;
+            nmCCycle.Value = (decimal)m_settings.G15Interval.TotalSeconds;
+
+            chkCDisplay.Checked = m_settings.G15Static;
+            chkSDisplay.Checked = m_settings.G15StaticSkill;
+            g15Preview.Visible = m_settings.G15UseG15Display;
+            chkG15Enabled.Checked = m_settings.G15UseG15Display;
+
+            #endregion
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
@@ -457,5 +472,41 @@ namespace EVEMon
             cbCloseToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
             gboxTooltipOptions.Enabled = !rbSystemTrayOptionsNever.Checked;
         }
+
+        private void tmrG15Update_Tick(object sender, EventArgs e)
+        {
+            if (g15Preview.Visible == true && G15Interface.CurrentView != null)
+            {
+                pbg15Preview.Image = G15Interface.CurrentView;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (g15Preview.Visible == true)
+                G15Interface.DisplayManager_OnButton1Down();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (g15Preview.Visible == true)
+                G15Interface.DisplayManager_OnButton2Down();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (g15Preview.Visible == true)
+                G15Interface.DisplayManager_OnButton3Down();
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (g15Preview.Visible == true)
+                G15Interface.DisplayManager_OnButton4Down();
+
+        }
+
+        
     }
 }

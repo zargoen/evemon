@@ -66,5 +66,26 @@ namespace EVEMon.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap evemon_g15 {
+            get {
+                object obj = ResourceManager.GetObject("evemon_g15", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap evemon_g15_evelogo {
+            get {
+                object obj = ResourceManager.GetObject("evemon_g15_evelogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap evemon_g15_sc {
+            get {
+                object obj = ResourceManager.GetObject("evemon_g15_sc", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

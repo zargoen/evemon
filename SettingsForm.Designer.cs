@@ -28,23 +28,24 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.TreeNode treeNode73 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode74 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode75 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode76 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode77 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode78 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode79 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode80 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode81 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode73,
+            treeNode74,
+            treeNode75,
+            treeNode76,
+            treeNode77,
+            treeNode78,
+            treeNode79,
+            treeNode80});
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
@@ -100,12 +101,6 @@ namespace EVEMon
             this.cbTooltipOptionSkill = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionDate = new System.Windows.Forms.CheckBox();
             this.cbTooltipOptionETA = new System.Windows.Forms.CheckBox();
-            this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
-            this.cbG15ACycle = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -166,6 +161,31 @@ namespace EVEMon
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.numericStatusInterval = new System.Windows.Forms.NumericUpDown();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.nmUpdateSpd = new System.Windows.Forms.NumericUpDown();
+            this.label22 = new System.Windows.Forms.Label();
+            this.chkG15Enabled = new System.Windows.Forms.CheckBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.nmSCycle = new System.Windows.Forms.NumericUpDown();
+            this.chkSDisplay = new System.Windows.Forms.CheckBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.nmCCycle = new System.Windows.Forms.NumericUpDown();
+            this.chkCDisplay = new System.Windows.Forms.CheckBox();
+            this.g15Preview = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
+            this.pbg15Preview = new System.Windows.Forms.PictureBox();
+            this.flowLayoutPanel25 = new System.Windows.Forms.FlowLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
@@ -173,6 +193,7 @@ namespace EVEMon
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
+            this.tmrG15Update = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -191,9 +212,6 @@ namespace EVEMon
             this.flpScreenSelect.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.gboxTooltipOptions.SuspendLayout();
-            this.groupBox12.SuspendLayout();
-            this.flowLayoutPanel23.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -225,6 +243,18 @@ namespace EVEMon
             this.flowLayoutPanel12.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            this.flowLayoutPanel23.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmUpdateSpd)).BeginInit();
+            this.groupBox13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmSCycle)).BeginInit();
+            this.groupBox14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmCCycle)).BeginInit();
+            this.g15Preview.SuspendLayout();
+            this.flowLayoutPanel26.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbg15Preview)).BeginInit();
+            this.flowLayoutPanel25.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
@@ -562,6 +592,7 @@ namespace EVEMon
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -587,7 +618,6 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox2);
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
             this.verticalFlowPanel1.Controls.Add(this.gboxTooltipOptions);
-            this.verticalFlowPanel1.Controls.Add(this.groupBox12);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
@@ -849,7 +879,7 @@ namespace EVEMon
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionETA);
             this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 227);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
-            this.gboxTooltipOptions.Size = new System.Drawing.Size(362, 110);
+            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 113);
             this.gboxTooltipOptions.TabIndex = 7;
             this.gboxTooltipOptions.TabStop = false;
             this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
@@ -857,7 +887,7 @@ namespace EVEMon
             // cbTooltipOptionName
             // 
             this.cbTooltipOptionName.AutoSize = true;
-            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 20);
+            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 19);
             this.cbTooltipOptionName.Name = "cbTooltipOptionName";
             this.cbTooltipOptionName.Size = new System.Drawing.Size(104, 17);
             this.cbTooltipOptionName.TabIndex = 5;
@@ -895,86 +925,6 @@ namespace EVEMon
             this.cbTooltipOptionETA.TabIndex = 2;
             this.cbTooltipOptionETA.Text = "Time to Completion";
             this.cbTooltipOptionETA.UseVisualStyleBackColor = true;
-            // 
-            // groupBox12
-            // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox12.AutoSize = true;
-            this.groupBox12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox12.Controls.Add(this.flowLayoutPanel23);
-            this.groupBox12.Controls.Add(this.label17);
-            this.groupBox12.Controls.Add(this.ACycleInterval);
-            this.groupBox12.Location = new System.Drawing.Point(3, 341);
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(362, 84);
-            this.groupBox12.TabIndex = 5;
-            this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "G15 Display";
-            // 
-            // flowLayoutPanel23
-            // 
-            this.flowLayoutPanel23.AutoSize = true;
-            this.flowLayoutPanel23.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel23.Controls.Add(this.cbUseLogitechG15Display);
-            this.flowLayoutPanel23.Controls.Add(this.cbG15ACycle);
-            this.flowLayoutPanel23.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel23.Location = new System.Drawing.Point(3, 17);
-            this.flowLayoutPanel23.Name = "flowLayoutPanel23";
-            this.flowLayoutPanel23.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel23.Size = new System.Drawing.Size(138, 46);
-            this.flowLayoutPanel23.TabIndex = 4;
-            // 
-            // cbUseLogitechG15Display
-            // 
-            this.cbUseLogitechG15Display.AutoSize = true;
-            this.cbUseLogitechG15Display.Location = new System.Drawing.Point(12, 3);
-            this.cbUseLogitechG15Display.Name = "cbUseLogitechG15Display";
-            this.cbUseLogitechG15Display.Size = new System.Drawing.Size(103, 17);
-            this.cbUseLogitechG15Display.TabIndex = 3;
-            this.cbUseLogitechG15Display.Text = "Use G15 Display";
-            this.cbUseLogitechG15Display.UseVisualStyleBackColor = true;
-            // 
-            // cbG15ACycle
-            // 
-            this.cbG15ACycle.AutoSize = true;
-            this.cbG15ACycle.Location = new System.Drawing.Point(12, 26);
-            this.cbG15ACycle.Name = "cbG15ACycle";
-            this.cbG15ACycle.Size = new System.Drawing.Size(114, 17);
-            this.cbG15ACycle.TabIndex = 3;
-            this.cbG15ACycle.Text = "Cycle Chars every";
-            this.cbG15ACycle.UseVisualStyleBackColor = true;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(200, 47);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(46, 13);
-            this.label17.TabIndex = 10;
-            this.label17.Text = "seconds";
-            // 
-            // ACycleInterval
-            // 
-            this.ACycleInterval.Location = new System.Drawing.Point(147, 43);
-            this.ACycleInterval.Maximum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.ACycleInterval.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ACycleInterval.Name = "ACycleInterval";
-            this.ACycleInterval.Size = new System.Drawing.Size(47, 21);
-            this.ACycleInterval.TabIndex = 8;
-            this.ACycleInterval.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
             // 
             // tabPage5
             // 
@@ -1189,26 +1139,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode73.Name = "Node1";
+            treeNode73.Text = "Node1";
+            treeNode74.Name = "Node2";
+            treeNode74.Text = "Node2";
+            treeNode75.Name = "Node3";
+            treeNode75.Text = "Node3";
+            treeNode76.Name = "Node4";
+            treeNode76.Text = "Node4";
+            treeNode77.Name = "Node5";
+            treeNode77.Text = "Node5";
+            treeNode78.Name = "Node6";
+            treeNode78.Text = "Node6";
+            treeNode79.Name = "Node7";
+            treeNode79.Text = "Node7";
+            treeNode80.Name = "Node8";
+            treeNode80.Text = "Node8";
+            treeNode81.Name = "Node0";
+            treeNode81.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode81});
             this.tvlist.Size = new System.Drawing.Size(350, 150);
             this.tvlist.TabIndex = 9;
             // 
@@ -1737,7 +1687,7 @@ namespace EVEMon
             // 
             // numericStatusInterval
             // 
-            this.numericStatusInterval.Location = new System.Drawing.Point(118, 38);
+            this.numericStatusInterval.Location = new System.Drawing.Point(119, 38);
             this.numericStatusInterval.Maximum = new decimal(new int[] {
             60,
             0,
@@ -1756,6 +1706,314 @@ namespace EVEMon
             0,
             0,
             0});
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.flowLayoutPanel23);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(388, 468);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Logitech G15";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel23
+            // 
+            this.flowLayoutPanel23.Controls.Add(this.groupBox12);
+            this.flowLayoutPanel23.Controls.Add(this.groupBox13);
+            this.flowLayoutPanel23.Controls.Add(this.groupBox14);
+            this.flowLayoutPanel23.Controls.Add(this.g15Preview);
+            this.flowLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel23.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel23.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel23.Name = "flowLayoutPanel23";
+            this.flowLayoutPanel23.Size = new System.Drawing.Size(382, 462);
+            this.flowLayoutPanel23.TabIndex = 0;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.label21);
+            this.groupBox12.Controls.Add(this.nmUpdateSpd);
+            this.groupBox12.Controls.Add(this.label22);
+            this.groupBox12.Controls.Add(this.chkG15Enabled);
+            this.groupBox12.Location = new System.Drawing.Point(3, 3);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(363, 70);
+            this.groupBox12.TabIndex = 0;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "G15 Status";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(202, 45);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(62, 13);
+            this.label21.TabIndex = 3;
+            this.label21.Text = "Milliseconds";
+            // 
+            // nmUpdateSpd
+            // 
+            this.nmUpdateSpd.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.nmUpdateSpd.Location = new System.Drawing.Point(132, 43);
+            this.nmUpdateSpd.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nmUpdateSpd.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.nmUpdateSpd.Name = "nmUpdateSpd";
+            this.nmUpdateSpd.Size = new System.Drawing.Size(64, 21);
+            this.nmUpdateSpd.TabIndex = 2;
+            this.nmUpdateSpd.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 45);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(133, 13);
+            this.label22.TabIndex = 1;
+            this.label22.Text = "Advanced: Update speed:";
+            // 
+            // chkG15Enabled
+            // 
+            this.chkG15Enabled.AutoSize = true;
+            this.chkG15Enabled.Location = new System.Drawing.Point(6, 20);
+            this.chkG15Enabled.Name = "chkG15Enabled";
+            this.chkG15Enabled.Size = new System.Drawing.Size(164, 17);
+            this.chkG15Enabled.TabIndex = 0;
+            this.chkG15Enabled.Text = "Enable Logitech G15 Support";
+            this.chkG15Enabled.UseVisualStyleBackColor = true;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.label17);
+            this.groupBox13.Controls.Add(this.label16);
+            this.groupBox13.Controls.Add(this.nmSCycle);
+            this.groupBox13.Controls.Add(this.chkSDisplay);
+            this.groupBox13.Location = new System.Drawing.Point(3, 79);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(363, 71);
+            this.groupBox13.TabIndex = 1;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Skill Display";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(140, 40);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(47, 13);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Seconds";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 40);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(64, 13);
+            this.label16.TabIndex = 2;
+            this.label16.Text = "Cycle every";
+            // 
+            // nmSCycle
+            // 
+            this.nmSCycle.DecimalPlaces = 2;
+            this.nmSCycle.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.nmSCycle.Location = new System.Drawing.Point(76, 38);
+            this.nmSCycle.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.nmSCycle.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmSCycle.Name = "nmSCycle";
+            this.nmSCycle.Size = new System.Drawing.Size(58, 21);
+            this.nmSCycle.TabIndex = 1;
+            this.nmSCycle.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // chkSDisplay
+            // 
+            this.chkSDisplay.AutoSize = true;
+            this.chkSDisplay.Location = new System.Drawing.Point(6, 20);
+            this.chkSDisplay.Name = "chkSDisplay";
+            this.chkSDisplay.Size = new System.Drawing.Size(107, 17);
+            this.chkSDisplay.TabIndex = 0;
+            this.chkSDisplay.Text = "Cycle skill display";
+            this.chkSDisplay.UseVisualStyleBackColor = true;
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.label20);
+            this.groupBox14.Controls.Add(this.label19);
+            this.groupBox14.Controls.Add(this.nmCCycle);
+            this.groupBox14.Controls.Add(this.chkCDisplay);
+            this.groupBox14.Location = new System.Drawing.Point(3, 156);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(363, 71);
+            this.groupBox14.TabIndex = 1;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Character Display";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(140, 40);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(47, 13);
+            this.label20.TabIndex = 3;
+            this.label20.Text = "Seconds";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 40);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(64, 13);
+            this.label19.TabIndex = 2;
+            this.label19.Text = "Cycle every";
+            // 
+            // nmCCycle
+            // 
+            this.nmCCycle.DecimalPlaces = 2;
+            this.nmCCycle.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.nmCCycle.Location = new System.Drawing.Point(76, 38);
+            this.nmCCycle.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.nmCCycle.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmCCycle.Name = "nmCCycle";
+            this.nmCCycle.Size = new System.Drawing.Size(58, 21);
+            this.nmCCycle.TabIndex = 1;
+            this.nmCCycle.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // chkCDisplay
+            // 
+            this.chkCDisplay.AutoSize = true;
+            this.chkCDisplay.Location = new System.Drawing.Point(6, 20);
+            this.chkCDisplay.Name = "chkCDisplay";
+            this.chkCDisplay.Size = new System.Drawing.Size(137, 17);
+            this.chkCDisplay.TabIndex = 0;
+            this.chkCDisplay.Text = "Cycle character display";
+            this.chkCDisplay.UseVisualStyleBackColor = true;
+            // 
+            // g15Preview
+            // 
+            this.g15Preview.Controls.Add(this.flowLayoutPanel26);
+            this.g15Preview.Location = new System.Drawing.Point(3, 233);
+            this.g15Preview.Name = "g15Preview";
+            this.g15Preview.Size = new System.Drawing.Size(363, 141);
+            this.g15Preview.TabIndex = 2;
+            this.g15Preview.TabStop = false;
+            this.g15Preview.Text = "G15 Preview";
+            // 
+            // flowLayoutPanel26
+            // 
+            this.flowLayoutPanel26.Controls.Add(this.pbg15Preview);
+            this.flowLayoutPanel26.Controls.Add(this.flowLayoutPanel25);
+            this.flowLayoutPanel26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel26.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel26.Location = new System.Drawing.Point(3, 17);
+            this.flowLayoutPanel26.Name = "flowLayoutPanel26";
+            this.flowLayoutPanel26.Size = new System.Drawing.Size(357, 121);
+            this.flowLayoutPanel26.TabIndex = 0;
+            // 
+            // pbg15Preview
+            // 
+            this.pbg15Preview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pbg15Preview.Location = new System.Drawing.Point(3, 3);
+            this.pbg15Preview.Name = "pbg15Preview";
+            this.pbg15Preview.Size = new System.Drawing.Size(320, 86);
+            this.pbg15Preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbg15Preview.TabIndex = 0;
+            this.pbg15Preview.TabStop = false;
+            // 
+            // flowLayoutPanel25
+            // 
+            this.flowLayoutPanel25.Controls.Add(this.button1);
+            this.flowLayoutPanel25.Controls.Add(this.button2);
+            this.flowLayoutPanel25.Controls.Add(this.button3);
+            this.flowLayoutPanel25.Controls.Add(this.button4);
+            this.flowLayoutPanel25.Location = new System.Drawing.Point(3, 95);
+            this.flowLayoutPanel25.Name = "flowLayoutPanel25";
+            this.flowLayoutPanel25.Size = new System.Drawing.Size(320, 22);
+            this.flowLayoutPanel25.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(74, 15);
+            this.button1.TabIndex = 0;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(83, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(74, 15);
+            this.button2.TabIndex = 1;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(163, 3);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(74, 15);
+            this.button3.TabIndex = 2;
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(243, 3);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(74, 15);
+            this.button4.TabIndex = 3;
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // flowLayoutPanel7
             // 
@@ -1834,6 +2092,12 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // tmrG15Update
+            // 
+            this.tmrG15Update.Enabled = true;
+            this.tmrG15Update.Interval = 666;
+            this.tmrG15Update.Tick += new System.EventHandler(this.tmrG15Update_Tick);
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -1886,11 +2150,6 @@ namespace EVEMon
             this.flowLayoutPanel4.PerformLayout();
             this.gboxTooltipOptions.ResumeLayout(false);
             this.gboxTooltipOptions.PerformLayout();
-            this.groupBox12.ResumeLayout(false);
-            this.groupBox12.PerformLayout();
-            this.flowLayoutPanel23.ResumeLayout(false);
-            this.flowLayoutPanel23.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
@@ -1949,6 +2208,21 @@ namespace EVEMon
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.flowLayoutPanel23.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmUpdateSpd)).EndInit();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmSCycle)).EndInit();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmCCycle)).EndInit();
+            this.g15Preview.ResumeLayout(false);
+            this.flowLayoutPanel26.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbg15Preview)).EndInit();
+            this.flowLayoutPanel25.ResumeLayout(false);
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel7.PerformLayout();
             this.flowLayoutPanel8.ResumeLayout(false);
@@ -2077,17 +2351,37 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel22;
         private System.Windows.Forms.CheckBox cbTitleToTime;
         private System.Windows.Forms.ComboBox cbWindowsTitleList;
-        private System.Windows.Forms.CheckBox cbG15ACycle;
-        private System.Windows.Forms.GroupBox groupBox12;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel23;
-        private System.Windows.Forms.CheckBox cbUseLogitechG15Display;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.NumericUpDown ACycleInterval;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel24;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsNever;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsMinimized;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel23;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.CheckBox chkG15Enabled;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown nmSCycle;
+        private System.Windows.Forms.CheckBox chkSDisplay;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.NumericUpDown nmCCycle;
+        private System.Windows.Forms.CheckBox chkCDisplay;
+        private System.Windows.Forms.GroupBox g15Preview;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel26;
+        private System.Windows.Forms.PictureBox pbg15Preview;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel25;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Timer tmrG15Update;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown nmUpdateSpd;
+        private System.Windows.Forms.Label label22;
     }
 }
