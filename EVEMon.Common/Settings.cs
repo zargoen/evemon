@@ -264,6 +264,14 @@ namespace EVEMon.Common
             set { m_portNumber = value; }
         }
 
+        private bool m_emailUseShortFormat = false;
+
+        public bool EmailUseShortFormat
+        {
+            get { return m_emailUseShortFormat; }
+            set { m_emailUseShortFormat = value; }
+        }
+
         #endregion // Email Settings
 
         private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;

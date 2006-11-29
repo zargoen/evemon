@@ -67,6 +67,7 @@ namespace EVEMon
                 s.PortNumber = 25;
             }
             s.EmailServerRequiresSsl = cbEmailServerRequireSsl.Checked;
+            s.EmailUseShortFormat = cbEmailUseShortFormat.Checked;
             s.EmailAuthRequired = cbEmailAuthRequired.Checked;
             s.EmailAuthUsername = tbEmailUsername.Text;
             s.EmailAuthPassword = tbEmailPassword.Text;
@@ -199,6 +200,7 @@ namespace EVEMon
             tbMailServer.Text = m_settings.EmailServer;
             tbPortNumber.Text = m_settings.PortNumber.ToString();
             cbEmailServerRequireSsl.Checked = m_settings.EmailServerRequiresSsl;
+            cbEmailUseShortFormat.Checked = m_settings.EmailUseShortFormat;
             cbEmailAuthRequired.Checked = m_settings.EmailAuthRequired;
             tbEmailUsername.Text = m_settings.EmailAuthUsername;
             tbEmailPassword.Text = m_settings.EmailAuthPassword;

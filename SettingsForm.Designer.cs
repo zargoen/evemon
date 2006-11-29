@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode73 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode74 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode75 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode76 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode77 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode78 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode79 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode80 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode81 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode73,
-            treeNode74,
-            treeNode75,
-            treeNode76,
-            treeNode77,
-            treeNode78,
-            treeNode79,
-            treeNode80});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
@@ -142,6 +142,7 @@ namespace EVEMon
             this.cbShowCompletedSkillsDialog = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbEmailUseShortFormat = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -311,7 +312,7 @@ namespace EVEMon
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.tlpEmailSettings, 1, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 26);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 49);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -511,7 +512,7 @@ namespace EVEMon
             // btnTestEmail
             // 
             this.btnTestEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestEmail.Location = new System.Drawing.Point(240, 259);
+            this.btnTestEmail.Location = new System.Drawing.Point(240, 282);
             this.btnTestEmail.Name = "btnTestEmail";
             this.btnTestEmail.Size = new System.Drawing.Size(110, 23);
             this.btnTestEmail.TabIndex = 10;
@@ -689,7 +690,7 @@ namespace EVEMon
             this.rbSystemTrayOptionsNever.Location = new System.Drawing.Point(3, 3);
             this.rbSystemTrayOptionsNever.Name = "rbSystemTrayOptionsNever";
             this.rbSystemTrayOptionsNever.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsNever.Size = new System.Drawing.Size(57, 17);
+            this.rbSystemTrayOptionsNever.Size = new System.Drawing.Size(58, 17);
             this.rbSystemTrayOptionsNever.TabIndex = 1;
             this.rbSystemTrayOptionsNever.TabStop = true;
             this.rbSystemTrayOptionsNever.Tag = "";
@@ -700,10 +701,10 @@ namespace EVEMon
             // rbSystemTrayOptionsMinimized
             // 
             this.rbSystemTrayOptionsMinimized.AutoSize = true;
-            this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(66, 3);
+            this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(67, 3);
             this.rbSystemTrayOptionsMinimized.Name = "rbSystemTrayOptionsMinimized";
             this.rbSystemTrayOptionsMinimized.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(104, 17);
+            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(105, 17);
             this.rbSystemTrayOptionsMinimized.TabIndex = 2;
             this.rbSystemTrayOptionsMinimized.TabStop = true;
             this.rbSystemTrayOptionsMinimized.Tag = "";
@@ -713,10 +714,10 @@ namespace EVEMon
             // rbSystemTrayOptionsAlways
             // 
             this.rbSystemTrayOptionsAlways.AutoSize = true;
-            this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(176, 3);
+            this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(178, 3);
             this.rbSystemTrayOptionsAlways.Name = "rbSystemTrayOptionsAlways";
             this.rbSystemTrayOptionsAlways.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(62, 17);
+            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(63, 17);
             this.rbSystemTrayOptionsAlways.TabIndex = 3;
             this.rbSystemTrayOptionsAlways.TabStop = true;
             this.rbSystemTrayOptionsAlways.Tag = "";
@@ -1139,26 +1140,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode73.Name = "Node1";
-            treeNode73.Text = "Node1";
-            treeNode74.Name = "Node2";
-            treeNode74.Text = "Node2";
-            treeNode75.Name = "Node3";
-            treeNode75.Text = "Node3";
-            treeNode76.Name = "Node4";
-            treeNode76.Text = "Node4";
-            treeNode77.Name = "Node5";
-            treeNode77.Text = "Node5";
-            treeNode78.Name = "Node6";
-            treeNode78.Text = "Node6";
-            treeNode79.Name = "Node7";
-            treeNode79.Text = "Node7";
-            treeNode80.Name = "Node8";
-            treeNode80.Text = "Node8";
-            treeNode81.Name = "Node0";
-            treeNode81.Text = "Node0";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode81});
+            treeNode9});
             this.tvlist.Size = new System.Drawing.Size(350, 150);
             this.tvlist.TabIndex = 9;
             // 
@@ -1225,7 +1226,7 @@ namespace EVEMon
             this.rbDefaultProxy.AutoSize = true;
             this.rbDefaultProxy.Location = new System.Drawing.Point(13, 3);
             this.rbDefaultProxy.Name = "rbDefaultProxy";
-            this.rbDefaultProxy.Size = new System.Drawing.Size(248, 17);
+            this.rbDefaultProxy.Size = new System.Drawing.Size(249, 17);
             this.rbDefaultProxy.TabIndex = 2;
             this.rbDefaultProxy.TabStop = true;
             this.rbDefaultProxy.Text = "Use system default proxy (from Control Panel)";
@@ -1236,7 +1237,7 @@ namespace EVEMon
             this.rbCustomProxy.AutoSize = true;
             this.rbCustomProxy.Location = new System.Drawing.Point(13, 26);
             this.rbCustomProxy.Name = "rbCustomProxy";
-            this.rbCustomProxy.Size = new System.Drawing.Size(156, 17);
+            this.rbCustomProxy.Size = new System.Drawing.Size(157, 17);
             this.rbCustomProxy.TabIndex = 3;
             this.rbCustomProxy.TabStop = true;
             this.rbCustomProxy.Text = "Use custom proxy settings:";
@@ -1444,7 +1445,7 @@ namespace EVEMon
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
             this.groupBox3.Location = new System.Drawing.Point(3, 98);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(368, 305);
+            this.groupBox3.Size = new System.Drawing.Size(368, 328);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Email Alert";
@@ -1454,6 +1455,7 @@ namespace EVEMon
             this.flowLayoutPanel6.AutoSize = true;
             this.flowLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel6.Controls.Add(this.cbSendEmail);
+            this.flowLayoutPanel6.Controls.Add(this.cbEmailUseShortFormat);
             this.flowLayoutPanel6.Controls.Add(this.tableLayoutPanel2);
             this.flowLayoutPanel6.Controls.Add(this.btnTestEmail);
             this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1461,9 +1463,19 @@ namespace EVEMon
             this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(362, 285);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(362, 308);
             this.flowLayoutPanel6.TabIndex = 1;
             this.flowLayoutPanel6.WrapContents = false;
+            // 
+            // cbEmailUseShortFormat
+            // 
+            this.cbEmailUseShortFormat.AutoSize = true;
+            this.cbEmailUseShortFormat.Location = new System.Drawing.Point(12, 26);
+            this.cbEmailUseShortFormat.Name = "cbEmailUseShortFormat";
+            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(186, 17);
+            this.cbEmailUseShortFormat.TabIndex = 2;
+            this.cbEmailUseShortFormat.Text = " Use Short Format (SMS-Friendly)";
+            this.cbEmailUseShortFormat.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
@@ -2383,5 +2395,6 @@ namespace EVEMon
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.NumericUpDown nmUpdateSpd;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.CheckBox cbEmailUseShortFormat;
     }
 }
