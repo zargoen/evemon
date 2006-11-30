@@ -106,8 +106,8 @@ namespace EVEMon
             s.HttpProxy = httpSetting;
 
             #region G15 Settings
-            s.G15Static = chkCDisplay.Checked;
-            s.G15StaticSkill = chkSDisplay.Checked;
+            s.G15Static = !chkCDisplay.Checked;
+            s.G15StaticSkill = !chkSDisplay.Checked;
             s.G15UseG15Display = chkG15Enabled.Checked;
 
             s.G15Interval = TimeSpan.FromSeconds((double)nmCCycle.Value);
@@ -241,8 +241,8 @@ namespace EVEMon
                 nmCCycle.Maximum = (decimal)m_settings.G15Interval.TotalSeconds;
             nmCCycle.Value = (decimal)m_settings.G15Interval.TotalSeconds;
 
-            chkCDisplay.Checked = m_settings.G15Static;
-            chkSDisplay.Checked = m_settings.G15StaticSkill;
+            chkCDisplay.Checked = !m_settings.G15Static;
+            chkSDisplay.Checked = !m_settings.G15StaticSkill;
             g15Preview.Visible = m_settings.G15UseG15Display;
             chkG15Enabled.Checked = m_settings.G15UseG15Display;
 
