@@ -104,6 +104,7 @@ namespace EVEMon
             m_igbServer = new EVEMon.IGBService.IGBServer();
             m_settings.RunIGBServerChanged += new EventHandler<EventArgs>(m_settings_RunIGBServerChanged);
             m_settings_RunIGBServerChanged(null, null);
+
             m_settings.RelocateEveWindowChanged += new EventHandler<EventArgs>(m_settings_RelocateEveWindowChanged);
             m_settings_RelocateEveWindowChanged(null, null);
             m_settings.CheckTranquilityStatusChanged += new EventHandler<EventArgs>(m_settings_CheckTranquilityStatusChanged);
@@ -137,6 +138,9 @@ namespace EVEMon
         {
             if (m_settings.RunIGBServer)
             {
+                //reset the settings, if necessary
+                m_igbServer.Stop();
+                m_igbServer.Reset(m_settings.IGBServerPublic, m_settings.IGBServerPort);
                 m_igbServer.Start();
             }
             else

@@ -45,7 +45,6 @@ namespace EVEMon
             s.TitleToTime = cbTitleToTime.Checked;
             s.TitleToTimeLayout = cbWindowsTitleList.SelectedIndex + 1;
             s.WorksafeMode = cbWorksafeMode.Checked;
-            s.RunIGBServer = cbRunIGBServer.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
             s.RelocateTargetScreen = cbScreenList.SelectedIndex;
             s.SkillIconGroup = cbSkillIconSet.SelectedIndex + 1;
@@ -73,6 +72,11 @@ namespace EVEMon
             s.EmailAuthPassword = tbEmailPassword.Text;
             s.EmailFromAddress = tbFromAddress.Text;
             s.EmailToAddress = tbToAddress.Text;
+
+            //IGB Options
+            s.RunIGBServer = cbRunIGBServer.Checked;
+            s.IGBServerPublic = cbIGBPublic.Checked;
+            s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
 
             // Tooltips
             ToolTipDisplayOptions tipOptions = ToolTipDisplayOptions.Blank;
@@ -180,6 +184,8 @@ namespace EVEMon
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
+            cbIGBPublic.Checked = m_settings.IGBServerPublic;
+            tb_IgbPort.Text = m_settings.IGBServerPort.ToString();
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;

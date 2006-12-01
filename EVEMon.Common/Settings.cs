@@ -613,6 +613,31 @@ namespace EVEMon.Common
 
         #region In Game Browser server
         private bool m_runIgbServer = true;
+        private bool m_igbServerPublic = false;
+        private int m_igbPort = 80;
+
+        public bool IGBServerPublic
+        {
+            get { return m_igbServerPublic; }
+            set
+            {
+                m_igbServerPublic = value;
+                OnRunIGBServerChanged();
+            }
+        }
+
+        public int IGBServerPort
+        {
+            get
+            {
+                return m_igbPort;
+            }
+            set
+            {
+                m_igbPort = value;
+                OnRunIGBServerChanged();
+            }
+        }
 
         public bool RunIGBServer
         {

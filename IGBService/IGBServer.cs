@@ -18,6 +18,20 @@ namespace EVEMon.IGBService
             m_listener.ClientConnected += new EventHandler<ClientConnectedEventArgs>(m_listener_ClientConnected);
         }
 
+        public void Reset(bool isPublic, int port)
+        {
+            m_public = isPublic;
+            m_port = port;
+            Stop();
+            m_listener = null;
+
+            m_listener = new IGBTcpListener(new IPEndPoint(m_public ? IPAddress.Any : IPAddress.Loopback, m_port));
+            m_listener.ClientConnected += new EventHandler<ClientConnectedEventArgs>(m_listener_ClientConnected);
+
+        }
+
+        private bool m_public = false;
+        private int m_port = 80;
         private bool m_running = false;
 
         public void Start()
