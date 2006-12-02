@@ -468,7 +468,7 @@ namespace EVEMon.Common
                     GrandSkill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
                     if (gs == null || pe.Level > 5 || pe.Level < 1)
                     {
-                        throw new ApplicationException("The plan contains invalid skills.");
+                        throw new ApplicationException("The plan contains " + pe.SkillName + ", which is an unknown skill");
                     }
                     if (gs.LastConfirmedLvl >= pe.Level)
                     {
