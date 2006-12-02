@@ -54,7 +54,19 @@ namespace EVEMon
 
             try
             {
-                textBox1.Text = m_exception.ToString();
+                String exceptionReport;
+                OperatingSystem os = Environment.OSVersion;
+
+                exceptionReport = "EVEMon Version: " + Application.ProductVersion;
+                exceptionReport += Environment.NewLine;
+                exceptionReport += ".NET Runtime Version: " + System.Environment.Version;
+                exceptionReport += Environment.NewLine;
+                exceptionReport += "Operating System: " + os.VersionString;
+                exceptionReport += Environment.NewLine;
+                exceptionReport += Environment.NewLine;
+                exceptionReport += m_exception.ToString();
+
+                textBox1.Text = exceptionReport;
             }
             catch (Exception ex)
             {

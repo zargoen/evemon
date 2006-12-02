@@ -51,6 +51,7 @@ namespace EVEMon
             slDevelopers.Add("FangVV", "04");
             slDevelopers.Add("Femaref", "04");
             slDevelopers.Add("Spiff Nutter", "04");
+            slDevelopers.Add("Richard Slater", "04");
  
             slOutput = new SortedList();
 
