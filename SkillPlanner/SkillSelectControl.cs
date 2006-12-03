@@ -280,7 +280,7 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (TreeNode tn in gtn.Nodes)
                 {
-                    if (tn.Text.ToLower().Contains(searchText))
+                    if (tn.Text.ToLower().Contains(searchText) || ((GrandSkill)tn.Tag).Description.ToLower().Contains(searchText))
                     {
                         filteredItems.Add(tn.Text, tn.Tag as GrandSkill);
                     }
