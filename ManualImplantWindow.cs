@@ -18,11 +18,20 @@ namespace EVEMon
         {
             foreach (GrandEveAttributeBonus b in bonuses)
             {
-                if (b.Manual)
-                {
-                    workingList.Add(b);
-                }
+                workingList.Add(b);
             }
+        }
+
+        static EveAttribute toSearchForAttrib = EveAttribute.None;
+        enum Searching { ALL, XML, USER };
+        static Searching Where = Searching.ALL;
+
+        private static bool isSameAttribute(GrandEveAttributeBonus x)
+        {
+            if (x.EveAttribute == toSearchForAttrib && (Where == Searching.ALL || (x.Manual && Where == Searching.USER) || (!x.Manual && Where == Searching.XML)))
+                return true;
+            else
+                return false;
         }
 
         private List<GrandEveAttributeBonus> workingList = new List<GrandEveAttributeBonus>();
@@ -69,7 +78,34 @@ namespace EVEMon
 
                 if (dr == DialogResult.OK)
                 {
-                    lvImplants.Items.Add(CreateItemForBonus(f.ResultBonus));
+                    // remove CCP XML item for same attribute if it exists
+                    GrandEveAttributeBonus temp = f.ResultBonus;
+                    toSearchForAttrib = temp.EveAttribute;
+                    Where = Searching.XML;
+                    int i = workingList.FindIndex(isSameAttribute);
+                    if (i != -1)
+                    {
+                        List<ListViewItem> removeItems = new List<ListViewItem>();
+                        foreach (ListViewItem Lvi in lvImplants.Items)
+                        {
+                            if ((Lvi.Tag as GrandEveAttributeBonus).EveAttribute == temp.EveAttribute)
+                                removeItems.Add(Lvi);
+                        }
+                        lvImplants.BeginUpdate();
+                        try
+                        {
+                            foreach (ListViewItem lvi in removeItems)
+                            {
+                                lvImplants.Items.Remove(lvi);
+                            }
+                        }
+                        finally
+                        {
+                            lvImplants.EndUpdate();
+                        }
+                    }
+                    // add new User generated implant
+                    lvImplants.Items.Add(CreateItemForBonus(temp));
                 }
             }
         }
@@ -78,6 +114,10 @@ namespace EVEMon
         {
             ListViewItem lvi = new ListViewItem(b.EveAttribute.ToString());
             lvi.Tag = b;
+            if (b.Manual)
+                lvi.SubItems.Add("User");
+            else
+                lvi.SubItems.Add("CCP XML");
             lvi.SubItems.Add(b.Amount.ToString());
             lvi.SubItems.Add(b.Name);
             return lvi;
@@ -90,11 +130,23 @@ namespace EVEMon
             {
                 foreach (GrandEveAttributeBonus b in workingList)
                 {
-                    ListViewItem lvi = CreateItemForBonus(b);
-                    lvImplants.Items.Add(lvi);
+                    if (!b.Manual)
+                    {
+                        toSearchForAttrib = b.EveAttribute;
+                        Where = Searching.USER;
+                        if (!workingList.Exists(isSameAttribute))
+                        {
+                            ListViewItem lvi = CreateItemForBonus(b);
+                            lvImplants.Items.Add(lvi);
+                        }
+                    }
+                    else
+                    {
+                        ListViewItem lvi = CreateItemForBonus(b);
+                        lvImplants.Items.Add(lvi);
+                    }
                 }
                 chName.Width = -2;
-                workingList = null;
             }
             finally
             {
@@ -104,32 +156,96 @@ namespace EVEMon
 
         private void miModify_Click(object sender, EventArgs e)
         {
+            DialogResult dr = DialogResult.No;
             if (lvImplants.SelectedItems.Count != 1)
             {
+                dr = MessageBox.Show("Please try again with one implant selected.",
+                                     "Wrong number of Implants selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if ((lvImplants.SelectedItems[0].Tag as GrandEveAttributeBonus).Manual == false)
+            {
+                dr = MessageBox.Show("Please add an implant to overwrite an automatically included implant.",
+                                     "Trying to modify an XML implant!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             ListViewItem lvi = lvImplants.SelectedItems[0];
             using (ManualImplantDetailWindow f = new ManualImplantDetailWindow(lvi.Tag as GrandEveAttributeBonus))
             {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
+                DialogResult dr2 = f.ShowDialog();
+                if (dr2 == DialogResult.OK)
                 {
                     ListViewItem rlvi = CreateItemForBonus(f.ResultBonus);
+                    // change the manual implant details
                     lvImplants.Items[lvImplants.Items.IndexOf(lvi)] = rlvi;
+                    if (((lvi.Tag as GrandEveAttributeBonus).EveAttribute) != ((rlvi.Tag as GrandEveAttributeBonus).EveAttribute))
+                    {
+                        Where = Searching.XML;
+                        int i = 0;
+                        // add XML sourced implant with (lvi.Tag as GrandEveAttributeBonus).EveAttribute
+                        GrandEveAttributeBonus add_temp = (lvi.Tag as GrandEveAttributeBonus);
+                        toSearchForAttrib = add_temp.EveAttribute;
+                        if (workingList.Exists(isSameAttribute))
+                        {
+                            i = workingList.FindIndex(isSameAttribute);
+                            lvImplants.Items.Add(CreateItemForBonus(workingList[i]));
+                        }
+                        i = -1;
+                        // remove any XML sourced implant with (rlvi.Tag as GrandEveAttributeBonus).EveAttribute
+                        GrandEveAttributeBonus remove_temp = (rlvi.Tag as GrandEveAttributeBonus);
+                        toSearchForAttrib = remove_temp.EveAttribute;
+                        i = workingList.FindIndex(isSameAttribute);
+                        if (i != -1)
+                        {
+                            List<ListViewItem> removeItems = new List<ListViewItem>();
+                            foreach (ListViewItem Lvi in lvImplants.Items)
+                            {
+                                if ((Lvi.Tag as GrandEveAttributeBonus).EveAttribute == remove_temp.EveAttribute && (Lvi.Tag as GrandEveAttributeBonus).Manual == false)
+                                    removeItems.Add(Lvi);
+                            }
+                            lvImplants.BeginUpdate();
+                            try
+                            {
+                                foreach (ListViewItem Lvi in removeItems)
+                                {
+                                    lvImplants.Items.Remove(Lvi);
+                                }
+                            }
+                            finally
+                            {
+                                lvImplants.EndUpdate();
+                            }
+                        }
+
+                    }
                 }
             }
         }
 
         private void miDelete_Click(object sender, EventArgs e)
         {
+            DialogResult dr = DialogResult.No;
             if (lvImplants.SelectedItems.Count == 0)
             {
+                dr = MessageBox.Show("Please try again with at least one implant selected.",
+                                     "No Implants selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+            else
+            {
+                foreach (ListViewItem lvi in lvImplants.SelectedItems)
+                {
+                    if ((lvi.Tag as GrandEveAttributeBonus).Manual == false)
+                    {
+                        dr = MessageBox.Show("Please add an implant to overwrite an automatically included implant.\nYou can not delete an XML implant.\nAdd a zero value implant to negate the XML implant.",
+                                             "Trying to delete an XML implant!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
             }
 
             List<ListViewItem> removeItems = new List<ListViewItem>();
-            DialogResult dr = DialogResult.No;
             if (lvImplants.SelectedItems.Count == 1)
             {
                 ListViewItem lvi = lvImplants.SelectedItems[0];
@@ -157,6 +273,14 @@ namespace EVEMon
                 {
                     foreach (ListViewItem lvi in removeItems)
                     {
+                        GrandEveAttributeBonus temp = (lvi.Tag as GrandEveAttributeBonus);
+                        toSearchForAttrib = temp.EveAttribute;
+                        Where = Searching.XML;
+                        if (workingList.Exists(isSameAttribute))
+                        {
+                            int i = workingList.FindIndex(isSameAttribute);
+                            lvImplants.Items.Add(CreateItemForBonus(workingList[i]));
+                        }
                         lvImplants.Items.Remove(lvi);
                     }
                 }

@@ -77,7 +77,7 @@ namespace EVEMon
         {
             btnOk.Enabled =
                 cbAttribute.SelectedIndex >= 0 &&
-                Convert.ToInt32(nudAmount.Value) > 0 &&
+                Convert.ToInt32(nudAmount.Value) >= 0 &&
                 !String.IsNullOrEmpty(tbName.Text);
         }
 

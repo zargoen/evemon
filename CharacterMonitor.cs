@@ -428,14 +428,10 @@ namespace EVEMon
 
         private void UpdateSkillHeaderStats()
         {
-            if (m_currentlyVisible)
-            {
-                lblSkillHeader.Text =
-                    String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
-                                    m_grandCharacterInfo.KnownSkillCount,
-                                    m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
-                                    m_grandCharacterInfo.MaxedSkillCount);
-            }
+            lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
+                                                m_grandCharacterInfo.KnownSkillCount,
+                                                m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
+                                                m_grandCharacterInfo.MaxedSkillCount);
         }
 
         private void m_grandCharacterInfo_AttributeChanged(object sender, EventArgs e)
@@ -1038,6 +1034,7 @@ namespace EVEMon
             {
                 // Trigger event on skill completion
                 m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
+                UpdateSkillHeaderStats();
             }
             if (updating_pic == false && pbCharImage.Image == null)
             {
@@ -2023,7 +2020,8 @@ namespace EVEMon
                         }
                         foreach (GrandEveAttributeBonus b in f.ResultBonuses)
                         {
-                            m_grandCharacterInfo.AttributeBonuses.Add(b);
+                            if (b.Manual)
+                                m_grandCharacterInfo.AttributeBonuses.Add(b);
                         }
                     }
                     finally

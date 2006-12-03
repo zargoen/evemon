@@ -357,16 +357,28 @@ namespace EVEMon.Common
         {
             double result = Convert.ToDouble(m_attributes[attribute]);
             double learningBonus = 1.0F;
-
+            double implant_value = 0.0;
             if (includeImplants)
             {
+                bool manual_override = false;
                 foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
                 {
                     if (geab.EveAttribute == attribute)
                     {
-                        result += geab.Amount;
+                        if (geab.Manual == false && manual_override == false)
+                            implant_value += geab.Amount;
+                        if (geab.Manual == true)
+                        {
+                            if (manual_override == false)
+                            {
+                                implant_value = 0.0;
+                                manual_override = true;
+                            }
+                            implant_value += geab.Amount;
+                        }
                     }
                 }
+                result += implant_value;
             }
 
             // XXX: include implants on scratchpad?
@@ -420,11 +432,22 @@ namespace EVEMon.Common
         public double getImplantValue(EveAttribute eveAttribute)
         {
             double result = 0.0;
+            bool manual_override = false;
             foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
                 {
-                    result += geab.Amount;
+                    if (geab.Manual == false && manual_override == false)
+                        result += geab.Amount;
+                    if (geab.Manual == true)
+                    {
+                        if (manual_override == false)
+                        {
+                            result = 0.0;
+                            manual_override = true;
+                        }
+                        result += geab.Amount;
+                    }
                 }
             }
             return result;
@@ -464,11 +487,22 @@ namespace EVEMon.Common
         {
             double result = 0.0F;
             double learningBonus = 1.0F;
+            bool manual_override = false;
             foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
                 {
-                    result += geab.Amount;
+                    if (geab.Manual == false && manual_override == false)
+                        result += geab.Amount;
+                    if (geab.Manual == true)
+                    {
+                        if (manual_override == false)
+                        {
+                            result = 0.0;
+                            manual_override = true;
+                        }
+                        result += geab.Amount;
+                    }
                 }
             }
             int learningLevel = m_skillGroups["Learning"]["Learning"].Level;

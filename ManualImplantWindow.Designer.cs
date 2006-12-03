@@ -43,6 +43,7 @@ namespace EVEMon
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.chFrom = new System.Windows.Forms.ColumnHeader();
             this.cmsImplantCommands.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -55,6 +56,7 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lvImplants.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chAttribute,
+            this.chFrom,
             this.chAdjust,
             this.chName});
             this.lvImplants.ContextMenuStrip = this.cmsImplantCommands;
@@ -83,7 +85,7 @@ namespace EVEMon
             // chName
             // 
             this.chName.Text = "Name";
-            this.chName.Width = 255;
+            this.chName.Width = 231;
             // 
             // cmsImplantCommands
             // 
@@ -93,32 +95,32 @@ namespace EVEMon
             this.msEditSep,
             this.miAddNew});
             this.cmsImplantCommands.Name = "cmsImplantCommands";
-            this.cmsImplantCommands.Size = new System.Drawing.Size(180, 76);
+            this.cmsImplantCommands.Size = new System.Drawing.Size(169, 76);
             this.cmsImplantCommands.Opening += new System.ComponentModel.CancelEventHandler(this.cmsImplantCommands_Opening);
             // 
             // miModify
             // 
             this.miModify.Name = "miModify";
-            this.miModify.Size = new System.Drawing.Size(179, 22);
+            this.miModify.Size = new System.Drawing.Size(168, 22);
             this.miModify.Text = "Modify Implant...";
             this.miModify.Click += new System.EventHandler(this.miModify_Click);
             // 
             // miDelete
             // 
             this.miDelete.Name = "miDelete";
-            this.miDelete.Size = new System.Drawing.Size(179, 22);
+            this.miDelete.Size = new System.Drawing.Size(168, 22);
             this.miDelete.Text = "Delete Implant...";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
             // msEditSep
             // 
             this.msEditSep.Name = "msEditSep";
-            this.msEditSep.Size = new System.Drawing.Size(176, 6);
+            this.msEditSep.Size = new System.Drawing.Size(165, 6);
             // 
             // miAddNew
             // 
             this.miAddNew.Name = "miAddNew";
-            this.miAddNew.Size = new System.Drawing.Size(179, 22);
+            this.miAddNew.Size = new System.Drawing.Size(168, 22);
             this.miAddNew.Text = "Add New Implant...";
             this.miAddNew.Click += new System.EventHandler(this.miAddNew_Click);
             // 
@@ -127,8 +129,8 @@ namespace EVEMon
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lvImplants, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lvImplants, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -186,6 +188,10 @@ namespace EVEMon
             this.label1.TabIndex = 1;
             this.label1.Text = "Tip: Right-click to add, change, or remove implants.";
             // 
+            // chFrom
+            // 
+            this.chFrom.Text = "From";
+            // 
             // ManualImplantWindow
             // 
             this.AcceptButton = this.btnOk;
@@ -223,5 +229,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem miDelete;
         private System.Windows.Forms.ToolStripSeparator msEditSep;
         private System.Windows.Forms.ToolStripMenuItem miAddNew;
+        private System.Windows.Forms.ColumnHeader chFrom;
     }
 }
