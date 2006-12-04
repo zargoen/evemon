@@ -252,7 +252,7 @@ namespace EVEMon
             this.Invoke(new MethodInvoker(delegate
             {
                 SortedList<TimeSpan, GrandCharacterInfo> gcis = new SortedList<TimeSpan, GrandCharacterInfo>();
-                int selectedCharId = 0; 
+                int selectedCharId = 0;
                 foreach (TabPage tp in tcCharacterTabs.TabPages)
                 {
                     CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
@@ -281,13 +281,13 @@ namespace EVEMon
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name)
                     {
                         sb.Append(gci.Name);
-                        sb.Append(" - "); 
+                        sb.Append(" - ");
                     }
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill)
                     {
                         sb.Append(gci.CurrentlyTrainingSkill.Name);
-                    sb.Append(" ");
-                    sb.Append(GrandSkill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
+                        sb.Append(" ");
+                        sb.Append(GrandSkill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
                         sb.Append(" - ");
                     }
 
@@ -300,7 +300,7 @@ namespace EVEMon
                     {
                         //show the time to completion
                         sb.Append(GrandSkill.TimeSpanToDescriptiveText(gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now, DescriptiveTextOptions.IncludeCommas));
-                        sb.Append(" - ");                        
+                        sb.Append(" - ");
                     }
                     if (sb.Length > 7)
                     {
@@ -308,7 +308,7 @@ namespace EVEMon
                     }
                     if (m_settings.TitleToTime && gcis.Count > 0)
                     {
-                        switch(m_settings.TitleToTimeLayout)
+                        switch (m_settings.TitleToTimeLayout)
                         {
                             case 1: // single Char - finishing skill next
                                 if (tsb.Length == 0)
@@ -325,9 +325,9 @@ namespace EVEMon
                                     DescriptiveTextOptions.Default) + " " + gci.Name);
                                 break;
                             case 3: // multi Char - finishing skill next first
-                                tsb.Append( (tsb.Length > 0 ? " | " : "") + GrandSkill.TimeSpanToDescriptiveText(
+                                tsb.Append((tsb.Length > 0 ? " | " : "") + GrandSkill.TimeSpanToDescriptiveText(
                                 gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                DescriptiveTextOptions.Default) + " " + gci.Name );
+                                DescriptiveTextOptions.Default) + " " + gci.Name);
                                 break;
                             case 4: // multi Char - selected char first 
                                 if (selectedCharId == gci.CharacterId)
@@ -347,12 +347,12 @@ namespace EVEMon
                         }
                     }
                 }
-                string sbOut = sb.ToString() ;
+                string sbOut = sb.ToString();
                 if (sbOut.Equals("EVEMon\n"))
                 {
-                    sbOut  = sb.ToString() + "You can configure this tooltip in the options/general panel";
+                    sbOut = sb.ToString() + "You can configure this tooltip in the options/general panel";
                 }
-                
+
                 SetMinimizedIconTooltipText(sbOut);
                 tsb.Append(" - EVEMon");
                 this.Text = tsb.ToString();
@@ -452,8 +452,17 @@ namespace EVEMon
 
                     if (m_settings.EnableBalloonTips)
                     {
-                        //level + 1 is a fairly safe assumption here... the order of operations on this thing is all noodled up.
-                        int skillLevel = m_settings.GetCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level+1;
+                        int skillLevel;
+                        try
+                        {
+                            //level + 1 is a fairly safe assumption here... the order of operations on this thing is all noodled up.
+                            skillLevel = m_settings.GetCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level + 1;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            skillLevel = 1;
+                        }
+
                         string skillLevelString;
 
                         switch (skillLevel)
@@ -468,7 +477,7 @@ namespace EVEMon
                         string sa = e.CharacterName + " has finished learning " + e.SkillName + " " + skillLevelString + ".";
 
                         m_completedSkills.Add(sa);
-                        
+
                         niAlertIcon.Text = "EVEMon - Skill Training Completed";
                         niAlertIcon.BalloonTipTitle = "Skill Training Completed";
                         if (m_completedSkills.Count == 1)
@@ -881,7 +890,7 @@ namespace EVEMon
             if (m_settings.CheckTranquilityStatus)
             {
                 // maybe we should check tranquility
-                if (m_minutesSinceLastServerCheck >= m_settings.StatusUpdateInterval || 
+                if (m_minutesSinceLastServerCheck >= m_settings.StatusUpdateInterval ||
                     m_minutesSinceLastServerCheck < 0)
                 {
                     // enough minutes have passed - check the server
@@ -892,7 +901,7 @@ namespace EVEMon
                 {
                     m_minutesSinceLastServerCheck++;
                 }
-                
+
             }
             tmrTranquilityClock.Interval = 60000;//1 minute
             tmrTranquilityClock.Enabled = true;
@@ -1026,7 +1035,7 @@ namespace EVEMon
                     foreach (TabPage tab in tcCharacterTabs.TabPages)
                     {
                         CharacterMonitor cm = tab.Controls[0] as CharacterMonitor;
-                        cm.CurrentlyVisible = false;                        
+                        cm.CurrentlyVisible = false;
                     }
                     break;
                 case FormWindowState.Normal:
@@ -1078,8 +1087,9 @@ namespace EVEMon
                 }
             }
         }
-    
+
     }
 }
+
 
 
