@@ -40,6 +40,7 @@ namespace EVEMon
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tmrTranquilityClock = new System.Windows.Forms.Timer(this.components);
+            this.tmrLCDClock = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAddChar = new System.Windows.Forms.ToolStripButton();
             this.tsbRemoveChar = new System.Windows.Forms.ToolStripButton();
@@ -128,6 +129,12 @@ namespace EVEMon
             this.tmrTranquilityClock.Enabled = true;
             this.tmrTranquilityClock.Interval = 5000;
             this.tmrTranquilityClock.Tick += new System.EventHandler(this.tmrClock_Tick);
+            // 
+            // tmrLCDClock
+            // 
+            this.tmrLCDClock.Enabled = true;
+            this.tmrLCDClock.Interval = 50;
+            this.tmrLCDClock.Tick += new System.EventHandler(this.tmrLCD_Tick);
             // 
             // toolStrip1
             // 
@@ -262,6 +269,7 @@ namespace EVEMon
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.Timer tmrTranquilityClock;
+        private System.Windows.Forms.Timer tmrLCDClock;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbAddChar;
         private System.Windows.Forms.ToolStripButton tsbRemoveChar;

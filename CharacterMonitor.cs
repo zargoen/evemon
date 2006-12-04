@@ -210,11 +210,18 @@ namespace EVEMon
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_WorksafeChanged);
             m_settings_WorksafeChanged(null, null);
 
+            m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(m_settings_UseLogitechG15DisplayChanged);
+
             if (m_settings != null)
             {
                 //set up individual character settings
                 tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
             }
+        }
+
+        private void m_settings_UseLogitechG15DisplayChanged(object sender, EventArgs e) 
+        {
+            UpdateLcdisplay();
         }
 
         private void m_fsw_Created(object sender, FileSystemEventArgs e)
@@ -261,6 +268,7 @@ namespace EVEMon
             m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
 
             m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_WorksafeChanged);
+            m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(m_settings_UseLogitechG15DisplayChanged);
         }
 
         private bool m_currentlyVisible = false;
@@ -272,6 +280,7 @@ namespace EVEMon
             { 
                 bool old_value = m_currentlyVisible;
                 m_currentlyVisible = value;
+                UpdateLcdisplay();
                 if (m_currentlyVisible != old_value && m_currentlyVisible)
                     UpdateSkillHeaderStats();
             }
@@ -773,6 +782,85 @@ namespace EVEMon
 
         public EventHandler ShortInfoChanged;
 
+        private void UpdateLcdisplay()
+        {
+            if (m_settings.UseLogitechG15Display && Program.LCD != null)
+            {
+                if (Program.LCD.CharacterName == null || Program.LCD.CharacterName == "")
+                {
+                    Program.LCD.CharacterName = m_charName;
+                    Program.LCD.newchar = m_charName;
+                }
+                if (Program.LCD.newchar == m_charName)
+                {
+                    GrandSkill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
+                    if (s != null)
+                    {
+                        double percentDone = 0.0;
+                        int NextLevel = 0;
+                        int CurrentSP = s.CurrentSkillPoints;
+                        int reqToThisLevel = s.GetPointsRequiredForLevel(s.Level);
+                        int reqToNextLevel = 0;
+                        int pointsInThisLevel = 0;
+                        double deltaPointsOfLevel = 0.0;
+
+                        //We must have completed some, but not all, of level II, III or IV
+                        NextLevel = s.Level + 1;
+                        pointsInThisLevel = CurrentSP - reqToThisLevel;
+                        reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
+                        deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
+                        percentDone = pointsInThisLevel / deltaPointsOfLevel;
+
+                        Program.LCD.curperc = percentDone;
+                    }
+                    else
+                    {
+                        Program.LCD.curperc = 1;
+                    }
+                    Program.LCD.CharacterName = m_charName; //null ok
+                    Program.LCD.CurrentSkillTrainingText = m_skillTrainingName; //null ok
+                    Program.LCD.TimeToComplete = m_shortTimeSpan;
+                }
+                long tmp = Program.LCD.leasttime.Ticks - m_shortTimeSpan.Ticks;
+                if (tmp > 0)
+                {
+                    if (m_skillTrainingName != "" && m_skillTrainingName != null)
+                    {
+                        Program.LCD.leasttime = m_shortTimeSpan;
+                        Program.LCD.leastchar = m_charName;
+                    }
+                }
+                if (Program.LCD.charlist == null)
+                {
+                    List<CharLoginInfo> mlist = m_settings.CharacterList;
+                    string[] temp = new string[mlist.Count];
+                    int i = 0;
+                    foreach (CharLoginInfo sci in mlist)
+                    {
+                        temp[i] = sci.CharacterName;
+                        i++;
+                    }
+                    Program.LCD.charlist = temp;
+                }
+                if (Program.LCD.refreshchar != null && Program.LCD.refreshchar == m_charName)
+                {
+                    Program.LCD.refreshchar = null;
+                    tmrUpdate_Tick(null, null);
+                    UpdateNextUpdateLabel();
+                }
+                if (Program.LCD.cycleini == false)
+                {
+                    Program.LCD.cycle = m_settings.G15ACycle;
+                    Program.LCD.cycleint = m_settings.G15ACycleint;
+                    Program.LCD.cycleini = true;
+                }
+                else
+                {
+                    m_settings.G15ACycle = Program.LCD.cycle;
+                }
+            }
+        }
+
         private void CalcSkillRemainText()
         {
             //update Short Data
@@ -913,6 +1001,7 @@ namespace EVEMon
             {
                 ShortInfoChanged(this, new EventArgs());
             }
+            UpdateLcdisplay();
         }
 
         private string TimeSpanDescriptive(DateTime t)

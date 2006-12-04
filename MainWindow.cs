@@ -442,6 +442,11 @@ namespace EVEMon
             {
                 if (e.Complete)
                 {
+                    if (m_settings.UseLogitechG15Display && Program.LCD != null)
+                    {
+                        Program.LCD._COMPLETESTR = e.CharacterName + "\nhas finished learning skill\n" + e.SkillName;
+                        Program.LCD.SkillCompleted();
+                    }
                     if (m_settings.PlaySoundOnSkillComplete)
                         MP3Player.Play("SkillTrained.mp3", true);
 
@@ -891,6 +896,21 @@ namespace EVEMon
             }
             tmrTranquilityClock.Interval = 60000;//1 minute
             tmrTranquilityClock.Enabled = true;
+        }
+
+        private void tmrLCD_Tick(object sender, EventArgs e)
+        {
+            if (Program.LCD != null)
+            {
+                Program.LCD.GetButtonState();
+                tmrLCDClock.Enabled = true;
+                tmrLCDClock.Interval = 50;
+            }
+            else
+            {
+                tmrLCDClock.Enabled = true;
+                tmrLCDClock.Interval = 1000;
+            }
         }
 
         // Semaphore to flag whether we are in the middle of an async server test

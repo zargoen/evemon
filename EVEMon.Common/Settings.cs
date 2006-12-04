@@ -14,30 +14,6 @@ namespace EVEMon.Common
     [XmlRoot("logindata2")]
     public class Settings
     {
-        #region G15 Display
-        private bool m_g15usedisplay = true;
-        private bool m_g15staticskillshow = false;
-        private bool m_g15staticshow = false;
-        private TimeSpan m_g15skillinterval = TimeSpan.FromSeconds(3);
-        private TimeSpan m_g15interval = TimeSpan.FromSeconds(3);
-        private TimeSpan m_g15updatespeed = TimeSpan.FromMilliseconds(50);
-        public bool G15UseG15Display { get { return m_g15usedisplay; } set { m_g15usedisplay = value; } }
-        public bool G15StaticSkill { get { return m_g15staticskillshow; } set { m_g15staticskillshow = value; } }
-        public bool G15Static { get { return m_g15staticshow; } set { m_g15staticshow = value; } }
-
-        public double G15SkillIntervalDbl { get { return m_g15skillinterval.TotalMilliseconds; } set { m_g15skillinterval = TimeSpan.FromMilliseconds(value); } }
-        public double G15IntervalDbl { get { return m_g15interval.TotalMilliseconds; } set { m_g15interval = TimeSpan.FromMilliseconds(value); } }
-        public double G15UpdateSpeedDbl { get { return m_g15updatespeed.TotalMilliseconds; } set { m_g15updatespeed = TimeSpan.FromMilliseconds(value); } }
-
-        [XmlIgnore]
-        public TimeSpan G15SkillInterval { get { return m_g15skillinterval; } set { m_g15skillinterval = value; } }
-        [XmlIgnore]
-        public TimeSpan G15Interval { get { return m_g15interval; } set { m_g15interval = value; } }
-        [XmlIgnore]
-        public TimeSpan G15UpdateSpeed { get { return m_g15updatespeed; } set { m_g15updatespeed = value; } }
-
-        #endregion
-
         private string m_username;
 
         public string Username
@@ -61,6 +37,33 @@ namespace EVEMon.Common
             get { return m_character; }
             set { m_character = value; }
         }        
+
+        private bool m_useLogitechG15Display = false;
+        public bool UseLogitechG15Display {
+            get { return m_useLogitechG15Display; }
+            set { m_useLogitechG15Display = value; OnUseLogitechG15DisplayChanged(); }
+        }
+
+        public bool m_g15acycle = false;
+        public bool G15ACycle
+        {
+            get { return m_g15acycle; }
+            set { m_g15acycle = value; }
+        }
+
+        public int m_g15acycleint = 20;
+        public int G15ACycleint
+        {
+            get { return m_g15acycleint; }
+            set { m_g15acycleint = value; }
+        }
+
+        private void OnUseLogitechG15DisplayChanged() {
+            if (UseLogitechG15DisplayChanged != null)
+                UseLogitechG15DisplayChanged(this, new EventArgs());
+        }
+
+        public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
 
         #region Skill Planner Highlighting
         private bool m_HighlightPlannedSkills;
