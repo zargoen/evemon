@@ -522,6 +522,7 @@ namespace EVEMon
             this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
+            this.tsbIneveSync.Visible = false;
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
             // 
             // btnSave

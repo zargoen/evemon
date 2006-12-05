@@ -335,6 +335,10 @@ namespace EVEMon.Common
             }
             foreach (Plan.Entry pe in m_entries)
             {
+                if (pe.Skill == null)
+                {
+                    continue;
+                }
                 ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
                 scratchpad.ApplyALevelOf(pe.Skill);
             }
@@ -382,6 +386,13 @@ namespace EVEMon.Common
                     bool jumpBack = false;
                     Plan.Entry pe = m_entries[i];
                     GrandSkill gs = pe.Skill;
+                    //skill has been removed
+                    if (gs == null)
+                    {
+                        this.RemoveEntry(pe);
+                        return;
+                    }
+
                     foreach (GrandSkill.Prereq pp in gs.Prereqs)
                     {
                         GrandSkill pgs = pp.Skill;
@@ -468,7 +479,15 @@ namespace EVEMon.Common
                     GrandSkill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
                     if (gs == null || pe.Level > 5 || pe.Level < 1)
                     {
-                        throw new ApplicationException("The plan contains " + pe.SkillName + ", which is an unknown skill");
+                        try
+                        {
+                            this.RemoveEntry(pe);
+                            return;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ApplicationException("The plan contains " + pe.SkillName + ", which is an unknown skill");
+                        }
                     }
                     if (gs.LastConfirmedLvl >= pe.Level)
                     {
@@ -646,6 +665,12 @@ namespace EVEMon.Common
             this.SuppressEvents();
             try
             {
+                //see if it's a "no longer available" skill - this fix for Squadron Command in 1.1.6 by Anders
+                if (pe.Skill == null)
+                {
+                    m_entries.Remove(pe);
+                    return true;
+                }
                 foreach (Plan.Entry tpe in m_entries)
                 {
                     GrandSkill tSkill = tpe.Skill;
