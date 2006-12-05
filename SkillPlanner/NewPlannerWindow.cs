@@ -52,6 +52,32 @@ namespace EVEMon.SkillPlanner
             // Force an update
             m_settings_WorksafeChanged(null, null);
             m_settings_SkillHighlightingChanged(null, null);
+
+            tsddbPlans.DropDownItems.Clear();
+            tsddbPlans.DropDownItems.Add("<New Plan>");
+
+            foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
+            {
+                ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
+                tsddiTemp.MouseEnter += new EventHandler(tsddiTemp_MouseEnter);
+                tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
+                if (planName == m_plan.Name)
+                {
+                    tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                }
+            }
+        }
+
+        void tsddiTemp_MouseEnter(object sender, EventArgs e)
+        {
+            if (((ToolStripDropDownItem)sender).BackColor == SystemColors.Highlight)
+                ((ToolStripDropDownItem)sender).ForeColor = SystemColors.MenuText;
+        }
+
+        void tsddiTemp_MouseLeave(object sender, EventArgs e)
+        {
+            if (((ToolStripDropDownItem)sender).BackColor == SystemColors.Highlight)
+                ((ToolStripDropDownItem)sender).ForeColor = SystemColors.HighlightText;
         }
 
         private void m_settings_SkillHighlightingChanged(object sender, EventArgs e)
@@ -115,7 +141,7 @@ namespace EVEMon.SkillPlanner
                 {
                     m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                     m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);                      
                 }
                 m_settings = value;
                 if (m_settings != null)
@@ -132,7 +158,6 @@ namespace EVEMon.SkillPlanner
             skillBrowser.WorksafeMode = m_settings.WorksafeMode;
             planEditor.WorksafeMode = m_settings.WorksafeMode;
         }
-
 
         private Plan m_plan;
         private void m_plan_Changed(object sender, EventArgs e)
@@ -188,6 +213,58 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        private void ChangePlan(Plan p)
+        {
+            p.GrandCharacterInfo = m_plan.GrandCharacterInfo;
+            m_plan = p;
+
+            skillBrowser.Plan = m_plan;
+            // Shouldn't need this
+            skillBrowser.GrandCharacterInfo = m_plan.GrandCharacterInfo;
+
+            planEditor.Plan = m_plan;
+            planEditor.PlannerWindow = this;
+
+            shipBrowser.Plan = m_plan;
+
+            itemBrowser.Plan = m_plan;
+
+            // See if this is a new plan
+            if (m_plan.Entries.Count == 0)
+                // jump straight to the skill browser
+                tabControl.SelectedTab = tpSkillBrowser;
+            else
+                // Jump to the plan queue
+                tabControl.SelectedTab = tpPlanQueue;
+
+            m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+
+            // Watch for changes to worksafe settings and plan changes
+            m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
+
+            // Force an update
+            m_settings_WorksafeChanged(null, null);
+            m_settings_SkillHighlightingChanged(null, null);
+
+            this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
+            this.RememberPositionKey = "SkillPlannerWindow";
+
+            tsddbPlans.DropDownItems.Clear();
+            tsddbPlans.DropDownItems.Add("<New Plan>");
+
+            foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
+            {
+                ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
+                if (planName == m_plan.Name)
+                {
+                    tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                }
+            }
+            UpdateStatusBar();
+        }
+
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show(
@@ -235,6 +312,58 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 m_plan.ResumeEvents();
+            }
+        }
+
+        private void tsddbPlans_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string s = e.ClickedItem.Text;
+            Plan p = null;
+            if (s != null && s != "<New Plan>" && s != m_plan.Name)
+            {
+                p = m_settings.GetPlanByName(m_plan.GrandCharacterInfo.Name, s);
+                ChangePlan(p);
+            }
+            else
+            {
+                if (s == "<New Plan>")
+                {                    
+                    bool doAgain = true;
+                    while (doAgain)
+                    {
+                        using (NewPlanWindow npw = new NewPlanWindow())
+                        {
+                            DialogResult dr = npw.ShowDialog();
+                            if (dr == DialogResult.Cancel)
+                            {
+                                return;
+                            }
+                            string planName = npw.Result;
+
+                            if (p == null)
+                            {
+                                p = new Plan();
+                            }
+                            try
+                            {
+                                m_settings.AddPlanFor(m_plan.GrandCharacterInfo.Name, p, planName);
+                                doAgain = false;
+                            }
+                            catch (ApplicationException err)
+                            {
+                                ExceptionHandler.LogException(err, true);
+                                DialogResult xdr =
+                                    MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel,
+                                                    MessageBoxIcon.Error);
+                                if (xdr == DialogResult.Cancel)
+                                {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    ChangePlan(p);
+                }                
             }
         }
 

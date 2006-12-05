@@ -34,6 +34,7 @@ namespace EVEMon.SkillPlanner
             this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.tslSuggestion = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsbSaveAs = new System.Windows.Forms.ToolStripButton();
             this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -44,12 +45,12 @@ namespace EVEMon.SkillPlanner
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpPlanQueue = new System.Windows.Forms.TabPage();
-            this.planEditor = new EVEMon.SkillPlanner.PlanOrderEditorControl();
             this.tpSkillBrowser = new System.Windows.Forms.TabPage();
-            this.skillBrowser = new EVEMon.SkillPlanner.SkillBrowser();
             this.tpShipBrowser = new System.Windows.Forms.TabPage();
-            this.shipBrowser = new EVEMon.SkillPlanner.ShipBrowserControl();
             this.tpItemBrowser = new System.Windows.Forms.TabPage();
+            this.planEditor = new EVEMon.SkillPlanner.PlanOrderEditorControl();
+            this.skillBrowser = new EVEMon.SkillPlanner.SkillBrowser();
+            this.shipBrowser = new EVEMon.SkillPlanner.ShipBrowserControl();
             this.itemBrowser = new EVEMon.SkillPlanner.ItemBrowserControl();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -92,6 +93,7 @@ namespace EVEMon.SkillPlanner
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsddbPlans,
             this.tsbSaveAs,
             this.tsbCopyForum,
             this.toolStripSeparator2,
@@ -103,6 +105,15 @@ namespace EVEMon.SkillPlanner
             this.toolStrip1.Size = new System.Drawing.Size(658, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tsddbPlans
+            // 
+            this.tsddbPlans.Image = ((System.Drawing.Image)(resources.GetObject("tsddbPlans.Image")));
+            this.tsddbPlans.ImageTransparentColor = System.Drawing.Color.Black;
+            this.tsddbPlans.Name = "tsddbPlans";
+            this.tsddbPlans.Size = new System.Drawing.Size(88, 22);
+            this.tsddbPlans.Text = "Select Plan";
+            this.tsddbPlans.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsddbPlans_DropDownItemClicked);
             // 
             // tsbSaveAs
             // 
@@ -186,16 +197,6 @@ namespace EVEMon.SkillPlanner
             this.tpPlanQueue.Text = "Plan Queue";
             this.tpPlanQueue.UseVisualStyleBackColor = true;
             // 
-            // planEditor
-            // 
-            this.planEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.planEditor.Location = new System.Drawing.Point(3, 3);
-            this.planEditor.Name = "planEditor";
-            this.planEditor.Plan = null;
-            this.planEditor.Size = new System.Drawing.Size(644, 407);
-            this.planEditor.TabIndex = 2;
-            // 
             // tpSkillBrowser
             // 
             this.tpSkillBrowser.Controls.Add(this.skillBrowser);
@@ -207,16 +208,6 @@ namespace EVEMon.SkillPlanner
             this.tpSkillBrowser.Text = "Skill Browser";
             this.tpSkillBrowser.UseVisualStyleBackColor = true;
             // 
-            // skillBrowser
-            // 
-            this.skillBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillBrowser.Location = new System.Drawing.Point(3, 3);
-            this.skillBrowser.Name = "skillBrowser";
-            this.skillBrowser.Plan = null;
-            this.skillBrowser.SelectedSkill = null;
-            this.skillBrowser.Size = new System.Drawing.Size(644, 407);
-            this.skillBrowser.TabIndex = 0;
-            // 
             // tpShipBrowser
             // 
             this.tpShipBrowser.Controls.Add(this.shipBrowser);
@@ -227,15 +218,6 @@ namespace EVEMon.SkillPlanner
             this.tpShipBrowser.Text = "Ship Browser";
             this.tpShipBrowser.UseVisualStyleBackColor = true;
             // 
-            // shipBrowser
-            // 
-            this.shipBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.shipBrowser.Location = new System.Drawing.Point(0, 0);
-            this.shipBrowser.Name = "shipBrowser";
-            this.shipBrowser.Plan = null;
-            this.shipBrowser.Size = new System.Drawing.Size(650, 413);
-            this.shipBrowser.TabIndex = 0;
-            // 
             // tpItemBrowser
             // 
             this.tpItemBrowser.Controls.Add(this.itemBrowser);
@@ -245,6 +227,38 @@ namespace EVEMon.SkillPlanner
             this.tpItemBrowser.TabIndex = 3;
             this.tpItemBrowser.Text = "Item Browser";
             this.tpItemBrowser.UseVisualStyleBackColor = true;
+            // 
+            // planEditor
+            // 
+            this.planEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.planEditor.HighlightPlannedSkills = false;
+            this.planEditor.HighlightPrerequisites = false;
+            this.planEditor.Location = new System.Drawing.Point(3, 3);
+            this.planEditor.Name = "planEditor";
+            this.planEditor.Plan = null;
+            this.planEditor.Size = new System.Drawing.Size(644, 407);
+            this.planEditor.TabIndex = 2;
+            this.planEditor.WorksafeMode = false;
+            // 
+            // skillBrowser
+            // 
+            this.skillBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillBrowser.Location = new System.Drawing.Point(3, 3);
+            this.skillBrowser.Name = "skillBrowser";
+            this.skillBrowser.Plan = null;
+            this.skillBrowser.SelectedSkill = null;
+            this.skillBrowser.Size = new System.Drawing.Size(644, 407);
+            this.skillBrowser.TabIndex = 0;
+            // 
+            // shipBrowser
+            // 
+            this.shipBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.shipBrowser.Location = new System.Drawing.Point(0, 0);
+            this.shipBrowser.Name = "shipBrowser";
+            this.shipBrowser.Plan = null;
+            this.shipBrowser.Size = new System.Drawing.Size(650, 413);
+            this.shipBrowser.TabIndex = 0;
             // 
             // itemBrowser
             // 
@@ -307,5 +321,6 @@ namespace EVEMon.SkillPlanner
         private ShipBrowserControl shipBrowser;
         private System.Windows.Forms.TabPage tpSkillBrowser;
         private SkillBrowser skillBrowser;
+        private System.Windows.Forms.ToolStripDropDownButton tsddbPlans;
     }
 }

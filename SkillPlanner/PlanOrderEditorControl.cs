@@ -113,38 +113,41 @@ namespace EVEMon.SkillPlanner
 
         #region Skill List View
         private void UpdateSkillList()
-        {
+        {            
             lvSkills.BeginUpdate();
             try
             {
                 lvSkills.Items.Clear();
-                foreach (Plan.Entry pe in m_plan.Entries)
+                if (m_plan != null)
                 {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Tag = pe;
-                    if (!m_WorksafeMode &&
-                        m_HighlightPlannedSkills && 
-                        pe.EntryType == Plan.Entry.Type.Planned)
+                    foreach (Plan.Entry pe in m_plan.Entries)
                     {
-                        lvi.Font = m_plannedSkillFont;
-                        lvi.ForeColor = m_plannedSkillColor;
-                    }
-                    else
-                    {
-                        lvi.Font = m_prerequisiteSkillFont;
-                        lvi.ForeColor = m_prerequisiteSkillColor;
-                    }
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Tag = pe;
+                        if (!m_WorksafeMode &&
+                            m_HighlightPlannedSkills &&
+                            pe.EntryType == Plan.Entry.Type.Planned)
+                        {
+                            lvi.Font = m_plannedSkillFont;
+                            lvi.ForeColor = m_plannedSkillColor;
+                        }
+                        else
+                        {
+                            lvi.Font = m_prerequisiteSkillFont;
+                            lvi.ForeColor = m_prerequisiteSkillColor;
+                        }
 
-                    lvSkills.Items.Add(lvi);
+                        lvSkills.Items.Add(lvi);
 
-                    GrandSkill gs = pe.Skill;
-                    if (gs.InTraining)
-                    {
-                        // This skill is currently in training so (re)start the auto refresh timer
-                        tmrAutoRefresh.Enabled = true;
+                        GrandSkill gs = pe.Skill;
+                        if (gs.InTraining)
+                        {
+                            // This skill is currently in training so (re)start the auto refresh timer
+                            tmrAutoRefresh.Enabled = true;
+                        }
                     }
+                    UpdateListViewItems();
                 }
-                UpdateListViewItems();
             }
             finally
             {
