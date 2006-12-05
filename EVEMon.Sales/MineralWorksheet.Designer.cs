@@ -376,6 +376,7 @@ namespace EVEMon.Sales
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MineralWorksheet";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Mineral Worksheet";
             this.Load += new System.EventHandler(this.MineralWorksheet_Load);
             this.toolStrip1.ResumeLayout(false);
@@ -414,4 +415,5 @@ namespace EVEMon.Sales
 
     }
 }
+
 

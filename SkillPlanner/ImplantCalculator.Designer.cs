@@ -545,6 +545,7 @@ namespace EVEMon.SkillPlanner
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ImplantCalculator";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Implant Calculator";
             this.Shown += new System.EventHandler(this.ImplantCalculator_Shown);
             this.groupBox1.ResumeLayout(false);
