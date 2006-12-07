@@ -1130,6 +1130,10 @@ namespace EVEMon
                 updating_pic = true;
                 GetCharacterImage();
             }
+            if (Program.LCD != null)
+            {
+                Program.LCD.Update();
+            }
         }
 
         private bool updating_pic = false;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -14,16 +15,12 @@ namespace EVEMon.LogitechG15
         {
             _defaultFont = new Font("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
             _bufferOut = new byte[6880];
-            _defBrush = Brushes.Black;
+            _defBrush = Brushes.White;
+            _backColor = Color.Black;
             _bmpLCD = new Bitmap(160, 43);
             _bmpLCD.SetResolution(46f, 46f);
             _lcdGraphics = Graphics.FromImage(_bmpLCD);
             _lcdGraphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-
-            _bmpLCDX = new Bitmap(160, 43);
-            _bmpLCDX.SetResolution(46f, 46f);
-            _lcdGraphicsX = Graphics.FromImage(_bmpLCDX);
-            _lcdGraphicsX.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
             _lines = new string[3] { "", "", "" };
             _formatStringConverted = FORMAT_CHAR_SKILL_TIME_STRING.Replace("[c]", "{0}").Replace("[s]", "{1}").Replace("[t]", "{2}");
@@ -33,6 +30,8 @@ namespace EVEMon.LogitechG15
             }
 
             _LCD = new LCDInterface();
+            _buttonDelegate = new ButtonDelegate(this.ButtonsPressed);
+            _LCD.AssignButtonDelegate(_buttonDelegate);
             _LCD.Open("EveMon", false);
             _btnstatehld = DateTime.Now;
             _cycletime = DateTime.Now.AddSeconds(10);
@@ -40,6 +39,9 @@ namespace EVEMon.LogitechG15
             _cycle = false;
             _COMPLETESTR = "Hotaru Nakayoshi\nhas finished learning skill\nHull Upgrades V";
             _leasttime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+
+            switchState(STATE_SPLASH);
+            ShowSplash();
         }
 
         #region Cleanup
@@ -64,6 +66,54 @@ namespace EVEMon.LogitechG15
         }
         #endregion
 
+        public const uint BUTTON1_VALUE = 1;
+        public const uint BUTTON2_VALUE = 2;
+        public const uint BUTTON3_VALUE = 4;
+        public const uint BUTTON4_VALUE = 8;
+        private int ButtonsPressed(int device, uint dwButtons, IntPtr pContext)
+        {
+            if (_oldbuttonstate != dwButtons)
+            {
+                // get all buttons who havent been pressed last time
+                uint press = (_oldbuttonstate ^ dwButtons) & dwButtons;
+                if ((press & BUTTON1_VALUE) != 0)
+                {
+                    displayChars();
+                }
+                if ((press & BUTTON2_VALUE) != 0)
+                {
+                    // select next skill ready char
+                    //switchState(STATE_SKILLC);
+                    if (_leastchar != null)
+                    {
+                        _newchar = _leastchar;
+                        reorderList(false);
+                        _cycle = false;
+                        switchState(STATE_CHARS);
+                    }
+                }
+                if ((press & BUTTON3_VALUE) != 0)
+                {
+                    // update charinfo
+                    if (_state == STATE_CHARS || _state == STATE_CLIST)
+                    {
+                        _refreshchar = _characterName;
+                        switchState(STATE_S_REFRESH);
+                    }
+                }
+                if ((press & BUTTON4_VALUE) != 0)
+                {
+                    switchCycle();
+                    switchState(STATE_S_CYCLE);
+                    _cycletime = DateTime.Now;
+                }
+
+                _oldbuttonstate = dwButtons;
+                DoRepaint();
+            }
+            return 0;
+        }
+
         //const int MIN_TIME_BETWEEN_REPAINT_MS = 200;
         const int STATE_SPLASH = 1;
         const int STATE_CLIST = 2;
@@ -77,7 +127,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         const string FORMAT_CHAR_SKILL_TIME_STRING = "[c] Training Status:\n[s]\n[t]";        
         private static Lcdisplay _singleInstance;
-        private volatile bool _shouldTerminate;
+        private ButtonDelegate _buttonDelegate;
 
         private LCDInterface _LCD;
         private LcdisplayMode _displayMode = LcdisplayMode.CharSkillTimeMode;
@@ -85,8 +135,7 @@ namespace EVEMon.LogitechG15
         private Brush _defBrush;
         private Bitmap _bmpLCD;
         private Graphics _lcdGraphics;
-        private Bitmap _bmpLCDX;
-        private Graphics _lcdGraphicsX;
+        private Color _backColor;
         private string _formatStringConverted;
         private DateTime _lastRepaint;
         //private bool _showSplash = true;
@@ -105,10 +154,9 @@ namespace EVEMon.LogitechG15
         private string[] _lines;
         //private string[] _lastLines;
         private Byte[] _bufferOut;
-        private Byte[] _lastBufferOut;
         private long _buttonstate;
         private string[] _charlist;
-        private long _oldbuttonstate;
+        private uint _oldbuttonstate;
         private DateTime _btnstatehld;
         private DateTime _painttime;
         private DateTime _holdtime;
@@ -149,62 +197,6 @@ namespace EVEMon.LogitechG15
             // Not going to implement other display modes right now. Will do later.
         }
 
-        public void GetButtonState() 
-        {
-            // called every 50ms to scan current button states
-            _LCD.ReadSoftButtons(ref _buttonstate);
-            if (_oldbuttonstate != _buttonstate)
-            {
-                // get all buttons who havent been pressed last time
-                long _press = (_oldbuttonstate ^ _buttonstate) & _buttonstate;
-                // get all buttons who have been pressed last time
-                //long _unpress = (_oldbuttonstate ^ _buttonstate) & _oldbuttonstate;
-
-                for (int i = 1; i <= 8; i=i*2)
-                {
-                    if ((_press & i) > 0)
-                    {
-                        // button i pressed
-                        if (i == 1)
-                        {
-                            displayChars();
-                        }
-                        if (i == 2)
-                        {
-                            // select next skill ready char
-                            //switchState(STATE_SKILLC);
-                            if (_leastchar != null)
-                            {
-                                _newchar = _leastchar;
-                                reorderList(false);
-                                _cycle = false;
-                                switchState(STATE_CHARS);
-                            }
-                        }
-                        if (i == 4)
-                        {
-                            // update charinfo
-                            if (_state == STATE_CHARS || _state == STATE_CLIST)
-                            {
-                                _refreshchar = _characterName;
-                                switchState(STATE_S_REFRESH);
-                            }
-                        }
-                        if (i == 8)
-                        {
-                            switchCycle();
-                            switchState(STATE_S_CYCLE);
-                            _cycletime = DateTime.Now;
-                        }
-                    }
-                    //if ((_unpress & i) > 0)
-                    //{
-                        // button i released
-                    //}
-                }
-                _oldbuttonstate = _buttonstate;
-            }
-        }
         public void SkillCompleted() 
         {
             switchState(STATE_SKILLC);
@@ -323,9 +315,6 @@ namespace EVEMon.LogitechG15
             get { return _charlist; }
             set { _charlist = value; }
         }
-        public bool IsRunning {
-            get { return (!_shouldTerminate); }
-        }
         public static Lcdisplay Instance() {
             if (_singleInstance == null) {
                 _singleInstance = new Lcdisplay();
@@ -333,30 +322,11 @@ namespace EVEMon.LogitechG15
             return _singleInstance;
         }
 
-        public void Start() {
-            Start(LcdisplayMode.CharSkillTimeMode);
-        }        
-        private void Start(LcdisplayMode mode)
+        public void Update()
         {
-            this._displayMode = mode;
-            this._shouldTerminate = false;
-            //this._showSplash = true;
-            DateTime dtThredStart = DateTime.Now;
-
-            switchState(STATE_SPLASH);
-            ShowSplash();
-
-            //Main loop
-            while (!_shouldTerminate) 
-            {
-                DoRepaint();
-                Thread.Sleep(50);
-            }
-        }
-
-        public void Stop() 
-        {
-            this._shouldTerminate = true;
+            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString("hh:mm:ss:fff") + " - start update");
+            DoRepaint();
+            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString("hh:mm:ss:fff") + " - end update");
         }
 
         private void switchState(int state) 
@@ -444,8 +414,7 @@ namespace EVEMon.LogitechG15
                 _lines[1] = tmpLines[1];
                 _lines[2] = tmpLines[2];
             }
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
             RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[0], _defaultFont));
             RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[1], _defaultFont));
             RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[2], _defaultFont));
@@ -468,7 +437,7 @@ namespace EVEMon.LogitechG15
             _lcdGraphics.DrawString(_lines[0], _defaultFont, _defBrush, recLine1);
             _lcdGraphics.DrawString(_lines[1], _defaultFont, _defBrush, recLine2);
             _lcdGraphics.DrawString(_lines[2], _defaultFont, _defBrush, recLine3);
-            _lcdGraphicsX.DrawString(perc, _defaultFont, _defBrush, recLine4);
+            _lcdGraphics.DrawString(perc, _defaultFont, _defBrush, recLine4);
 
             //_lcdGraphics.DrawRectangle(test, 0, 0, 159, 10);
             _lcdGraphics.DrawRectangle(test, 1, (recLine3.Bottom + 1), 158, 8);
@@ -484,8 +453,7 @@ namespace EVEMon.LogitechG15
                 _lines[1] = tmpLines[1];
                 _lines[2] = tmpLines[2];
             }
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
             RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[0], _defaultFont));
             RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[1], _defaultFont));
             RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), _lcdGraphics.MeasureString(_lines[2], _defaultFont));
@@ -509,7 +477,7 @@ namespace EVEMon.LogitechG15
                 RectangleF recLine4 = new RectangleF(new PointF(0f, 0f), new SizeF(40f, 10f));
 
                 recLine4.Offset(61f, recLine3.Bottom - 1);
-                _lcdGraphicsX.DrawString(perc, _defaultFont, _defBrush, recLine4);
+                _lcdGraphics.DrawString(perc, _defaultFont, _defBrush, recLine4);
                 //_lcdGraphics.DrawRectangle(test, 0, 0, 159, 10);
                 _lcdGraphics.DrawRectangle(test, 1, (recLine3.Bottom + 1), 158, 8);
                 _lcdGraphics.FillRectangle(_defBrush, 2, (recLine3.Bottom + 2), 157, 7);
@@ -523,8 +491,7 @@ namespace EVEMon.LogitechG15
         }
         private void DoRepaint_charlist() 
         {
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
             RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
             RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
             RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
@@ -534,7 +501,7 @@ namespace EVEMon.LogitechG15
             recLine3.Offset(0f, recLine2.Bottom);
             recLine4.Offset(0f, recLine3.Bottom);
 
-            _lcdGraphicsX.DrawString(_charlist[0], _defaultFont, _defBrush, recLine1);
+            _lcdGraphics.DrawString(_charlist[0], _defaultFont, _defBrush, recLine1);
             if (_charlist.Length > 1)
                 _lcdGraphics.DrawString(_charlist[1], _defaultFont, _defBrush, recLine2);
             if (_charlist.Length > 2)
@@ -549,8 +516,7 @@ namespace EVEMon.LogitechG15
         }
         private void DoRepaint_s_cycle()
         {
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
             string[] _line = new string[2];
 
             _line[0] = "Autocycle is now ";
@@ -575,8 +541,7 @@ namespace EVEMon.LogitechG15
         }
         private void DoRepaint_s_refresh()
         {
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
 
             _lines[0] = "Refreshing Character Information";
             _lines[1] = "of";
@@ -601,8 +566,7 @@ namespace EVEMon.LogitechG15
         }
         private void ShowSplash() 
         {
-            _lcdGraphics.Clear(Color.White);
-            _lcdGraphicsX.Clear(Color.White);
+            _lcdGraphics.Clear(_backColor);
             _lcdGraphics.DrawIcon(_eveMonSplash, new Rectangle(64, 5, 32, 32));
             DoRepaint_RawBitMapMode(LcdisplayPriority.Alert);
         }
@@ -610,37 +574,39 @@ namespace EVEMon.LogitechG15
         private void DoRepaint_RawBitMapMode() { DoRepaint_RawBitMapMode(LcdisplayPriority.Normal); }
         private void DoRepaint_RawBitMapMode(LcdisplayPriority priority)
         {
-            int bNdx = 0;
-            bool bitBOn = false;
-            bool bitBOn2 = false;
-            for (int y = 0; y < 43; y++) 
+            lock (_bmpLCD)
             {
-                for (int x = 0; x < 160; x++) 
+                BitmapData bmData = _bmpLCD.LockBits(
+                    new Rectangle(0, 0, _bmpLCD.Width, _bmpLCD.Height),
+                    ImageLockMode.ReadOnly, _bmpLCD.PixelFormat);
+                try
                 {
-                    bNdx = (160 * y) + x;
-                    Color bc = _bmpLCD.GetPixel(x, y);
-                    Color bc2 = _bmpLCDX.GetPixel(x, y);
-                    bitBOn = (bc.GetBrightness() < .4f);
-                    bitBOn2 = (bc2.GetBrightness() < .4f);
-                    if (bitBOn && bitBOn2)
-                    {
-                        bitBOn = false;
-                    }
-                    else if (bitBOn || bitBOn2)
-                    {
-                        bitBOn = true;
-                    }
-                    _bufferOut[bNdx] = (byte)(bitBOn ? 255 : 0);
-                }
-            }
+                    byte[] rawData = new byte[bmData.Stride * _bmpLCD.Height];
+                    System.Runtime.InteropServices.Marshal.Copy(bmData.Scan0, rawData, 0, rawData.Length);
+                    int bpp = bmData.Stride / _bmpLCD.Width;
 
-            if(_displayMode == LcdisplayMode.RawBitMapMode)
-            {
-                _lastBufferOut = new byte[6880];
-                _bufferOut.CopyTo(_lastBufferOut, 0);
+                    int currPos = 0;
+                    int rowWidth = _bmpLCD.Width * bpp;
+                    for (int row = 0; row < _bmpLCD.Height; row++)
+                    {
+                        int rowStart = row * bmData.Stride;
+                        for (int pixel = 0; pixel < rowWidth; pixel += bpp)
+                        {
+                            _bufferOut[currPos] = rawData[rowStart + pixel + 2];
+                            currPos++;
+                        }
+                    }
+                    _LCD.DisplayBitmap(ref _bufferOut[0], (int)priority);
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    _bmpLCD.UnlockBits(bmData);
+                }
+                _lastRepaint = DateTime.Now;
             }
-            _LCD.DisplayBitmap(ref _bufferOut[0], (int)priority);
-            _lastRepaint = DateTime.Now;
         }
 
         static string FormatTimeSpan(TimeSpan timespan) 

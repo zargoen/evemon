@@ -47,7 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="lgLCDNETWrapper, Version=1.0.2.0, Culture=neutral">
+    <Reference Include="lgLCDNETWrapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\lgLCDNETWrapper.dll</HintPath>
     </Reference>
@@ -64,7 +64,12 @@
   <ItemGroup>
     <EmbeddedResource Include="EVEMon-all.ico">
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="lgLcdLibWrapper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lgLCDNETWrapper.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

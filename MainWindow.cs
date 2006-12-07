@@ -907,20 +907,20 @@ namespace EVEMon
             tmrTranquilityClock.Enabled = true;
         }
 
-        private void tmrLCD_Tick(object sender, EventArgs e)
-        {
-            if (Program.LCD != null)
-            {
-                Program.LCD.GetButtonState();
-                tmrLCDClock.Enabled = true;
-                tmrLCDClock.Interval = 50;
-            }
-            else
-            {
-                tmrLCDClock.Enabled = true;
-                tmrLCDClock.Interval = 1000;
-            }
-        }
+        //private void tmrLCD_Tick(object sender, EventArgs e)
+        //{
+        //    if (Program.LCD != null)
+        //    {
+        //        Program.LCD.GetButtonState();
+        //        tmrLCDClock.Enabled = true;
+        //        tmrLCDClock.Interval = 50;
+        //    }
+        //    else
+        //    {
+        //        tmrLCDClock.Enabled = true;
+        //        tmrLCDClock.Interval = 1000;
+        //    }
+        //}
 
         // Semaphore to flag whether we are in the middle of an async server test
         bool m_checkingServer = false;
@@ -1090,6 +1090,8 @@ namespace EVEMon
 
     }
 }
+
+
 
 
 
