@@ -12,5 +12,4 @@
 
 EVEMONWINHOOK_API LRESULT CALLBACK CbtHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-
 #pragma comment( lib, "user32" )
