@@ -7,6 +7,8 @@ using System.Windows.Forms.VisualStyles;
 using System.Drawing;
 using System.Windows.Forms;
 
+/* Code from http://blogs.msdn.com/jfoscoding/articles/491523.aspx */
+
 namespace EVEMon.Common
 {
     public partial class SplitButton : Button
