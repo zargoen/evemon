@@ -65,7 +65,7 @@ namespace EVEMon
             this.miManualImplants = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
-            this.btnPlan = new System.Windows.Forms.Button();
+            this.btnPlan = new EVEMon.Common.SplitButton();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSkillHeader = new System.Windows.Forms.Label();
             this.tmrTick = new System.Windows.Forms.Timer(this.components);
@@ -462,18 +462,18 @@ namespace EVEMon
             this.flowLayoutPanel2.Controls.Add(this.btnSave);
             this.flowLayoutPanel2.Controls.Add(this.btnPlan);
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(326, 68);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(311, 68);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel2, 3);
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(66, 102);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(81, 102);
             this.flowLayoutPanel2.TabIndex = 20;
             // 
             // llToggleAll
             // 
             this.llToggleAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llToggleAll.AutoSize = true;
-            this.llToggleAll.Location = new System.Drawing.Point(13, 89);
+            this.llToggleAll.Location = new System.Drawing.Point(28, 89);
             this.llToggleAll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.llToggleAll.Name = "llToggleAll";
             this.llToggleAll.Size = new System.Drawing.Size(53, 13);
@@ -494,7 +494,7 @@ namespace EVEMon
             this.btnMoreOptions.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnMoreOptions.Name = "btnMoreOptions";
             this.btnMoreOptions.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnMoreOptions.Size = new System.Drawing.Size(63, 22);
+            this.btnMoreOptions.Size = new System.Drawing.Size(78, 22);
             this.btnMoreOptions.TabIndex = 19;
             this.btnMoreOptions.Text = "More...";
             this.btnMoreOptions.UseVisualStyleBackColor = true;
@@ -506,7 +506,7 @@ namespace EVEMon
             this.miManualImplants,
             this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 48);
             // 
             // miManualImplants
             // 
@@ -535,7 +535,7 @@ namespace EVEMon
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnSave.Name = "btnSave";
             this.btnSave.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnSave.Size = new System.Drawing.Size(63, 23);
+            this.btnSave.Size = new System.Drawing.Size(78, 23);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -543,19 +543,16 @@ namespace EVEMon
             // 
             // btnPlan
             // 
-            this.btnPlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPlan.AutoSize = true;
-            this.btnPlan.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPlan.Enabled = false;
+            this.btnPlan.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPlan.ImageKey = "Normal";
             this.btnPlan.Location = new System.Drawing.Point(3, 3);
-            this.btnPlan.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnPlan.Name = "btnPlan";
-            this.btnPlan.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnPlan.Size = new System.Drawing.Size(63, 23);
-            this.btnPlan.TabIndex = 18;
+            this.btnPlan.Size = new System.Drawing.Size(75, 23);
+            this.btnPlan.TabIndex = 20;
             this.btnPlan.Text = "Plan...";
             this.btnPlan.UseVisualStyleBackColor = true;
+            this.btnPlan.ContextMenuShowing += new System.EventHandler(this.btnPlan_ContextMenuShowing);
             this.btnPlan.Click += new System.EventHandler(this.btnPlan_Click);
             // 
             // flowLayoutPanel1
@@ -730,7 +727,6 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.Button btnPlan;
         private System.Windows.Forms.Button btnMoreOptions;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
@@ -749,5 +745,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem setEVEFolder;
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
         private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
+        private EVEMon.Common.SplitButton btnPlan;
     }
 }

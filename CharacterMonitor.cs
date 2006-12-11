@@ -19,7 +19,7 @@ namespace EVEMon
 {
     public partial class CharacterMonitor : UserControl
     {
-        public CharacterMonitor()
+        private CharacterMonitor()
         {
             InitializeComponent();
            
@@ -52,6 +52,11 @@ namespace EVEMon
             m_cli = null;
             m_sci = sci;
             m_cfi = cfi;
+        }
+
+        private void LoadPlans()
+        {
+           
         }
 
         private string m_charName
@@ -1617,6 +1622,25 @@ namespace EVEMon
             p.ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
+        private void btnPlan_ContextMenuShowing(object sender, EventArgs e)
+        {
+            ContextMenuStrip plans = new ContextMenuStrip();
+
+            foreach (string plan in m_settings.GetPlansForCharacter(m_grandCharacterInfo.Name))
+            {
+                
+                ToolStripItem planItem = new ToolStripButton(plan);
+                planItem.Click += delegate(object o, EventArgs ev)
+                {
+                    ToolStripItem item = o as ToolStripItem;
+                    m_settings.GetPlanByName(m_grandCharacterInfo.Name, item.Text).ShowEditor(m_settings, m_grandCharacterInfo);
+                };               
+                plans.Items.Add(planItem);
+            }
+
+            btnPlan.ContextMenuStrip = plans;
+        }
+
         private void btnMoreOptions_Click(object sender, EventArgs e)
         {
             cmsMoreOptions.Show(btnMoreOptions,
@@ -2201,6 +2225,8 @@ namespace EVEMon
         {
             m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
         }
+
+        
     }
 
     public delegate void SkillTrainingCompletedHandler(object sender, SkillTrainingCompletedEventArgs e);

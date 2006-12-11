@@ -77,6 +77,12 @@
     <Compile Include="SerializableCharacterInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Ship.cs" />
+    <Compile Include="SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SplitButton.designer.cs">
+      <DependentUpon>SplitButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="StringTable.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
