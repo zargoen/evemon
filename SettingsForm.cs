@@ -238,7 +238,6 @@ namespace EVEMon
             cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
             cbTooltipOptionName.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name);
 
-
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
             {
@@ -254,7 +253,15 @@ namespace EVEMon
         private void cbRunAtStartup_CheckedChanged(object sender, EventArgs e)
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            if ((sender as CheckBox).Checked)
+            CheckBox cbSender = sender as CheckBox;
+
+            //it's possible to get to this point without write access, check for nulls just in case
+            if (rk == null)
+            {
+                cbSender.Checked = false;
+                return;
+            }
+            if (cbSender.Checked)
             {
                 rk.SetValue("EVEMon", String.Format("{0} {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
             }
