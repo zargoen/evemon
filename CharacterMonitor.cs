@@ -1734,6 +1734,9 @@ namespace EVEMon
                     int pointsInThisLevel = 0;
                     double deltaPointsOfLevel = 0.0;
                     int PointsRemain = 0;
+                    double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(s.PrimaryAttribute) +
+                                           (m_grandCharacterInfo.GetEffectiveAttribute(s.SecondaryAttribute) / 2));
+                    string SPPerHour = " ("+Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour)";
 
                     if (CurrentSP > s.GetPointsRequiredForLevel(s.Level))
                     {
@@ -1762,7 +1765,7 @@ namespace EVEMon
                                                                                   DescriptiveTextOptions.UppercaseText) +
                                              "\n" + s.DescriptionNl.ToString() + "\nPrimary: " +
                                              s.PrimaryAttribute.ToString() + ", Secondary: " +
-                                             s.SecondaryAttribute.ToString());
+                                             s.SecondaryAttribute.ToString() + SPPerHour);
                     }
                     else if (CurrentSP == s.GetPointsRequiredForLevel(s.Level))
                     // We've completed all the skill points for the current level
@@ -1794,18 +1797,18 @@ namespace EVEMon
                                                      DescriptiveTextOptions.UppercaseText) + "\n" +
                                                  s.DescriptionNl.ToString() + "\nPrimary: " +
                                                  s.PrimaryAttribute.ToString() + ", Secondary: " +
-                                                 s.SecondaryAttribute.ToString());
+                                                 s.SecondaryAttribute.ToString() + SPPerHour);
                         }
                         else // training completed
                         {
                             ttToolTip.Active = true;
                             ttToolTip.SetToolTip(lbSkills,
                                                  String.Format(
-                                                     "Level V Complete: {0}/{1} (100%)\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4}",
+                                                     "Level V Complete: {0}/{1} (100%)\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4} {5}",
                                                      s.CurrentSkillPoints.ToString("#,##0"),
                                                      s.GetPointsRequiredForLevel(5).ToString("#,##0"),
                                                      s.DescriptionNl.ToString(), s.PrimaryAttribute.ToString(),
-                                                     s.SecondaryAttribute.ToString()));
+                                                     s.SecondaryAttribute.ToString(),SPPerHour));
                         }
                     }
                     else // training hasn't got past level 1 yet
@@ -1836,7 +1839,7 @@ namespace EVEMon
                                                  DescriptiveTextOptions.UppercaseText) + "\n" +
                                              s.DescriptionNl.ToString() + "\nPrimary: " +
                                              s.PrimaryAttribute.ToString() + ", Secondary: " +
-                                             s.SecondaryAttribute.ToString());
+                                             s.SecondaryAttribute.ToString() + SPPerHour);
                     }
                 }
             }
@@ -1860,6 +1863,10 @@ namespace EVEMon
                     double deltaPointsOfLevel = 0.0;
                     int PointsRemain = 0;
 
+                    double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(s.PrimaryAttribute) +
+                             (m_grandCharacterInfo.GetEffectiveAttribute(s.SecondaryAttribute) / 2));
+                    string SPPerHour = " (" + Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour)";
+                    
                     if (CurrentSP > s.GetPointsRequiredForLevel(s.Level))
                     { //We must have completed some, but not all, of level II, III or IV
                         NextLevel = s.Level + 1;
@@ -1872,7 +1879,7 @@ namespace EVEMon
                         string CurrentlyDone = String.Format("Partially Completed lvl {0}: {1}/{2} ({3})", GrandSkill.GetRomanForInt(NextLevel), s.CurrentSkillPoints.ToString("#,##0"), s.GetPointsRequiredForLevel(NextLevel).ToString("#,##0"), percentDone.ToString("P0"));
                         string ToNextLevel = String.Format("To Level {0}: {1} Skill Points remaining", GrandSkill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
                         ttToolTip.Active = true;
-                        ttToolTip.SetToolTip(lbSkills, CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString());
+                        ttToolTip.SetToolTip(lbSkills, CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString()+ SPPerHour);
                     }
                     else if (CurrentSP == s.GetPointsRequiredForLevel(s.Level))// We've completed all the skill points for the current level
                     {
@@ -1888,16 +1895,16 @@ namespace EVEMon
                             string ToNextLevel = String.Format("To Level {0}: {1} Skill Points required", GrandSkill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
                             ttToolTip.Active = true;
                             ttToolTip.SetToolTip(lbSkills,
-                                CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString());
+                                CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString() + SPPerHour);
                         }
                         else// training completed
                         {
                             ttToolTip.Active = true;
                             ttToolTip.SetToolTip(lbSkills,
-                                String.Format("Level V Complete: {0}/{1} (100%)\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4}",
+                                String.Format("Level V Complete: {0}/{1} (100%)\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4} {5}",
                                 s.CurrentSkillPoints.ToString("#,##0"),
                                 s.GetPointsRequiredForLevel(5).ToString("#,##0"),
-                                s.DescriptionNl.ToString(), s.PrimaryAttribute.ToString(), s.SecondaryAttribute.ToString()));
+                                s.DescriptionNl.ToString(), s.PrimaryAttribute.ToString(), s.SecondaryAttribute.ToString(), SPPerHour));
                         }
                     }
                     else// training hasn't got past level 1 yet
@@ -1912,7 +1919,7 @@ namespace EVEMon
                         string CurrentlyDone = String.Format("Partially Completed lvl {0}: {1}/{2} ({3})", GrandSkill.GetRomanForInt(NextLevel), s.CurrentSkillPoints.ToString("#,##0"), s.GetPointsRequiredForLevel(NextLevel).ToString("#,##0"), percentDone.ToString("P0"));
                         string ToNextLevel = String.Format("To Level {0}: {1} Skill Points remaining", GrandSkill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
                         ttToolTip.Active = true;
-                        ttToolTip.SetToolTip(lbSkills, CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString());
+                        ttToolTip.SetToolTip(lbSkills, CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " + GrandSkill.TimeSpanToDescriptiveText(s.GetTrainingTimeToLevel(NextLevel), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText) + "\n" + s.DescriptionNl.ToString() + "\nPrimary: " + s.PrimaryAttribute.ToString() + ", Secondary: " + s.SecondaryAttribute.ToString()+ SPPerHour);
                     }
                 }
             }
@@ -2227,6 +2234,16 @@ namespace EVEMon
         }
 
         
+
+        private void flowLayoutPanel6_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void lbSkills_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public delegate void SkillTrainingCompletedHandler(object sender, SkillTrainingCompletedEventArgs e);
