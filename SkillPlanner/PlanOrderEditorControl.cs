@@ -354,11 +354,13 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the colour of all items
+
             foreach (ListViewItem current in lvSkills.Items)
             {
                 bool isSameSkill = false;
                 bool isPreRequisite = false;
                 bool isPostRequisite = false;
+
 
                 if (!m_WorksafeMode &&
                     m_HighlightPrerequisites &&
@@ -404,6 +406,29 @@ namespace EVEMon.SkillPlanner
                     //current.BackColor = lvSkills.BackColor;
                     current.StateImageIndex = -1;
                 }
+            }
+            if (lvSkills.SelectedItems.Count > 1)
+            {
+                TimeSpan selectedTrainTime = TimeSpan.Zero;
+                foreach (ListViewItem current in lvSkills.SelectedItems)
+                {
+                    Plan.Entry pe = (Plan.Entry)current.Tag;
+                    GrandSkill gs = pe.Skill;
+                    selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
+                }
+
+                m_plannerWindow.UpdateStatusBarSelected(String.Format("{0} Skills selected, Training time: {1}",
+                                            lvSkills.SelectedItems.Count,
+                                            GrandSkill.TimeSpanToDescriptiveText(selectedTrainTime,
+                                                                                     DescriptiveTextOptions.FullText |
+                                                                                     DescriptiveTextOptions.
+                                                                                         IncludeCommas |
+                                                                                     DescriptiveTextOptions.SpaceText)));
+            }
+            else
+            {
+                // reset the status bar to normal in case multiple items were previously selected
+                m_plannerWindow.UpdateStatusBar();
             }
         }
 

@@ -168,7 +168,12 @@ namespace EVEMon.SkillPlanner
 
         private bool m_suggestionTipUp = false;
 
-        private void UpdateStatusBar()
+        public void UpdateStatusBarSelected(String txt)
+        {
+            slblStatusText.Text = txt;
+        }
+
+        public void UpdateStatusBar()
         {
             if (this.InvokeRequired)
             {
