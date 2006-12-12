@@ -918,7 +918,15 @@ namespace EVEMon.Common
                     sw.Write("{0}: ", num);
                 }
                 boldStart();
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("<a href='showinfo:{0}'>", pe.Skill.Id);
+                }
                 sw.Write(pe.SkillName);
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("</a>");
+                }
                 sw.Write(' ');
                 sw.Write(GrandSkill.GetRomanForInt(pe.Level));
                 boldEnd();
