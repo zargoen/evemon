@@ -312,7 +312,7 @@ namespace EVEMon.Common
 
 
         /// <summary>
-        /// Gets the character info from the myeve website.  Also updates ineve.net, if applicable.
+        /// Gets the character info from the myeve website and stores it in the local cache.
         /// </summary>
         /// <param name="charId">The char id.</param>
         /// <returns>The SerializableCharacterInfo, fully populated</returns>
@@ -349,6 +349,9 @@ namespace EVEMon.Common
                 SerializableCharacterInfo sci = ProcessCharacterXml(xdoc, charId, out timeLeftInCache);
                 sci.TimeLeftInCache = timeLeftInCache;
                 sci.SkillInTraining = sit;
+
+                //save the xml in the character cache
+                LocalXmlCache.Instance.Save(xdoc);
                 
                 return sci;
             }
@@ -359,27 +362,50 @@ namespace EVEMon.Common
             }
         }
 
-        public void UpdateIneve(XmlDocument xdoc)
+        /// <summary>
+        /// Uploads the character to ineve.  Relies on the local xml cache.  Should only be called asynchronously.
+        /// </summary>
+        /// <param name="charName">Name of the char as an object.</param>
+        public void UpdateIneve(object charName)
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ineve.net/skills/upload.php");
-            request.Timeout = 10000;
-            Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            request.UserAgent = "EVEMon/" + currentVersion.ToString();
-            string boundary=Guid.NewGuid().ToString().Replace("-", "");
-            request.ContentType = "multipart/form-data; boundary=" + boundary;
-            request.Method = "POST";
-
-            string spacer = "--" + boundary + "\r\n";
-            spacer += "Content-Disposition: form-data;\r\nname=\"upload\";\r\nfilename=\"character.xml\"\r\n";
-            spacer += "Content-Type:text/xml\r\n\r\n";
-            byte[] bytes = Encoding.UTF8.GetBytes(spacer);
-            using (Stream s = request.GetRequestStream())
+            lock (LocalXmlCache.Instance)
             {
-                s.Write(bytes, 0, bytes.Length);
-                xdoc.WriteTo(new XmlTextWriter(s, Encoding.UTF8));
+                WebClient client = new WebClient();
+                byte[] bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[charName as string].FullName);
+                string response = Encoding.UTF8.GetString(bytes);
             }
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();            
+            
+            /*string encoded = string.Empty;
+            lock (LocalXmlCache.Instance)
+            {
+                FileInfo charFile = LocalXmlCache.Instance[charName as string];
+                FileStream fs = new FileStream(charFile.FullName, FileMode.Open);
+                StreamReader reader = new StreamReader(fs);
+                string charXml = reader.ReadToEnd();
+                reader.Dispose();
+                fs.Dispose();
+                encoded = HttpUtility.UrlEncode(charXml);
+            }
+
+
+            string postData = "charxml=\"" + encoded;// +HttpUtility.UrlEncode("\"&login=\"Anders Chydenius&password=\"password\"");
+
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ineve.net/skills/evemon_upload.php");
+            request.Method = "POST";
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.UserAgent = "EVEMon/" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            request.ContentLength = byteArray.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+            
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();*/
+            
         }
+
+        
 
         private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int charId, out int cacheExpires)
         {

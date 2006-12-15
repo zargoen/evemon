@@ -484,7 +484,7 @@ namespace EVEMon.Common
                             this.RemoveEntry(pe);
                             return;
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             throw new ApplicationException("The plan contains " + pe.SkillName + ", which is an unknown skill");
                         }

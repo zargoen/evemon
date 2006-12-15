@@ -65,7 +65,7 @@ namespace EVEMon
                 {
                     LCD = EVEMon.LogitechG15.Lcdisplay.Instance();
                 }
-                catch (Exception exx)
+                catch (Exception)
                 {
                     if (Debugger.IsAttached)
                     {

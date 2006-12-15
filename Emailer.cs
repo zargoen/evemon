@@ -15,7 +15,6 @@ namespace EVEMon
         private string m_server;
         private ICredentialsByHost m_serverCredentials;
         private bool m_serverRequiresSsl = false;
-        private bool m_useShortFormat = false;
         private string m_fromAddr;
         private string m_toAddr;
         private string m_subject;
