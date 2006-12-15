@@ -414,6 +414,11 @@ namespace EVEMon
                                                (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
                         m_estimatedCompletion = gs.EstimatedCompletion;
+                        
+                        //downtime finish?       
+                        DateTime universalFinish = m_estimatedCompletion.ToUniversalTime();
+                        lblDtWarning.Visible = (universalFinish.Hour == 11);
+
                         CalcSkillRemainText();
                         pnlTraining.Visible = true;
                     }

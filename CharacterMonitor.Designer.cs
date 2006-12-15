@@ -77,6 +77,7 @@ namespace EVEMon
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.lblDtWarning = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -253,6 +254,7 @@ namespace EVEMon
             this.flowLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel6.Controls.Add(this.label1);
             this.flowLayoutPanel6.Controls.Add(this.lblSPPerHour);
+            this.flowLayoutPanel6.Controls.Add(this.lblDtWarning);
             this.flowLayoutPanel6.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel6.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -406,19 +408,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -657,6 +659,19 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
+            // lblDtWarning
+            // 
+            this.lblDtWarning.AutoSize = true;
+            this.lblDtWarning.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDtWarning.ForeColor = System.Drawing.Color.Red;
+            this.lblDtWarning.Location = new System.Drawing.Point(0, 26);
+            this.lblDtWarning.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.lblDtWarning.Name = "lblDtWarning";
+            this.lblDtWarning.Size = new System.Drawing.Size(112, 13);
+            this.lblDtWarning.TabIndex = 2;
+            this.lblDtWarning.Text = "Downtime Conflict!";
+            this.lblDtWarning.Visible = false;
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -748,5 +763,6 @@ namespace EVEMon
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
         private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
         private EVEMon.Common.SplitButton btnPlan;
+        private System.Windows.Forms.Label lblDtWarning;
     }
 }
