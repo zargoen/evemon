@@ -1629,11 +1629,10 @@ namespace EVEMon
 
             foreach (string plan in m_settings.GetPlansForCharacter(m_grandCharacterInfo.Name))
             {
-
-                ToolStripItem planItem = new ToolStripButton(plan);
+                ToolStripMenuItem planItem = new ToolStripMenuItem(plan);
                 planItem.Click += delegate(object o, EventArgs ev)
                 {
-                    ToolStripItem item = o as ToolStripItem;
+                    ToolStripMenuItem item = o as ToolStripMenuItem;
                     m_settings.GetPlanByName(m_grandCharacterInfo.Name, item.Text).ShowEditor(m_settings, m_grandCharacterInfo);
                 };
                 plans.Items.Add(planItem);
