@@ -40,25 +40,25 @@ namespace EVEMon
             this.lblCharisma = new System.Windows.Forms.Label();
             this.lblIntelligence = new System.Windows.Forms.Label();
             this.pnlTraining = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.tlpStatus = new System.Windows.Forms.TableLayoutPanel();
+            this.flpStatusLabels = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblCurrentlyTraining = new System.Windows.Forms.Label();
             this.lblSPPerHour = new System.Windows.Forms.Label();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpStatusValues = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTrainingSkill = new System.Windows.Forms.Label();
             this.lblTrainingRemain = new System.Windows.Forms.Label();
             this.lblTrainingEst = new System.Windows.Forms.Label();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
             this.pnlCharData = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tlpInfo = new System.Windows.Forms.TableLayoutPanel();
+            this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
             this.pbThrobber = new System.Windows.Forms.PictureBox();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUpdateTimer = new System.Windows.Forms.Label();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpAttributes = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.llToggleAll = new System.Windows.Forms.LinkLabel();
             this.btnMoreOptions = new System.Windows.Forms.Button();
             this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -66,7 +66,7 @@ namespace EVEMon
             this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnPlan = new EVEMon.Common.SplitButton();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSkillHeader = new System.Windows.Forms.Label();
             this.tmrTick = new System.Windows.Forms.Timer(this.components);
             this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
@@ -80,18 +80,18 @@ namespace EVEMon
             this.lblDtWarning = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel6.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
+            this.tlpStatus.SuspendLayout();
+            this.flpStatusLabels.SuspendLayout();
+            this.flpStatusValues.SuspendLayout();
             this.pnlCharData.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel5.SuspendLayout();
+            this.tlpInfo.SuspendLayout();
+            this.flpThrobber.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbThrobber)).BeginInit();
             this.cmsThrobberMenu.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
+            this.flpAttributes.SuspendLayout();
+            this.flpButtons.SuspendLayout();
             this.cmsMoreOptions.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.flpCharacterInfo.SuspendLayout();
             this.cmsPictureOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,7 +102,7 @@ namespace EVEMon
             this.pbCharImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.pbCharImage.MinimumSize = new System.Drawing.Size(128, 128);
             this.pbCharImage.Name = "pbCharImage";
-            this.tableLayoutPanel1.SetRowSpan(this.pbCharImage, 3);
+            this.tlpInfo.SetRowSpan(this.pbCharImage, 3);
             this.pbCharImage.Size = new System.Drawing.Size(128, 128);
             this.pbCharImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCharImage.TabIndex = 0;
@@ -219,7 +219,7 @@ namespace EVEMon
             // 
             this.pnlTraining.AutoSize = true;
             this.pnlTraining.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pnlTraining.Controls.Add(this.tableLayoutPanel2);
+            this.pnlTraining.Controls.Add(this.tlpStatus);
             this.pnlTraining.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlTraining.Location = new System.Drawing.Point(0, 457);
             this.pnlTraining.Name = "pnlTraining";
@@ -228,52 +228,50 @@ namespace EVEMon
             this.pnlTraining.TabIndex = 13;
             this.pnlTraining.Visible = false;
             // 
-            // tableLayoutPanel2
+            // tlpStatus
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel6, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 3);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(392, 39);
-            this.tableLayoutPanel2.TabIndex = 4;
+            this.tlpStatus.AutoSize = true;
+            this.tlpStatus.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpStatus.ColumnCount = 2;
+            this.tlpStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpStatus.Controls.Add(this.flpStatusLabels, 0, 0);
+            this.tlpStatus.Controls.Add(this.flpStatusValues, 1, 0);
+            this.tlpStatus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpStatus.Location = new System.Drawing.Point(0, 3);
+            this.tlpStatus.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpStatus.Name = "tlpStatus";
+            this.tlpStatus.RowCount = 1;
+            this.tlpStatus.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpStatus.Size = new System.Drawing.Size(392, 39);
+            this.tlpStatus.TabIndex = 4;
             // 
-            // flowLayoutPanel6
+            // flpStatusLabels
             // 
-            this.flowLayoutPanel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.flpStatusLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel6.AutoSize = true;
-            this.flowLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel6.Controls.Add(this.label1);
-            this.flowLayoutPanel6.Controls.Add(this.lblSPPerHour);
-            this.flowLayoutPanel6.Controls.Add(this.lblDtWarning);
-            this.flowLayoutPanel6.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(115, 39);
-            this.flowLayoutPanel6.TabIndex = 15;
-            this.flowLayoutPanel6.WrapContents = false;
-            this.flowLayoutPanel6.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel6_Paint);
+            this.flpStatusLabels.AutoSize = true;
+            this.flpStatusLabels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpStatusLabels.Controls.Add(this.lblCurrentlyTraining);
+            this.flpStatusLabels.Controls.Add(this.lblSPPerHour);
+            this.flpStatusLabels.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpStatusLabels.Location = new System.Drawing.Point(0, 0);
+            this.flpStatusLabels.Margin = new System.Windows.Forms.Padding(0);
+            this.flpStatusLabels.Name = "flpStatusLabels";
+            this.flpStatusLabels.Size = new System.Drawing.Size(115, 39);
+            this.flpStatusLabels.TabIndex = 15;
+            this.flpStatusLabels.WrapContents = false;
             // 
-            // label1
+            // lblCurrentlyTraining
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Currently Training:";
+            this.lblCurrentlyTraining.AutoSize = true;
+            this.lblCurrentlyTraining.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentlyTraining.Location = new System.Drawing.Point(0, 0);
+            this.lblCurrentlyTraining.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.lblCurrentlyTraining.Name = "lblCurrentlyTraining";
+            this.lblCurrentlyTraining.Size = new System.Drawing.Size(112, 13);
+            this.lblCurrentlyTraining.TabIndex = 0;
+            this.lblCurrentlyTraining.Text = "Currently Training:";
             // 
             // lblSPPerHour
             // 
@@ -285,19 +283,19 @@ namespace EVEMon
             this.lblSPPerHour.TabIndex = 1;
             this.lblSPPerHour.Text = "label2";
             // 
-            // flowLayoutPanel3
+            // flpStatusValues
             // 
-            this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel3.Controls.Add(this.lblTrainingSkill);
-            this.flowLayoutPanel3.Controls.Add(this.lblTrainingRemain);
-            this.flowLayoutPanel3.Controls.Add(this.lblTrainingEst);
-            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(115, 0);
-            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(47, 39);
-            this.flowLayoutPanel3.TabIndex = 5;
+            this.flpStatusValues.AutoSize = true;
+            this.flpStatusValues.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpStatusValues.Controls.Add(this.lblTrainingSkill);
+            this.flpStatusValues.Controls.Add(this.lblTrainingRemain);
+            this.flpStatusValues.Controls.Add(this.lblTrainingEst);
+            this.flpStatusValues.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpStatusValues.Location = new System.Drawing.Point(115, 0);
+            this.flpStatusValues.Margin = new System.Windows.Forms.Padding(0);
+            this.flpStatusValues.Name = "flpStatusValues";
+            this.flpStatusValues.Size = new System.Drawing.Size(47, 39);
+            this.flpStatusValues.TabIndex = 5;
             // 
             // lblTrainingSkill
             // 
@@ -340,53 +338,53 @@ namespace EVEMon
             // 
             this.pnlCharData.AutoSize = true;
             this.pnlCharData.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pnlCharData.Controls.Add(this.tableLayoutPanel1);
+            this.pnlCharData.Controls.Add(this.tlpInfo);
             this.pnlCharData.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCharData.Location = new System.Drawing.Point(0, 0);
             this.pnlCharData.Name = "pnlCharData";
             this.pnlCharData.Size = new System.Drawing.Size(392, 173);
             this.pnlCharData.TabIndex = 14;
             // 
-            // tableLayoutPanel1
+            // tlpInfo
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel5, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.pbCharImage, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblSkillHeader, 0, 3);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 173);
-            this.tableLayoutPanel1.TabIndex = 19;
+            this.tlpInfo.AutoSize = true;
+            this.tlpInfo.ColumnCount = 3;
+            this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpInfo.Controls.Add(this.flpThrobber, 2, 0);
+            this.tlpInfo.Controls.Add(this.flpAttributes, 1, 2);
+            this.tlpInfo.Controls.Add(this.flpButtons, 2, 1);
+            this.tlpInfo.Controls.Add(this.flpCharacterInfo, 1, 0);
+            this.tlpInfo.Controls.Add(this.pbCharImage, 0, 0);
+            this.tlpInfo.Controls.Add(this.lblSkillHeader, 0, 3);
+            this.tlpInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpInfo.Location = new System.Drawing.Point(0, 0);
+            this.tlpInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.tlpInfo.Name = "tlpInfo";
+            this.tlpInfo.RowCount = 4;
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpInfo.Size = new System.Drawing.Size(392, 173);
+            this.tlpInfo.TabIndex = 19;
             // 
-            // flowLayoutPanel5
+            // flpThrobber
             // 
-            this.flowLayoutPanel5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel5.Controls.Add(this.pbThrobber);
-            this.flowLayoutPanel5.Controls.Add(this.lblUpdateTimer);
-            this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(333, 0);
-            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(59, 24);
-            this.flowLayoutPanel5.TabIndex = 15;
-            this.flowLayoutPanel5.WrapContents = false;
+            this.flpThrobber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpThrobber.AutoSize = true;
+            this.flpThrobber.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpThrobber.Controls.Add(this.pbThrobber);
+            this.flpThrobber.Controls.Add(this.lblUpdateTimer);
+            this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flpThrobber.Location = new System.Drawing.Point(333, 0);
+            this.flpThrobber.Margin = new System.Windows.Forms.Padding(0);
+            this.flpThrobber.Name = "flpThrobber";
+            this.flpThrobber.Size = new System.Drawing.Size(59, 24);
+            this.flpThrobber.TabIndex = 15;
+            this.flpThrobber.WrapContents = false;
             // 
             // pbThrobber
             // 
@@ -437,46 +435,46 @@ namespace EVEMon
             this.lblUpdateTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.lblUpdateTimer.Visible = false;
             // 
-            // flowLayoutPanel4
+            // flpAttributes
             // 
-            this.flowLayoutPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.flowLayoutPanel4.AutoSize = true;
-            this.flowLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel4.Controls.Add(this.lblWillpower);
-            this.flowLayoutPanel4.Controls.Add(this.lblMemory);
-            this.flowLayoutPanel4.Controls.Add(this.lblPerception);
-            this.flowLayoutPanel4.Controls.Add(this.lblCharisma);
-            this.flowLayoutPanel4.Controls.Add(this.lblIntelligence);
-            this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(131, 63);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(74, 65);
-            this.flowLayoutPanel4.TabIndex = 19;
-            this.flowLayoutPanel4.WrapContents = false;
+            this.flpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.flpAttributes.AutoSize = true;
+            this.flpAttributes.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpAttributes.Controls.Add(this.lblWillpower);
+            this.flpAttributes.Controls.Add(this.lblMemory);
+            this.flpAttributes.Controls.Add(this.lblPerception);
+            this.flpAttributes.Controls.Add(this.lblCharisma);
+            this.flpAttributes.Controls.Add(this.lblIntelligence);
+            this.flpAttributes.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
+            this.flpAttributes.Location = new System.Drawing.Point(131, 63);
+            this.flpAttributes.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.flpAttributes.Name = "flpAttributes";
+            this.flpAttributes.Size = new System.Drawing.Size(74, 65);
+            this.flpAttributes.TabIndex = 19;
+            this.flpAttributes.WrapContents = false;
             // 
-            // flowLayoutPanel2
+            // flpButtons
             // 
-            this.flowLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel2.Controls.Add(this.llToggleAll);
-            this.flowLayoutPanel2.Controls.Add(this.btnMoreOptions);
-            this.flowLayoutPanel2.Controls.Add(this.btnSave);
-            this.flowLayoutPanel2.Controls.Add(this.btnPlan);
-            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(311, 68);
-            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel2, 3);
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(81, 102);
-            this.flowLayoutPanel2.TabIndex = 20;
+            this.flpButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpButtons.AutoSize = true;
+            this.flpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpButtons.Controls.Add(this.llToggleAll);
+            this.flpButtons.Controls.Add(this.btnMoreOptions);
+            this.flpButtons.Controls.Add(this.btnSave);
+            this.flpButtons.Controls.Add(this.btnPlan);
+            this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
+            this.flpButtons.Location = new System.Drawing.Point(314, 69);
+            this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.flpButtons.Name = "flpButtons";
+            this.tlpInfo.SetRowSpan(this.flpButtons, 3);
+            this.flpButtons.Size = new System.Drawing.Size(78, 101);
+            this.flpButtons.TabIndex = 20;
             // 
             // llToggleAll
             // 
             this.llToggleAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llToggleAll.AutoSize = true;
-            this.llToggleAll.Location = new System.Drawing.Point(28, 89);
+            this.llToggleAll.Location = new System.Drawing.Point(25, 88);
             this.llToggleAll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.llToggleAll.Name = "llToggleAll";
             this.llToggleAll.Size = new System.Drawing.Size(53, 13);
@@ -493,11 +491,11 @@ namespace EVEMon
             this.btnMoreOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnMoreOptions.ContextMenuStrip = this.cmsMoreOptions;
             this.btnMoreOptions.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnMoreOptions.Location = new System.Drawing.Point(3, 61);
+            this.btnMoreOptions.Location = new System.Drawing.Point(3, 60);
             this.btnMoreOptions.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnMoreOptions.Name = "btnMoreOptions";
             this.btnMoreOptions.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnMoreOptions.Size = new System.Drawing.Size(78, 22);
+            this.btnMoreOptions.Size = new System.Drawing.Size(75, 22);
             this.btnMoreOptions.TabIndex = 19;
             this.btnMoreOptions.Text = "More...";
             this.btnMoreOptions.UseVisualStyleBackColor = true;
@@ -534,15 +532,16 @@ namespace EVEMon
             this.btnSave.AutoSize = true;
             this.btnSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSave.Enabled = false;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnSave.Location = new System.Drawing.Point(3, 32);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnSave.Name = "btnSave";
             this.btnSave.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnSave.Size = new System.Drawing.Size(78, 23);
+            this.btnSave.Size = new System.Drawing.Size(75, 22);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.button1_Click);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnPlan
             // 
@@ -551,36 +550,36 @@ namespace EVEMon
             this.btnPlan.ImageKey = "Normal";
             this.btnPlan.Location = new System.Drawing.Point(3, 3);
             this.btnPlan.Name = "btnPlan";
-            this.btnPlan.Size = new System.Drawing.Size(75, 23);
+            this.btnPlan.Size = new System.Drawing.Size(72, 23);
             this.btnPlan.TabIndex = 20;
             this.btnPlan.Text = "Plan...";
             this.btnPlan.UseVisualStyleBackColor = true;
             this.btnPlan.ContextMenuShowing += new System.EventHandler(this.btnPlan_ContextMenuShowing);
             this.btnPlan.Click += new System.EventHandler(this.btnPlan_Click);
             // 
-            // flowLayoutPanel1
+            // flpCharacterInfo
             // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.flpCharacterInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.lblCharacterName);
-            this.flowLayoutPanel1.Controls.Add(this.lblBioInfo);
-            this.flowLayoutPanel1.Controls.Add(this.lblCorpInfo);
-            this.flowLayoutPanel1.Controls.Add(this.lblBalance);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(131, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(132, 60);
-            this.flowLayoutPanel1.TabIndex = 18;
-            this.flowLayoutPanel1.WrapContents = false;
+            this.flpCharacterInfo.AutoSize = true;
+            this.flpCharacterInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpCharacterInfo.Controls.Add(this.lblCharacterName);
+            this.flpCharacterInfo.Controls.Add(this.lblBioInfo);
+            this.flpCharacterInfo.Controls.Add(this.lblCorpInfo);
+            this.flpCharacterInfo.Controls.Add(this.lblBalance);
+            this.flpCharacterInfo.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpCharacterInfo.Location = new System.Drawing.Point(131, 0);
+            this.flpCharacterInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.flpCharacterInfo.Name = "flpCharacterInfo";
+            this.tlpInfo.SetRowSpan(this.flpCharacterInfo, 2);
+            this.flpCharacterInfo.Size = new System.Drawing.Size(132, 60);
+            this.flpCharacterInfo.TabIndex = 18;
+            this.flpCharacterInfo.WrapContents = false;
             // 
             // lblSkillHeader
             // 
             this.lblSkillHeader.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.lblSkillHeader, 2);
+            this.tlpInfo.SetColumnSpan(this.lblSkillHeader, 2);
             this.lblSkillHeader.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSkillHeader.Location = new System.Drawing.Point(0, 131);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
@@ -654,7 +653,6 @@ namespace EVEMon
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
-            this.lbSkills.SelectedIndexChanged += new System.EventHandler(this.lbSkills_SelectedIndexChanged);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
@@ -686,27 +684,27 @@ namespace EVEMon
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).EndInit();
             this.pnlTraining.ResumeLayout(false);
             this.pnlTraining.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel6.ResumeLayout(false);
-            this.flowLayoutPanel6.PerformLayout();
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
+            this.tlpStatus.ResumeLayout(false);
+            this.tlpStatus.PerformLayout();
+            this.flpStatusLabels.ResumeLayout(false);
+            this.flpStatusLabels.PerformLayout();
+            this.flpStatusValues.ResumeLayout(false);
+            this.flpStatusValues.PerformLayout();
             this.pnlCharData.ResumeLayout(false);
             this.pnlCharData.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel5.ResumeLayout(false);
-            this.flowLayoutPanel5.PerformLayout();
+            this.tlpInfo.ResumeLayout(false);
+            this.tlpInfo.PerformLayout();
+            this.flpThrobber.ResumeLayout(false);
+            this.flpThrobber.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbThrobber)).EndInit();
             this.cmsThrobberMenu.ResumeLayout(false);
-            this.flowLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel4.PerformLayout();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
+            this.flpAttributes.ResumeLayout(false);
+            this.flpAttributes.PerformLayout();
+            this.flpButtons.ResumeLayout(false);
+            this.flpButtons.PerformLayout();
             this.cmsMoreOptions.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
+            this.flpCharacterInfo.ResumeLayout(false);
+            this.flpCharacterInfo.PerformLayout();
             this.cmsPictureOptions.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -730,7 +728,7 @@ namespace EVEMon
         private System.Windows.Forms.Label lblTrainingEst;
         private System.Windows.Forms.Label lblTrainingRemain;
         private System.Windows.Forms.Label lblTrainingSkill;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblCurrentlyTraining;
         private System.Windows.Forms.Timer tmrUpdate;
         private System.Windows.Forms.Panel pnlCharData;
         private System.Windows.Forms.Timer tmrTick;
@@ -741,21 +739,21 @@ namespace EVEMon
         private System.Windows.Forms.PictureBox pbThrobber;
         private System.Windows.Forms.Timer tmrThrobber;
         private System.Windows.Forms.LinkLabel llToggleAll;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flpCharacterInfo;
+        private System.Windows.Forms.TableLayoutPanel tlpInfo;
+        private System.Windows.Forms.FlowLayoutPanel flpButtons;
         private System.Windows.Forms.Button btnMoreOptions;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.TableLayoutPanel tlpStatus;
+        private System.Windows.Forms.FlowLayoutPanel flpStatusValues;
+        private System.Windows.Forms.FlowLayoutPanel flpAttributes;
+        private System.Windows.Forms.FlowLayoutPanel flpThrobber;
         private System.Windows.Forms.Label lblUpdateTimer;
         private System.Windows.Forms.ContextMenuStrip cmsThrobberMenu;
         private System.Windows.Forms.ToolStripMenuItem miHitEveO;
         private System.Windows.Forms.ToolStripMenuItem miChangeInfo;
         private System.Windows.Forms.ContextMenuStrip cmsMoreOptions;
         private System.Windows.Forms.ToolStripMenuItem miManualImplants;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
+        private System.Windows.Forms.FlowLayoutPanel flpStatusLabels;
         private System.Windows.Forms.Label lblSPPerHour;
         private System.Windows.Forms.ToolStripMenuItem updatePicture;
         private System.Windows.Forms.ToolStripMenuItem updatePictureFromEVECache;

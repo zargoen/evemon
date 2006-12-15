@@ -296,13 +296,13 @@ namespace EVEMon
             pbCharImage.Visible = !m_settings.WorksafeMode;
             if (m_settings.WorksafeMode)
             {
-                tableLayoutPanel1.SetColumnSpan(lblSkillHeader, 1);
-                tableLayoutPanel1.SetColumn(lblSkillHeader, 1);
+                tlpInfo.SetColumnSpan(lblSkillHeader, 1);
+                tlpInfo.SetColumn(lblSkillHeader, 1);
             }
             else
             {
-                tableLayoutPanel1.SetColumn(lblSkillHeader, 0);
-                tableLayoutPanel1.SetColumnSpan(lblSkillHeader, 2);
+                tlpInfo.SetColumn(lblSkillHeader, 0);
+                tlpInfo.SetColumnSpan(lblSkillHeader, 2);
             }
             //lblCharacterName.Left = m_settings.WorksafeMode ? -3 : 134;
             //lblBioInfo.Left = m_settings.WorksafeMode ? -3 : 134;
@@ -1273,7 +1273,7 @@ namespace EVEMon
             Png = 4
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             sfdSaveDialog.FileName = m_grandCharacterInfo.Name;
             sfdSaveDialog.FilterIndex = (int)SaveFormat.Xml;
@@ -1629,6 +1629,7 @@ namespace EVEMon
 
             foreach (string plan in m_settings.GetPlansForCharacter(m_grandCharacterInfo.Name))
             {
+
                 ToolStripMenuItem planItem = new ToolStripMenuItem(plan);
                 planItem.Click += delegate(object o, EventArgs ev)
                 {
@@ -1646,8 +1647,6 @@ namespace EVEMon
             cmsMoreOptions.Show(btnMoreOptions,
                                 btnMoreOptions.PointToClient(MousePosition), ToolStripDropDownDirection.Default);
         }
-
-
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
@@ -2231,18 +2230,6 @@ namespace EVEMon
         private void tsbIneveSync_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
-        }
-
-
-
-        private void flowLayoutPanel6_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void lbSkills_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 
