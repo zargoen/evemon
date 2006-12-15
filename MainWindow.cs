@@ -324,6 +324,7 @@ namespace EVEMon
                                     gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                     DescriptiveTextOptions.Default) + " " + gci.Name);
                                 break;
+                            case 0: //this is the default
                             case 3: // multi Char - finishing skill next first
                                 tsb.Append((tsb.Length > 0 ? " | " : "") + GrandSkill.TimeSpanToDescriptiveText(
                                 gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
