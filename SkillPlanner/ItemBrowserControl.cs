@@ -212,22 +212,25 @@ namespace EVEMon.SkillPlanner
             {
                 GrandCharacterInfo gci = m_plan.GrandCharacterInfo;
                 GrandSkill gs = gci.GetSkill(rs.Name);
-                if (gs.Level >= rs.Level)
+                if (gs != null)
                 {
-                    sb.Append(" (Known)");
-                }
-                else
-                {
-                    if (m_plan.IsPlanned(gs, rs.Level))
-                    {
-                        sb.Append(" (Planned)");
-                        m_allSkillsKnown = false;
-                    }
-                    else
-                    {
-                        m_allSkillsKnown = false;
-                        m_skillsUnplanned = true;
-                    }
+                    if (gs.Level >= rs.Level)
+                 {
+                     sb.Append(" (Known)");
+                 }
+                 else
+                 {
+                     if (m_plan.IsPlanned(gs, rs.Level))
+                     {
+                         sb.Append(" (Planned)");
+                         m_allSkillsKnown = false;
+                     }
+                     else
+                     {
+                         m_allSkillsKnown = false;
+                         m_skillsUnplanned = true;
+                     }
+                 }
                 }
             }
             lblSkill.Text = sb.ToString();
