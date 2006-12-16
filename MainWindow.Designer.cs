@@ -234,7 +234,6 @@ namespace EVEMon
             this.Controls.Add(this.tcCharacterTabs);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
-            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(425, 350);
             this.Name = "MainWindow";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
