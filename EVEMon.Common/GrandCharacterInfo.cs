@@ -733,17 +733,15 @@ namespace EVEMon.Common
                     GrandSkill gs = gsg[s.Name];
                     if (gs == null)
                     {
-                        gs = new GrandSkill(this, false,
-                                            s.Name, s.Id, "Unknown Skill", EveAttribute.Intelligence,
-                                            EveAttribute.Willpower,
-                                            s.Rank, new List<GrandSkill.Prereq>());
-                        gs.Changed += new EventHandler(gs_Changed);
-
-                        gsg.InsertSkill(gs);
+                        MessageBox.Show("The character cache contains the unknown skill " + s.Name + ", which will be removed.",
+                                    "Unknown skill", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
-                    gs.CurrentSkillPoints = s.SkillPoints;
-                    gs.Known = true;
-                    gs.LastConfirmedLvl = gs.Level;
+                    else
+                    {
+                        gs.CurrentSkillPoints = s.SkillPoints;
+                        gs.Known = true;
+                        gs.LastConfirmedLvl = gs.Level;
+                    }
                 }
             }
             this.check_training_skills(ci.SkillInTraining);
