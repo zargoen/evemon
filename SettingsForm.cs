@@ -85,7 +85,7 @@ namespace EVEMon
             //IGB Options
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.IGBServerPublic = cbIGBPublic.Checked;
-            s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
+            s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);                
 
             // Tooltips
             ToolTipDisplayOptions tipOptions = ToolTipDisplayOptions.Blank;
@@ -131,8 +131,28 @@ namespace EVEMon
             m_settings.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
         }
 
+        private bool ValidateIGBSettings() {
+            int l_igbPort = -1;
+            try {
+                l_igbPort = Int32.Parse(tb_IgbPort.Text);
+            }
+            catch (FormatException) {}
+
+            if ((l_igbPort < System.Net.IPEndPoint.MinPort) || (l_igbPort > System.Net.IPEndPoint.MaxPort)) {
+                MessageBox.Show(string.Format("IGB port value must be between {0} and {1}",
+                    System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort),
+                    "Invalid IGB Port",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tb_IgbPort.Focus();
+                tb_IgbPort.SelectAll();
+                return false;
+            }
+            return true;
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
+            if (!ValidateIGBSettings()) return;
             ApplyToSettings(m_settings);
             m_settings.Save();
 
