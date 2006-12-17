@@ -132,8 +132,7 @@ namespace EVEMon.Common
             }
             if (rootCat == null)
             {
-                string m_DataDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
-                string itemfile = m_DataDir + "/eve-items2.xml.gz";
+                string itemfile = System.AppDomain.CurrentDomain.BaseDirectory + "\\Resources\\eve-items2.xml.gz";
                 if (!File.Exists(itemfile))
                 {
                     throw new ApplicationException(itemfile + " not found!");

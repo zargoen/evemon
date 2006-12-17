@@ -38,8 +38,7 @@ namespace EVEMon.Common
 
         private void BuildSkillTree()
         {
-            string m_DataDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
-            string skillfile = m_DataDir + "/eve-skills2.xml.gz";
+            string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "\\Resources\\eve-skills2.xml.gz";
             if (!File.Exists(skillfile))
             {
                 throw new ApplicationException(skillfile + " not found!");

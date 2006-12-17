@@ -98,7 +98,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="eve-skills2.xml.gz">
+    <None Include="Resources\eve-skills2.xml.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -106,12 +106,12 @@
     <EmbeddedResource Include="EVEMon-all.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="eve-ships2.xml.gz">
+    <None Include="Resources\eve-ships2.xml.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="eve-items2.xml.gz">
+    <None Include="Resources\eve-items2.xml.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
