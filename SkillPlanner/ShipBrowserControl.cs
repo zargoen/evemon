@@ -147,7 +147,7 @@ namespace EVEMon.SkillPlanner
                 {
                     addText = " (Known)";
                 }
-                else if (Plan.IsPlanned(gs))
+                else if (Plan.IsPlanned(gs, list[rnum].Level))
                 {
                     addText = " (Planned)";
                     m_allSkillsKnown = false;
