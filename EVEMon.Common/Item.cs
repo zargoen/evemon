@@ -132,8 +132,13 @@ namespace EVEMon.Common
             }
             if (rootCat == null)
             {
-                Assembly asm = Assembly.GetExecutingAssembly();
-                using (Stream s = asm.GetManifestResourceStream("EVEMon.Common.eve-items2.xml.gz"))
+                string m_DataDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
+                string itemfile = m_DataDir + "/eve-items2.xml.gz";
+                if (!File.Exists(itemfile))
+                {
+                    throw new ApplicationException(itemfile + " not found!");
+                }
+                using (FileStream s = new FileStream(itemfile, FileMode.Open, FileAccess.Read))
                 using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                 {
                     using (StringTable.GetInstanceScope())

@@ -98,16 +98,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="eve-skills2.xml.gz" />
+    <None Include="eve-skills2.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EVEMon-all.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="eve-ships2.xml.gz" />
+    <None Include="eve-ships2.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="eve-items2.xml.gz" />
+    <None Include="eve-items2.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Expand_large.png" />

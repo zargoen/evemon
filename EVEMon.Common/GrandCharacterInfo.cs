@@ -38,8 +38,13 @@ namespace EVEMon.Common
 
         private void BuildSkillTree()
         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            using (Stream s = asm.GetManifestResourceStream("EVEMon.Common.eve-skills2.xml.gz"))
+            string m_DataDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
+            string skillfile = m_DataDir + "/eve-skills2.xml.gz";
+            if (!File.Exists(skillfile))
+            {
+                throw new ApplicationException(skillfile + " not found!");
+            }
+            using (FileStream s = new FileStream(skillfile, FileMode.Open, FileAccess.Read))
             using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
             {
                 // Init the static list of all skills

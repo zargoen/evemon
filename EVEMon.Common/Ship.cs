@@ -15,8 +15,13 @@ namespace EVEMon.Common
         {
             if (sm_ships == null)
             {
-                Assembly a = Assembly.GetExecutingAssembly();
-                using (Stream s = a.GetManifestResourceStream("EVEMon.Common.eve-ships2.xml.gz"))
+                string m_DataDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName); 
+                string shipfile = m_DataDir + "/eve-ships2.xml.gz";
+                if (!File.Exists(shipfile))
+                {
+                    throw new ApplicationException(shipfile + " not found!");
+                }
+                using (FileStream s = new FileStream(shipfile, FileMode.Open, FileAccess.Read))
                 using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                 {
                     try
