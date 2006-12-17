@@ -31,7 +31,8 @@ namespace EVEMon.Common.Schedule
     {
         None = 0,
         Blocking = 1, // Blocks skill training starting
-        Quiet = 2 // Silences alerts
+        Quiet = 2, // Silences alerts
+        EVETime = 4  // Uses EVETime
     }
 
     public abstract class ScheduleEntry

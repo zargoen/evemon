@@ -197,6 +197,7 @@ namespace EVEMon.Schedule
         {
             cbBlocking.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
             cbSilent.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0);
+            cbUseEVETime.Checked = ((scheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0);
         }
 
         private ScheduleEntryOptions GetTypeFlags()
@@ -209,6 +210,10 @@ namespace EVEMon.Schedule
             if (cbSilent.Checked)
             {
                 result |= ScheduleEntryOptions.Quiet;
+            }
+            if (cbUseEVETime.Checked)
+            {
+                result |= ScheduleEntryOptions.EVETime;
             }
             return result;
         }

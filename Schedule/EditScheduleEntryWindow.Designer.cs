@@ -63,6 +63,7 @@ namespace EVEMon.Schedule
             this.tbOneTimeStartTime = new System.Windows.Forms.TextBox();
             this.rbOneTime = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbUseEVETime = new System.Windows.Forms.CheckBox();
             this.cbSilent = new System.Windows.Forms.CheckBox();
             this.cbBlocking = new System.Windows.Forms.CheckBox();
             this.tbTitle = new System.Windows.Forms.TextBox();
@@ -84,7 +85,7 @@ namespace EVEMon.Schedule
             this.groupBox1.Controls.Add(this.rbRecurring);
             this.groupBox1.Controls.Add(this.pnlOneTime);
             this.groupBox1.Controls.Add(this.rbOneTime);
-            this.groupBox1.Location = new System.Drawing.Point(12, 114);
+            this.groupBox1.Location = new System.Drawing.Point(12, 135);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(377, 370);
             this.groupBox1.TabIndex = 2;
@@ -471,14 +472,25 @@ namespace EVEMon.Schedule
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cbUseEVETime);
             this.groupBox2.Controls.Add(this.cbSilent);
             this.groupBox2.Controls.Add(this.cbBlocking);
             this.groupBox2.Location = new System.Drawing.Point(12, 36);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(377, 72);
+            this.groupBox2.Size = new System.Drawing.Size(377, 93);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Schedule Type";
+            // 
+            // cbUseEVETime
+            // 
+            this.cbUseEVETime.AutoSize = true;
+            this.cbUseEVETime.Location = new System.Drawing.Point(17, 66);
+            this.cbUseEVETime.Name = "cbUseEVETime";
+            this.cbUseEVETime.Size = new System.Drawing.Size(123, 17);
+            this.cbUseEVETime.TabIndex = 2;
+            this.cbUseEVETime.Text = "Entry uses EVE Time";
+            this.cbUseEVETime.UseVisualStyleBackColor = true;
             // 
             // cbSilent
             // 
@@ -523,7 +535,7 @@ namespace EVEMon.Schedule
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(314, 494);
+            this.btnOk.Location = new System.Drawing.Point(314, 515);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 3;
@@ -535,7 +547,7 @@ namespace EVEMon.Schedule
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(233, 494);
+            this.btnCancel.Location = new System.Drawing.Point(233, 515);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -546,7 +558,7 @@ namespace EVEMon.Schedule
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 493);
+            this.button1.Location = new System.Drawing.Point(12, 514);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(114, 23);
             this.button1.TabIndex = 5;
@@ -559,7 +571,7 @@ namespace EVEMon.Schedule
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(401, 529);
+            this.ClientSize = new System.Drawing.Size(401, 550);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -635,5 +647,6 @@ namespace EVEMon.Schedule
         private System.Windows.Forms.TextBox tbOneTimeEndDate;
         private System.Windows.Forms.Button btnOneTimeEndDateChoose;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox cbUseEVETime;
     }
 }

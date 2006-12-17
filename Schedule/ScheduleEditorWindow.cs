@@ -170,12 +170,15 @@ namespace EVEMon.Schedule
         {
             if (lbEntries.SelectedIndex != -1)
             {
-                string label_text = "Title: " + m_settings.Schedule[lbEntries.SelectedIndex].Title;
                 ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+                string label_text = "Title: " + temp.Title;
                 if (temp.GetType() == typeof(SimpleScheduleEntry))
                 {
                     SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                    label_text = label_text + "\nOne Off Entry\n Start: " + x.StartDateTime + "\n End: " + x.EndDateTime + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
+                    label_text = label_text + "\nOne Off Entry\n Start: " + x.StartDateTime + "\n End: " + x.EndDateTime + "\n Expired: " + x.Expired;
+                    label_text += "\n\n Options\n  Blocking: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
+                    label_text += "\n  Silent: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0);
+                    label_text += "\n  Uses Eve Time: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0);
                 }
                 else if (temp.GetType() == typeof(RecurringScheduleEntry))
                 {
@@ -189,7 +192,10 @@ namespace EVEMon.Schedule
                     {
                         label_text = label_text + "\n Day of Week: " + x.RecurDayOfWeek;
                     }
-                    label_text = label_text + "\n Start Time: " + TimeSpan.FromSeconds(x.StartSecond).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndSecond).ToString() + "\n Expired: " + x.Expired + "\n Options: " + x.ScheduleEntryOptions;
+                    label_text = label_text + "\n Start Time: " + TimeSpan.FromSeconds(x.StartSecond).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndSecond).ToString() + "\n Expired: " + x.Expired;
+                    label_text += "\n\n Options\n  Blocking: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
+                    label_text += "\n  Silent: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0);
+                    label_text += "\n  Uses Eve Time: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0);
                 }
                 else
                 {
@@ -201,6 +207,37 @@ namespace EVEMon.Schedule
             else
             {
                 lblEntryDescription.Text = "";
+            }
+        }
+
+        private void lbEntries_DoubleClick(object sender, EventArgs e)
+        {
+            if (lbEntries.SelectedIndex != -1)
+            {
+                ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+                using (EditScheduleEntryWindow f = new EditScheduleEntryWindow())
+                {
+                    f.ScheduleEntry = temp;
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                    // need to put something in here to test to see if the item has actually been changed, and if not, simply return
+                    int i = -1;
+                    for (int x = 0; x < m_settings.Schedule.Count && i == -1; x++)
+                    {
+                        if (m_settings.Schedule[x].Equals(temp))
+                        {
+                            i = x;
+                        }
+                    }
+                    lbEntries.Items.RemoveAt(lbEntries.SelectedIndex);
+                    m_settings.Schedule.RemoveAt(i);
+                    m_settings.Schedule.Add(f.ScheduleEntry);
+                    lbEntries.Items.Add(f.ScheduleEntry.Title);
+                    m_settings.Save();
+                }
             }
         }
     }
