@@ -1048,6 +1048,7 @@ namespace EVEMon.Common
             private Plan m_owner;
             private string m_skillName;
             private int m_level;
+            private System.Collections.ArrayList m_planGroups;
             private Entry.Type m_entryType;
             private bool m_addNoteonly = false;
             private string m_notes;
@@ -1090,6 +1091,18 @@ namespace EVEMon.Common
             {
                 get { return m_level; }
                 set { m_level = value; }
+            }
+
+            public System.Collections.ArrayList PlanGroups
+            {
+                get
+                {
+                    if (m_planGroups == null)
+                        m_planGroups = new System.Collections.ArrayList();
+
+                    return m_planGroups;
+                }
+                set { m_planGroups = value; }
             }
 
             public Type EntryType
@@ -1173,6 +1186,7 @@ namespace EVEMon.Common
                 Plan.Entry pe = new Plan.Entry();
                 pe.SkillName = this.SkillName;
                 pe.Level = this.Level;
+                pe.PlanGroups = (System.Collections.ArrayList)this.PlanGroups.Clone();
                 pe.EntryType = this.EntryType;
                 pe.Notes = this.Notes;
                 return pe;

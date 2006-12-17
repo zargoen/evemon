@@ -205,6 +205,20 @@ namespace EVEMon.SkillPlanner
 
                     skillPointTotal += (reqToThisLevel - reqBeforeThisLevel - pointsInThisLevel);
 
+                    string planGroups;
+                    if (pe.PlanGroups.Count == 0)
+                    {
+                        planGroups = "None";
+                    }
+                    else if (pe.PlanGroups.Count == 1)
+                    {
+                        planGroups = (string)pe.PlanGroups[0];
+                    }
+                    else
+                    {
+                        planGroups = "Multiple (" + pe.PlanGroups.Count + ")";
+                    }
+
                     for (int x = 0; x < lvSkills.Columns.Count; x++)
                     {
                         ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
@@ -213,6 +227,9 @@ namespace EVEMon.SkillPlanner
                         {
                             case ColumnPreference.ColumnType.SkillName:
                                 res = gs.Name + " " + GrandSkill.GetRomanForInt(pe.Level);
+                                break;
+                            case ColumnPreference.ColumnType.PlanGroup:
+                                res = planGroups;
                                 break;
                             case ColumnPreference.ColumnType.TrainingTime:
                                 res =
@@ -539,6 +556,37 @@ namespace EVEMon.SkillPlanner
             miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
             miChangeNote.Enabled = (lvSkills.SelectedItems.Count == 1);
             miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
+            if (lvSkills.SelectedItems.Count == 1 &&
+                GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]).PlanGroups.Count > 0)
+            {
+                miPlanGroups.Enabled = true;
+                miPlanGroups.DropDownItems.Clear();
+                List<string> planGroups = new List<string>();
+                foreach (string pg in GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]).PlanGroups)
+                {
+                    planGroups.Add(pg);
+                }
+                planGroups.Sort();
+                foreach (string pg in planGroups)
+                {
+                    ToolStripButton tsb = new ToolStripButton(pg);
+                    tsb.Click += new EventHandler(tsb_Click);
+                    miPlanGroups.DropDownItems.Add(tsb);
+                }
+            }
+            else
+            {
+                miPlanGroups.Enabled = false;
+            }
+        }
+
+        private void tsb_Click(object sender, EventArgs e)
+        {
+            string planGroup = ((ToolStripButton)sender).Text;
+            foreach (ListViewItem lvi in lvSkills.Items)
+            {
+                lvi.Selected = GetPlanEntryForListViewItem(lvi).PlanGroups.Contains(planGroup);
+            }
         }
 
         private void miShowInSkillBrowser_Click(object sender, EventArgs e)

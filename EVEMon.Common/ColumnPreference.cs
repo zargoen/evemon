@@ -47,6 +47,7 @@ namespace EVEMon.Common
         public enum ColumnType
         {
             [ColumnDisplay("Skill Name")] SkillName,
+            [ColumnDisplay("Plan Group")] PlanGroup,
             [ColumnDisplay("Training Time")] TrainingTime,
             [ColumnDisplay("Earliest Start")] EarliestStart,
             [ColumnDisplay("Earliest End")] EarliestEnd,
@@ -71,6 +72,7 @@ namespace EVEMon.Common
             }
 
             this.SkillName = true;
+            this.PlanGroup = true;
             this.TrainingTime = true;
             this.EarliestStart = true;
             this.EarliestEnd = true;
@@ -160,6 +162,13 @@ namespace EVEMon.Common
         {
             get { return this[ColumnType.SkillName]; }
             set { this[ColumnType.SkillName] = value; }
+        }
+
+        [XmlAttribute]
+        public bool PlanGroup
+        {
+            get { return this[ColumnType.PlanGroup]; }
+            set { this[ColumnType.PlanGroup] = value; }
         }
 
         [XmlAttribute]

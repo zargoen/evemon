@@ -90,7 +90,10 @@ namespace EVEMon.SkillPlanner
         [PlanSortDescription("No Sorting", "Do not sort skills in the plan.")] NoChange,
         [
             PlanSortDescription("Fastest Skills First",
-                "Skills with the shortest remaining training time will be ordered first.")] FastestFirst
+                "Skills with the shortest remaining training time will be ordered first.")] FastestFirst,
+        [
+            PlanSortDescription("Fastest Group First",
+                "Skill groups with the shortest remaining training time will be ordered first.")] FastestGroupFirst
     }
 
     public class PlanSortDescriptionAttribute : Attribute
@@ -236,6 +239,9 @@ namespace EVEMon.SkillPlanner
                 case PlanSortType.FastestFirst:
                     ArrangeFastestFirst();
                     break;
+                case PlanSortType.FastestGroupFirst:
+                    ArrangeFastestGroupFirst();
+                    break;
             }
         }
 
@@ -282,6 +288,72 @@ namespace EVEMon.SkillPlanner
                 m_plan.Entries.Add((Plan.Entry) fastestPe.Clone());
                 m_skillsToInsert.Remove(fastestPe);
                 trainedLevels[fastestPe.SkillName] = fastestPe.Level;
+            }
+        }
+
+        private void ArrangeFastestGroupFirst()
+        {
+            Dictionary<string, Plan> planGroups = new Dictionary<string, Plan>();
+
+            foreach (Plan.Entry pe in m_skillsToInsert)
+            {
+                foreach (string pg in pe.PlanGroups)
+                {
+                    if (planGroups.ContainsKey(pg))
+                    {
+                        planGroups[pg].Entries.Add((Plan.Entry)pe.Clone());
+                    }
+                    else
+                    {
+                        Plan plan = new Plan();
+                        plan.GrandCharacterInfo = m_plan.GrandCharacterInfo;
+                        plan.Entries.Add((Plan.Entry)pe.Clone());
+                        planGroups.Add(pg, plan);
+                    }
+                }
+            }
+
+            while (planGroups.Count > 0)
+            {
+                string shortestPlanGroup = "";
+                TimeSpan shortestTimeSpan = TimeSpan.MaxValue;
+
+                foreach (string pg in planGroups.Keys)
+                {
+                    if (planGroups[pg].TotalTrainingTime < shortestTimeSpan)
+                    {
+                        shortestTimeSpan = planGroups[pg].TotalTrainingTime;
+                        shortestPlanGroup = pg;
+                    }
+                }
+
+                foreach (Plan.Entry pe in planGroups[shortestPlanGroup].Entries)
+                {
+                    Plan.Entry _pe = null;
+
+                    foreach (Plan p in planGroups.Values)
+                    {
+                        if (p != planGroups[shortestPlanGroup] &&
+                            (_pe = p.GetEntry(pe.SkillName, pe.Level)) != null)
+                        {
+                            p.RemoveEntry(_pe);
+                        }
+                    }
+
+                    if (m_plan.GetEntry(pe.SkillName, pe.Level) == null)
+                    {
+                        m_plan.Entries.Add((Plan.Entry)pe.Clone());
+                    }
+                }
+                planGroups.Remove(shortestPlanGroup);
+            }
+
+            foreach (Plan.Entry pe in m_skillsToInsert)
+            {
+                if (m_plan.GetEntry(pe.SkillName, pe.Level) == null)
+                {
+                    m_plan.Entries.Add((Plan.Entry)pe.Clone());
+                }
             }
         }
 

@@ -128,9 +128,16 @@ namespace EVEMon.SkillPlanner
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
                     foreach (Plan.Entry entry in p.Entries)
                     {
+                        Plan.Entry entryInMergedPlan = m_result.GetEntry(entry.SkillName, entry.Level);
                         if (m_result.GetEntry(entry.SkillName, entry.Level) == null)
                         {
-                            m_result.Entries.Add(entry);
+                            Plan.Entry entryClone = (Plan.Entry)entry.Clone();
+                            entryClone.PlanGroups.Add(p.Name);
+                            m_result.Entries.Add(entryClone);
+                        }
+                        else
+                        {
+                            entryInMergedPlan.PlanGroups.Add(p.Name);
                         }
                     }
                 }

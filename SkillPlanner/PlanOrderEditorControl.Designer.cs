@@ -32,6 +32,7 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanOrderEditorControl));
             this.cmsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.miRemoveFromPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
@@ -46,8 +47,9 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.llSuggestionLink = new System.Windows.Forms.LinkLabel();
             this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
-            this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.miPlanGroups = new System.Windows.Forms.ToolStripMenuItem();
             this.cmsContextMenu.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -59,9 +61,11 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote,
             this.miShowInSkillBrowser,
             this.toolStripMenuItem1,
-            this.miRemoveFromPlan});
+            this.miRemoveFromPlan,
+            this.toolStripSeparator2,
+            this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(197, 98);
+            this.cmsContextMenu.Size = new System.Drawing.Size(197, 126);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -70,6 +74,13 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote.Size = new System.Drawing.Size(196, 22);
             this.miChangeNote.Text = "View/Change Note...";
             this.miChangeNote.Click += new System.EventHandler(this.miChangeNote_Click);
+            // 
+            // miShowInSkillBrowser
+            // 
+            this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
+            this.miShowInSkillBrowser.Size = new System.Drawing.Size(196, 22);
+            this.miShowInSkillBrowser.Text = "Show in Skill Browser...";
+            this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -89,7 +100,7 @@ namespace EVEMon.SkillPlanner
                 "xt";
             this.sfdSave.Title = "Save Plan As...";
             // 
-            // tmrTick
+            // tmrAutoRefresh
             // 
             this.tmrAutoRefresh.Interval = 30000;
             this.tmrAutoRefresh.Tick += new System.EventHandler(this.tmrAutoRefresh_Tick);
@@ -169,12 +180,12 @@ namespace EVEMon.SkillPlanner
             this.panel1.Size = new System.Drawing.Size(645, 21);
             this.panel1.TabIndex = 11;
             // 
-            // linkLabel1
+            // llSuggestionLink
             // 
             this.llSuggestionLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llSuggestionLink.AutoSize = true;
             this.llSuggestionLink.Location = new System.Drawing.Point(551, 5);
-            this.llSuggestionLink.Name = "linkLabel1";
+            this.llSuggestionLink.Name = "llSuggestionLink";
             this.llSuggestionLink.Size = new System.Drawing.Size(91, 13);
             this.llSuggestionLink.TabIndex = 0;
             this.llSuggestionLink.TabStop = true;
@@ -188,13 +199,6 @@ namespace EVEMon.SkillPlanner
             this.ilSkillDependency.Images.SetKeyName(0, "redbutton.bmp");
             this.ilSkillDependency.Images.SetKeyName(1, "yellowbutton.bmp");
             this.ilSkillDependency.Images.SetKeyName(2, "greenbutton.bmp");
-            // 
-            // miShowInSkillBrowser
-            // 
-            this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
-            this.miShowInSkillBrowser.Size = new System.Drawing.Size(196, 22);
-            this.miShowInSkillBrowser.Text = "Show in Skill Browser...";
-            this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // lvSkills
             // 
@@ -216,6 +220,17 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
+            // 
+            // miPlanGroups
+            // 
+            this.miPlanGroups.Name = "miPlanGroups";
+            this.miPlanGroups.Size = new System.Drawing.Size(196, 22);
+            this.miPlanGroups.Text = "Plan Groups";
             // 
             // PlanOrderEditorControl
             // 
@@ -257,5 +272,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbSort;
         private System.Windows.Forms.ImageList ilSkillDependency;
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem miPlanGroups;
     }
 }
