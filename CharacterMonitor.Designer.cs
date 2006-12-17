@@ -77,7 +77,7 @@ namespace EVEMon
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
-            this.lblDtWarning = new System.Windows.Forms.Label();
+            this.lblScheduleWarning = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -254,6 +254,7 @@ namespace EVEMon
             this.flpStatusLabels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpStatusLabels.Controls.Add(this.lblCurrentlyTraining);
             this.flpStatusLabels.Controls.Add(this.lblSPPerHour);
+            this.flpStatusLabels.Controls.Add(this.lblScheduleWarning);
             this.flpStatusLabels.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpStatusLabels.Location = new System.Drawing.Point(0, 0);
             this.flpStatusLabels.Margin = new System.Windows.Forms.Padding(0);
@@ -406,19 +407,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -463,18 +464,18 @@ namespace EVEMon
             this.flpButtons.Controls.Add(this.btnSave);
             this.flpButtons.Controls.Add(this.btnPlan);
             this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flpButtons.Location = new System.Drawing.Point(314, 69);
+            this.flpButtons.Location = new System.Drawing.Point(326, 69);
             this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flpButtons.Name = "flpButtons";
             this.tlpInfo.SetRowSpan(this.flpButtons, 3);
-            this.flpButtons.Size = new System.Drawing.Size(78, 101);
+            this.flpButtons.Size = new System.Drawing.Size(66, 101);
             this.flpButtons.TabIndex = 20;
             // 
             // llToggleAll
             // 
             this.llToggleAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llToggleAll.AutoSize = true;
-            this.llToggleAll.Location = new System.Drawing.Point(25, 88);
+            this.llToggleAll.Location = new System.Drawing.Point(13, 88);
             this.llToggleAll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.llToggleAll.Name = "llToggleAll";
             this.llToggleAll.Size = new System.Drawing.Size(53, 13);
@@ -495,7 +496,7 @@ namespace EVEMon
             this.btnMoreOptions.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnMoreOptions.Name = "btnMoreOptions";
             this.btnMoreOptions.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnMoreOptions.Size = new System.Drawing.Size(75, 22);
+            this.btnMoreOptions.Size = new System.Drawing.Size(63, 22);
             this.btnMoreOptions.TabIndex = 19;
             this.btnMoreOptions.Text = "More...";
             this.btnMoreOptions.UseVisualStyleBackColor = true;
@@ -507,12 +508,12 @@ namespace EVEMon
             this.miManualImplants,
             this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 48);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(210, 48);
             // 
             // miManualImplants
             // 
             this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(220, 22);
+            this.miManualImplants.Size = new System.Drawing.Size(209, 22);
             this.miManualImplants.Text = "Manual Implants...";
             this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
             // 
@@ -520,7 +521,7 @@ namespace EVEMon
             // 
             this.tsbIneveSync.CheckOnClick = true;
             this.tsbIneveSync.Name = "tsbIneveSync";
-            this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
+            this.tsbIneveSync.Size = new System.Drawing.Size(209, 22);
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
@@ -537,7 +538,7 @@ namespace EVEMon
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnSave.Name = "btnSave";
             this.btnSave.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnSave.Size = new System.Drawing.Size(75, 22);
+            this.btnSave.Size = new System.Drawing.Size(63, 22);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -545,12 +546,16 @@ namespace EVEMon
             // 
             // btnPlan
             // 
+            this.btnPlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPlan.AutoSize = true;
-            this.btnPlan.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPlan.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnPlan.ImageKey = "Normal";
             this.btnPlan.Location = new System.Drawing.Point(3, 3);
+            this.btnPlan.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.btnPlan.Name = "btnPlan";
-            this.btnPlan.Size = new System.Drawing.Size(72, 23);
+            this.btnPlan.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnPlan.Size = new System.Drawing.Size(63, 23);
             this.btnPlan.TabIndex = 20;
             this.btnPlan.Text = "Plan...";
             this.btnPlan.UseVisualStyleBackColor = true;
@@ -616,26 +621,26 @@ namespace EVEMon
             this.updatePictureFromEVECache,
             this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(238, 70);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(227, 70);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(237, 22);
+            this.updatePicture.Size = new System.Drawing.Size(226, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.mi_UpdatePicture_Click);
             // 
             // updatePictureFromEVECache
             // 
             this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
-            this.updatePictureFromEVECache.Size = new System.Drawing.Size(237, 22);
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(226, 22);
             this.updatePictureFromEVECache.Text = "Update Picture From EVE Cache";
             this.updatePictureFromEVECache.Click += new System.EventHandler(this.mi_UpdatePictureFromEVECache_Click);
             // 
             // setEVEFolder
             // 
             this.setEVEFolder.Name = "setEVEFolder";
-            this.setEVEFolder.Size = new System.Drawing.Size(237, 22);
+            this.setEVEFolder.Size = new System.Drawing.Size(226, 22);
             this.setEVEFolder.Text = "Set EVE Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.mi_setEVEFolder_Click);
             // 
@@ -657,18 +662,18 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
-            // lblDtWarning
+            // lblScheduleWarning
             // 
-            this.lblDtWarning.AutoSize = true;
-            this.lblDtWarning.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDtWarning.ForeColor = System.Drawing.Color.Red;
-            this.lblDtWarning.Location = new System.Drawing.Point(0, 26);
-            this.lblDtWarning.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.lblDtWarning.Name = "lblDtWarning";
-            this.lblDtWarning.Size = new System.Drawing.Size(112, 13);
-            this.lblDtWarning.TabIndex = 2;
-            this.lblDtWarning.Text = "Downtime Conflict!";
-            this.lblDtWarning.Visible = false;
+            this.lblScheduleWarning.AutoSize = true;
+            this.lblScheduleWarning.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScheduleWarning.ForeColor = System.Drawing.Color.Red;
+            this.lblScheduleWarning.Location = new System.Drawing.Point(0, 26);
+            this.lblScheduleWarning.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.lblScheduleWarning.Name = "lblScheduleWarning";
+            this.lblScheduleWarning.Size = new System.Drawing.Size(112, 13);
+            this.lblScheduleWarning.TabIndex = 2;
+            this.lblScheduleWarning.Text = "Schedule Conflict!";
+            this.lblScheduleWarning.Visible = false;
             // 
             // CharacterMonitor
             // 
@@ -761,6 +766,6 @@ namespace EVEMon
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
         private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
         private EVEMon.Common.SplitButton btnPlan;
-        private System.Windows.Forms.Label lblDtWarning;
+        private System.Windows.Forms.Label lblScheduleWarning;
     }
 }

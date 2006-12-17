@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common;
+using EVEMon.Common.Schedule;
 using EVEMon.SkillPlanner;
 using System.Web;
 
@@ -403,10 +404,58 @@ namespace EVEMon
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
                         m_estimatedCompletion = gs.EstimatedCompletion;
 
-                        //downtime finish?       
+                        //downtime finish?
                         DateTime universalFinish = m_estimatedCompletion.ToUniversalTime();
-                        lblDtWarning.Visible = (universalFinish.Hour == 11);
+                        //lblScheduleWarning.Visible = (universalFinish.Hour == 11);
 
+                        bool isBlocked = (universalFinish.Hour == 11);
+                        for (int i = 0; i < m_settings.Schedule.Count; i++)
+                        {
+                            ScheduleEntry temp = m_settings.Schedule[i];
+                            if (temp.GetType() == typeof(SimpleScheduleEntry))
+                            {
+                                SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                                {
+                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                    {
+                                        if (x.StartDateTime <= universalFinish && universalFinish <= x.EndDateTime)
+                                        {
+                                            // This blocks in EVE Time
+                                            isBlocked = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (x.StartDateTime <= m_estimatedCompletion && m_estimatedCompletion <= x.EndDateTime)
+                                        {
+                                            // This blocks in local Time
+                                            isBlocked = true;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                            {
+                                RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                                {
+                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                    {
+                                        // Still needs to be written
+                                        // This needs to check to see if universalFinish coincides with
+                                        // any of the scheduled periods that this entry represents
+                                    }
+                                    else
+                                    {
+                                        // Still needs to be written
+                                        // This needs to check to see if m_estimatedCompletion coincides with
+                                        // any of the scheduled periods that this entry represents
+                                    }
+                                }
+                            }
+                        }
+                        lblScheduleWarning.Visible = isBlocked;
                         CalcSkillRemainText();
 
                         pnlTraining.Visible = true;
