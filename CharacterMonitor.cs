@@ -20,23 +20,49 @@ namespace EVEMon
 {
     public partial class CharacterMonitor : UserControl
     {
-        private CharacterMonitor()
-        {
-            InitializeComponent();
-
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-        }
-
         private Settings m_settings;
         private CharLoginInfo m_cli;
         private SerializableCharacterInfo m_sci;
         private CharFileInfo m_cfi;
         private EveSession m_session;
         private int m_charId;
-        private FileSystemWatcher m_fsw = null;
-
+        private FileSystemWatcher m_characterFileWatch = null;
         private Dictionary<GrandSkillGroup, bool> m_groupCollapsed = new Dictionary<GrandSkillGroup, bool>();
+        private DateTime m_nextScheduledUpdateAt = DateTime.MinValue;
+        private string m_skillTrainingName;
+        private DateTime m_estimatedCompletion;
+        private GrandCharacterInfo m_grandCharacterInfo;
+        private int m_lastTickSPPaint = 0;
+        private bool m_updatingPortrait = false;
+        private bool m_currentlyVisible = false;
 
+        //This is data that would be shown ON the LCD display, not data ABOUT the LCD display
+        public EventHandler LCDDataChanged;
+        private string m_lcdNote = String.Empty;
+        private TimeSpan m_lcdTimeSpan = TimeSpan.Zero;
+
+        //file formats for saving your character
+        private enum SaveFormat
+        {
+            None = 0,
+            Text = 1,
+            Html = 2,
+            Xml = 3,
+            Png = 4
+        }
+
+        private CharacterMonitor()
+        {
+            InitializeComponent();
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CharacterMonitor"/> class.  For eve-o based characters
+        /// </summary>
+        /// <param name="s">The EVEMon settings.</param>
+        /// <param name="cli">The character login info.</param>
         public CharacterMonitor(Settings s, CharLoginInfo cli)
             : this()
         {
@@ -46,6 +72,13 @@ namespace EVEMon
             m_cfi = null;
         }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CharacterMonitor"/> class.  For file based characters
+        /// </summary>
+        /// <param name="s">The EVEMon settings.</param>
+        /// <param name="cfi">The character file info.</param>
+        /// <param name="sci">The serializable character, loaded from the file.</param>
         public CharacterMonitor(Settings s, CharFileInfo cfi, SerializableCharacterInfo sci)
             : this()
         {
@@ -53,11 +86,6 @@ namespace EVEMon
             m_cli = null;
             m_sci = sci;
             m_cfi = cfi;
-        }
-
-        private void LoadPlans()
-        {
-
         }
 
         private string m_charName
@@ -74,48 +102,6 @@ namespace EVEMon
                 }
             }
         }
-
-        private static Image[] m_throbberImages = null;
-
-        public static Image[] ThrobberImages
-        {
-            get
-            {
-                if (m_throbberImages == null)
-                {
-                    InitializeThrobberImages();
-                }
-                return m_throbberImages;
-            }
-        }
-
-        private const int THROBBERIMG_WIDTH = 24;
-        private const int THROBBERIMG_HEIGHT = 24;
-
-        /// <summary>
-        /// Extract the throbber images from the assembly and load them into m_throbberImages
-        /// </summary>
-        private static void InitializeThrobberImages()
-        {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            using (Stream s = asm.GetManifestResourceStream("EVEMon.throbber.png"))
-            using (Image b = Image.FromStream(s, true, true))
-            {
-                m_throbberImages = new Image[9];
-                for (int i = 0; i < 9; i++)
-                {
-                    Bitmap ib = new Bitmap(THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT);
-                    using (Graphics g = Graphics.FromImage(ib))
-                    {
-                        g.DrawImage(b, new Rectangle(0, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
-                                    new Rectangle(i * THROBBERIMG_WIDTH, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
-                                    GraphicsUnit.Pixel);
-                    }
-                    m_throbberImages[i] = ib;
-                }
-            }
-        }
-
 
         /// <summary>
         /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed, 
@@ -141,17 +127,17 @@ namespace EVEMon
                 }
                 if (m_cfi.MonitorFile)
                 {
-                    m_fsw = new FileSystemWatcher(
+                    m_characterFileWatch = new FileSystemWatcher(
                         Path.GetDirectoryName(m_cfi.Filename), Path.GetFileName(m_cfi.Filename));
-                    m_fsw.Created += new FileSystemEventHandler(m_fsw_Created);
-                    m_fsw.Changed += new FileSystemEventHandler(m_fsw_Changed);
-                    m_fsw.EnableRaisingEvents = true;
+                    m_characterFileWatch.Created += new FileSystemEventHandler(CharacterFileUpdatedCallback);
+                    m_characterFileWatch.Changed += new FileSystemEventHandler(CharacterFileUpdatedCallback);
+                    m_characterFileWatch.EnableRaisingEvents = true;
                 }
             }
-            m_grandCharacterInfo.BioInfoChanged += new EventHandler(m_grandCharacterInfo_BioInfoChanged);
-            m_grandCharacterInfo.BalanceChanged += new EventHandler(m_grandCharacterInfo_BalanceChanged);
-            m_grandCharacterInfo.AttributeChanged += new EventHandler(m_grandCharacterInfo_AttributeChanged);
-            m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+            m_grandCharacterInfo.BioInfoChanged += new EventHandler(BioInfoChangedCallback);
+            m_grandCharacterInfo.BalanceChanged += new EventHandler(BalanceChangedCallback);
+            m_grandCharacterInfo.AttributeChanged += new EventHandler(AttributeChangedCallback);
+            m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
 
             if (m_cli != null)
             {
@@ -162,18 +148,18 @@ namespace EVEMon
                 }
                 if (m_settings.DisableXMLAutoUpdate == false)
                 {
-                    tmrUpdate.Interval = 10;
-                    tmrUpdate.Enabled = true;
+                    tmrUpdateCharacter.Interval = 10;
+                    tmrUpdateCharacter.Enabled = true;
                 }
                 else
                 {
-                    tmrUpdate.Enabled = false;
+                    tmrUpdateCharacter.Enabled = false;
                     pbThrobber.Visible = false;
                 }
             }
             else
             {
-                tmrUpdate.Enabled = false;
+                tmrUpdateCharacter.Enabled = false;
                 pbThrobber.Visible = false;
                 m_grandCharacterInfo.AssignFromSerializableCharacterInfo(m_sci);
                 m_sci = null;
@@ -200,31 +186,16 @@ namespace EVEMon
 
             tmrTick.Enabled = true;
 
-            m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_WorksafeChanged);
-            m_settings_WorksafeChanged(null, null);
+            m_settings.WorksafeChanged += new EventHandler<EventArgs>(WorksafeChangedCallback);
+            WorksafeChangedCallback(null, null);
 
-            m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(m_settings_UseLogitechG15DisplayChanged);
+            m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
 
             if (m_settings != null)
             {
                 //set up individual character settings
                 tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
             }
-        }
-
-        private void m_settings_UseLogitechG15DisplayChanged(object sender, EventArgs e)
-        {
-            UpdateLcdisplay();
-        }
-
-        private void m_fsw_Created(object sender, FileSystemEventArgs e)
-        {
-            ReloadFromFile();
-        }
-
-        private void m_fsw_Changed(object sender, FileSystemEventArgs e)
-        {
-            ReloadFromFile();
         }
 
         private void ReloadFromFile()
@@ -242,6 +213,9 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Stop all timers, unhook all events, lie down and die.
+        /// </summary>
         public void Stop()
         {
             if (m_session != null)
@@ -249,23 +223,25 @@ namespace EVEMon
                 m_session = null;
             }
             tmrTick.Enabled = false;
-            tmrUpdate.Enabled = false;
-            if (m_fsw != null)
+            tmrUpdateCharacter.Enabled = false;
+            if (m_characterFileWatch != null)
             {
-                m_fsw.EnableRaisingEvents = false;
+                m_characterFileWatch.EnableRaisingEvents = false;
             }
 
-            m_grandCharacterInfo.BioInfoChanged -= new EventHandler(m_grandCharacterInfo_BioInfoChanged);
-            m_grandCharacterInfo.BalanceChanged -= new EventHandler(m_grandCharacterInfo_BalanceChanged);
-            m_grandCharacterInfo.AttributeChanged -= new EventHandler(m_grandCharacterInfo_AttributeChanged);
-            m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(m_grandCharacterInfo_SkillChanged);
+            m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
+            m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
+            m_grandCharacterInfo.AttributeChanged -= new EventHandler(AttributeChangedCallback);
+            m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(CharacterSkillChangedCallback);
 
-            m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_WorksafeChanged);
-            m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(m_settings_UseLogitechG15DisplayChanged);
+            m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
+            m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
         }
 
-        private bool m_currentlyVisible = false;
-
+        /// <summary>
+        /// Gets or sets a value indicating whether the panel is currently visible
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
         public bool CurrentlyVisible
         {
             get
@@ -284,7 +260,702 @@ namespace EVEMon
             }
         }
 
-        private void m_settings_WorksafeChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Enables the three main buttons on the form.
+        /// </summary>
+        private void EnableButtons()
+        {
+            btnSave.Enabled = true;
+            btnPlan.Enabled = true;
+            btnMoreOptions.Enabled = true;
+        }
+
+        /// <summary>
+        /// Updates skill summary info (the block just below the portrait).
+        /// </summary>
+        private void UpdateSkillHeaderStats()
+        {
+            lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
+                                                m_grandCharacterInfo.KnownSkillCount,
+                                                m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
+                                                m_grandCharacterInfo.MaxedSkillCount);
+        }
+
+        /// <summary>
+        /// Sets the specified attribute label.
+        /// </summary>
+        /// <param name="lblAttrib">The LBL attrib.</param>
+        /// <param name="eveAttribute">The eve attribute.</param>
+        private void SetAttributeLabel(Label lblAttrib, EveAttribute eveAttribute)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(eveAttribute.ToString());
+
+            sb.Append(": ");
+            sb.Append(m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute).ToString("0.00"));
+            lblAttrib.Text = sb.ToString();
+        }
+
+        /// <summary>
+        /// Updates the cached copy.
+        /// </summary>
+        /// <remarks>I have no fracking idea what this does - Anders</remarks>
+        private void UpdateCachedCopy()
+        {
+            SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+            m_settings.SetCharacterCache(sci);
+            if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
+            {
+                int toremove;
+                bool add = true;
+                do
+                {
+                    toremove = -1;
+                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+                    {
+                        if (x.A == m_charName)
+                        {
+                            if (x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
+                            {
+                                add = false;
+                                x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
+                                x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
+                                if (!x.B.old_skill_completed)
+                                {
+                                    toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                                }
+                            }
+                            else
+                            {
+                                toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                            }
+                        }
+                    }
+                    if (toremove != -1)
+                        m_settings.OldSkillLearnt.RemoveAt(toremove);
+                } while (toremove != -1);
+                if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
+                    m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
+            }
+            m_settings.Save();
+        }
+
+        private void DownloadCharacter()
+        {
+#if DEBUG_SINGLETHREAD
+            GetCharIdAndUpdateInternal(null);
+#else
+            ThreadPool.QueueUserWorkItem(new WaitCallback(GetCharIdAndUpdateInternal));
+#endif
+        }
+
+        /// <summary>
+        /// Actually download and update the character
+        /// </summary>
+        /// <param name="state">Does nothing, provided for compliance with WaitCallback</param>
+        private void GetCharIdAndUpdateInternal(object state)
+        {
+            //get the character ID
+            int charId = -1;
+            try
+            {
+                m_session = EveSession.GetSession(m_cli.Username, m_cli.Password);
+                charId = m_session.GetCharacterId(m_cli.CharacterName);
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+            if (charId < 0)
+            {
+                this.Invoke(new MethodInvoker(CharacterDownloadFailedCallback));
+                return;
+            }
+
+            m_grandCharacterInfo.CharacterId = charId;
+            GetCharacterImage();
+
+            //actually perform the update.  This is then happening asynchronously, is this a problem?
+            UpdateGrandCharacterInfo();
+
+            //oh, what a tangled web we weave
+            foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+            {
+                if (x.A == m_charName)
+                {
+                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
+                }
+            }
+        }
+
+        private void UpdateGrandCharacterInfo()
+        {
+            m_session.UpdateGrandCharacterInfoAsync(m_grandCharacterInfo, Program.MainWindow,
+                                                    new UpdateGrandCharacterInfoCallback(GrandCharacterUpdatedCallback));
+
+        }
+
+        /// <summary>
+        /// Updates the throbber timer when finished updating
+        /// </summary>
+        /// <param name="s">The eve session - not used.</param>
+        /// <param name="timeLeftInCache">The time left in cache - that is, the time before the next update to the sheet on eve-o.</param>
+        private void GrandCharacterUpdatedCallback(EveSession s, int timeLeftInCache)
+        {
+            this.Invoke(new MethodInvoker(delegate
+                                                                                              {
+                                                                                                  //m_lastUpdate = DateTime.Now;
+                                                                                                  m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
+                                                                                                  ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
+                                                                                                  ttToolTip.IsBalloon = true;
+                                                                                                  //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
+                                                                                                  tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
+                                                                                                  tmrUpdateCharacter.Enabled = true;
+                                                                                                  StopThrobber();
+                                                                                              }));
+        }
+
+        /// <summary>
+        /// Updates the LCD Display if G15 support is on
+        /// </summary>
+        private void UpdateLcdisplay()
+        {
+            if (m_settings.UseLogitechG15Display && Program.LCD != null)
+            {
+                if (Program.LCD.CharacterName == null || Program.LCD.CharacterName == "")
+                {
+                    Program.LCD.CharacterName = m_charName;
+                    Program.LCD.newchar = m_charName;
+                }
+                if (Program.LCD.newchar == m_charName)
+                {
+                    GrandSkill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
+                    if (s != null)
+                    {
+                        double percentDone = 0.0;
+                        int NextLevel = 0;
+                        int CurrentSP = s.CurrentSkillPoints;
+                        int reqToThisLevel = s.GetPointsRequiredForLevel(s.Level);
+                        int reqToNextLevel = 0;
+                        int pointsInThisLevel = 0;
+                        double deltaPointsOfLevel = 0.0;
+
+                        //We must have completed some, but not all, of level II, III or IV
+                        NextLevel = s.Level + 1;
+                        pointsInThisLevel = CurrentSP - reqToThisLevel;
+                        reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
+                        deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
+                        percentDone = pointsInThisLevel / deltaPointsOfLevel;
+
+                        Program.LCD.curperc = percentDone;
+                    }
+                    else
+                    {
+                        Program.LCD.curperc = 1;
+                    }
+                    Program.LCD.CharacterName = m_charName; //null ok
+                    Program.LCD.CurrentSkillTrainingText = m_skillTrainingName; //null ok
+                    Program.LCD.TimeToComplete = m_lcdTimeSpan;
+                }
+                long tmp = Program.LCD.leasttime.Ticks - m_lcdTimeSpan.Ticks;
+                if (tmp > 0)
+                {
+                    if (m_skillTrainingName != "" && m_skillTrainingName != null)
+                    {
+                        Program.LCD.leasttime = m_lcdTimeSpan;
+                        Program.LCD.leastchar = m_charName;
+                    }
+                }
+                if (Program.LCD.charlist == null)
+                {
+                    List<CharLoginInfo> mlist = m_settings.CharacterList;
+                    string[] temp = new string[mlist.Count];
+                    int i = 0;
+                    foreach (CharLoginInfo sci in mlist)
+                    {
+                        temp[i] = sci.CharacterName;
+                        i++;
+                    }
+                    Program.LCD.charlist = temp;
+                }
+                if (Program.LCD.refreshchar != null && Program.LCD.refreshchar == m_charName)
+                {
+                    Program.LCD.refreshchar = null;
+                    tmrUpdate_Tick(null, null);
+                    UpdateThrobberLabel();
+                }
+                if (Program.LCD.cycleini == false)
+                {
+                    Program.LCD.cycle = m_settings.G15ACycle;
+                    Program.LCD.cycleint = m_settings.G15ACycleint;
+                    Program.LCD.cycleini = true;
+                }
+                else
+                {
+                    m_settings.G15ACycle = Program.LCD.cycle;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the skill text and time remaining for LCD Display
+        /// </summary>
+        private void CalculateLcdData()
+        {
+            DateTime now = DateTime.Now;
+            if (m_estimatedCompletion != DateTime.MaxValue)
+            {
+                if (m_estimatedCompletion > now)
+                {
+                    SetLcdData(m_charName + ": " +
+                             TimeSpanDescriptiveShort(m_estimatedCompletion),
+                                 m_estimatedCompletion - now);
+                }
+                else
+                {
+                    SetLcdData(m_charName + ": Done", TimeSpan.Zero);
+                }
+            }
+            else
+            {
+                SetLcdData(String.Empty, TimeSpan.Zero);
+            }
+        }
+
+        /// <summary>
+        /// Update labels in the bottom panel for time remaining
+        /// </summary>
+        private void UpdateTimeRemainingLabels()
+        {
+            DateTime now = DateTime.Now;
+            if (m_estimatedCompletion != DateTime.MaxValue)
+            {
+                lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
+                if (m_estimatedCompletion > now)
+                {
+                    lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                }
+                else
+                {
+                    lblTrainingEst.Text = String.Empty;
+                }
+            }
+            else
+            {
+                lblTrainingRemain.Text = String.Empty;
+                lblTrainingEst.Text = String.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Sets the note and the timespan used by the LCDdisplay functions
+        /// </summary>
+        /// <param name="newShortText">The new short text.</param>
+        /// <param name="timeSpan">The time span.</param>
+        private void SetLcdData(string newShortText, TimeSpan timeSpan)
+        {
+            bool fireEvent = false;
+            if (newShortText != m_lcdNote || timeSpan != m_lcdTimeSpan)
+            {
+                fireEvent = true;
+            }
+            m_lcdNote = newShortText;
+            m_lcdTimeSpan = timeSpan;
+            if (fireEvent && LCDDataChanged != null)
+            {
+                LCDDataChanged(this, new EventArgs());
+            }
+            UpdateLcdisplay();
+        }
+
+        /// <summary>
+        /// Returns a short timespan string between now and the DateTime given... which is in the future.
+        /// If someone comes up with a clean way to whack this with string.format, go for it... as it is, it's a custom format, and not one
+        /// that we can throw out, so this needs to stay.  It's not SO bad.
+        /// Changes to this should also touch TimeSpanDescriptive.
+        /// </summary>
+        /// <param name="t">The time (in the future) for which you want a span.</param>
+        /// <returns>Format:XdXh0Xm0Xs</returns>
+        public static string TimeSpanDescriptiveShort(DateTime t)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (t > DateTime.Now)
+            {
+                TimeSpan ts = t - DateTime.Now;
+                if (ts.Days > 0)
+                {
+                    sb.Append(ts.Days.ToString());
+                    sb.Append("d");
+                }
+                ts -= TimeSpan.FromDays(ts.Days);
+                if (ts.Hours > 0)
+                {
+                    sb.Append(ts.Hours.ToString());
+                    sb.Append("h");
+                }
+                ts -= TimeSpan.FromHours(ts.Hours);
+                if (ts.Minutes > 0)
+                {
+                    sb.Append(ts.Minutes.ToString());
+                    sb.Append("m");
+                }
+                ts -= TimeSpan.FromMinutes(ts.Minutes);
+                if (ts.Seconds > 0)
+                {
+                    sb.Append(ts.Seconds.ToString());
+                    sb.Append("s");
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return "Done";
+            }
+        }
+
+        /// <summary>
+        /// Returns a long format timespan string between now and the DateTime given, which should be in the future.
+        /// If someone comes up with a clean way to whack this with string.format, go for it... as it is, it's a custom format, and not one
+        /// that we can throw out, so this needs to stay.  It's not SO bad.
+        /// Changes to this should also touch TimeSpanDescriptiveShort.
+        /// </summary>
+        /// <param name="t">The time (in the future) for which you want a span</param>
+        /// <returns>Format: X day(x), X hour(s), X minute(s), X second(s)</returns>
+        private string TimeSpanDescriptive(DateTime t)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (t > DateTime.Now)
+            {
+                TimeSpan ts = t - DateTime.Now;
+                if (ts.Days > 0)
+                {
+                    sb.Append(ts.Days.ToString());
+                    sb.Append(" day");
+                    if (ts.Days > 1)
+                    {
+                        sb.Append("s");
+                    }
+                }
+                ts -= TimeSpan.FromDays(ts.Days);
+                if (ts.Hours > 0)
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append(ts.Hours.ToString());
+                    sb.Append(" hour");
+                    if (ts.Hours > 1)
+                    {
+                        sb.Append("s");
+                    }
+                }
+                ts -= TimeSpan.FromHours(ts.Hours);
+                if (ts.Minutes > 0)
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append(ts.Minutes.ToString());
+                    sb.Append(" minute");
+                    if (ts.Minutes > 1)
+                    {
+                        sb.Append("s");
+                    }
+                }
+                ts -= TimeSpan.FromMinutes(ts.Minutes);
+                if (ts.Seconds > 0)
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append(ts.Seconds.ToString());
+                    sb.Append(" second");
+                    if (ts.Seconds > 1)
+                    {
+                        sb.Append("s");
+                    }
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return "Completed.";
+            }
+        }
+
+        /// <summary>
+        /// Updates label above the throbber for the next update
+        /// </summary>
+        private void UpdateThrobberLabel()
+        {
+            if (m_throbberRunning)
+            {
+                lblUpdateTimer.Visible = false;
+                return;
+            }
+
+            TimeSpan ts = m_nextScheduledUpdateAt - DateTime.Now;
+            if (ts < TimeSpan.Zero || ts > TimeSpan.FromMinutes(60))
+            {
+                lblUpdateTimer.Visible = false;
+            }
+            else
+            {
+                lblUpdateTimer.Text = String.Format("{0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
+                lblUpdateTimer.Visible = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets the character image.  First attempt to get it from cache, then attempt to get it from eve-o.  If you can't get it either place, fail quietly.
+        /// </summary>
+        private void GetCharacterImage()
+        {
+            if (pbCharImage.Image == null)
+            {
+                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                if (File.Exists(cacheFileName))
+                {
+                    pbCharImage.Image = PortraitFromCache(cacheFileName);
+                    m_updatingPortrait = false;
+                }
+                if (pbCharImage.Image == null)
+                {
+                    UpdateCharacterImageRemote();
+                }
+            }
+        }
+        private void UpdateCharacterImageRemote()
+        {
+            pbCharImage.Image = null;
+            EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId,
+                                              new GetImageCallback(GotCharacterImage));
+        }
+
+        /// <summary>
+        /// Scan the specified EVE Folder for character portraits and, if possible, copy one of them to EVEMon's cache for use, then update the portrait display.
+        /// </summary>
+        private void UpdateCharacterImageLocal()
+        {
+            pbCharImage.Image = null;
+            Image i = null;
+
+            // test to see if an EVE Folder has been selected
+            if (this.GrandCharacterInfo.EVEFolder == "")
+            {
+                // if the folder has not been selected, ask the user to select it
+                RequestEVEFolder();
+            }
+
+            try
+            {
+                // generate paths and file patterns required for 
+                string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
+                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
+
+                // create a pattern that matches anything "<characterId>*.png"
+                string filePattern = this.GrandCharacterInfo.CharacterId.ToString() + "*.png";
+
+                // enumerate files in the EVE cache directory
+                DirectoryInfo di = new DirectoryInfo(eveCacheFolder);
+                FileInfo[] filesInEveCache = di.GetFiles(filePattern);
+
+                if (filesInEveCache.Length > 0)
+                {
+                    // add each file to a sorted list
+                    SortedList<int, string> sl = new SortedList<int, string>();
+
+                    foreach (FileInfo file in filesInEveCache)
+                    {
+                        int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                        int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
+                        sl.Add(imageSize, file.FullName);
+                    }
+
+                    // pick the largest image
+                    string eveCacheFileName = sl.Values[sl.Count - 1];
+
+                    FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
+                    FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
+                    i = Image.FromStream(fs1, true);
+                    i.Save(fs2, ImageFormat.Png);
+                    fs1.Close();
+                    fs1.Dispose();
+                    fs2.Close();
+                    fs2.Dispose();
+                }
+                else
+                {
+                    String message;
+
+                    message = "No portraits for your character were found in the folder you selected." + Environment.NewLine + Environment.NewLine;
+                    message += "Ensure that you have checked the following" + Environment.NewLine;
+                    message += " - You have selected a valid EVE Folder (i.e. C:\\Program Files\\CCP\\EVE\\)" + Environment.NewLine;
+                    message += " - You have logged into EVE using this folder";
+
+                    MessageBox.Show(message, "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+
+            pbCharImage.Image = i;
+            m_updatingPortrait = false;
+        }
+
+        /// <summary>
+        /// Pops up a window for the user to select their EVE folder.
+        /// </summary>
+        private void RequestEVEFolder()
+        {
+            using (EVEFolderWindow f = new EVEFolderWindow())
+            {
+                f.EVEFolder = m_grandCharacterInfo.EVEFolder;
+                f.ShowDialog();
+                if (f.DialogResult == DialogResult.OK)
+                {
+                    m_grandCharacterInfo.EVEFolder = f.EVEFolder;
+                    UpdateCachedCopy();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toggles the expansion or collapsing of a single group
+        /// </summary>
+        /// <param name="gsg">The group to expand or collapse.</param>
+        private void ToggleGroupExpandCollapse(GrandSkillGroup gsg)
+        {
+            bool toCollapse;
+            if (gsg.isCollapsed)
+            {
+                toCollapse = false;
+            }
+            else
+            {
+                toCollapse = true;
+            }
+            m_groupCollapsed[gsg] = toCollapse;
+            gsg.isCollapsed = m_groupCollapsed[gsg];
+            if (toCollapse)
+            {
+                // Remove the skills in the group from the list
+                foreach (GrandSkill gs in gsg)
+                {
+                    if (gs.Known)
+                    {
+                        lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
+                    }
+                }
+
+                Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
+                m_settings.CollapsedGroups.Add(grp);
+            }
+            else
+            {
+                List<GrandSkill> skillList = new List<GrandSkill>();
+                foreach (GrandSkill gs in gsg)
+                {
+                    skillList.Add(gs);
+                }
+                SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
+                CharacterSkillChangedCallback(this, args);
+                foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
+                {
+                    if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
+                    {
+                        m_settings.CollapsedGroups.Remove(grp);
+                        break;
+                    }
+                }
+                //void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+            }
+            lbSkills.Invalidate(lbSkills.GetItemRectangle(lbSkills.Items.IndexOf(gsg)));
+        }
+
+        /// <summary>
+        /// Handles the LinkClicked event of the llToggleAll control.  Toggles all the skill groups to collapse or open.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        private void llToggleAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            List<GrandSkillGroup> toggles = new List<GrandSkillGroup>();
+            bool? setCollapsed = null;
+            foreach (object o in lbSkills.Items)
+            {
+                if (o is GrandSkillGroup)
+                {
+                    GrandSkillGroup gsg = (GrandSkillGroup)o;
+                    bool isCollapsed = (m_groupCollapsed.ContainsKey(gsg) && m_groupCollapsed[gsg]);
+                    if (setCollapsed == null)
+                    {
+                        setCollapsed = !isCollapsed;
+                    }
+                    if (isCollapsed != setCollapsed)
+                    {
+                        toggles.Add(gsg);
+                    }
+                }
+            }
+            lbSkills.BeginUpdate();
+            try
+            {
+                foreach (GrandSkillGroup toggroup in toggles)
+                {
+                    ToggleGroupExpandCollapse(toggroup);
+                }
+            }
+            finally
+            {
+                lbSkills.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Forces the LCD data to be recalculated.
+        /// </summary>
+        public void ForceLcdDataUpdate()
+        {
+            CalculateLcdData();
+        }
+
+        #region External Callbacks
+
+        /// <summary>
+        /// Updates the LCD display.  Used to allow external agents (ie the settings object) to force this monitor to update its LCD display data in the event that
+        /// something that would influence LCD data changes.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void UpdateLcdDisplayCallback(object sender, EventArgs e)
+        {
+            UpdateLcdisplay();
+        }
+
+        /// <summary>
+        /// Called when the character file has been updated on the disc.  Used only by xml-backed characters
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.IO.FileSystemEventArgs"/> instance containing the event data.</param>
+        private void CharacterFileUpdatedCallback(object sender, FileSystemEventArgs e)
+        {
+            ReloadFromFile();
+        }
+
+        /// <summary>
+        ///Changes worksafe mode - all the lifting is done right in this method.  Allows the settings object to notify monitors when they need to hide from the man.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void WorksafeChangedCallback(object sender, EventArgs e)
         {
             pbCharImage.Visible = !m_settings.WorksafeMode;
             if (m_settings.WorksafeMode)
@@ -297,24 +968,21 @@ namespace EVEMon
                 tlpInfo.SetColumn(lblSkillHeader, 0);
                 tlpInfo.SetColumnSpan(lblSkillHeader, 2);
             }
-            //lblCharacterName.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblBioInfo.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblCorpInfo.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblBalance.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblIntelligence.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblCharisma.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblPerception.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblMemory.Left = m_settings.WorksafeMode ? -3 : 134;
-            //lblWillpower.Left = m_settings.WorksafeMode ? -3 : 134;
         }
 
-        private void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        /// <summary>
+        /// Handles everything when the character's training skill has changed.  Called by GrandCharacterInfo.
+        /// </summary>
+        /// <remarks>Another high-complexity method for us to look at.</remarks>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.SkillChangedEventArgs"/> instance containing the event data.</param>
+        private void CharacterSkillChangedCallback(object sender, SkillChangedEventArgs e)
         {
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
                                                   {
-                                                      m_grandCharacterInfo_SkillChanged(sender, e);
+                                                      CharacterSkillChangedCallback(sender, e);
                                                   }));
                 return;
             }
@@ -459,7 +1127,7 @@ namespace EVEMon
                             }
                         }
                         lblScheduleWarning.Visible = isBlocked;
-                        CalcSkillRemainText();
+                        CalculateLcdData();
 
                         pnlTraining.Visible = true;
                     }
@@ -489,27 +1157,18 @@ namespace EVEMon
             UpdateCachedCopy();
         }
 
-        private void EnableButtons()
-        {
-            btnSave.Enabled = true;
-            btnPlan.Enabled = true;
-        }
-
-        private void UpdateSkillHeaderStats()
-        {
-            lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
-                                                m_grandCharacterInfo.KnownSkillCount,
-                                                m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
-                                                m_grandCharacterInfo.MaxedSkillCount);
-        }
-
-        private void m_grandCharacterInfo_AttributeChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handle the event when a character's attributes change.  Called by GrandCharacterInfo.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void AttributeChangedCallback(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
                                                   {
-                                                      m_grandCharacterInfo_AttributeChanged(sender, e);
+                                                      AttributeChangedCallback(sender, e);
                                                   }));
                 return;
             }
@@ -520,54 +1179,21 @@ namespace EVEMon
             SetAttributeLabel(lblPerception, EveAttribute.Perception);
             SetAttributeLabel(lblMemory, EveAttribute.Memory);
             SetAttributeLabel(lblWillpower, EveAttribute.Willpower);
-
             UpdateCachedCopy();
         }
 
-        private void SetAttributeLabel(Label lblAttrib, EveAttribute eveAttribute)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(eveAttribute.ToString());
-
-            sb.Append(": ");
-            sb.Append(m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute).ToString("0.00"));
-            lblAttrib.Text = sb.ToString();
-
-            int baseAtt = m_grandCharacterInfo.GetBaseAttribute(eveAttribute);
-            double fromSkills = m_grandCharacterInfo.GetEffectiveAttribute(eveAttribute, null, false, false) - baseAtt;
-            double learning = m_grandCharacterInfo.LearningBonus;
-            double implant = m_grandCharacterInfo.getImplantValue(eveAttribute);
-
-            sb.Append(" [");
-            if (learning > 0.0) sb.Append("(");
-            sb.Append(baseAtt.ToString("0"));
-            sb.Append(" base + ");
-            sb.Append(fromSkills.ToString("0"));
-            sb.Append(" skills + ");
-            sb.Append(implant.ToString("0"));
-            if (learning > 0.0)
-            {
-                sb.Append(" implants) * ");
-                sb.Append(learning.ToString("0.00"));
-                sb.Append(" from learning bonus");
-            }
-            sb.Append("]");
-
-            ttToolTip.SetToolTip(lblAttrib, sb.ToString());
-            ttToolTip.IsBalloon = false;
-            ttToolTip.Active = true;
-
-            //lblAttrib.Text = sb.ToString();
-        }
-
-        private void m_grandCharacterInfo_BalanceChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the character's wallet changing, hopefully for the better.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BalanceChangedCallback(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
                                                   {
-                                                      m_grandCharacterInfo_BalanceChanged(sender, e);
+                                                      BalanceChangedCallback(sender, e);
                                                   }));
                 return;
             }
@@ -578,13 +1204,18 @@ namespace EVEMon
             UpdateCachedCopy();
         }
 
-        private void m_grandCharacterInfo_BioInfoChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Invoked when the character's bio info changes.  Used by GrandCharacterInfo
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BioInfoChangedCallback(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
                                                   {
-                                                      m_grandCharacterInfo_BioInfoChanged(sender, e);
+                                                      BioInfoChangedCallback(sender, e);
                                                   }));
                 return;
             }
@@ -606,889 +1237,240 @@ namespace EVEMon
             UpdateCachedCopy();
         }
 
-        private void m_grandCharacterInfo_EVEFolderChanged(object sender, EventArgs e)
-        {
-            UpdateCachedCopy();
-        }
-
-        private void UpdateCachedCopy()
-        {
-            SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
-            m_settings.SetCharacterCache(sci);
-            if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
-            {
-                int toremove;
-                bool add = true;
-                do
-                {
-                    toremove = -1;
-                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
-                    {
-                        if (x.A == m_charName)
-                        {
-                            if (x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
-                            {
-                                add = false;
-                                x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
-                                x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
-                                if (!x.B.old_skill_completed)
-                                {
-                                    toremove = m_settings.OldSkillLearnt.IndexOf(x);
-                                }
-                            }
-                            else
-                            {
-                                toremove = m_settings.OldSkillLearnt.IndexOf(x);
-                            }
-                        }
-                    }
-                    if (toremove != -1)
-                        m_settings.OldSkillLearnt.RemoveAt(toremove);
-                } while (toremove != -1);
-                if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
-                    m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
-            }
-            m_settings.Save();
-        }
-
-        private void GotCharacterImage(EveSession sender, Image i)
+        /// <summary>
+        /// Update the character image in the event that the remote character image was (probably) retrieved.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="i">The retrieved image.</param>
+        private void GotCharacterImage(EveSession sender, Image newImage)
         {
             string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-            if (i == null)
+
+            //the image was not retrieved - go to plan B
+            if (newImage == null)
             {
+                //Can we get it from the cache?
                 if (File.Exists(cacheFileName))
                 {
-                    try
-                    {
-                        FileStream fs = new FileStream(cacheFileName, FileMode.Open);
-                        i = Image.FromStream(fs, true);
-                        fs.Close();
-                        fs.Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
+                    newImage = PortraitFromCache(cacheFileName);
                 }
-                if (i == null)
+                //the image is not in the cache
+                if (newImage == null)
                 {
-                    i = pbCharImage.InitialImage;
-                    try
-                    {
-                        FileStream fs = new FileStream(cacheFileName, FileMode.Create);
-                        i.Save(fs, ImageFormat.Png);
-                        fs.Close();
-                        fs.Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
+                    newImage = pbCharImage.InitialImage;
+                    SavePortraitToCache(newImage, cacheFileName);
                 }
             }
             else
             {
-                try
-                {
-                    FileStream fs = new FileStream(cacheFileName, FileMode.Create);
-                    i.Save(fs, ImageFormat.Png);
-                    fs.Close();
-                    fs.Dispose();
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
+                SavePortraitToCache(newImage, cacheFileName);
             }
-            pbCharImage.Image = i;
-            updating_pic = false;
+            //whatever happened, show a portrait
+            pbCharImage.Image = newImage;
+            m_updatingPortrait = false;
         }
 
-        //private DateTime m_lastUpdate = DateTime.MinValue;
-        private DateTime m_nextScheduledUpdateAt = DateTime.MinValue;
-
-        private void tmrUpdate_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// Open the character portrait from the EVEMon cache
+        /// </summary>
+        /// <returns>The character portrait as an Image object</returns>
+        private static Image PortraitFromCache(string cacheFile)
         {
-            if (m_throbberRunning)
-            {
-                return;
-            }
-
-            tmrUpdate.Enabled = false;
-            StartThrobber();
-            if (m_charId < 0)
-            {
-                GetCharIdAndUpdate();
-            }
-            else
-            {
-                UpdateGrandCharacterInfo();
-            }
-        }
-
-        private void GetCharIdAndUpdate()
-        {
-#if DEBUG_SINGLETHREAD
-            GetCharIdAndUpdateInternal(null);
-#else
-            ThreadPool.QueueUserWorkItem(new WaitCallback(GetCharIdAndUpdateInternal));
-#endif
-        }
-
-        private void GetCharIdAndUpdateInternal(object state)
-        {
-            int gotCharId = -1;
+            Image newImage;
             try
             {
-                m_session = EveSession.GetSession(m_cli.Username, m_cli.Password);
-                gotCharId = m_session.GetCharacterId(m_cli.CharacterName);
+                FileStream fs = new FileStream(cacheFile, FileMode.Open);
+                newImage = Image.FromStream(fs, true);
+                fs.Close();
+                fs.Dispose();
+                return newImage;
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, false);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Save the specified image to the EVEMon cache as this character's portrait
+        /// </summary>
+        /// <param name="newImage">The new portrait image.</param>
+        private static void SavePortraitToCache(Image newImage, string cacheFile)
+        {
+            try
+            {
+                //make their character a "!" in the cache
+                FileStream fs = new FileStream(cacheFile, FileMode.Create);
+                newImage.Save(fs, ImageFormat.Png);
+                fs.Close();
+                fs.Dispose();
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, false);
             }
-            if (gotCharId < 0)
-            {
-                this.Invoke(new MethodInvoker(delegate
-                                                  {
-                                                      ttToolTip.SetToolTip(pbThrobber,
-                                                                           "Could not get character data!\nClick to try again.");
-                                                      ttToolTip.IsBalloon = true;
-                                                      tmrUpdate.Interval = 1000 * 60 * 30;
-                                                      tmrUpdate.Enabled = true;
-                                                      SetErrorThrobber();
-                                                      this.m_grandCharacterInfo.check_old_skill();
-                                                  }));
-                return;
-            }
+        }
 
-            m_charId = gotCharId;
-            m_grandCharacterInfo.CharacterId = gotCharId;
-            GetCharacterImage();
-            UpdateGrandCharacterInfo();
-            foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+        /// <summary>
+        /// Callback for the event where a character update failed.  Should be used via Invoke.
+        /// </summary>
+        private void CharacterDownloadFailedCallback()
+        {
+            ttToolTip.SetToolTip(pbThrobber, "Could not get character data!\nClick to try again.");
+            ttToolTip.IsBalloon = true;
+            tmrUpdateCharacter.Interval = 1000 * 60 * 30;
+            tmrUpdateCharacter.Enabled = true;
+            SetErrorThrobber();
+            this.m_grandCharacterInfo.check_old_skill();
+        }
+        #endregion
+
+        #region Control/Component Event Handlers
+
+        /// <summary>
+        /// Handles animation for the throbber control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tmrThrobber_Tick(object sender, EventArgs e)
+        {
+            if (m_currentlyVisible)
             {
-                if (x.A == m_charName)
+                tmrThrobber.Enabled = false;
+                if (m_throbberRunning)
                 {
-                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
+                    m_throbberFrame = ((m_throbberFrame + 1) % 8);
+                    pbThrobber.Image = ThrobberImages[m_throbberFrame + 1];
+                    tmrThrobber.Enabled = true;
                 }
-            }
-        }
-
-        private void UpdateGrandCharacterInfo()
-        {
-            m_session.UpdateGrandCharacterInfoAsync(m_grandCharacterInfo, Program.MainWindow,
-                                                    new UpdateGrandCharacterInfoCallback(
-                                                        delegate(EveSession s, int timeLeftInCache)
-                                                        {
-                                                            this.Invoke(new MethodInvoker(delegate
-                                                                                              {
-                                                                                                  //m_lastUpdate = DateTime.Now;
-                                                                                                  m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
-                                                                                                  ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
-                                                                                                  ttToolTip.IsBalloon = true;
-                                                                                                  //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
-                                                                                                  tmrUpdate.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
-                                                                                                  tmrUpdate.Enabled = true;
-                                                                                                  StopThrobber();
-                                                                                              }));
-                                                        }));
-
-
-        }
-
-        private string m_skillTrainingName;
-        private DateTime m_estimatedCompletion;
-
-        private GrandCharacterInfo m_grandCharacterInfo;
-
-        private string m_shortText = String.Empty;
-        private TimeSpan m_shortTimeSpan = TimeSpan.Zero;
-
-        public GrandCharacterInfo GrandCharacterInfo
-        {
-            get { return m_grandCharacterInfo; }
-        }
-
-        public string ShortText
-        {
-            get { return m_shortText; }
-        }
-
-        public TimeSpan ShortTimeSpan
-        {
-            get { return m_shortTimeSpan; }
-        }
-
-        public EventHandler ShortInfoChanged;
-
-        private void UpdateLcdisplay()
-        {
-            if (m_settings.UseLogitechG15Display && Program.LCD != null)
-            {
-                if (Program.LCD.CharacterName == null || Program.LCD.CharacterName == "")
+                else if (m_throbberError)
                 {
-                    Program.LCD.CharacterName = m_charName;
-                    Program.LCD.newchar = m_charName;
-                }
-                if (Program.LCD.newchar == m_charName)
-                {
-                    GrandSkill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
-                    if (s != null)
+                    bool blinkState = (DateTime.Now.Millisecond > 500);
+                    if (!blinkState)
                     {
-                        double percentDone = 0.0;
-                        int NextLevel = 0;
-                        int CurrentSP = s.CurrentSkillPoints;
-                        int reqToThisLevel = s.GetPointsRequiredForLevel(s.Level);
-                        int reqToNextLevel = 0;
-                        int pointsInThisLevel = 0;
-                        double deltaPointsOfLevel = 0.0;
-
-                        //We must have completed some, but not all, of level II, III or IV
-                        NextLevel = s.Level + 1;
-                        pointsInThisLevel = CurrentSP - reqToThisLevel;
-                        reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
-                        deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
-                        percentDone = pointsInThisLevel / deltaPointsOfLevel;
-
-                        Program.LCD.curperc = percentDone;
+                        pbThrobber.Image = null;
                     }
                     else
                     {
-                        Program.LCD.curperc = 1;
+                        pbThrobber.Image = ThrobberImages[0];
                     }
-                    Program.LCD.CharacterName = m_charName; //null ok
-                    Program.LCD.CurrentSkillTrainingText = m_skillTrainingName; //null ok
-                    Program.LCD.TimeToComplete = m_shortTimeSpan;
-                }
-                long tmp = Program.LCD.leasttime.Ticks - m_shortTimeSpan.Ticks;
-                if (tmp > 0)
-                {
-                    if (m_skillTrainingName != "" && m_skillTrainingName != null)
-                    {
-                        Program.LCD.leasttime = m_shortTimeSpan;
-                        Program.LCD.leastchar = m_charName;
-                    }
-                }
-                if (Program.LCD.charlist == null)
-                {
-                    List<CharLoginInfo> mlist = m_settings.CharacterList;
-                    string[] temp = new string[mlist.Count];
-                    int i = 0;
-                    foreach (CharLoginInfo sci in mlist)
-                    {
-                        temp[i] = sci.CharacterName;
-                        i++;
-                    }
-                    Program.LCD.charlist = temp;
-                }
-                if (Program.LCD.refreshchar != null && Program.LCD.refreshchar == m_charName)
-                {
-                    Program.LCD.refreshchar = null;
-                    tmrUpdate_Tick(null, null);
-                    UpdateNextUpdateLabel();
-                }
-                if (Program.LCD.cycleini == false)
-                {
-                    Program.LCD.cycle = m_settings.G15ACycle;
-                    Program.LCD.cycleint = m_settings.G15ACycleint;
-                    Program.LCD.cycleini = true;
+                    tmrThrobber.Enabled = true;
                 }
                 else
                 {
-                    m_settings.G15ACycle = Program.LCD.cycle;
+                    pbThrobber.Image = ThrobberImages[0];
+                    m_throbberFrame = 0;
                 }
             }
         }
 
-        private void CalcSkillRemainText()
+        /// <summary>
+        /// Handles the Click event of the pbThrobber control.  If we're in an OK state, hit eve-o, otherwise, show the throbber menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void pbThrobber_Click(object sender, EventArgs e)
         {
-            //update Short Data
-            DateTime now = DateTime.Now;
-            if (m_estimatedCompletion != DateTime.MaxValue)
+            if (!m_throbberError)
             {
-                if (m_estimatedCompletion > now)
-                {
-                    SetShortData(m_charName + ": " +
-                             TimeSpanDescriptiveShort(m_estimatedCompletion),
-                                 m_estimatedCompletion - now);
-                }
-                else
-                {
-                    SetShortData(m_charName + ": Done", TimeSpan.Zero);
-                }
+                tmrUpdate_Tick(null, null);
+                UpdateThrobberLabel();
             }
             else
             {
-                SetShortData(String.Empty, TimeSpan.Zero);
+                cmsThrobberMenu.Show(MousePosition);
             }
         }
 
-        private void UpdateSkillLabels()
+        private void lbSkills_MouseEnter(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            if (m_estimatedCompletion != DateTime.MaxValue)
+            ttToolTip.Active = false;
+        }
+
+        private void lbSkills_MouseLeave(object sender, EventArgs e)
+        {
+            ttToolTip.Active = false;
+        }
+
+        private void pbThrobber_MouseEnter(object sender, EventArgs e)
+        {
+            ttToolTip.IsBalloon = true;
+            ttToolTip.Active = true;
+        }
+
+        private void miHitEveO_Click(object sender, EventArgs e)
+        {
+            tmrUpdate_Tick(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Handles the Click event of the miChangeInfo control.  Displays a new login window and gets username/password from the user.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void miChangeInfo_Click(object sender, EventArgs e)
+        {
+            using (ChangeLoginWindow f = new ChangeLoginWindow())
             {
-                lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
-                if (m_estimatedCompletion > now)
+                f.CharacterName = m_grandCharacterInfo.Name;
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.OK)
                 {
-                    lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                    m_cli.Username = f.Username;
+                    m_cli.Password = f.Password;
+                    m_session = EveSession.GetSession(f.Username, f.Password);
+                    m_charId = -1;
+                    tmrUpdate_Tick(this, new EventArgs());
+
+                    m_settings.Save();
                 }
-                else
-                {
-                    lblTrainingEst.Text = String.Empty;
-                }
-            }
-            else
-            {
-                lblTrainingRemain.Text = String.Empty;
-                lblTrainingEst.Text = String.Empty;
             }
         }
 
-        public static string TimeSpanDescriptiveMedium(TimeSpan ts)
+        /// <summary>
+        /// Handles the Click event of the miManualImplants control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void miManualImplants_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            if (ts < TimeSpan.Zero)
+            using (ManualImplantWindow f = new ManualImplantWindow(m_grandCharacterInfo.AttributeBonuses))
             {
-                ts -= (ts + ts);
-            }
-            if (ts.Days > 0)
-            {
-                sb.Append(ts.Days.ToString());
-                sb.Append("D");
-            }
-            ts -= TimeSpan.FromDays(ts.Days);
-            if (ts.Hours > 0)
-            {
-                if (sb.Length > 0)
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.OK)
                 {
-                    sb.Append(", ");
-                }
-                sb.Append(ts.Hours.ToString());
-                sb.Append("H");
-            }
-            ts -= TimeSpan.FromHours(ts.Hours);
-            if (ts.Minutes > 0)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(ts.Minutes.ToString());
-                sb.Append("M");
-            }
-            ts -= TimeSpan.FromMinutes(ts.Minutes);
-            if (ts.Seconds > 0)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(ts.Seconds.ToString());
-                sb.Append("S");
-            }
-            return sb.ToString();
-        }
-
-        public static string TimeSpanDescriptiveShort(DateTime t)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (t > DateTime.Now)
-            {
-                TimeSpan ts = t - DateTime.Now;
-                if (ts.Days > 0)
-                {
-                    sb.Append(ts.Days.ToString());
-                    sb.Append("d");
-                }
-                ts -= TimeSpan.FromDays(ts.Days);
-                if (ts.Hours > 0)
-                {
-                    sb.Append(ts.Hours.ToString());
-                    sb.Append("h");
-                }
-                ts -= TimeSpan.FromHours(ts.Hours);
-                if (ts.Minutes > 0)
-                {
-                    sb.Append(ts.Minutes.ToString());
-                    sb.Append("m");
-                }
-                ts -= TimeSpan.FromMinutes(ts.Minutes);
-                if (ts.Seconds > 0)
-                {
-                    sb.Append(ts.Seconds.ToString());
-                    sb.Append("s");
-                }
-                return sb.ToString();
-            }
-            else
-            {
-                return "Done";
-            }
-        }
-
-        private void SetShortData(string newShortText, TimeSpan timeSpan)
-        {
-            bool fireEvent = false;
-            if (newShortText != m_shortText || timeSpan != m_shortTimeSpan)
-            {
-                fireEvent = true;
-            }
-            m_shortText = newShortText;
-            m_shortTimeSpan = timeSpan;
-            if (fireEvent && ShortInfoChanged != null)
-            {
-                ShortInfoChanged(this, new EventArgs());
-            }
-            UpdateLcdisplay();
-        }
-
-        private string TimeSpanDescriptive(DateTime t)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (t > DateTime.Now)
-            {
-                TimeSpan ts = t - DateTime.Now;
-                if (ts.Days > 0)
-                {
-                    sb.Append(ts.Days.ToString());
-                    sb.Append(" day");
-                    if (ts.Days > 1)
-                    {
-                        sb.Append("s");
-                    }
-                }
-                ts -= TimeSpan.FromDays(ts.Days);
-                if (ts.Hours > 0)
-                {
-                    if (sb.Length > 0)
-                    {
-                        sb.Append(", ");
-                    }
-                    sb.Append(ts.Hours.ToString());
-                    sb.Append(" hour");
-                    if (ts.Hours > 1)
-                    {
-                        sb.Append("s");
-                    }
-                }
-                ts -= TimeSpan.FromHours(ts.Hours);
-                if (ts.Minutes > 0)
-                {
-                    if (sb.Length > 0)
-                    {
-                        sb.Append(", ");
-                    }
-                    sb.Append(ts.Minutes.ToString());
-                    sb.Append(" minute");
-                    if (ts.Minutes > 1)
-                    {
-                        sb.Append("s");
-                    }
-                }
-                ts -= TimeSpan.FromMinutes(ts.Minutes);
-                if (ts.Seconds > 0)
-                {
-                    if (sb.Length > 0)
-                    {
-                        sb.Append(", ");
-                    }
-                    sb.Append(ts.Seconds.ToString());
-                    sb.Append(" second");
-                    if (ts.Seconds > 1)
-                    {
-                        sb.Append("s");
-                    }
-                }
-                return sb.ToString();
-            }
-            else
-            {
-                return "Completed.";
-            }
-        }
-
-        private void UpdateNextUpdateLabel()
-        {
-            if (m_throbberRunning)
-            {
-                lblUpdateTimer.Visible = false;
-                return;
-            }
-
-            TimeSpan ts = m_nextScheduledUpdateAt - DateTime.Now;
-            if (ts < TimeSpan.Zero || ts > TimeSpan.FromMinutes(60))
-            {
-                lblUpdateTimer.Visible = false;
-            }
-            else
-            {
-                lblUpdateTimer.Text = String.Format("{0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
-                lblUpdateTimer.Visible = true;
-            }
-        }
-
-        private int m_lastTickSPPaint = 0;
-
-        private void tmrTick_Tick(object sender, EventArgs e)
-        {
-            CalcSkillRemainText();
-
-            if (m_currentlyVisible)
-            {
-                UpdateSkillLabels();
-                UpdateNextUpdateLabel();
-
-                GrandSkill trainingSkill = m_grandCharacterInfo.CurrentlyTrainingSkill;
-                if (trainingSkill != null)
-                {
-                    if (trainingSkill.CurrentSkillPoints != m_lastTickSPPaint)
-                    {
-                        m_lastTickSPPaint = trainingSkill.CurrentSkillPoints;
-                        int idx = lbSkills.Items.IndexOf(trainingSkill);
-                        if (idx >= 0)
-                        {
-                            lbSkills.Invalidate(lbSkills.GetItemRectangle(idx));
-                        }
-                        int sgidx = lbSkills.Items.IndexOf(trainingSkill.SkillGroup);
-                        lbSkills.Invalidate(lbSkills.GetItemRectangle(sgidx));
-                        UpdateSkillHeaderStats();
-                    }
-                }
-            }
-            if (m_grandCharacterInfo.DL_Complete && m_estimatedCompletion < DateTime.Now &&
-                m_grandCharacterInfo.CurrentlyTrainingSkill != null)
-            {
-                // Trigger event on skill completion
-                // The 'event' for a skill completion is in GrandCharacterInfo.cs, depending on what is wanted
-                // it should be triggered from there as all skill manipulation is done in that file.
-
-                // The following line triggers the required code in GrandCharacterInfo.cs
-                m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
-
-                UpdateSkillHeaderStats();
-            }
-            if (updating_pic == false && pbCharImage.Image == null)
-            {
-                updating_pic = true;
-                GetCharacterImage();
-            }
-            if (Program.LCD != null)
-            {
-                Program.LCD.Update();
-            }
-        }
-
-        private bool updating_pic = false;
-
-        private void GetCharacterImage()
-        {
-            if (pbCharImage.Image == null)
-            {
-                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-                if (File.Exists(cacheFileName))
-                {
+                    m_grandCharacterInfo.SuppressEvents();
                     try
                     {
-                        FileStream fs = new FileStream(cacheFileName, FileMode.Open);
-                        pbCharImage.Image = Image.FromStream(fs, true);
-                        fs.Close();
-                        fs.Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
-                    updating_pic = false;
-                }
-                if (pbCharImage.Image == null)
-                {
-                    UpdateCharacterImage();
-                }
-            }
-        }
-
-        private void UpdateCharacterImage()
-        {
-            pbCharImage.Image = null;
-            EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId,
-                                              new GetImageCallback(GotCharacterImage));
-        }
-
-        private void UpdateCharacterImageFromEVECache()
-        {
-            pbCharImage.Image = null;
-            Image i = null;
-
-            // test to see if an EVE Folder has been selected
-            if (this.GrandCharacterInfo.EVEFolder == "")
-            {
-                // if the folder has not been selected, ask the user to select it
-                SetCharacterEVEFolder();
-            }
-
-            try
-            {
-                // generate paths and file patterns required for 
-                string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
-                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
-                int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
-
-                // create a pattern that matches anything "<characterId>*.png"
-                string filePattern = this.GrandCharacterInfo.CharacterId.ToString() + "*.png";
-
-                // enumerate files in the EVE cache directory
-                DirectoryInfo di = new DirectoryInfo(eveCacheFolder);
-                FileInfo[] filesInEveCache = di.GetFiles(filePattern);
-
-                if (filesInEveCache.Length > 0)
-                {
-                    // add each file to a sorted list
-                    SortedList<int, string> sl = new SortedList<int, string>();
-
-                    foreach (FileInfo file in filesInEveCache)
-                    {
-                        int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
-                        int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength));
-                        sl.Add(imageSize, file.FullName);
-                    }
-
-                    // pick the largest image
-                    string eveCacheFileName = sl.Values[sl.Count - 1];
-
-                    FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
-                    FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
-                    i = Image.FromStream(fs1, true);
-                    i.Save(fs2, ImageFormat.Png);
-                    fs1.Close();
-                    fs1.Dispose();
-                    fs2.Close();
-                    fs2.Dispose();
-                }
-                else
-                {
-                    String message;
-
-                    message = "No portraits for your character were found in the folder you selected." + Environment.NewLine + Environment.NewLine;
-                    message += "Ensure that you have checked the following" + Environment.NewLine;
-                    message += " - You have selected a valid EVE Folder (i.e. C:\\Program Files\\CCP\\EVE\\)" + Environment.NewLine;
-                    message += " - You have logged into EVE using this folder";
-
-                    MessageBox.Show(message, "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, false);
-            }
-
-            pbCharImage.Image = i;
-            updating_pic = false;
-        }
-
-        private void SetCharacterEVEFolder()
-        {
-            using (EVEFolderWindow f = new EVEFolderWindow())
-            {
-                f.EVEFolder = m_grandCharacterInfo.EVEFolder;
-                f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
-                {
-                    m_grandCharacterInfo.EVEFolder = f.EVEFolder;
-                    UpdateCachedCopy();
-                }
-            }
-        }
-
-        private enum SaveFormat
-        {
-            None = 0,
-            Text = 1,
-            Html = 2,
-            Xml = 3,
-            Png = 4
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            sfdSaveDialog.FileName = m_grandCharacterInfo.Name;
-            sfdSaveDialog.FilterIndex = (int)SaveFormat.Xml;
-            DialogResult dr = sfdSaveDialog.ShowDialog();
-            if (dr == DialogResult.OK)
-            {
-                SaveFile((SaveFormat)sfdSaveDialog.FilterIndex, sfdSaveDialog.FileName);
-            }
-        }
-
-        private void SavePNGScreenshot(string fileName)
-        {
-            int cachedHeight = lbSkills.Height;
-            lbSkills.Dock = System.Windows.Forms.DockStyle.None;
-            lbSkills.Height = lbSkills.PreferredHeight;
-            lbSkills.Update();
-
-            Bitmap bitmap = new Bitmap(lbSkills.Width, lbSkills.PreferredHeight);
-            lbSkills.DrawToBitmap(bitmap, new Rectangle(0, 0, lbSkills.Width, lbSkills.PreferredHeight));
-            bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
-            lbSkills.Height = cachedHeight;
-            lbSkills.Update();
-
-            this.Invalidate();
-        }
-
-        private void SaveTextFile(string fileName)
-        {
-            SerializableCharacterInfo ci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
-            using (StreamWriter sw = new StreamWriter(fileName, false))
-            {
-                MethodInvoker writeSep = new MethodInvoker(delegate
-                                                               {
-                                                                   sw.WriteLine(
-                                                                       "=======================================================================");
-                                                               });
-                MethodInvoker writeSubSep = new MethodInvoker(delegate
-                                                                  {
-                                                                      sw.WriteLine(
-                                                                          "-----------------------------------------------------------------------");
-                                                                  });
-                sw.WriteLine("BASIC INFO");
-                writeSep();
-                sw.WriteLine("     Name: {0}", ci.Name);
-                sw.WriteLine("   Gender: {0}", ci.Gender);
-                sw.WriteLine("     Race: {0}", ci.Race);
-                sw.WriteLine("Bloodline: {0}", ci.BloodLine);
-                sw.WriteLine("  Balance: {0} ISK", ci.Balance.ToString("#,##0.00"));
-                sw.WriteLine();
-                sw.WriteLine("Intelligence: {0}", ci.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("    Charisma: {0}", ci.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("  Perception: {0}", ci.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("      Memory: {0}", ci.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("   Willpower: {0}", ci.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
-                sw.WriteLine();
-                if (ci.AttributeBonuses.Bonuses.Count > 0)
-                {
-                    sw.WriteLine("IMPLANTS");
-                    writeSep();
-                    foreach (SerializableEveAttributeBonus tb in ci.AttributeBonuses.Bonuses)
-                    {
-                        sw.WriteLine("+{0} {1} : {2}", tb.Amount, tb.EveAttribute.ToString().PadRight(13), tb.Name);
-                    }
-                    sw.WriteLine();
-                }
-                sw.WriteLine("SKILLS");
-                writeSep();
-                foreach (SerializableSkillGroup sg in ci.SkillGroups)
-                {
-                    sw.WriteLine("{0}, {1} Skill{2}, {3} Points",
-                                 sg.Name, sg.Skills.Count, sg.Skills.Count > 1 ? "s" : "",
-                                 sg.GetTotalPoints().ToString("#,##0"));
-                    foreach (SerializableSkill s in sg.Skills)
-                    {
-                        string skillDesc = s.Name + " " + GrandSkill.GetRomanForInt(s.Level) + " (" +
-                                           s.Rank.ToString() + ")";
-                        sw.WriteLine(": {0} {1}/{2} Points",
-                                     skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
-                                     s.SkillLevel5.ToString("#,##0"));
-                        if (ci.SkillInTraining != null && ci.SkillInTraining.SkillName == s.Name)
+                        for (int i = 0; i < m_grandCharacterInfo.AttributeBonuses.Count; i++)
                         {
-                            sw.WriteLine(":  (Currently training to level {0}, completes {1})",
-                                         GrandSkill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
-                                         ci.SkillInTraining.EstimatedCompletion.ToString());
+                            GrandEveAttributeBonus geab = m_grandCharacterInfo.AttributeBonuses[i];
+                            if (geab.Manual)
+                            {
+                                m_grandCharacterInfo.AttributeBonuses.RemoveAt(i);
+                                i--;
+                            }
+                        }
+                        foreach (GrandEveAttributeBonus b in f.ResultBonuses)
+                        {
+                            if (b.Manual)
+                                m_grandCharacterInfo.AttributeBonuses.Add(b);
                         }
                     }
-                    writeSubSep();
-                }
-            }
-        }
-
-        private void SaveFile(SaveFormat saveFormat, string fileName)
-        {
-            if (saveFormat == SaveFormat.Text)
-            {
-                SaveTextFile(fileName);
-                return;
-            }
-            else if (saveFormat == SaveFormat.Png)
-            {
-                SavePNGScreenshot(fileName);
-                return;
-            }
-            try
-            {
-                Stream outerStream;
-                XPathDocument xpdoc;
-                if (saveFormat == SaveFormat.Xml)
-                {
-                    outerStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                }
-                else
-                {
-                    outerStream = new MemoryStream(32767);
-                }
-                try
-                {
-                    using (XmlTextWriter xtw = new XmlTextWriter(outerStream, Encoding.UTF8))
+                    finally
                     {
-                        if (saveFormat == SaveFormat.Xml)
-                        {
-                            xtw.Indentation = 1;
-                            xtw.IndentChar = '\t';
-                            xtw.Formatting = Formatting.Indented;
-                        }
-                        XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
-                        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                        ns.Add("", "");
-                        xs.Serialize(xtw, m_grandCharacterInfo.ExportSerializableCharacterInfo(), ns);
-                        xtw.Flush();
-
-                        if (saveFormat == SaveFormat.Xml)
-                        {
-                            return;
-                        }
-
-                        MemoryStream ms = (MemoryStream)outerStream;
-                        ms.Position = 0;
-                        using (StreamReader tr = new StreamReader(ms))
-                        {
-                            xpdoc = new XPathDocument(tr);
-                        }
+                        m_grandCharacterInfo.ResumeEvents();
                     }
                 }
-                finally
-                {
-                    outerStream.Dispose();
-                }
-
-                XslCompiledTransform xstDoc2 = new XslCompiledTransform();
-                using (
-                    Stream s =
-                        Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.output-" +
-                                                                                  saveFormat.ToString().ToLower() +
-                                                                                  ".xsl"))
-                using (XmlTextReader xtr = new XmlTextReader(s))
-                {
-                    xstDoc2.Load(xtr);
-                }
-
-                using (StreamWriter sw = new StreamWriter(fileName, false))
-                using (XmlTextWriter xtw = new XmlTextWriter(sw))
-                {
-                    xtw.Indentation = 1;
-                    xtw.IndentChar = '\t';
-                    xtw.Formatting = Formatting.Indented;
-                    xstDoc2.Transform(xpdoc, null, xtw);
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Failed to save:\n" + ex.Message, "Could not save", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        /// <summary>
+        /// Handles the DrawItem event of the lbSkills control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lbSkills_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
@@ -1507,6 +1489,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Handles the MeasureItem event of the lbSkills control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MeasureItemEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             if (e.Index < 0)
@@ -1524,6 +1511,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Handles the MouseWheel event of the lbSkills control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MouseWheel(object sender, MouseEventArgs e)
         {
             // Update the drawing based upon the mouse wheel scrolling.
@@ -1595,6 +1587,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the btnPlan control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
             Plan p = null;
@@ -1659,6 +1656,11 @@ namespace EVEMon
             p.ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
+        /// <summary>
+        /// Handles the ContextMenuShowing event of the btnPlan control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnPlan_ContextMenuShowing(object sender, EventArgs e)
         {
             ContextMenuStrip plans = new ContextMenuStrip();
@@ -1678,17 +1680,25 @@ namespace EVEMon
             btnPlan.ContextMenuStrip = plans;
         }
 
+
         private void btnMoreOptions_Click(object sender, EventArgs e)
         {
             cmsMoreOptions.Show(btnMoreOptions,
                                 btnMoreOptions.PointToClient(MousePosition), ToolStripDropDownDirection.Default);
         }
 
+
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             lbSkills_MouseClick(sender, e);
         }
 
+        /// <summary>
+        /// Handles the MouseClick event of the lbSkills control.
+        /// </summary>
+        /// <remarks>TODO:  There are opportunities for improvement here.</remarks>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MouseClick(object sender, MouseEventArgs e)
         {
             int index = lbSkills.IndexFromPoint(e.X, e.Y);
@@ -1879,262 +1889,37 @@ namespace EVEMon
             }
         }
 
-        private void ToggleGroupExpandCollapse(GrandSkillGroup gsg)
-        {
-            bool toCollapse;
-            if (gsg.isCollapsed)
-            {
-                toCollapse = false;
-            }
-            else
-            {
-                toCollapse = true;
-            }
-            m_groupCollapsed[gsg] = toCollapse;
-            gsg.isCollapsed = m_groupCollapsed[gsg];
-            if (toCollapse)
-            {
-                // Remove the skills in the group from the list
-                foreach (GrandSkill gs in gsg)
-                {
-                    if (gs.Known)
-                    {
-                        lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
-                    }
-                }
 
-                Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
-                m_settings.CollapsedGroups.Add(grp);
-            }
-            else
-            {
-                List<GrandSkill> skillList = new List<GrandSkill>();
-                foreach (GrandSkill gs in gsg)
-                {
-                    skillList.Add(gs);
-                }
-                SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
-                m_grandCharacterInfo_SkillChanged(this, args);
-                foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
-                {
-                    if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
-                    {
-                        m_settings.CollapsedGroups.Remove(grp);
-                        break;
-                    }
-                }
-                //void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
-            }
-            lbSkills.Invalidate(lbSkills.GetItemRectangle(lbSkills.Items.IndexOf(gsg)));
+        private void miUpdatePicture_Click(object sender, EventArgs e)
+        {
+            UpdateCharacterImageRemote();
         }
 
-        private bool m_throbberRunning = false;
-        private bool m_throbberError = true;
-        private int m_throbberFrame = 0;
 
-        private void StartThrobber()
+        private void miUpdatePictureFromEVECache_Click(object sender, EventArgs e)
         {
-            m_throbberRunning = true;
-            tmrThrobber.Enabled = true;
-            ttToolTip.SetToolTip(pbThrobber, "Retrieving data from EVE Online...");
-            ttToolTip.IsBalloon = true;
+            UpdateCharacterImageLocal();
         }
 
-        private void StopThrobber()
+
+        private void miSetEVEFolder_Click(object sender, EventArgs e)
         {
-            m_throbberRunning = false;
-            m_throbberError = false;
+            RequestEVEFolder();
         }
 
-        private void SetErrorThrobber()
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new MethodInvoker(SetErrorThrobber));
-                return;
-            }
-
-            m_throbberRunning = false;
-            m_throbberError = true;
-        }
-
-        private void tmrThrobber_Tick(object sender, EventArgs e)
-        {
-            if (m_currentlyVisible)
-            {
-                tmrThrobber.Enabled = false;
-                if (m_throbberRunning)
-                {
-                    m_throbberFrame = ((m_throbberFrame + 1) % 8);
-                    pbThrobber.Image = ThrobberImages[m_throbberFrame + 1];
-                    tmrThrobber.Enabled = true;
-                }
-                else if (m_throbberError)
-                {
-                    bool blinkState = (DateTime.Now.Millisecond > 500);
-                    if (!blinkState)
-                    {
-                        pbThrobber.Image = null;
-                    }
-                    else
-                    {
-                        pbThrobber.Image = ThrobberImages[0];
-                    }
-                    tmrThrobber.Enabled = true;
-                }
-                else
-                {
-                    pbThrobber.Image = ThrobberImages[0];
-                    m_throbberFrame = 0;
-                }
-            }
-        }
-
-        private void pbThrobber_Click(object sender, EventArgs e)
-        {
-            if (!m_throbberError)
-            {
-                tmrUpdate_Tick(null, null);
-                UpdateNextUpdateLabel();
-            }
-            else
-            {
-                cmsThrobberMenu.Show(MousePosition);
-            }
-        }
-
-        private void lbSkills_MouseEnter(object sender, EventArgs e)
-        {
-            ttToolTip.Active = false;
-        }
-
-        private void lbSkills_MouseLeave(object sender, EventArgs e)
-        {
-            ttToolTip.Active = false;
-        }
-
-        private void pbThrobber_MouseEnter(object sender, EventArgs e)
-        {
-            ttToolTip.IsBalloon = true;
-            ttToolTip.Active = true;
-        }
-
-        private void llToggleAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            List<GrandSkillGroup> toggles = new List<GrandSkillGroup>();
-            bool? setCollapsed = null;
-            foreach (object o in lbSkills.Items)
-            {
-                if (o is GrandSkillGroup)
-                {
-                    GrandSkillGroup gsg = (GrandSkillGroup)o;
-                    bool isCollapsed = (m_groupCollapsed.ContainsKey(gsg) && m_groupCollapsed[gsg]);
-                    if (setCollapsed == null)
-                    {
-                        setCollapsed = !isCollapsed;
-                    }
-                    if (isCollapsed != setCollapsed)
-                    {
-                        toggles.Add(gsg);
-                    }
-                }
-            }
-            lbSkills.BeginUpdate();
-            try
-            {
-                foreach (GrandSkillGroup toggroup in toggles)
-                {
-                    ToggleGroupExpandCollapse(toggroup);
-                }
-            }
-            finally
-            {
-                lbSkills.EndUpdate();
-            }
-        }
-
-        private void miHitEveO_Click(object sender, EventArgs e)
-        {
-            tmrUpdate_Tick(this, new EventArgs());
-        }
-
-        private void miChangeInfo_Click(object sender, EventArgs e)
-        {
-            using (ChangeLoginWindow f = new ChangeLoginWindow())
-            {
-                f.CharacterName = m_grandCharacterInfo.Name;
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    m_cli.Username = f.Username;
-                    m_cli.Password = f.Password;
-                    m_session = EveSession.GetSession(f.Username, f.Password);
-                    m_charId = -1;
-                    tmrUpdate_Tick(this, new EventArgs());
-
-                    m_settings.Save();
-                }
-            }
-        }
-
-        private void miManualImplants_Click(object sender, EventArgs e)
-        {
-            using (ManualImplantWindow f = new ManualImplantWindow(m_grandCharacterInfo.AttributeBonuses))
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    m_grandCharacterInfo.SuppressEvents();
-                    try
-                    {
-                        for (int i = 0; i < m_grandCharacterInfo.AttributeBonuses.Count; i++)
-                        {
-                            GrandEveAttributeBonus geab = m_grandCharacterInfo.AttributeBonuses[i];
-                            if (geab.Manual)
-                            {
-                                m_grandCharacterInfo.AttributeBonuses.RemoveAt(i);
-                                i--;
-                            }
-                        }
-                        foreach (GrandEveAttributeBonus b in f.ResultBonuses)
-                        {
-                            if (b.Manual)
-                                m_grandCharacterInfo.AttributeBonuses.Add(b);
-                        }
-                    }
-                    finally
-                    {
-                        m_grandCharacterInfo.ResumeEvents();
-                    }
-                }
-            }
-        }
-
-        public void ForceUpdate()
-        {
-            CalcSkillRemainText();
-        }
-
-        private void mi_UpdatePicture_Click(object sender, EventArgs e)
-        {
-            UpdateCharacterImage();
-        }
-
-        private void mi_UpdatePictureFromEVECache_Click(object sender, EventArgs e)
-        {
-            UpdateCharacterImageFromEVECache();
-        }
-
-        private void mi_setEVEFolder_Click(object sender, EventArgs e)
-        {
-            SetCharacterEVEFolder();
-        }
 
         private void pbCharImage_Click(object sender, EventArgs e)
         {
             cmsPictureOptions.Show(MousePosition);
         }
 
+        /// <summary>
+        /// Handles the MouseHover event of the lblAttribute control.  Pops up a little tooltip containing everything the person could possibly want to know
+        /// about their character's attributes.
+        /// </summary>
+        /// <remarks>Recalculates everything every time the label pops - so it's inefficient, but responsive enough for this purpose.</remarks>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void lblAttribute_MouseHover(object sender, EventArgs e)
         {
             Label lblAttrib = (Label)sender;
@@ -2182,9 +1967,387 @@ namespace EVEMon
 
         }
 
+
         private void tsbIneveSync_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
         }
+
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            sfdSaveDialog.FileName = m_grandCharacterInfo.Name;
+            sfdSaveDialog.FilterIndex = (int)SaveFormat.Xml;
+            DialogResult dr = sfdSaveDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                SaveFile((SaveFormat)sfdSaveDialog.FilterIndex, sfdSaveDialog.FileName);
+            }
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the tmrUpdate control.  This is the one that updates the character itself.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tmrUpdate_Tick(object sender, EventArgs e)
+        {
+            if (m_throbberRunning)
+            {
+                return;
+            }
+
+            tmrUpdateCharacter.Enabled = false;
+            StartThrobber();
+            if (m_charId < 0)
+            {
+                DownloadCharacter();
+            }
+            else
+            {
+                UpdateGrandCharacterInfo();
+            }
+        }
+
+        /// <summary>
+        /// Things that happen every second:
+        /// Update LCD Data, Update time remaining and throbber labels, check your skills, so on, so forth
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tmrTick_Tick(object sender, EventArgs e)
+        {
+            CalculateLcdData();
+
+            if (m_currentlyVisible)
+            {
+                UpdateTimeRemainingLabels();
+                UpdateThrobberLabel();
+
+                GrandSkill trainingSkill = m_grandCharacterInfo.CurrentlyTrainingSkill;
+                if (trainingSkill != null)
+                {
+                    if (trainingSkill.CurrentSkillPoints != m_lastTickSPPaint)
+                    {
+                        m_lastTickSPPaint = trainingSkill.CurrentSkillPoints;
+                        int idx = lbSkills.Items.IndexOf(trainingSkill);
+                        if (idx >= 0)
+                        {
+                            lbSkills.Invalidate(lbSkills.GetItemRectangle(idx));
+                        }
+                        int sgidx = lbSkills.Items.IndexOf(trainingSkill.SkillGroup);
+                        lbSkills.Invalidate(lbSkills.GetItemRectangle(sgidx));
+                        UpdateSkillHeaderStats();
+                    }
+                }
+            }
+            if (m_grandCharacterInfo.DL_Complete && m_estimatedCompletion < DateTime.Now &&
+                m_grandCharacterInfo.CurrentlyTrainingSkill != null)
+            {
+                // Trigger event on skill completion
+                // The 'event' for a skill completion is in GrandCharacterInfo.cs, depending on what is wanted
+                // it should be triggered from there as all skill manipulation is done in that file.
+
+                // The following line triggers the required code in GrandCharacterInfo.cs
+                m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
+
+                UpdateSkillHeaderStats();
+            }
+            if (m_updatingPortrait == false && pbCharImage.Image == null)
+            {
+                m_updatingPortrait = true;
+                GetCharacterImage();
+            }
+            if (Program.LCD != null)
+            {
+                Program.LCD.Update();
+            }
+        }
+        #endregion
+
+        #region Simple Properties
+        /// <summary>
+        /// Gets the grand character info.
+        /// </summary>
+        /// <value>The grand character info.</value>
+        public GrandCharacterInfo GrandCharacterInfo
+        {
+            get { return m_grandCharacterInfo; }
+        }
+
+
+        #endregion
+
+        #region Saving the Character
+
+        /// <summary>
+        /// Saves the character skill list as a PNG screenshot
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        private void SavePNGScreenshot(string fileName)
+        {
+            int cachedHeight = lbSkills.Height;
+            lbSkills.Dock = System.Windows.Forms.DockStyle.None;
+            lbSkills.Height = lbSkills.PreferredHeight;
+            lbSkills.Update();
+
+            Bitmap bitmap = new Bitmap(lbSkills.Width, lbSkills.PreferredHeight);
+            lbSkills.DrawToBitmap(bitmap, new Rectangle(0, 0, lbSkills.Width, lbSkills.PreferredHeight));
+            bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+            lbSkills.Height = cachedHeight;
+            lbSkills.Update();
+
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Saves character data as a text file
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        private void SaveTextFile(string fileName)
+        {
+            SerializableCharacterInfo ci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                MethodInvoker writeSep = new MethodInvoker(delegate
+                                                               {
+                                                                   sw.WriteLine(
+                                                                       "=======================================================================");
+                                                               });
+                MethodInvoker writeSubSep = new MethodInvoker(delegate
+                                                                  {
+                                                                      sw.WriteLine(
+                                                                          "-----------------------------------------------------------------------");
+                                                                  });
+                sw.WriteLine("BASIC INFO");
+                writeSep();
+                sw.WriteLine("     Name: {0}", ci.Name);
+                sw.WriteLine("   Gender: {0}", ci.Gender);
+                sw.WriteLine("     Race: {0}", ci.Race);
+                sw.WriteLine("Bloodline: {0}", ci.BloodLine);
+                sw.WriteLine("  Balance: {0} ISK", ci.Balance.ToString("#,##0.00"));
+                sw.WriteLine();
+                sw.WriteLine("Intelligence: {0}", ci.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("    Charisma: {0}", ci.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("  Perception: {0}", ci.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("      Memory: {0}", ci.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("   Willpower: {0}", ci.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
+                sw.WriteLine();
+                if (ci.AttributeBonuses.Bonuses.Count > 0)
+                {
+                    sw.WriteLine("IMPLANTS");
+                    writeSep();
+                    foreach (SerializableEveAttributeBonus tb in ci.AttributeBonuses.Bonuses)
+                    {
+                        sw.WriteLine("+{0} {1} : {2}", tb.Amount, tb.EveAttribute.ToString().PadRight(13), tb.Name);
+                    }
+                    sw.WriteLine();
+                }
+                sw.WriteLine("SKILLS");
+                writeSep();
+                foreach (SerializableSkillGroup sg in ci.SkillGroups)
+                {
+                    sw.WriteLine("{0}, {1} Skill{2}, {3} Points",
+                                 sg.Name, sg.Skills.Count, sg.Skills.Count > 1 ? "s" : "",
+                                 sg.GetTotalPoints().ToString("#,##0"));
+                    foreach (SerializableSkill s in sg.Skills)
+                    {
+                        string skillDesc = s.Name + " " + GrandSkill.GetRomanForInt(s.Level) + " (" +
+                                           s.Rank.ToString() + ")";
+                        sw.WriteLine(": {0} {1}/{2} Points",
+                                     skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
+                                     s.SkillLevel5.ToString("#,##0"));
+                        if (ci.SkillInTraining != null && ci.SkillInTraining.SkillName == s.Name)
+                        {
+                            sw.WriteLine(":  (Currently training to level {0}, completes {1})",
+                                         GrandSkill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
+                                         ci.SkillInTraining.EstimatedCompletion.ToString());
+                        }
+                    }
+                    writeSubSep();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves character to a file in one of a variety of formats.  Does clever things with xsl to avoid having a seperate xml and html method.
+        /// </summary>
+        /// <param name="saveFormat">The save format.</param>
+        /// <param name="fileName">Name of the file.</param>
+        private void SaveFile(SaveFormat saveFormat, string fileName)
+        {
+            if (saveFormat == SaveFormat.Text)
+            {
+                SaveTextFile(fileName);
+                return;
+            }
+            else if (saveFormat == SaveFormat.Png)
+            {
+                SavePNGScreenshot(fileName);
+                return;
+            }
+            try
+            {
+                Stream outerStream;
+                XPathDocument xpdoc;
+                if (saveFormat == SaveFormat.Xml)
+                {
+                    outerStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                }
+                else
+                {
+                    outerStream = new MemoryStream(32767);
+                }
+                try
+                {
+                    using (XmlTextWriter xtw = new XmlTextWriter(outerStream, Encoding.UTF8))
+                    {
+                        if (saveFormat == SaveFormat.Xml)
+                        {
+                            xtw.Indentation = 1;
+                            xtw.IndentChar = '\t';
+                            xtw.Formatting = Formatting.Indented;
+                        }
+                        XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
+                        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                        ns.Add("", "");
+                        xs.Serialize(xtw, m_grandCharacterInfo.ExportSerializableCharacterInfo(), ns);
+                        xtw.Flush();
+
+                        if (saveFormat == SaveFormat.Xml)
+                        {
+                            return;
+                        }
+
+                        MemoryStream ms = (MemoryStream)outerStream;
+                        ms.Position = 0;
+                        using (StreamReader tr = new StreamReader(ms))
+                        {
+                            xpdoc = new XPathDocument(tr);
+                        }
+                    }
+                }
+                finally
+                {
+                    outerStream.Dispose();
+                }
+
+                XslCompiledTransform xstDoc2 = new XslCompiledTransform();
+                using (
+                    Stream s =
+                        Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.output-" +
+                                                                                  saveFormat.ToString().ToLower() +
+                                                                                  ".xsl"))
+                using (XmlTextReader xtr = new XmlTextReader(s))
+                {
+                    xstDoc2.Load(xtr);
+                }
+
+                using (StreamWriter sw = new StreamWriter(fileName, false))
+                using (XmlTextWriter xtw = new XmlTextWriter(sw))
+                {
+                    xtw.Indentation = 1;
+                    xtw.IndentChar = '\t';
+                    xtw.Formatting = Formatting.Indented;
+                    xstDoc2.Transform(xpdoc, null, xtw);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show("Failed to save:\n" + ex.Message, "Could not save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion
+
+        #region Throbber Management
+        private bool m_throbberRunning = false;
+        private bool m_throbberError = true;
+        private int m_throbberFrame = 0;
+
+        private void StartThrobber()
+        {
+            m_throbberRunning = true;
+            tmrThrobber.Enabled = true;
+            ttToolTip.SetToolTip(pbThrobber, "Retrieving data from EVE Online...");
+            ttToolTip.IsBalloon = true;
+        }
+
+        private void StopThrobber()
+        {
+            m_throbberRunning = false;
+            m_throbberError = false;
+        }
+
+        private void SetErrorThrobber()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(SetErrorThrobber));
+                return;
+            }
+            m_throbberRunning = false;
+            m_throbberError = true;
+        }
+
+        private static Image[] m_throbberImages = null;
+
+        public static Image[] ThrobberImages
+        {
+            get
+            {
+                if (m_throbberImages == null)
+                {
+                    InitializeThrobberImages();
+                }
+                return m_throbberImages;
+            }
+        }
+
+        private const int THROBBERIMG_WIDTH = 24;
+        private const int THROBBERIMG_HEIGHT = 24;
+
+        /// <summary>
+        /// Extract the throbber images from the assembly and load them into m_throbberImages
+        /// </summary>
+        private static void InitializeThrobberImages()
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            using (Stream s = asm.GetManifestResourceStream("EVEMon.throbber.png"))
+            using (Image b = Image.FromStream(s, true, true))
+            {
+                m_throbberImages = new Image[9];
+                for (int i = 0; i < 9; i++)
+                {
+                    Bitmap ib = new Bitmap(THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT);
+                    using (Graphics g = Graphics.FromImage(ib))
+                    {
+                        g.DrawImage(b, new Rectangle(0, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
+                                    new Rectangle(i * THROBBERIMG_WIDTH, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
+                                    GraphicsUnit.Pixel);
+                    }
+                    m_throbberImages[i] = ib;
+                }
+            }
+        }
+        #endregion
+
+        #region Garbage?
+
+        /*
+        public string LcdNote
+        {
+            get { return m_lcdNote; }
+        }
+
+        public TimeSpan LcdTimeSpan
+        {
+            get { return m_lcdTimeSpan; }
+        }
+         * */
+        #endregion
     }
 }

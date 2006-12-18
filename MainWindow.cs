@@ -209,7 +209,7 @@ namespace EVEMon
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
             //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
+            cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
             cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
@@ -239,7 +239,7 @@ namespace EVEMon
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
             //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.ShortInfoChanged += new EventHandler(cm_ShortInfoChanged);
+            cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
             cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
@@ -538,7 +538,7 @@ namespace EVEMon
             if (cm != null)
                 cm.Stop();
             //cm.SkillTrainingCompleted -= new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.ShortInfoChanged -= new EventHandler(cm_ShortInfoChanged);
+            cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
             if (tp.Tag is CharLoginInfo)
             {
@@ -636,7 +636,7 @@ namespace EVEMon
                         CharacterMonitor current = tp.Controls[0] as CharacterMonitor;
                         if (current != null)
                         {
-                            current.ForceUpdate();
+                            current.ForceLcdDataUpdate();
                         }
                     }
                 }
