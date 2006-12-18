@@ -92,6 +92,9 @@ namespace EVEMon
         private const int THROBBERIMG_WIDTH = 24;
         private const int THROBBERIMG_HEIGHT = 24;
 
+        /// <summary>
+        /// Extract the throbber images from the assembly and load them into m_throbberImages
+        /// </summary>
         private static void InitializeThrobberImages()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
@@ -113,16 +116,16 @@ namespace EVEMon
             }
         }
 
+
+        /// <summary>
+        /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed, 
+        /// the FileSystemWatcher
+        /// <remarks>This method can probably be broken up quite a bit, for simplicity's sake</remarks>
+        /// </summary>
         public void Start()
         {
             m_session = null;
             m_charId = -1;
-            //m_charId = m_session.GetCharacterId(m_cli.CharacterName);
-            //if (m_charId < 0)
-            //{
-            //    m_session = null;
-            //    throw new ApplicationException("Could not start character monitor");
-            //}
 
             if (m_cli != null)
             {
