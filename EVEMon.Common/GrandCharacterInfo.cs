@@ -85,7 +85,7 @@ namespace EVEMon.Common
                         GrandSkill.AllSkills[gs.Name] = gs;
                     }
 
-                    GrandSkillGroup gsg = new GrandSkillGroup(sgel.GetAttribute("n"),
+                    GrandSkillGroup gsg = new GrandSkillGroup(sgel.GetAttribute("n"), Convert.ToInt32(sgel.GetAttribute("g")),
                                                               skills);
                     this.m_skillGroups[gsg.Name] = gsg;
                 }
@@ -753,32 +753,62 @@ namespace EVEMon.Common
         }
 
         public void check_old_skill()
-        {// basically check if old skill is complete in the current character data and if not, set to currenttrainingskill
+        {
+            // This is called from CharacterMonitor.cs when a fresh XML file has failed to be obtained.
+            // In other words, this is the default behaviour when there is a problem
+            // 
+            // check if old skill is complete in the current character data and if not, set to currenttrainingskill
             if (this.CurrentlyTrainingSkill != null && old_skill != null && (old_skill.old_SkillName == null || (old_skill.old_SkillName != null && old_skill.old_SkillName != this.CurrentlyTrainingSkill.Name)))
-                this.CancelCurrentSkillTraining(); // Skill or current expected completion time changed since previous update.
+            {
+                // Skill or current expected completion time changed since previous update.
+                // I'd actually be amazed if this actually needed to be called due to when
+                // this code actually gets called.... but....
+                this.CancelCurrentSkillTraining(); 
+            }
             if (!first_run && old_skill != null)
             {
+                // If this isn't the first run and old_skill has actually been initalised
+                // 
+                // The code for the first run is at the bottom of the section in normal running,
+                // This section isn't normal running, this is called when something has gone wrong in normal running
                 if (old_skill.old_SkillName != null && this.GetSkill(old_skill.old_SkillName) != null)
                 {
+                    // first we look at the status of the skill indicated by old_skill and check on it's progress
+                    // for this we need a few bool values to use as flags.
+                    // Could probaly use an enumerated type for this
+                    // Both default to negative
                     bool add = false;
                     bool check = false;
                     string skill_name = old_skill.old_SkillName;
                     if (old_skill.old_skill_completed)
                     {
-                        if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                        // Check to see if the oldskill has NOT completed
+                        if (this.GetSkill(skill_name).CurrentSkillPoints < this.GetSkill(skill_name).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {
+                            // so we need to check the skill alerts and remove this skill as it hasn't completed yet.
+                            // This assumes no one has looked at the skill alerts in a while.
                             check = true;
                         }
                     }
                     else if (!old_skill.old_skill_completed)
                     {
-                        if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints >= this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
-                        {// Check old skill for completion
+                        // Check old skill for completion
+                        if (this.GetSkill(skill_name).CurrentSkillPoints >= this.GetSkill(skill_name).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                        {
+                            // So we need to add this skill (if it's not already there)
+                            // to the skill alerts as according to the current XML it's done.
+                            // This skill should have been added when it completed during run time
+                            // but this might be the first time it's been looked at
+                            // due to the initial startup failing to get the XML
                             old_skill.old_skill_completed = true;
                             add = true;
                         }
+                        // This is out here as the above checks to see if it's been completed NOW,
+                        // when the original old_skill.old_skill_complete it may have been a guess
+                        // so in that case, 'add' would still be false.
                         check = true;
                     }
+                    // This is where we use the two flags
                     if (check)
                     {
                         OnDownloadAttemptComplete(this.Name, skill_name, add);
@@ -786,38 +816,58 @@ namespace EVEMon.Common
                 }
                 if (old_skill.old_SkillName != null && this.CurrentlyTrainingSkill == null)
                 {
+                    // Now we start having some fun with the Currently training skill values.
                     GrandSkill newTrainingSkill = this.GetSkill(old_skill.old_SkillName);
+                    // Check we actually have a skill in training
                     if (newTrainingSkill != null)
                     {
+                        // See if the old_skill in the current details has completed it's training
                         if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints >= this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {
                             if (old_skill.old_skill_completed)
                             {
-                                newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
-                                old_skill.old_skill_completed = true;
+                                // Right, so it's completed, but old_skill has already been flagged as dealt with in this regard... so...
+                                // Oh yeah, if you don't do this skill points for some odd reason reset to the old XML values when you cancel the skill training so...
+                                if (newTrainingSkill.CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                                    newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
                             }
                             if (!old_skill.old_skill_completed)
                             {
-                                OnDownloadAttemptComplete(this.Name, old_skill.old_SkillName, true);
-                                newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
+                                // Right, so the skill needs to be flagged as done.
+                                // Oh yeah, if you don't do this skill points for some odd reason reset to the old XML values when you cancel the skill training so...
+                                if (newTrainingSkill.CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                                    newTrainingSkill.CurrentSkillPoints = this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel);
                                 old_skill.old_skill_completed = true;
+                                // Oh, yeah, we need to add this skill to the alerts...
+                                // The alerter takes care of whether it's already there or not.
+                                OnDownloadAttemptComplete(this.Name, old_skill.old_SkillName, true);
                             }
                         }
                         else if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {
+                            // Here is where we set the currently training skill according to the last
+                            // known skill in training.
                             newTrainingSkill.SetTrainingInfo(old_skill.old_TrainingToLevel,
                                                              old_skill.old_estimated_completion);
                         }
                     }
                 }
+                // Now to activate normal runtime skill completion monitoring
                 m_attempted_dl_complete = true;
             }
         }
 
         public void check_training_skills(SerializableSkillInTraining SkillInTraining)
         {
+            // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
+            // This is where normal running takes you in the standard run of the mill operation of EVEMon
+            // 
+            // check if old skill is complete in the current character data and if not, set to currenttrainingskill
             if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.SkillName != this.CurrentlyTrainingSkill.Name) || SkillInTraining.EstimatedCompletion.ToString() != this.CurrentlyTrainingSkill.EstimatedCompletion.ToString()))
-                this.CancelCurrentSkillTraining(); // Skill or current expected completion time changed since previous update.
+            {
+                // Skill or current expected completion time changed since previous update.
+                this.CancelCurrentSkillTraining();
+            }
             if (!first_run)
             {
                 if (old_skill != null && old_skill.old_SkillName != null && this.GetSkill(old_skill.old_SkillName) != null)
@@ -827,19 +877,19 @@ namespace EVEMon.Common
                     string skill_name = old_skill.old_SkillName;
                     if (old_skill.old_skill_completed)
                     {
-                        if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                        if (this.GetSkill(skill_name).CurrentSkillPoints < this.GetSkill(skill_name).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {
                             check = true;
                         }
                     }
                     else if (!old_skill.old_skill_completed)
                     {
-                        if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints >= this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                        if (this.GetSkill(skill_name).CurrentSkillPoints >= this.GetSkill(skill_name).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {// Check old skill for completion
                             old_skill.old_skill_completed = true;
                             add = true;
                         }
-                        else if (this.GetSkill(old_skill.old_SkillName).CurrentSkillPoints < this.GetSkill(old_skill.old_SkillName).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
+                        else if (this.GetSkill(skill_name).CurrentSkillPoints < this.GetSkill(skill_name).GetPointsRequiredForLevel(old_skill.old_TrainingToLevel))
                         {// If this is literally the second pass then the old_skill values need to be checked so that the rest is consistently coded
                             old_skill.old_SkillName = null;
                             old_skill.old_TrainingToLevel = 0;
@@ -855,6 +905,9 @@ namespace EVEMon.Common
                 }
                 if (SkillInTraining != null && this.CurrentlyTrainingSkill == null)
                 {
+                    // Now we depart even more from the version above.
+                    // We have to deal with making this character actually show that he is learning the
+                    // skill the XML file says he's learning. But we do this carefully as it may be complete
                     GrandSkill newTrainingSkill = this.GetSkill(SkillInTraining.SkillName);
                     if (newTrainingSkill != null)
                     {
@@ -863,13 +916,12 @@ namespace EVEMon.Common
                             if (old_skill.old_skill_completed && SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel == old_skill.old_TrainingToLevel)
                             {
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
-                                old_skill.old_skill_completed = true;
                             }
                             if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (SkillInTraining.SkillName != old_skill.old_SkillName || (SkillInTraining.SkillName == old_skill.old_SkillName && SkillInTraining.TrainingToLevel != old_skill.old_TrainingToLevel))))
                             {
-                                OnDownloadAttemptComplete(this.Name, SkillInTraining.SkillName, true);
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(SkillInTraining.TrainingToLevel);
                                 old_skill = new OldSkillinfo(newTrainingSkill.Name, SkillInTraining.TrainingToLevel, true, SkillInTraining.EstimatedCompletion);
+                                OnDownloadAttemptComplete(this.Name, SkillInTraining.SkillName, true);
                             }
                         }
                         else if (SkillInTraining.NeededPoints > SkillInTraining.CurrentPoints)
@@ -879,12 +931,16 @@ namespace EVEMon.Common
                         }
                     }
                 }
+                // Now to activate normal runtime skill completion monitoring
                 m_attempted_dl_complete = true;
             }
             if (first_run)
             {
+                // This is where the old_skill values are initalised,
+                // it's here to avoid accidentally triggering any other code on this pass.
+                // Order is everything in this section!!
                 if (SkillInTraining != null)
-                {   
+                {
                     GrandSkill newTrainingSkill = this.GetSkill(SkillInTraining.SkillName);
                     if (newTrainingSkill != null)
                     {
@@ -947,7 +1003,6 @@ namespace EVEMon.Common
 
         public void trigger_skill_complete(string CharacterName, string skillName)
         { // Basically trigger the event when a skill completes between downloads
-            OnDownloadAttemptComplete(CharacterName, skillName, true);
             GrandSkill newlyCompletedSkill = this.GetSkill(skillName);
             if (newlyCompletedSkill != null)
             {
@@ -955,6 +1010,7 @@ namespace EVEMon.Common
                 old_skill = new OldSkillinfo(newlyCompletedSkill.Name, newlyCompletedSkill.TrainingToLevel, true, DateTime.MinValue);
                 this.CancelCurrentSkillTraining();
             }
+            OnDownloadAttemptComplete(CharacterName, skillName, true);
         }
 
         private void OnDownloadAttemptComplete(string CharacterName, string skillName, bool Complete)
@@ -1030,6 +1086,7 @@ namespace EVEMon.Common
                         SerializableSkill s = new SerializableSkill();
                         s.Name = gs.Name;
                         s.Id = gs.Id;
+                        s.GroupId = gsg.ID;
                         s.Level = gs.Level;
                         s.Rank = gs.Rank;
                         s.SkillPoints = gs.CurrentSkillPoints;
@@ -1040,6 +1097,7 @@ namespace EVEMon.Common
                 if (added)
                 {
                     sg.Name = gsg.Name;
+                    sg.Id = gsg.ID;
                     ci.SkillGroups.Add(sg);
                 }
             }
@@ -1408,11 +1466,13 @@ namespace EVEMon.Common
     public class GrandSkillGroup : IEnumerable<GrandSkill>
     {
         private string m_name;
+        private int m_ID;
         private Dictionary<string, GrandSkill> m_skills = new Dictionary<string, GrandSkill>();
 
-        public GrandSkillGroup(string name, IEnumerable<GrandSkill> skills)
+        public GrandSkillGroup(string name, int id, IEnumerable<GrandSkill> skills)
         {
             m_name = name;
+            m_ID = id;
             foreach (GrandSkill gs in skills)
             {
                 m_skills[gs.Name] = gs;
@@ -1426,6 +1486,11 @@ namespace EVEMon.Common
         private void gs_Changed(object sender, EventArgs e)
         {
             m_cachedKnownCount = -1;
+        }
+
+        public int ID
+        {
+            get { return m_ID; }
         }
 
         public string Name

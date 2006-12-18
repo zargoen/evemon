@@ -456,7 +456,10 @@ namespace EVEMon
                         int skillLevel;
                         try
                         {
-                            //level + 1 is a fairly safe assumption here... the order of operations on this thing is all noodled up.
+                            //level + 1 is a fairly safe assumption here... 
+                            // the order of operations is that at the time this event is triggered, the settings file has
+                            // yet to be saved with the new details... therefore level + 1
+                            // The order of the events seems to get borked somewhere while the events are surpressed
                             skillLevel = m_settings.GetCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level + 1;
                         }
                         catch (NullReferenceException)
