@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="lgLCDNETWrapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\lgLCDNETWrapper.dll</HintPath>
+      <HintPath>..\lgLcdClassLibrary\Release\lgLCDNETWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -67,9 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="lgLcdLibWrapper.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lgLCDNETWrapper.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
