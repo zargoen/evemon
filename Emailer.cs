@@ -28,15 +28,14 @@ namespace EVEMon
                             "This is a test email sent by EVE Character Monitor");
         }
 
-        public static bool SendAlertMail(Settings settings, string skillName, string charName)
+        public static bool SendAlertMail(Settings settings, int SkillLevel, string skillName, string charName)
         {
             bool useShortFormat = settings.EmailUseShortFormat;
             StringBuilder messageText = new StringBuilder();
-            int skillLevel = settings.GetCharacterInfo(charName).GetSkill(skillName).Level+1;
             messageText.Append(charName + " has finished training " + skillName + " ");
             string skillLevelString;
 
-            switch (skillLevel)
+            switch (SkillLevel)
             {
                 case 1: skillLevelString = "I"; break;
                 case 2: skillLevelString="II"; break;
