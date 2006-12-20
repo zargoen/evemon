@@ -758,6 +758,15 @@ namespace EVEMon.Common
             // In other words, this is the default behaviour when there is a problem
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
+
+            //first we must check that the old_skill skill is still the skill that is currently training, and that
+            // the estimated completion is within 3 minutes 30 seconds of the old one
+            // if not, then it needs canceling, this of course assumes that the old_skill data
+            // has been updated properly!
+            // Using 3 minutes 30 seconds as a ball park for standard deviation due to download
+            // to settings file lag etc. Feel free to reduce it so long as we don't start getting issues from it being to short.
+            if (this.CurrentlyTrainingSkill != null && old_skill != null && (old_skill.old_SkillName == null || old_skill.old_SkillName != this.CurrentlyTrainingSkill.Name || ((TimeSpan)old_skill.old_estimated_completion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0,3,30)))
+                this.CancelCurrentSkillTraining(); 
             if (!first_run && old_skill != null)
             {
                 // If this isn't the first run and old_skill has actually been initalised
@@ -866,7 +875,7 @@ namespace EVEMon.Common
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
             // 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.SkillName != this.CurrentlyTrainingSkill.Name) || SkillInTraining.EstimatedCompletion.ToString() != this.CurrentlyTrainingSkill.EstimatedCompletion.ToString()))
+            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.SkillName != this.CurrentlyTrainingSkill.Name) || ((TimeSpan)SkillInTraining.EstimatedCompletion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0,3,30)))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();

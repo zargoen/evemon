@@ -300,7 +300,7 @@ namespace EVEMon
         /// <summary>
         /// Updates the cached copy.
         /// </summary>
-        /// <remarks>I have no fracking idea what this does - Anders</remarks>
+        /// <remarks>This makes sure the settings file only has you down with one "last skill trained", then saves the settings file</remarks>
         private void UpdateCachedCopy()
         {
             SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
@@ -379,7 +379,7 @@ namespace EVEMon
             //actually perform the update.  This is then happening asynchronously, is this a problem?
             UpdateGrandCharacterInfo();
 
-            //oh, what a tangled web we weave
+            //loads the details from the settings file as to what was actually training the last time you had EVEMon running
             foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
             {
                 if (x.A == m_charName)
