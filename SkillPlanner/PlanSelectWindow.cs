@@ -138,6 +138,13 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             entryInMergedPlan.PlanGroups.Add(p.Name);
+                            foreach (string subplanName in entry.PlanGroups)
+                            {
+                                if (!entryInMergedPlan.PlanGroups.Contains(subplanName))
+                                {
+                                    entryInMergedPlan.PlanGroups.Add(subplanName);
+                                }
+                            }
                         }
                     }
                 }
