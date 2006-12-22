@@ -1906,6 +1906,22 @@ namespace EVEMon.Common
             return pointsForLevel;
         }
 
+        /// <summary>
+        /// Calculates the percentage trained (in terms of skill points) of the next level of this skill.
+        /// If the skill is already at level 5, we return 100.0
+        /// </summary>
+        /// <returns>percent of skill points for the next level that have already been trained</returns>
+        public double GetPercentDone()
+        {
+            if (Level == 5) return 100.0;
+            
+            int reqToThisLevel = GetPointsRequiredForLevel(Level);
+            int pointsInThisLevel = CurrentSkillPoints - reqToThisLevel;
+            int reqToNextLevel = GetPointsRequiredForLevel(Level + 1);
+            double deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
+            return pointsInThisLevel / deltaPointsOfLevel;
+        }
+
         public bool Public
         {
             get { return m_public; }

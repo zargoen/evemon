@@ -250,6 +250,7 @@ namespace EVEMon.SkillPlanner
                     tts = m_selectedSkill.GetTrainingTimeToLevel(level);
                 }
                 sb.Append(GrandSkill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
+      
                 TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) +
                                 m_selectedSkill.GetPrerequisiteTime();
                 if (prts > TimeSpan.Zero)
@@ -257,6 +258,16 @@ namespace EVEMon.SkillPlanner
                     sb.Append(" (plus ");
                     sb.Append(GrandSkill.TimeSpanToDescriptiveText(prts, DescriptiveTextOptions.IncludeCommas));
                     sb.Append(")");
+                }
+                else
+                {
+                    // we're displaying the next level to train - show %complete
+                     if (m_selectedSkill.Level != 5)
+                    {
+                        
+                        double percentDone = m_selectedSkill.GetPercentDone();
+                        sb.Append(String.Format(" ({0} complete)", percentDone.ToString("P0")));
+                    }
                 }
                 //button.Enabled = !isPlanned;
                 //if (m_selectedSkill.InTraining && m_selectedSkill.TrainingToLevel == level)

@@ -433,22 +433,7 @@ namespace EVEMon
                     GrandSkill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
                     if (s != null)
                     {
-                        double percentDone = 0.0;
-                        int NextLevel = 0;
-                        int CurrentSP = s.CurrentSkillPoints;
-                        int reqToThisLevel = s.GetPointsRequiredForLevel(s.Level);
-                        int reqToNextLevel = 0;
-                        int pointsInThisLevel = 0;
-                        double deltaPointsOfLevel = 0.0;
-
-                        //We must have completed some, but not all, of level II, III or IV
-                        NextLevel = s.Level + 1;
-                        pointsInThisLevel = CurrentSP - reqToThisLevel;
-                        reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
-                        deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
-                        percentDone = pointsInThisLevel / deltaPointsOfLevel;
-
-                        Program.LCD.curperc = percentDone;
+                       Program.LCD.curperc = s.GetPercentDone();
                     }
                     else
                     {
@@ -1777,9 +1762,6 @@ namespace EVEMon
                 int NextLevel = 0;
                 int CurrentSP = s.CurrentSkillPoints;
                 int reqToThisLevel = s.GetPointsRequiredForLevel(s.Level);
-                int reqToNextLevel = 0;
-                int pointsInThisLevel = 0;
-                double deltaPointsOfLevel = 0.0;
                 int PointsRemain = 0;
                 double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(s.PrimaryAttribute) +
                                        (m_grandCharacterInfo.GetEffectiveAttribute(s.SecondaryAttribute) / 2));
@@ -1790,10 +1772,7 @@ namespace EVEMon
                     //We must have completed some, but not all, of level II, III or IV
                     NextLevel = s.Level + 1;
 
-                    pointsInThisLevel = CurrentSP - reqToThisLevel;
-                    reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
-                    deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
-                    percentDone = pointsInThisLevel / deltaPointsOfLevel;
+                    percentDone = s.GetPercentDone();
                     PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                     string CurrentlyDone =
                         String.Format("Partially Completed lvl {0}: {1}/{2} ({3})",
@@ -1821,10 +1800,7 @@ namespace EVEMon
                     if (s.Level != 5)
                     {
                         NextLevel = s.Level + 1;
-                        pointsInThisLevel = CurrentSP - reqToThisLevel;
-                        reqToNextLevel = s.GetPointsRequiredForLevel(NextLevel);
-                        deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
-                        percentDone = pointsInThisLevel / deltaPointsOfLevel;
+                        percentDone = s.GetPercentDone();
                         PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                         string CurrentlyDone =
                             String.Format("Completed lvl {0}: {1}/{2} ({3})",
