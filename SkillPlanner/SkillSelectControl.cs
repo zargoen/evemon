@@ -107,50 +107,62 @@ namespace EVEMon.SkillPlanner
 
             SkillFilter sf;
 
-            switch (cbFilter.SelectedIndex)
+            switch (cbFilter.SelectedItem.ToString())
             {
                 default:
-                case 0: // All Skills
+                case "All": // All Skills
                     sf = delegate
                              {
                                  return true;
                              };
                     break;
-                case 1: // Known Skills
+                case "Known": // Known Skills
                     sf = delegate(GrandSkill gs)
                              {
                                  return gs.Known;
                              };
                     break;
-                case 2: // Not Known Skills
+                case "Not Known": // Not Known Skills
                     sf = delegate(GrandSkill gs)
                              {
                                  return !gs.Known;
                              };
                     break;
-                case 3: // Planned Skills
+                case "Planned": // Planned Skills
                     sf = delegate(GrandSkill gs)
                              {
                                  return m_plan.IsPlanned(gs);
                              };
                     break;
-                case 4: // Level I Ready Skills
+                case "Level I Ready": // Level I Ready Skills
                     sf = delegate(GrandSkill gs)
                              {
                                  return (gs.Level == 0 && gs.PrerequisitesMet);
                              };
                     break;
-                case 5: // Trainable Skills
+                case "Trainable": // Trainable Skills
                     sf = delegate(GrandSkill gs)
                              {
                                  return (gs.PrerequisitesMet && gs.Level < 5);
                              };
                     break;
 
-                case 6: // partially trained skils
+                case "Partially Trained": // partially trained skils
                     sf = delegate(GrandSkill gs)
                              {
                                  return (gs.IsPartiallyTrained());
+                             };
+                    break;
+                case "Not Planned": // Not Planned Skills
+                    sf = delegate(GrandSkill gs)
+                             {
+                                 return !m_plan.IsPlanned(gs);
+                             };
+                    break;
+                case "Not Planned - Trainable": // Not Planned & Trainable Skills
+                    sf = delegate(GrandSkill gs)
+                             {
+                                 return (!m_plan.IsPlanned(gs) && (gs.PrerequisitesMet && gs.Level < 5));
                              };
                     break;
             }

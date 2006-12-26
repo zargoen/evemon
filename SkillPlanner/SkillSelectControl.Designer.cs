@@ -58,18 +58,23 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFilter.FormattingEnabled = true;
+            // Changes to the values in this list need propagated to UpdateSkillFilter()
             this.cbFilter.Items.AddRange(new object[] {
-            "All Skills",
-            "Known Skills",
-            "Not Known Skills",
-            "Planned Skills",
-            "Level I Ready Skills",
-            "Trainable Skills",
-            "Partially Trained Skills"});
+            "All",
+            "Known",
+            "Level I Ready",
+            "Not Known",
+            "Partially Trained",
+            "Planned",
+            "Trainable",
+            "Not Planned",
+            "Not Planned - Trainable"});
             this.cbFilter.Location = new System.Drawing.Point(31, 3);
             this.cbFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cbFilter.MaxDropDownItems = 12;
             this.cbFilter.Name = "cbFilter";
             this.cbFilter.Size = new System.Drawing.Size(231, 21);
+            this.cbFilter.Sorted = true;
             this.cbFilter.TabIndex = 0;
             this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
             // 
@@ -300,7 +305,6 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cbFilter;
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.PictureBox pbSearchImage;
         private System.Windows.Forms.ListBox lbSearchList;
@@ -317,5 +321,6 @@ namespace EVEMon.SkillPlanner
         public System.Windows.Forms.TreeView tvSkillList;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ComboBox cbFilter;
     }
 }
