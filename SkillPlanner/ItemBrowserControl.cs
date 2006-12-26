@@ -23,7 +23,11 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set { m_plan = value; }
+            set 
+            { 
+                m_plan = value;
+                itemSelectControl1.Plan = value;
+            }
         }
 
         private void itemSelectControl1_SelectedItemChanged(object sender, EventArgs e)

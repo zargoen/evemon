@@ -37,6 +37,8 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbFilter = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -71,7 +73,7 @@ namespace EVEMon.SkillPlanner
             this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
             this.lbSearchTextHint.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbSearchTextHint.Location = new System.Drawing.Point(23, 8);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(23, 37);
             this.lbSearchTextHint.Name = "lbSearchTextHint";
             this.lbSearchTextHint.Size = new System.Drawing.Size(70, 14);
             this.lbSearchTextHint.TabIndex = 29;
@@ -84,7 +86,7 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Name = "tvItems";
-            this.tvItems.Size = new System.Drawing.Size(185, 380);
+            this.tvItems.Size = new System.Drawing.Size(185, 348);
             this.tvItems.TabIndex = 28;
             this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvItems_AfterSelect);
             // 
@@ -92,7 +94,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearchText.Location = new System.Drawing.Point(22, 6);
+            this.tbSearchText.Location = new System.Drawing.Point(22, 35);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.tbSearchText.Name = "tbSearchText";
             this.tbSearchText.Size = new System.Drawing.Size(163, 21);
@@ -105,7 +107,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(4, 6);
+            this.pbSearchImage.Location = new System.Drawing.Point(4, 35);
             this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
             this.pbSearchImage.Name = "pbSearchImage";
             this.pbSearchImage.Size = new System.Drawing.Size(13, 17);
@@ -116,28 +118,53 @@ namespace EVEMon.SkillPlanner
             // panel1
             // 
             this.panel1.Controls.Add(this.lbSearchTextHint);
-            this.panel1.Controls.Add(this.pbSearchImage);
             this.panel1.Controls.Add(this.tbSearchText);
+            this.panel1.Controls.Add(this.cbFilter);
+            this.panel1.Controls.Add(this.pbSearchImage);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(185, 30);
+            this.panel1.Size = new System.Drawing.Size(185, 62);
             this.panel1.TabIndex = 32;
             // 
             // panel2
             // 
             this.panel2.AutoSize = true;
             this.panel2.Controls.Add(this.lbItemResults);
-            this.panel2.Controls.Add(this.tvItems);
             this.panel2.Controls.Add(this.lbNoMatches);
+            this.panel2.Controls.Add(this.tvItems);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 30);
+            this.panel2.Location = new System.Drawing.Point(0, 62);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(185, 380);
+            this.panel2.Size = new System.Drawing.Size(185, 348);
             this.panel2.TabIndex = 33;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(-1, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Filter:";
+            // 
+            // cbFilter
+            // 
+            this.cbFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbFilter.FormattingEnabled = true;
+            this.cbFilter.Items.AddRange(new object[] {
+            "All Items",
+            "Items I Can Use"});
+            this.cbFilter.Location = new System.Drawing.Point(31, 3);
+            this.cbFilter.Name = "cbFilter";
+            this.cbFilter.Size = new System.Drawing.Size(154, 21);
+            this.cbFilter.TabIndex = 1;
+            this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
             // 
             // ItemSelectControl
             // 
@@ -168,5 +195,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.PictureBox pbSearchImage;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ComboBox cbFilter;
+        private System.Windows.Forms.Label label1;
     }
 }

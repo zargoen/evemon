@@ -12,6 +12,14 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+        private Plan m_plan;
+        public Plan Plan
+        {
+            get { return m_plan; }
+            set { m_plan = value; }
+        }
+
+
         private ItemCategory m_rootCategory;
 
         private void ItemSelectControl_Load(object sender, EventArgs e)
@@ -20,6 +28,7 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
+            cbFilter.SelectedIndex = 0;
 
             try
             {
@@ -33,7 +42,54 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException(err, true);
                 return;
             }
+            BuildTreeView();
+        }
 
+        // Filtering code
+        private delegate bool ItemFilter(Item i);
+        private ItemFilter itemf = delegate { return true; };
+
+        private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbFilter.SelectedIndex)
+            {
+                default:
+                case 0: // All Items
+                    itemf = delegate
+                             {
+                                 return true;
+                             };
+                    break;
+                case 1: // Ships I can fly
+                    itemf = delegate(Item i)
+                             {
+                                 GrandSkill gs = null;
+                                 for (int x = 0; x < i.RequiredSkills.Count; x++)
+                                 {
+                                     try
+                                     {
+                                         gs = m_plan.GrandCharacterInfo.GetSkill(i.RequiredSkills[x].Name);
+                                         if (gs.Level < i.RequiredSkills[x].Level) return false;
+                                     }
+                                     catch
+                                     {
+                                         // unknown or no skill - assume we can use it
+                                         return true;
+                                     }
+
+                                 }
+                                 return true;
+                             };
+                    break;
+            }
+            if (m_rootCategory != null)
+                BuildTreeView();
+        }
+
+
+        private void BuildTreeView()
+        {
+            tvItems.Nodes.Clear();
             tvItems.BeginUpdate();
             try
             {
@@ -60,13 +116,15 @@ namespace EVEMon.SkillPlanner
                 TreeNode tn = new TreeNode();
                 tn.Text = tcat.Name;
                 BuildSubtree(tcat, tn.Nodes);
-                nodeCollection.Add(tn);
+                if (tn.GetNodeCount(true) > 0)
+                    nodeCollection.Add(tn);
             }
 
             SortedDictionary<string, Item> sortedItems = new SortedDictionary<string, Item>();
             foreach (Item titem in cat.Items)
             {
-                sortedItems.Add(titem.Name, titem);
+                if (itemf(titem))
+                    sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)
             {
