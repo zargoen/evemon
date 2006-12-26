@@ -12,32 +12,78 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+        private Plan m_plan;
+        public Plan Plan
+        {
+            get { return m_plan; }
+            set { m_plan = value; }
+        }
+
         private Ship[] m_ships;
 
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
+            cbFilter.SelectedIndex = 0;
             m_ships = Ship.GetShips();
             if (m_ships != null)
                 BuildTreeView();
         }
 
+        // Filtering code
+        private delegate bool ShipFilter(Ship s);
+        private ShipFilter sf = delegate { return true; };
+
+        private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbFilter.SelectedIndex)
+            {
+                default:
+                case 0: // All Ships
+                    sf = delegate
+                             {
+                                 return true;
+                             };
+                    break;
+                case 1: // Ships I can fly
+                    sf = delegate(Ship s)
+                             {
+                                 GrandSkill gs=null;
+                                 for (int i = 0; i < s.RequiredSkills.Count;i++)
+                                 {
+                                    gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
+                                    if (gs.Level < s.RequiredSkills[i].Level) return false;
+                                 }
+                                 return true;
+                             };
+                    break;
+            }
+            if (m_ships != null)
+                BuildTreeView();
+        }
+
+        
         private void BuildTreeView()
         {
+            tvShips.Nodes.Clear();
             tvShips.BeginUpdate();
             try
             {
                 SortedList<string, List<Ship>> types = new SortedList<string, List<Ship>>();
                 foreach (Ship s in m_ships)
                 {
-                    if (!types.ContainsKey(s.Type))
+                    if (sf(s))
                     {
-                        List<Ship> nl = new List<Ship>();
-                        nl.Add(s);
-                        types.Add(s.Type, nl);
-                    }
-                    else
-                    {
-                        types[s.Type].Add(s);
+                        // check with filter if this ship is to be ad
+                        if (!types.ContainsKey(s.Type))
+                        {
+                            List<Ship> nl = new List<Ship>();
+                            nl.Add(s);
+                            types.Add(s.Type, nl);
+                        }
+                        else
+                        {
+                            types[s.Type].Add(s);
+                        }
                     }
                 }
 
@@ -198,5 +244,10 @@ namespace EVEMon.SkillPlanner
         }
 
         public event EventHandler<EventArgs> SelectedShipChanged;
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

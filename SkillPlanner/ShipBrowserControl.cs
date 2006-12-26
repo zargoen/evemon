@@ -16,7 +16,10 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set { m_plan = value; }
+            set { 
+                m_plan = value;
+                shipSelectControl.Plan = value;
+            }
         }
 
         private bool m_allSkillsKnown;
