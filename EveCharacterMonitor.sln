@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon.csproj", "{A2E5EFE0-614A-4567-95E5-92A4D94169AC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F9553086-E8BE-463B-9A68-1F7794EB060D} = {F9553086-E8BE-463B-9A68-1F7794EB060D}
@@ -19,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMonInstallBuilder", "EVEMonInstallBuilder\EVEMonInstallBuilder.csproj", "{5CE8E302-3577-41BC-A35F-C88AC625F7A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.LogitechG15", "EveMon.LogitechG15\EVEMon.LogitechG15.csproj", "{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lgLcdClassLibrary", "lgLcdClassLibrary\lgLcdClassLibrary.vcproj", "{4DC1603E-1EB1-40BE-AF82-637820765659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +134,18 @@ Global
 		{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}.Release|Win32.ActiveCfg = Release|x86
 		{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}.Release|x86.ActiveCfg = Release|x86
 		{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}.Release|x86.Build.0 = Release|x86
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Win32.Build.0 = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|x86.ActiveCfg = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Win32.ActiveCfg = Release|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Win32.Build.0 = Release|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

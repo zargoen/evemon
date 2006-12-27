@@ -175,7 +175,7 @@ namespace lgLcdClassLibrary
 			if (LCD == NULL) return false; 
 			// create a pinned pointer to unmanaged data type
 			unsigned char __pin *pPinned = samplebitmap;
-			Boolean returnStatus = LCD->DisplayBitmap(pPinned, priority);
+			Boolean returnStatus = LCD->DisplayBitmap(pPinned, (DWORD)priority);
 			pPinned = 0;
             return returnStatus;
 		}
