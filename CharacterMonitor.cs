@@ -104,7 +104,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed, 
+        /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed,
         /// the FileSystemWatcher
         /// <remarks>This method can probably be broken up quite a bit, for simplicity's sake</remarks>
         /// </summary>
@@ -138,6 +138,7 @@ namespace EVEMon
             m_grandCharacterInfo.BalanceChanged += new EventHandler(BalanceChangedCallback);
             m_grandCharacterInfo.AttributeChanged += new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
+            m_grandCharacterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
 
             if (m_cli != null)
             {
@@ -233,6 +234,7 @@ namespace EVEMon
             m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
             m_grandCharacterInfo.AttributeChanged -= new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(CharacterSkillChangedCallback);
+            m_grandCharacterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
 
             m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
             m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
@@ -377,7 +379,7 @@ namespace EVEMon
             GetCharacterImage();
 
             //actually perform the update.  This is then happening asynchronously, is this a problem?
-            UpdateGrandCharacterInfo();
+            UpdateGrandCharacterInfo();            
 
             //loads the details from the settings file as to what was actually training the last time you had EVEMon running
             foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
@@ -956,6 +958,30 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// The currently training skill has changed.  Update ineve.
+        /// This could probably take over some of the work currently done in CharacterSkillChangedCallback.
+        /// </summary>
+        /// <param name="sender">The sender - ignored.</param>
+        /// <param name="?">The <see cref="System.EventArgs"/> instance containing the event data - ignored.</param>
+        private void TrainingSkillChangedCallback(object sender, EventArgs args)
+        {
+            //will need this if we ever do UI things here, which we probably will.
+            /*if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                                                  {
+                                                      CharacterSkillChangedCallback(sender, e);
+                                                  }));
+                return;
+            }
+             */ 
+            
+            if (m_session != null)
+                m_session.UpdateIneveAsync(m_grandCharacterInfo);
+
+        }
+
+        /// <summary>
         /// Handles everything when the character's training skill has changed.  Called by GrandCharacterInfo.
         /// </summary>
         /// <remarks>Another high-complexity method for us to look at.</remarks>
@@ -1127,15 +1153,6 @@ namespace EVEMon
             finally
             {
                 lbSkills.EndUpdate();
-            }
-
-            //update ineve.net
-            if (m_session != null)
-            {
-                if (m_settings.GetCharacterSettings(m_charName).IneveSync)
-                {
-                    ThreadPool.QueueUserWorkItem(m_session.UpdateIneve, m_charName);
-                }
             }
 
             UpdateSkillHeaderStats();

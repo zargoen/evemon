@@ -66,10 +66,14 @@
     </Compile>
     <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="GrandSkill.cs" />
+    <Compile Include="GrandSkillGroup.cs" />
     <Compile Include="ICharacterSettings.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LocalXmlCache.cs" />
+    <Compile Include="MonitoredList.cs" />
     <Compile Include="NewEveSession.cs" />
+    <Compile Include="OldSkillInfo.cs" />
     <Compile Include="PlanTextOptions.cs" />
     <Compile Include="GrandCharacterInfo.cs" />
     <Compile Include="Plan.cs" />
