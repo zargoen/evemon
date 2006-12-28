@@ -27,9 +27,9 @@ namespace EVEMon.Common
         }
 
         // The Character
-        private GrandCharacterInfo m_grandCharacterInfo = null;
+        private CharacterInfo m_grandCharacterInfo = null;
         [XmlIgnore]
-        public GrandCharacterInfo GrandCharacterInfo
+        public CharacterInfo GrandCharacterInfo
         {
             get { return m_grandCharacterInfo; }
             set
@@ -245,18 +245,18 @@ namespace EVEMon.Common
 
         private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime, List<Plan.Entry> entries)
         {
-            GrandSkill gsa = GrandCharacterInfo.SkillGroups["Learning"][skillA];
-            GrandSkill gsb = GrandCharacterInfo.SkillGroups["Learning"][skillB];
+            Skill gsa = GrandCharacterInfo.SkillGroups["Learning"][skillA];
+            Skill gsb = GrandCharacterInfo.SkillGroups["Learning"][skillB];
 
             TimeSpan bestTime = baseTime;
             TimeSpan addedTrainingTime = TimeSpan.Zero;
-            GrandSkill bestGs = null;
+            Skill bestGs = null;
             int bestLevel = -1;
             int added = 0;
             for (int i = 0; i < 10; i++)
             {
                 int level;
-                GrandSkill gs;
+                Skill gs;
                 if (i < 5)
                 {
                     gs = gsa;
@@ -290,7 +290,7 @@ namespace EVEMon.Common
                 for (int i = 0; i < 10; i++)
                 {
                     int level;
-                    GrandSkill gs;
+                    Skill gs;
                     if (i < 5)
                     {
                         gs = gsa;
@@ -385,7 +385,7 @@ namespace EVEMon.Common
                 {
                     bool jumpBack = false;
                     Plan.Entry pe = m_entries[i];
-                    GrandSkill gs = pe.Skill;
+                    Skill gs = pe.Skill;
                     //skill has been removed
                     if (gs == null)
                     {
@@ -393,9 +393,9 @@ namespace EVEMon.Common
                         return;
                     }
 
-                    foreach (GrandSkill.Prereq pp in gs.Prereqs)
+                    foreach (Skill.Prereq pp in gs.Prereqs)
                     {
-                        GrandSkill pgs = pp.Skill;
+                        Skill pgs = pp.Skill;
                         int prIndex = GetIndexOf(pgs.Name, pp.RequiredLevel);
                         if (prIndex == -1 && pgs.Level < pp.RequiredLevel)
                         {
@@ -476,7 +476,7 @@ namespace EVEMon.Common
                 for (int i = 0; i < m_entries.Count; i++)
                 {
                     Plan.Entry pe = m_entries[i];
-                    GrandSkill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
+                    Skill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
                     if (gs == null || pe.Level > 5 || pe.Level < 1)
                     {
                         try
@@ -502,7 +502,7 @@ namespace EVEMon.Common
             }
         }
 
-        public bool IsPlanned(GrandSkill gs)
+        public bool IsPlanned(Skill gs)
         {
             foreach (Plan.Entry pe in m_entries)
             {
@@ -514,7 +514,7 @@ namespace EVEMon.Common
             return false;
         }
 
-        public bool IsPlanned(GrandSkill gs, int level)
+        public bool IsPlanned(Skill gs, int level)
         {
             foreach (Plan.Entry pe in m_entries)
             {
@@ -527,7 +527,7 @@ namespace EVEMon.Common
         }
 
         #region remove this if possible, comment if not
-        private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
+        private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             // check that the current level is less than the planned level and not planned
             if (gs.Level < level && !IsPlanned(gs, level))
@@ -548,11 +548,11 @@ namespace EVEMon.Common
             return false;
         }
 
-        private void AddPrerequisiteEntries(GrandSkill gs, List<Plan.Entry> planEntries, string Note)
+        private void AddPrerequisiteEntries(Skill gs, List<Plan.Entry> planEntries, string Note)
         {
-            foreach (GrandSkill.Prereq pp in gs.Prereqs)
+            foreach (Skill.Prereq pp in gs.Prereqs)
             {
-                GrandSkill pgs = pp.Skill;
+                Skill pgs = pp.Skill;
                 AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
@@ -570,7 +570,7 @@ namespace EVEMon.Common
         }
         #endregion remove this if possible, comment if not
 
-        public void PlanTo(GrandSkill gs, int level)
+        public void PlanTo(Skill gs, int level)
         {
             if (level == 0)
             {
@@ -673,7 +673,7 @@ namespace EVEMon.Common
                 }
                 foreach (Plan.Entry tpe in m_entries)
                 {
-                    GrandSkill tSkill = tpe.Skill;
+                    Skill tSkill = tpe.Skill;
                     int thisMinNeeded;
                     if (pe.Skill == tpe.Skill && tpe.Level > pe.Level)
                     {
@@ -696,7 +696,7 @@ namespace EVEMon.Common
             }
         }
 
-        public bool RemoveEntry(GrandSkill gs, bool removePrerequisites, bool nonPlannedOnly)
+        public bool RemoveEntry(Skill gs, bool removePrerequisites, bool nonPlannedOnly)
         {
             this.SuppressEvents();
             try
@@ -705,7 +705,7 @@ namespace EVEMon.Common
                 // Verify nothing else in the plan requires this...
                 foreach (Plan.Entry pe in m_entries)
                 {
-                    GrandSkill tSkill = pe.Skill;
+                    Skill tSkill = pe.Skill;
                     int thisMinNeeded;
                     if (tSkill.HasAsPrerequisite(gs, out thisMinNeeded))
                     {
@@ -742,7 +742,7 @@ namespace EVEMon.Common
                 }
 
                 // Remove prerequisites
-                foreach (GrandSkill.Prereq pp in gs.Prereqs)
+                foreach (Skill.Prereq pp in gs.Prereqs)
                 {
                     RemoveEntry(pp.Skill, true, true);
                 }
@@ -771,7 +771,7 @@ namespace EVEMon.Common
             int level = 0;
             for (int i = 1; i <= 5; i++)
             {
-                string tRomanSuffix = " " + GrandSkill.GetRomanForInt(i);
+                string tRomanSuffix = " " + Skill.GetRomanForInt(i);
                 if (name.EndsWith(tRomanSuffix))
                 {
                     level = i;
@@ -794,7 +794,7 @@ namespace EVEMon.Common
 
         private WeakReference<Form> m_plannerWindow;
 
-        public void ShowEditor(Settings s, GrandCharacterInfo gci)
+        public void ShowEditor(Settings s, CharacterInfo gci)
         {
             if (m_plannerWindow != null)
             {
@@ -928,7 +928,7 @@ namespace EVEMon.Common
                     sw.Write("</a>");
                 }
                 sw.Write(' ');
-                sw.Write(GrandSkill.GetRomanForInt(pe.Level));
+                sw.Write(Skill.GetRomanForInt(pe.Level));
                 boldEnd();
 
                 TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
@@ -944,7 +944,7 @@ namespace EVEMon.Common
                     bool needComma = false;
                     if (pto.EntryTrainingTimes)
                     {
-                        sw.Write(GrandSkill.TimeSpanToDescriptiveText(trainingTime,
+                        sw.Write(Skill.TimeSpanToDescriptiveText(trainingTime,
                                                                       DescriptiveTextOptions.FullText |
                                                                       DescriptiveTextOptions.IncludeCommas |
                                                                       DescriptiveTextOptions.SpaceText));
@@ -998,7 +998,7 @@ namespace EVEMon.Common
                     }
                     sw.Write("Total time: ");
                     boldStart();
-                    sw.Write(GrandSkill.TimeSpanToDescriptiveText(totalTrainingTime,
+                    sw.Write(Skill.TimeSpanToDescriptiveText(totalTrainingTime,
                                                                   DescriptiveTextOptions.FullText |
                                                                   DescriptiveTextOptions.IncludeCommas |
                                                                   DescriptiveTextOptions.SpaceText));
@@ -1125,7 +1125,7 @@ namespace EVEMon.Common
             }
 
             [XmlIgnore]
-            public GrandSkill Skill
+            public Skill Skill
             {
                 get
                 {
@@ -1153,12 +1153,12 @@ namespace EVEMon.Common
                 }
             }
 
-            private void BuildPrereqs(GrandSkill gs, int level, List<Prerequisite> result,
+            private void BuildPrereqs(Skill gs, int level, List<Prerequisite> result,
                                       Dictionary<string, bool> contains)
             {
                 for (int l = level; l >= 1; l--)
                 {
-                    string tSkill = gs.Name + " " + GrandSkill.GetRomanForInt(l);
+                    string tSkill = gs.Name + " " + Skill.GetRomanForInt(l);
                     if (!contains.ContainsKey(tSkill))
                     {
                         Plan.Entry.Prerequisite pep = new Plan.Entry.Prerequisite(m_owner.GetEntry(gs.Name, l));
@@ -1166,9 +1166,9 @@ namespace EVEMon.Common
                         result.Insert(0, pep);
                     }
                 }
-                foreach (GrandSkill.Prereq pp in gs.Prereqs)
+                foreach (Skill.Prereq pp in gs.Prereqs)
                 {
-                    string tSkill = pp.Skill + " " + GrandSkill.GetRomanForInt(pp.RequiredLevel);
+                    string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.RequiredLevel);
                     if (!contains.ContainsKey(tSkill))
                     {
                         Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Skill.Name,

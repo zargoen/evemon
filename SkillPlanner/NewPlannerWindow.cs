@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
             planEditor.HighlightPrerequisites = m_settings.SkillPlannerHighlightPrerequisites;
         }
 
-        public void ShowSkillInTree(GrandSkill gs)
+        public void ShowSkillInTree(Skill gs)
         {
             skillBrowser.SelectedSkill = gs;
             tabControl.SelectedTab = tpSkillBrowser;
@@ -190,7 +190,7 @@ namespace EVEMon.SkillPlanner
                                                 m_plan.Entries.Count == 1 ? "" : "s",
                                                 m_plan.UniqueSkillCount,
                                                 m_plan.UniqueSkillCount == 1 ? "" : "s",
-                                                GrandSkill.TimeSpanToDescriptiveText(res,
+                                                Skill.TimeSpanToDescriptiveText(res,
                                                                                      DescriptiveTextOptions.FullText |
                                                                                      DescriptiveTextOptions.
                                                                                          IncludeCommas |

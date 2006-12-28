@@ -105,17 +105,17 @@ namespace EVEMon.SkillPlanner
 
                 if (!m_allSkillsKnown)
                 {
-                    List<Pair<GrandSkill, int>> reqSkills = new List<Pair<GrandSkill, int>>();
+                    List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
                     foreach (ItemRequiredSkill irs in i.RequiredSkills)
                     {
-                        Pair<GrandSkill, int> p = new Pair<GrandSkill, int>();
+                        Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(irs.Name);
                         p.B = irs.Level;
                         reqSkills.Add(p);
                     }
                     TimeSpan trainTime = m_plan.GrandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
                     lblItemTimeRequired.Text = "Training Time: " +
-                                               GrandSkill.TimeSpanToDescriptiveText(trainTime,
+                                               Skill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                     DescriptiveTextOptions.SpaceText);
                 }
@@ -211,11 +211,11 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
             sb.Append(rs.Name);
             sb.Append(' ');
-            sb.Append(GrandSkill.GetRomanForInt(rs.Level));
+            sb.Append(Skill.GetRomanForInt(rs.Level));
             if (m_plan != null)
             {
-                GrandCharacterInfo gci = m_plan.GrandCharacterInfo;
-                GrandSkill gs = gci.GetSkill(rs.Name);
+                CharacterInfo gci = m_plan.GrandCharacterInfo;
+                Skill gs = gci.GetSkill(rs.Name);
                 if (gs != null)
                 {
                     if (gs.Level >= rs.Level)

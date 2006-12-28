@@ -12,14 +12,14 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
-        public ImplantCalculator(GrandCharacterInfo gci, Plan p)
+        public ImplantCalculator(CharacterInfo gci, Plan p)
             : this()
         {
             m_grandCharacterInfo = gci;
             m_plan = p;
         }
 
-        private GrandCharacterInfo m_grandCharacterInfo;
+        private CharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
 
         private void ImplantCalculator_Shown(object sender, EventArgs e)
@@ -185,14 +185,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Red;
-                lblComparedToBase.Text = GrandSkill.TimeSpanToDescriptiveText(thisSpan - baseSpan,
+                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(thisSpan - baseSpan,
                                                                               DescriptiveTextOptions.IncludeCommas) +
                                          " slower than current base";
             }
             else
             {
                 lblComparedToBase.ForeColor = SystemColors.ControlText;
-                lblComparedToBase.Text = GrandSkill.TimeSpanToDescriptiveText(baseSpan - thisSpan,
+                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(baseSpan - thisSpan,
                                                                               DescriptiveTextOptions.IncludeCommas) +
                                          " better than current base";
             }
@@ -200,14 +200,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.Red;
-                lblComparedToCurrent.Text = GrandSkill.TimeSpanToDescriptiveText(thisSpan - currentSpan,
+                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(thisSpan - currentSpan,
                                                                                  DescriptiveTextOptions.IncludeCommas) +
                                             " slower than current";
             }
             else
             {
                 lblComparedToCurrent.ForeColor = SystemColors.ControlText;
-                lblComparedToCurrent.Text = GrandSkill.TimeSpanToDescriptiveText(currentSpan - thisSpan,
+                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(currentSpan - thisSpan,
                                                                                  DescriptiveTextOptions.IncludeCommas) +
                                             " better than current";
             }
@@ -218,7 +218,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan ts = m_plan.GetTotalTime(scratchpad);
             DateTime dt = DateTime.Now + ts;
 
-            lblSpan.Text = GrandSkill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas);
+            lblSpan.Text = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas);
             lblDate.Text = dt.ToString();
 
             return ts;

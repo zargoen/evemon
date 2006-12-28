@@ -27,11 +27,11 @@ namespace EVEMon
         private EveSession m_session;
         private int m_charId;
         private FileSystemWatcher m_characterFileWatch = null;
-        private Dictionary<GrandSkillGroup, bool> m_groupCollapsed = new Dictionary<GrandSkillGroup, bool>();
+        private Dictionary<SkillGroup, bool> m_groupCollapsed = new Dictionary<SkillGroup, bool>();
         private DateTime m_nextScheduledUpdateAt = DateTime.MinValue;
         private string m_skillTrainingName;
         private DateTime m_estimatedCompletion;
-        private GrandCharacterInfo m_grandCharacterInfo;
+        private CharacterInfo m_grandCharacterInfo;
         private int m_lastTickSPPaint = 0;
         private bool m_updatingPortrait = false;
         private bool m_currentlyVisible = false;
@@ -115,12 +115,12 @@ namespace EVEMon
 
             if (m_cli != null)
             {
-                m_grandCharacterInfo = new GrandCharacterInfo(m_charId, m_cli.CharacterName);
+                m_grandCharacterInfo = new CharacterInfo(m_charId, m_cli.CharacterName);
             }
             else
             {
                 m_charId = m_sci.CharacterId;
-                m_grandCharacterInfo = new GrandCharacterInfo(m_sci.CharacterId, m_sci.Name);
+                m_grandCharacterInfo = new CharacterInfo(m_sci.CharacterId, m_sci.Name);
                 if (m_charId > 0)
                 {
                     GetCharacterImage();
@@ -166,14 +166,14 @@ namespace EVEMon
                 m_sci = null;
             }
 
-            foreach (GrandSkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
+            foreach (SkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
                 foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
                 {
                     if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
                     {
                         m_groupCollapsed.Add(gsg, true);
-                        foreach (GrandSkill gs in gsg)
+                        foreach (Skill gs in gsg)
                         {
                             if (gs.Known)
                             {
@@ -432,7 +432,7 @@ namespace EVEMon
                 }
                 if (Program.LCD.newchar == m_charName)
                 {
-                    GrandSkill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
+                    Skill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
                     if (s != null)
                     {
                        Program.LCD.curperc = s.GetPercentDone();
@@ -818,7 +818,7 @@ namespace EVEMon
         /// Toggles the expansion or collapsing of a single group
         /// </summary>
         /// <param name="gsg">The group to expand or collapse.</param>
-        private void ToggleGroupExpandCollapse(GrandSkillGroup gsg)
+        private void ToggleGroupExpandCollapse(SkillGroup gsg)
         {
             bool toCollapse;
             if (gsg.isCollapsed)
@@ -834,7 +834,7 @@ namespace EVEMon
             if (toCollapse)
             {
                 // Remove the skills in the group from the list
-                foreach (GrandSkill gs in gsg)
+                foreach (Skill gs in gsg)
                 {
                     if (gs.Known)
                     {
@@ -847,8 +847,8 @@ namespace EVEMon
             }
             else
             {
-                List<GrandSkill> skillList = new List<GrandSkill>();
-                foreach (GrandSkill gs in gsg)
+                List<Skill> skillList = new List<Skill>();
+                foreach (Skill gs in gsg)
                 {
                     skillList.Add(gs);
                 }
@@ -874,13 +874,13 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llToggleAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            List<GrandSkillGroup> toggles = new List<GrandSkillGroup>();
+            List<SkillGroup> toggles = new List<SkillGroup>();
             bool? setCollapsed = null;
             foreach (object o in lbSkills.Items)
             {
-                if (o is GrandSkillGroup)
+                if (o is SkillGroup)
                 {
-                    GrandSkillGroup gsg = (GrandSkillGroup)o;
+                    SkillGroup gsg = (SkillGroup)o;
                     bool isCollapsed = (m_groupCollapsed.ContainsKey(gsg) && m_groupCollapsed[gsg]);
                     if (setCollapsed == null)
                     {
@@ -895,7 +895,7 @@ namespace EVEMon
             lbSkills.BeginUpdate();
             try
             {
-                foreach (GrandSkillGroup toggroup in toggles)
+                foreach (SkillGroup toggroup in toggles)
                 {
                     ToggleGroupExpandCollapse(toggroup);
                 }
@@ -1002,9 +1002,9 @@ namespace EVEMon
             lbSkills.BeginUpdate();
             try
             {
-                foreach (GrandSkill gs in e.SkillList)
+                foreach (Skill gs in e.SkillList)
                 {
-                    GrandSkillGroup gsg = gs.SkillGroup;
+                    SkillGroup gsg = gs.SkillGroup;
 
                     if (gs.Known)
                     {
@@ -1031,14 +1031,14 @@ namespace EVEMon
                                     inMySkillGroup = true;
                                     shouldInsertSkillGroup = false;
                                 }
-                                else if (o is GrandSkillGroup && ((GrandSkillGroup)o).Name.CompareTo(gsg.Name) > 0)
+                                else if (o is SkillGroup && ((SkillGroup)o).Name.CompareTo(gsg.Name) > 0)
                                 {
                                     shouldInsertAt = i;
                                     shouldInsertSkillGroup = (!inMySkillGroup);
                                     break;
                                 }
-                                else if (inMySkillGroup && o is GrandSkill &&
-                                         ((GrandSkill)o).Name.CompareTo(gs.Name) > 0)
+                                else if (inMySkillGroup && o is Skill &&
+                                         ((Skill)o).Name.CompareTo(gs.Name) > 0)
                                 {
                                     shouldInsertAt = i;
                                     shouldInsertSkillGroup = false;
@@ -1078,7 +1078,7 @@ namespace EVEMon
 
                     if (gs.InTraining)
                     {
-                        m_skillTrainingName = gs.Name + " " + GrandSkill.GetRomanForInt(gs.TrainingToLevel);
+                        m_skillTrainingName = gs.Name + " " + Skill.GetRomanForInt(gs.TrainingToLevel);
                         lblTrainingSkill.Text = m_skillTrainingName;
 
                         double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(gs.PrimaryAttribute) +
@@ -1481,13 +1481,13 @@ namespace EVEMon
             }
             object item = lbSkills.Items[e.Index];
 
-            if (item is GrandSkillGroup)
+            if (item is SkillGroup)
             {
-                ((GrandSkillGroup)item).Draw(e);
+                ((SkillGroup)item).Draw(e);
             }
-            else if (item is GrandSkill)
+            else if (item is Skill)
             {
-                ((GrandSkill)item).Draw(e);
+                ((Skill)item).Draw(e);
             }
         }
 
@@ -1503,13 +1503,13 @@ namespace EVEMon
                 return;
             }
             object item = lbSkills.Items[e.Index];
-            if (item is GrandSkillGroup)
+            if (item is SkillGroup)
             {
-                e.ItemHeight = GrandSkillGroup.Height;
+                e.ItemHeight = SkillGroup.Height;
             }
-            else if (item is GrandSkill)
+            else if (item is Skill)
             {
-                e.ItemHeight = GrandSkill.Height;
+                e.ItemHeight = Skill.Height;
             }
         }
 
@@ -1542,13 +1542,13 @@ namespace EVEMon
                     int h = 0; // height of items from current topindex inclusive
                     for (int j = lbSkills.TopIndex + i - 1; j < lbSkills.Items.Count; j++)
                     {
-                        if (lbSkills.Items[j] is GrandSkillGroup)
+                        if (lbSkills.Items[j] is SkillGroup)
                         {
-                            h += GrandSkillGroup.Height;
+                            h += SkillGroup.Height;
                         }
-                        else if (lbSkills.Items[j] is GrandSkill)
+                        else if (lbSkills.Items[j] is Skill)
                         {
-                            h += GrandSkill.Height;
+                            h += Skill.Height;
                         }
                     }
                     if (h > lbSkills.ClientSize.Height)
@@ -1558,13 +1558,13 @@ namespace EVEMon
                 }
                 if (item != null)
                 {
-                    if (item is GrandSkillGroup)
+                    if (item is SkillGroup)
                     {
-                        numberOfPixelsToMove[i - 1] = GrandSkillGroup.Height * direction;
+                        numberOfPixelsToMove[i - 1] = SkillGroup.Height * direction;
                     }
-                    else if (item is GrandSkill)
+                    else if (item is Skill)
                     {
-                        numberOfPixelsToMove[i - 1] = GrandSkill.Height * direction;
+                        numberOfPixelsToMove[i - 1] = Skill.Height * direction;
                     }
                 }
                 else
@@ -1719,9 +1719,9 @@ namespace EVEMon
             ttToolTip.UseFading = true;
             ttToolTip.AutoPopDelay = 10000;
 
-            if (item is GrandSkillGroup)
+            if (item is SkillGroup)
             {
-                GrandSkillGroup sg = (GrandSkillGroup)item;
+                SkillGroup sg = (SkillGroup)item;
                 if (e.Button == MouseButtons.Left)
                 {
                     ToggleGroupExpandCollapse(sg);
@@ -1741,7 +1741,7 @@ namespace EVEMon
                     double percentDonePoints = 0.0;
                     double percentDoneSkills = 0.0;
 
-                    foreach (GrandSkill s in sg)
+                    foreach (Skill s in sg)
                     {
                         TotalPoints += s.GetPointsRequiredForLevel(5);
                     }
@@ -1772,9 +1772,9 @@ namespace EVEMon
                     }
                 }
             }
-            else if (item is GrandSkill)
+            else if (item is Skill)
             {
-                GrandSkill s = (GrandSkill)item;
+                Skill s = (Skill)item;
                 double percentDone = 0.0;
                 int NextLevel = 0;
                 int CurrentSP = s.CurrentSkillPoints;
@@ -1793,17 +1793,17 @@ namespace EVEMon
                     PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                     string CurrentlyDone =
                         String.Format("Partially Completed lvl {0}: {1}/{2} ({3})",
-                                      GrandSkill.GetRomanForInt(NextLevel),
+                                      Skill.GetRomanForInt(NextLevel),
                                       s.CurrentSkillPoints.ToString("#,##0"),
                                       s.GetPointsRequiredForLevel(NextLevel).ToString("#,##0"),
                                       percentDone.ToString("P0"));
                     string ToNextLevel =
                         String.Format("To Level {0}: {1} Skill Points remaining",
-                                      GrandSkill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
+                                      Skill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
                     ttToolTip.Active = true;
                     ttToolTip.SetToolTip(lbSkills,
                                          CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " +
-                                         GrandSkill.TimeSpanToDescriptiveText(
+                                         Skill.TimeSpanToDescriptiveText(
                                              s.GetTrainingTimeToLevel(NextLevel),
                                              DescriptiveTextOptions.IncludeCommas |
                                              DescriptiveTextOptions.UppercaseText) + "\n" +
@@ -1821,18 +1821,18 @@ namespace EVEMon
                         PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                         string CurrentlyDone =
                             String.Format("Completed lvl {0}: {1}/{2} ({3})",
-                                          GrandSkill.GetRomanForInt(s.Level),
+                                          Skill.GetRomanForInt(s.Level),
                                           s.CurrentSkillPoints.ToString("#,##0"),
                                           s.GetPointsRequiredForLevel(s.Level).ToString("#,##0"),
                                           percentDone.ToString("P0"));
                         string ToNextLevel =
                             String.Format("To Level {0}: {1} Skill Points required",
-                                          GrandSkill.GetRomanForInt(NextLevel),
+                                          Skill.GetRomanForInt(NextLevel),
                                           PointsRemain.ToString("#,##0"));
                         ttToolTip.Active = true;
                         ttToolTip.SetToolTip(lbSkills,
                                              CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time: " +
-                                             GrandSkill.TimeSpanToDescriptiveText(
+                                             Skill.TimeSpanToDescriptiveText(
                                                  s.GetTrainingTimeToLevel(NextLevel),
                                                  DescriptiveTextOptions.IncludeCommas |
                                                  DescriptiveTextOptions.UppercaseText) + "\n" +
@@ -1861,17 +1861,17 @@ namespace EVEMon
                     PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                     string CurrentlyDone =
                         String.Format("Partially Completed lvl {0}: {1}/{2} ({3})",
-                                      GrandSkill.GetRomanForInt(NextLevel),
+                                      Skill.GetRomanForInt(NextLevel),
                                       s.CurrentSkillPoints.ToString("#,##0"),
                                       s.GetPointsRequiredForLevel(NextLevel).ToString("#,##0"),
                                       percentDone.ToString("P0"));
                     string ToNextLevel =
                         String.Format("To Level {0}: {1} Skill Points remaining",
-                                      GrandSkill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
+                                      Skill.GetRomanForInt(NextLevel), PointsRemain.ToString("#,##0"));
                     ttToolTip.Active = true;
                     ttToolTip.SetToolTip(lbSkills,
                                          CurrentlyDone + "\n" + ToNextLevel + "\nTraining Time remaining: " +
-                                         GrandSkill.TimeSpanToDescriptiveText(
+                                         Skill.TimeSpanToDescriptiveText(
                                              s.GetTrainingTimeToLevel(NextLevel),
                                              DescriptiveTextOptions.IncludeCommas |
                                              DescriptiveTextOptions.UppercaseText) + "\n" +
@@ -2017,7 +2017,7 @@ namespace EVEMon
                 UpdateTimeRemainingLabels();
                 UpdateThrobberLabel();
 
-                GrandSkill trainingSkill = m_grandCharacterInfo.CurrentlyTrainingSkill;
+                Skill trainingSkill = m_grandCharacterInfo.CurrentlyTrainingSkill;
                 if (trainingSkill != null)
                 {
                     if (trainingSkill.CurrentSkillPoints != m_lastTickSPPaint)
@@ -2063,7 +2063,7 @@ namespace EVEMon
         /// Gets the grand character info.
         /// </summary>
         /// <value>The grand character info.</value>
-        public GrandCharacterInfo GrandCharacterInfo
+        public CharacterInfo GrandCharacterInfo
         {
             get { return m_grandCharacterInfo; }
         }
@@ -2147,7 +2147,7 @@ namespace EVEMon
                                  sg.GetTotalPoints().ToString("#,##0"));
                     foreach (SerializableSkill s in sg.Skills)
                     {
-                        string skillDesc = s.Name + " " + GrandSkill.GetRomanForInt(s.Level) + " (" +
+                        string skillDesc = s.Name + " " + Skill.GetRomanForInt(s.Level) + " (" +
                                            s.Rank.ToString() + ")";
                         sw.WriteLine(": {0} {1}/{2} Points",
                                      skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
@@ -2155,7 +2155,7 @@ namespace EVEMon
                         if (ci.SkillInTraining != null && ci.SkillInTraining.SkillName == s.Name)
                         {
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
-                                         GrandSkill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
+                                         Skill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
                                          ci.SkillInTraining.EstimatedCompletion.ToString());
                         }
                     }

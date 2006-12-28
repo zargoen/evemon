@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
             listBox1.Items.Clear();
             foreach (Plan.Entry pe in m_entries)
             {
-                string m_skill = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
+                string m_skill = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
                 if (pe.AddNoteonly)
                 {
                     m_skill = m_skill + " (planned)";
@@ -50,7 +50,7 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        private static bool ShouldAdd(Plan p, GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
+        private static bool ShouldAdd(Plan p, Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
  // yes isPlanned is checked outbound already so should be ok!
             if (gs.Level < level /*&& !p.IsPlanned(gs, level)*/)
@@ -88,11 +88,11 @@ namespace EVEMon.SkillPlanner
             return false;
         }
 
-        private static void AddPrerequisiteEntries(Plan p, GrandSkill gs, List<Plan.Entry> planEntries, string Note)
+        private static void AddPrerequisiteEntries(Plan p, Skill gs, List<Plan.Entry> planEntries, string Note)
         {
-            foreach (GrandSkill.Prereq pp in gs.Prereqs)
+            foreach (Skill.Prereq pp in gs.Prereqs)
             {
-                GrandSkill pgs = pp.Skill;
+                Skill pgs = pp.Skill;
                 AddPrerequisiteEntries(p, pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
@@ -140,7 +140,7 @@ namespace EVEMon.SkillPlanner
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             foreach (Pair<string, int> ts in skillsToAdd)
             {
-                GrandSkill gs = p.GrandCharacterInfo.GetSkill(ts.A);
+                Skill gs = p.GrandCharacterInfo.GetSkill(ts.A);
                 if (ShouldAdd(p, gs, ts.B, planEntries, Note))
                 {
                     AddPrerequisiteEntries(p, gs, planEntries, Note);

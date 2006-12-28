@@ -63,7 +63,7 @@ namespace EVEMon.SkillPlanner
                 case 1: // Ships I can fly
                     itemf = delegate(Item i)
                              {
-                                 GrandSkill gs = null;
+                                 Skill gs = null;
                                  for (int x = 0; x < i.RequiredSkills.Count; x++)
                                  {
                                      try

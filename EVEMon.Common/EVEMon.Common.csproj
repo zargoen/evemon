@@ -66,7 +66,7 @@
     </Compile>
     <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="ExceptionHandler.cs" />
-    <Compile Include="GrandSkill.cs" />
+    <Compile Include="Skill.cs" />
     <Compile Include="GrandSkillGroup.cs" />
     <Compile Include="ICharacterSettings.cs" />
     <Compile Include="Item.cs" />

@@ -47,7 +47,7 @@ namespace EVEMon.SkillPlanner
                 case 1: // Ships I can fly
                     sf = delegate(Ship s)
                              {
-                                 GrandSkill gs=null;
+                                 Skill gs=null;
                                  for (int i = 0; i < s.RequiredSkills.Count;i++)
                                  {
                                     gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);

@@ -212,7 +212,7 @@ namespace EVEMon
             cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
-            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
             return true;
 
@@ -242,7 +242,7 @@ namespace EVEMon
             cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
-            cm.GrandCharacterInfo.DownloadAttemptCompleted += new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
             return true;
         }
@@ -251,17 +251,17 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                SortedList<TimeSpan, GrandCharacterInfo> gcis = new SortedList<TimeSpan, GrandCharacterInfo>();
+                SortedList<TimeSpan, CharacterInfo> gcis = new SortedList<TimeSpan, CharacterInfo>();
                 int selectedCharId = 0;
                 foreach (TabPage tp in tcCharacterTabs.TabPages)
                 {
                     CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
                     if (cm != null && cm.GrandCharacterInfo != null && cm.GrandCharacterInfo.CurrentlyTrainingSkill != null)
                     {
-                        GrandCharacterInfo gci = cm.GrandCharacterInfo;
+                        CharacterInfo gci = cm.GrandCharacterInfo;
                         // Remember the Char ID of the currently selected TabPage
                         if (tcCharacterTabs.SelectedTab.Text.Equals(tp.Text)) selectedCharId = gci.CharacterId;
-                        GrandSkill gs = gci.CurrentlyTrainingSkill;
+                        Skill gs = gci.CurrentlyTrainingSkill;
                         TimeSpan ts = gs.EstimatedCompletion - DateTime.Now;
                         if (ts > TimeSpan.Zero)
                         {
@@ -275,7 +275,7 @@ namespace EVEMon
                 StringBuilder sb = new StringBuilder();
                 StringBuilder tsb = new StringBuilder();
                 sb.Append("EVEMon");
-                foreach (GrandCharacterInfo gci in gcis.Values)
+                foreach (CharacterInfo gci in gcis.Values)
                 {
                     sb.Append("\n");
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name)
@@ -287,7 +287,7 @@ namespace EVEMon
                     {
                         sb.Append(gci.CurrentlyTrainingSkill.Name);
                         sb.Append(" ");
-                        sb.Append(GrandSkill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
+                        sb.Append(Skill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
                         sb.Append(" - ");
                     }
 
@@ -299,7 +299,7 @@ namespace EVEMon
                     if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining)
                     {
                         //show the time to completion
-                        sb.Append(GrandSkill.TimeSpanToDescriptiveText(gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now, DescriptiveTextOptions.IncludeCommas));
+                        sb.Append(Skill.TimeSpanToDescriptiveText(gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now, DescriptiveTextOptions.IncludeCommas));
                         sb.Append(" - ");
                     }
                     if (sb.Length > 7)
@@ -313,34 +313,34 @@ namespace EVEMon
                             case 1: // single Char - finishing skill next
                                 if (tsb.Length == 0)
                                 {
-                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
                                     gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                     DescriptiveTextOptions.Default) + " " + gci.Name);
                                 }
                                 break;
                             case 2: // single Char - selected char
                                 if (selectedCharId == gci.CharacterId)
-                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
                                     gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                     DescriptiveTextOptions.Default) + " " + gci.Name);
                                 break;
                             case 0: //this is the default
                             case 3: // multi Char - finishing skill next first
-                                tsb.Append((tsb.Length > 0 ? " | " : "") + GrandSkill.TimeSpanToDescriptiveText(
+                                tsb.Append((tsb.Length > 0 ? " | " : "") + Skill.TimeSpanToDescriptiveText(
                                 gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                 DescriptiveTextOptions.Default) + " " + gci.Name);
                                 break;
                             case 4: // multi Char - selected char first 
                                 if (selectedCharId == gci.CharacterId)
                                 {
-                                    tsb.Insert(0, GrandSkill.TimeSpanToDescriptiveText(
+                                    tsb.Insert(0, Skill.TimeSpanToDescriptiveText(
                                     gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                     DescriptiveTextOptions.Default) + " " + gci.Name + (tsb.Length > 0 ? " | " : ""));
                                 }
                                 else
                                 {
                                     if (tsb.Length > 0) tsb.Append(" | ");
-                                    tsb.Append(GrandSkill.TimeSpanToDescriptiveText(
+                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
                                     gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
                                     DescriptiveTextOptions.Default) + " " + gci.Name);
                                 }
@@ -437,7 +437,7 @@ namespace EVEMon
             }));
         }*/
 
-        private void cm_DownloadAttemptCompleted(object sender, GrandCharacterInfo.DownloadAttemptCompletedEventArgs e)
+        private void cm_DownloadAttemptCompleted(object sender, CharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
             {
@@ -540,7 +540,7 @@ namespace EVEMon
                 CharFileInfo cfi = tp.Tag as CharFileInfo;
                 RemoveCharFileInfo(cfi);
             }
-            cm.GrandCharacterInfo.DownloadAttemptCompleted -= new GrandCharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
         }
 
@@ -729,12 +729,12 @@ namespace EVEMon
             }
         }
 
-        public GrandCharacterInfo GetGrandCharacterInfo(string charName)
+        public CharacterInfo GetGrandCharacterInfo(string charName)
         {
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
                 CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                GrandCharacterInfo gci = cm.GrandCharacterInfo;
+                CharacterInfo gci = cm.GrandCharacterInfo;
                 if (gci != null && gci.Name == charName)
                     return gci;
             }

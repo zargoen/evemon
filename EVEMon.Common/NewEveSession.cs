@@ -362,7 +362,7 @@ namespace EVEMon.Common
             }
         }
 
-        public void UpdateIneveAsync(GrandCharacterInfo info)
+        public void UpdateIneveAsync(CharacterInfo info)
         {
             
             if (info != null)
@@ -566,12 +566,12 @@ namespace EVEMon.Common
 
         private class UpdateGCIArgs
         {
-            public GrandCharacterInfo GrandCharacterInfo;
+            public CharacterInfo GrandCharacterInfo;
             public Control InvokeControl;
             public UpdateGrandCharacterInfoCallback UpdateGrandCharacterInfoCallback;
         }
 
-        public void UpdateGrandCharacterInfoAsync(GrandCharacterInfo grandCharacterInfo, Control invokeControl,
+        public void UpdateGrandCharacterInfoAsync(CharacterInfo grandCharacterInfo, Control invokeControl,
                                                   UpdateGrandCharacterInfoCallback callback)
         {
             UpdateGCIArgs xx = new UpdateGCIArgs();
@@ -595,7 +595,7 @@ namespace EVEMon.Common
 
         private const int DEFAULT_RETRY_INTERVAL = 60*5*1000;
 
-        public int UpdateGrandCharacterInfo(GrandCharacterInfo grandCharacterInfo, Control invokeControl)
+        public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
             SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
 

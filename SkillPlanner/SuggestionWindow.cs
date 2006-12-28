@@ -36,7 +36,7 @@ namespace EVEMon.SkillPlanner
         {
             IEnumerable<Plan.Entry> entries = m_plan.GetSuggestions();
 
-            GrandCharacterInfo gci = m_plan.GrandCharacterInfo;
+            CharacterInfo gci = m_plan.GrandCharacterInfo;
             EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
             TimeSpan postTime = TimeSpan.Zero;
 
@@ -44,9 +44,9 @@ namespace EVEMon.SkillPlanner
             foreach (Plan.Entry pe in entries)
             {
                 lbSkills.Items.Add(pe.SkillName + " " +
-                                   GrandSkill.GetRomanForInt(pe.Level));
+                                   Skill.GetRomanForInt(pe.Level));
 
-                GrandSkill gs = gci.GetSkill(pe.SkillName);
+                Skill gs = gci.GetSkill(pe.SkillName);
                 postTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
                 scratchpad.ApplyALevelOf(gs);
             }
@@ -55,10 +55,10 @@ namespace EVEMon.SkillPlanner
 
             TimeSpan diff = preTime - postTime;
 
-            lblBeforeTime.Text = GrandSkill.TimeSpanToDescriptiveText(preTime, DTO_OPTS);
-            lblAfterTime.Text = GrandSkill.TimeSpanToDescriptiveText(postTime, DTO_OPTS);
+            lblBeforeTime.Text = Skill.TimeSpanToDescriptiveText(preTime, DTO_OPTS);
+            lblAfterTime.Text = Skill.TimeSpanToDescriptiveText(postTime, DTO_OPTS);
 
-            lblDiffTime.Text = GrandSkill.TimeSpanToDescriptiveText(diff, DTO_OPTS);
+            lblDiffTime.Text = Skill.TimeSpanToDescriptiveText(diff, DTO_OPTS);
         }
 
         private const DescriptiveTextOptions DTO_OPTS = DescriptiveTextOptions.IncludeCommas;

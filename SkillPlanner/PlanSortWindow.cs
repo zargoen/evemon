@@ -256,12 +256,12 @@ namespace EVEMon.SkillPlanner
                 for (int i = 0; i < m_skillsToInsert.Count; i++)
                 {
                     Plan.Entry thisPe = m_skillsToInsert[i];
-                    GrandSkill thisSkill = m_plan.GrandCharacterInfo.GetSkill(thisPe.SkillName);
+                    Skill thisSkill = m_plan.GrandCharacterInfo.GetSkill(thisPe.SkillName);
                     TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, true);
                     if (thisSpan < fastestSpan)
                     {
                         bool canInsert = true;
-                        foreach (GrandSkill.Prereq pp in thisSkill.Prereqs)
+                        foreach (Skill.Prereq pp in thisSkill.Prereqs)
                         {
                             if (pp.Skill.Level < pp.RequiredLevel)
                             {

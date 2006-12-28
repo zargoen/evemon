@@ -380,7 +380,7 @@ namespace EVEMon.Common
             SerializableCharacterInfo sci = this.GetCharacterInfo(charName);
             if (sci != null)
             {
-                GrandCharacterInfo gci = new GrandCharacterInfo(sci.CharacterId, charName);
+                CharacterInfo gci = new CharacterInfo(sci.CharacterId, charName);
                 gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
 
                 p.GrandCharacterInfo = gci;

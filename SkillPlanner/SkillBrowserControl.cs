@@ -17,7 +17,7 @@ namespace EVEMon.SkillPlanner
             this.splitContainer2.RememberDistanceKey = "SkillBrowser";
         }
 
-        public GrandCharacterInfo GrandCharacterInfo
+        public CharacterInfo GrandCharacterInfo
         {
 //            get { return m_grandCharacterInfo; }
             set
@@ -47,8 +47,8 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        GrandSkill m_selectedSkill;
-        public GrandSkill SelectedSkill
+        Skill m_selectedSkill;
+        public Skill SelectedSkill
         {
             get { return m_selectedSkill; }
             set
@@ -158,7 +158,7 @@ namespace EVEMon.SkillPlanner
             if (s.StartsWith("Level "))
             {
                 string r = s.Substring(6);
-                setLevel = GrandSkill.GetIntForRoman(r);
+                setLevel = Skill.GetIntForRoman(r);
             }
             m_planSelectSelected = setLevel;
             PlanTo(setLevel);
@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
             bool isPlanned = m_plan.IsPlanned(m_selectedSkill, level);
             StringBuilder sb = new StringBuilder();
             sb.Append("Level ");
-            sb.Append(GrandSkill.GetRomanForInt(level));
+            sb.Append(Skill.GetRomanForInt(level));
             sb.Append(": ");
             if (m_selectedSkill.Level >= level)
             {
@@ -249,14 +249,14 @@ namespace EVEMon.SkillPlanner
                 {
                     tts = m_selectedSkill.GetTrainingTimeToLevel(level);
                 }
-                sb.Append(GrandSkill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
+                sb.Append(Skill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
       
                 TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) +
                                 m_selectedSkill.GetPrerequisiteTime();
                 if (prts > TimeSpan.Zero)
                 {
                     sb.Append(" (plus ");
-                    sb.Append(GrandSkill.TimeSpanToDescriptiveText(prts, DescriptiveTextOptions.IncludeCommas));
+                    sb.Append(Skill.TimeSpanToDescriptiveText(prts, DescriptiveTextOptions.IncludeCommas));
                     sb.Append(")");
                 }
                 else
@@ -309,7 +309,7 @@ namespace EVEMon.SkillPlanner
         private const DescriptiveTextOptions DTO_OPTS =
             DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
 
-        private bool SetMenuItemState(ToolStripMenuItem mi, GrandSkill gs, int level)
+        private bool SetMenuItemState(ToolStripMenuItem mi, Skill gs, int level)
         {
             bool isKnown = false;
             bool isPlanned = false;
@@ -341,15 +341,15 @@ namespace EVEMon.SkillPlanner
             {
                 if (isPlanned)
                 {
-                    mi.Text = "Plan to Level " + GrandSkill.GetRomanForInt(level) + " (Already Planned)";
+                    mi.Text = "Plan to Level " + Skill.GetRomanForInt(level) + " (Already Planned)";
                     mi.Enabled = false;
                     return true;
                 }
                 else
                 {
                     TimeSpan ts = gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(level);
-                    mi.Text = "Plan to Level " + GrandSkill.GetRomanForInt(level) + " (" +
-                              GrandSkill.TimeSpanToDescriptiveText(ts, DTO_OPTS) + ")";
+                    mi.Text = "Plan to Level " + Skill.GetRomanForInt(level) + " (" +
+                              Skill.TimeSpanToDescriptiveText(ts, DTO_OPTS) + ")";
                     mi.Enabled = true;
                 }
             }
@@ -357,12 +357,12 @@ namespace EVEMon.SkillPlanner
             {
                 if (isKnown)
                 {
-                    mi.Text = "Plan to Level " + GrandSkill.GetRomanForInt(level) + " (Already Known)";
+                    mi.Text = "Plan to Level " + Skill.GetRomanForInt(level) + " (Already Known)";
                     mi.Enabled = false;
                 }
                 else if (isTraining)
                 {
-                    mi.Text = "Plan to Level " + GrandSkill.GetRomanForInt(level) + " (Currently Training)";
+                    mi.Text = "Plan to Level " + Skill.GetRomanForInt(level) + " (Currently Training)";
                     mi.Enabled = false;
                 }
             }
@@ -410,7 +410,7 @@ namespace EVEMon.SkillPlanner
         }
 
         #region Replace all this with calls to Plan.PlanTo()
-        private bool ShouldAdd(GrandSkill gs, int level, IEnumerable<Plan.Entry> list, string Note)
+        private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             if (gs.Level < level && !m_plan.IsPlanned(gs, level))
             {
@@ -494,11 +494,11 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void AddPrerequisiteEntries(GrandSkill gs, List<Plan.Entry> planEntries, string Note)
+        private void AddPrerequisiteEntries(Skill gs, List<Plan.Entry> planEntries, string Note)
         {
-            foreach (GrandSkill.Prereq pp in gs.Prereqs)
+            foreach (Skill.Prereq pp in gs.Prereqs)
             {
-                GrandSkill pgs = pp.Skill;
+                Skill pgs = pp.Skill;
                 AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {

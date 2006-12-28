@@ -84,17 +84,17 @@ namespace EVEMon.SkillPlanner
 
                 if (! m_allSkillsKnown)
                 {
-                    List<Pair<GrandSkill, int>> reqSkills = new List<Pair<GrandSkill, int>>();
+                    List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
                     foreach (ShipRequiredSkill srs in s.RequiredSkills)
                     {
-                        Pair<GrandSkill, int> p = new Pair<GrandSkill, int>();
+                        Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(srs.Name);
                         p.B = srs.Level;
                         reqSkills.Add(p);
                     }
                     TimeSpan trainTime = m_plan.GrandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
                     lblShipTimeRequired.Text = "Training Time: " +
-                                               GrandSkill.TimeSpanToDescriptiveText(trainTime,
+                                               Skill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                     DescriptiveTextOptions.SpaceText);
                     
@@ -144,7 +144,7 @@ namespace EVEMon.SkillPlanner
         {
             if (list.Count > rnum)
             {
-                GrandSkill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
+                Skill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
                 string addText = String.Empty;
                 if (gs.Level >= list[rnum].Level)
                 {
@@ -161,7 +161,7 @@ namespace EVEMon.SkillPlanner
                     m_skillsUnplanned = true;
                 }
                 skillLabel.Text = list[rnum].Name + " " +
-                                  GrandSkill.GetRomanForInt(list[rnum].Level) + addText;
+                                  Skill.GetRomanForInt(list[rnum].Level) + addText;
             }
             else
             {

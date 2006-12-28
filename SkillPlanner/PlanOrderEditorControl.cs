@@ -139,7 +139,7 @@ namespace EVEMon.SkillPlanner
 
                         lvSkills.Items.Add(lvi);
 
-                        GrandSkill gs = pe.Skill;
+                        Skill gs = pe.Skill;
                         if (gs.InTraining)
                         {
                             // This skill is currently in training so (re)start the auto refresh timer
@@ -180,7 +180,7 @@ namespace EVEMon.SkillPlanner
                 {
                     ListViewItem lvi = lvSkills.Items[i];
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
-                    GrandSkill gs = pe.Skill;
+                    Skill gs = pe.Skill;
 
                     while (lvi.SubItems.Count < lvSkills.Columns.Count + 1)
                     {
@@ -226,14 +226,14 @@ namespace EVEMon.SkillPlanner
                         switch (ct)
                         {
                             case ColumnPreference.ColumnType.SkillName:
-                                res = gs.Name + " " + GrandSkill.GetRomanForInt(pe.Level);
+                                res = gs.Name + " " + Skill.GetRomanForInt(pe.Level);
                                 break;
                             case ColumnPreference.ColumnType.PlanGroup:
                                 res = planGroups;
                                 break;
                             case ColumnPreference.ColumnType.TrainingTime:
                                 res =
-                                    GrandSkill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                                    Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
                                 break;
                             case ColumnPreference.ColumnType.EarliestStart:
                                 res = thisStart.ToString();
@@ -430,13 +430,13 @@ namespace EVEMon.SkillPlanner
                 foreach (ListViewItem current in lvSkills.SelectedItems)
                 {
                     Plan.Entry pe = (Plan.Entry)current.Tag;
-                    GrandSkill gs = pe.Skill;
+                    Skill gs = pe.Skill;
                     selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
                 }
 
                 m_plannerWindow.UpdateStatusBarSelected(String.Format("{0} Skills selected, Training time: {1}",
                                             lvSkills.SelectedItems.Count,
-                                            GrandSkill.TimeSpanToDescriptiveText(selectedTrainTime,
+                                            Skill.TimeSpanToDescriptiveText(selectedTrainTime,
                                                                                      DescriptiveTextOptions.FullText |
                                                                                      DescriptiveTextOptions.
                                                                                          IncludeCommas |
@@ -593,7 +593,7 @@ namespace EVEMon.SkillPlanner
         {
             ListViewItem lvi = lvSkills.SelectedItems[0];
             Plan.Entry pe = (Plan.Entry)lvi.Tag;
-            GrandSkill gs = pe.Skill;
+            Skill gs = pe.Skill;
             m_plannerWindow.ShowSkillInTree(gs);
         }
 
@@ -638,7 +638,7 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            string sn = pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level);
+            string sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
             using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
             {
                 f.NoteText = pe.Notes;

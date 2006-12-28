@@ -15,7 +15,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
-        public PlanSelectWindow(Settings s, GrandCharacterInfo gci)
+        public PlanSelectWindow(Settings s, CharacterInfo gci)
             : this()
         {
             m_settings = s;
@@ -24,7 +24,7 @@ namespace EVEMon.SkillPlanner
         }
 
         private Settings m_settings;
-        private GrandCharacterInfo m_grandCharacterInfo;
+        private CharacterInfo m_grandCharacterInfo;
         private string m_charKey;
 
         public string CharKey
@@ -62,7 +62,7 @@ namespace EVEMon.SkillPlanner
 					TimeSpan ts_plan = tmp_plan.GetTotalTime(null);
 					ListViewItem lvi = new ListViewItem(planName);
 					lvi.Text = planName;
-					lvi.SubItems.Add(GrandSkill.TimeSpanToDescriptiveText(	ts_plan,
+					lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(	ts_plan,
                                                                             DescriptiveTextOptions.FullText |
                                                                             DescriptiveTextOptions.IncludeCommas |
                                                                             DescriptiveTextOptions.SpaceText));

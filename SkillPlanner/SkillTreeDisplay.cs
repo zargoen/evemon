@@ -34,9 +34,9 @@ namespace EVEMon.SkillPlanner
             set { m_plan = value; }
         }
 
-        private GrandSkill m_rootSkill = null;
+        private Skill m_rootSkill = null;
 
-        public GrandSkill RootSkill
+        public Skill RootSkill
         {
             get { return m_rootSkill; }
             set
@@ -72,13 +72,13 @@ namespace EVEMon.SkillPlanner
 
         private class SkillInfo
         {
-            private GrandSkill m_skill;
+            private Skill m_skill;
             private int m_requiredLevel = -1;
             private SkillInfo m_parent;
             private int m_left;
             private Rectangle m_currentRectangle = Rectangle.Empty;
 
-            public GrandSkill Skill
+            public Skill Skill
             {
                 get { return m_skill; }
             }
@@ -106,7 +106,7 @@ namespace EVEMon.SkillPlanner
                 set { m_currentRectangle = value; }
             }
 
-            public SkillInfo(GrandSkill gs, SkillInfo parent)
+            public SkillInfo(Skill gs, SkillInfo parent)
             {
                 m_skill = gs;
                 m_parent = parent;
@@ -160,7 +160,7 @@ namespace EVEMon.SkillPlanner
                 {
                     foreach (SkillInfo si in lsi)
                     {
-                        GrandSkill gs = si.Skill;
+                        Skill gs = si.Skill;
                         gs.Changed -= m_eventChangeHandler;
                     }
                 }
@@ -179,7 +179,7 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (SkillInfo si in lsi)
                 {
-                    GrandSkill gs = si.Skill;
+                    Skill gs = si.Skill;
                     gs.Changed += m_eventChangeHandler;
                     if (gs.InTraining)
                     {
@@ -189,9 +189,9 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private GrandSkill m_trainingSkill = null;
+        private Skill m_trainingSkill = null;
 
-        private void SetTrainingSkill(GrandSkill gs)
+        private void SetTrainingSkill(Skill gs)
         {
             if (gs != null && gs.InTraining)
             {
@@ -212,7 +212,7 @@ namespace EVEMon.SkillPlanner
 
         private void OnEventChanged(object sender, EventArgs e)
         {
-            GrandSkill gs = sender as GrandSkill;
+            Skill gs = sender as Skill;
             if (gs == null)
             {
                 return;
@@ -225,7 +225,7 @@ namespace EVEMon.SkillPlanner
                                                   {
                                                       if (m_inTick)
                                                       {
-                                                          foreach (GrandSkill sgs in m_skillsToUpdateOnTick)
+                                                          foreach (Skill sgs in m_skillsToUpdateOnTick)
                                                           {
                                                               using (Region sr = GetSkillRegion(sgs))
                                                               {
@@ -248,7 +248,7 @@ namespace EVEMon.SkillPlanner
             m_inTick = false;
         }
 
-        public Region GetSkillRegion(GrandSkill gs)
+        public Region GetSkillRegion(Skill gs)
         {
             Region r = new Region();
             r.MakeEmpty();
@@ -276,8 +276,8 @@ namespace EVEMon.SkillPlanner
 
         private void BuildPrereqs(SkillInfo parentSi, int level)
         {
-            GrandSkill parentSkill = parentSi.Skill;
-            foreach (GrandSkill.Prereq pp in parentSkill.Prereqs)
+            Skill parentSkill = parentSi.Skill;
+            foreach (Skill.Prereq pp in parentSkill.Prereqs)
             {
                 //if (!m_alreadyInLayout.ContainsKey(pp.Skill))
                 //{
@@ -574,7 +574,7 @@ namespace EVEMon.SkillPlanner
             this.Invalidate();
         }
 
-        private List<GrandSkill> m_skillsToUpdateOnTick = new List<GrandSkill>();
+        private List<Skill> m_skillsToUpdateOnTick = new List<Skill>();
 
         private const DescriptiveTextOptions DTO_TIME =
             DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
@@ -645,7 +645,7 @@ namespace EVEMon.SkillPlanner
                             si.Left + ofsLeft, ttop, SKILLBOX_WIDTH, SKILLBOX_HEIGHT);
                         si.CurrentRectangle = rect;
 
-                        string currentLevelText = "Current Level: " + GrandSkill.GetRomanForInt(si.Skill.Level);
+                        string currentLevelText = "Current Level: " + Skill.GetRomanForInt(si.Skill.Level);
                         Color stdTextColor = !m_worksafeMode ? Color.Black : SystemColors.ControlText;
                         Color reqTextColor = !m_worksafeMode ? Color.Red : SystemColors.GrayText;
                         string requiredLevel = null;
@@ -656,11 +656,11 @@ namespace EVEMon.SkillPlanner
 
                         if (si.RequiredLevel > 0)
                         {
-                            requiredLevel = "Required Level: " + GrandSkill.GetRomanForInt(si.RequiredLevel);
+                            requiredLevel = "Required Level: " + Skill.GetRomanForInt(si.RequiredLevel);
                             if (si.RequiredLevel > si.Skill.Level)
                             {
                                 TimeSpan ts = si.Skill.GetTrainingTimeToLevel(si.RequiredLevel);
-                                thisRequiredTime = "This Time: " + GrandSkill.TimeSpanToDescriptiveText(ts, DTO_TIME);
+                                thisRequiredTime = "This Time: " + Skill.TimeSpanToDescriptiveText(ts, DTO_TIME);
                                 reqTextColor = !m_worksafeMode ? Color.Yellow : SystemColors.GrayText;
                                 if (si.Skill.PrerequisitesMet)
                                 {
@@ -698,7 +698,7 @@ namespace EVEMon.SkillPlanner
                             if (pts > TimeSpan.Zero)
                             {
                                 prereqTime = "Prerequisite: " +
-                                             GrandSkill.TimeSpanToDescriptiveText(pts, DTO_TIME);
+                                             Skill.TimeSpanToDescriptiveText(pts, DTO_TIME);
                                 if (timeIncludesTraining)
                                 {
                                     m_skillsToUpdateOnTick.Add(si.Skill);
@@ -781,7 +781,7 @@ namespace EVEMon.SkillPlanner
         {
             base.OnMouseClick(e);
 
-            GrandSkill clickedSkill = null;
+            Skill clickedSkill = null;
             using (this.CreateGraphics())
             {
                 foreach (List<SkillInfo> lsi in m_layoutData)
@@ -815,18 +815,18 @@ namespace EVEMon.SkillPlanner
 
     public class SkillClickedEventArgs : EventArgs
     {
-        private GrandSkill m_skill;
+        private Skill m_skill;
         private MouseButtons m_button;
         private Point m_location;
 
-        internal SkillClickedEventArgs(GrandSkill skill, MouseButtons button, Point location)
+        internal SkillClickedEventArgs(Skill skill, MouseButtons button, Point location)
         {
             m_skill = skill;
             m_button = button;
             m_location = location;
         }
 
-        public GrandSkill Skill
+        public Skill Skill
         {
             get { return m_skill; }
         }
