@@ -29,6 +29,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
@@ -94,10 +95,9 @@ namespace EVEMon
             this.cbScreenList = new System.Windows.Forms.ComboBox();
             this.btnIdentifyScreens = new System.Windows.Forms.Button();
             this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
-            this.cbTooltipOptionName = new System.Windows.Forms.CheckBox();
-            this.cbTooltipOptionSkill = new System.Windows.Forms.CheckBox();
-            this.cbTooltipOptionDate = new System.Windows.Forms.CheckBox();
-            this.cbTooltipOptionETA = new System.Windows.Forms.CheckBox();
+            this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
+            this.tbTooltipString = new System.Windows.Forms.TextBox();
+            this.cbTooltipDisplay = new System.Windows.Forms.ComboBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
@@ -137,6 +137,13 @@ namespace EVEMon
             this.label12 = new System.Windows.Forms.Label();
             this.btnProxyHttpAuth = new System.Windows.Forms.Button();
             this.tbProxyHttpPort = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
+            this.cbIGBPublic = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label23 = new System.Windows.Forms.Label();
+            this.tb_IgbPort = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.verticalFlowPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -172,13 +179,7 @@ namespace EVEMon
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
-            this.cbIGBPublic = new System.Windows.Forms.CheckBox();
-            this.tb_IgbPort = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -213,6 +214,9 @@ namespace EVEMon
             this.verticalFlowPanel4.SuspendLayout();
             this.vfpCustomProxySettings.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel27.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.verticalFlowPanel2.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -232,9 +236,6 @@ namespace EVEMon
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
-            this.flowLayoutPanel27.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOk
@@ -812,58 +813,47 @@ namespace EVEMon
             // 
             // gboxTooltipOptions
             // 
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionName);
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionSkill);
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionDate);
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipOptionETA);
+            this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
+            this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
             this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 178);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
-            this.gboxTooltipOptions.Size = new System.Drawing.Size(362, 110);
+            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 101);
             this.gboxTooltipOptions.TabIndex = 7;
             this.gboxTooltipOptions.TabStop = false;
             this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
             // 
-            // cbTooltipOptionName
+            // tbTooltipTestDisplay
             // 
-            this.cbTooltipOptionName.AutoSize = true;
-            this.cbTooltipOptionName.Location = new System.Drawing.Point(14, 20);
-            this.cbTooltipOptionName.Name = "cbTooltipOptionName";
-            this.cbTooltipOptionName.Size = new System.Drawing.Size(104, 17);
-            this.cbTooltipOptionName.TabIndex = 5;
-            this.cbTooltipOptionName.Text = "Character Name";
-            this.cbTooltipOptionName.UseVisualStyleBackColor = true;
+            this.tbTooltipTestDisplay.BackColor = System.Drawing.SystemColors.Info;
+            this.tbTooltipTestDisplay.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tbTooltipTestDisplay.Location = new System.Drawing.Point(15, 74);
+            this.tbTooltipTestDisplay.Name = "tbTooltipTestDisplay";
+            this.tbTooltipTestDisplay.ReadOnly = true;
+            this.tbTooltipTestDisplay.Size = new System.Drawing.Size(329, 21);
+            this.tbTooltipTestDisplay.TabIndex = 8;
+            this.ttToolTipCodes.SetToolTip(this.tbTooltipTestDisplay, resources.GetString("tbTooltipTestDisplay.ToolTip"));
+            this.tbTooltipTestDisplay.Visible = false;
             // 
-            // cbTooltipOptionSkill
+            // tbTooltipString
             // 
-            this.cbTooltipOptionSkill.AutoSize = true;
-            this.cbTooltipOptionSkill.Location = new System.Drawing.Point(14, 42);
-            this.cbTooltipOptionSkill.Name = "cbTooltipOptionSkill";
-            this.cbTooltipOptionSkill.Size = new System.Drawing.Size(102, 17);
-            this.cbTooltipOptionSkill.TabIndex = 4;
-            this.cbTooltipOptionSkill.Text = "Skill Name/Level";
-            this.cbTooltipOptionSkill.UseVisualStyleBackColor = true;
+            this.tbTooltipString.BackColor = System.Drawing.SystemColors.Window;
+            this.tbTooltipString.Location = new System.Drawing.Point(15, 47);
+            this.tbTooltipString.Name = "tbTooltipString";
+            this.tbTooltipString.ReadOnly = true;
+            this.tbTooltipString.Size = new System.Drawing.Size(329, 21);
+            this.tbTooltipString.TabIndex = 6;
+            this.tbTooltipString.TextChanged += new System.EventHandler(this.tbTooltipString_TextChanged);
             // 
-            // cbTooltipOptionDate
+            // cbTooltipDisplay
             // 
-            this.cbTooltipOptionDate.AutoSize = true;
-            this.cbTooltipOptionDate.Location = new System.Drawing.Point(14, 88);
-            this.cbTooltipOptionDate.Name = "cbTooltipOptionDate";
-            this.cbTooltipOptionDate.Size = new System.Drawing.Size(118, 17);
-            this.cbTooltipOptionDate.TabIndex = 3;
-            this.cbTooltipOptionDate.Text = "Date of Completion";
-            this.cbTooltipOptionDate.UseVisualStyleBackColor = true;
-            // 
-            // cbTooltipOptionETA
-            // 
-            this.cbTooltipOptionETA.AutoSize = true;
-            this.cbTooltipOptionETA.Checked = true;
-            this.cbTooltipOptionETA.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTooltipOptionETA.Location = new System.Drawing.Point(14, 65);
-            this.cbTooltipOptionETA.Name = "cbTooltipOptionETA";
-            this.cbTooltipOptionETA.Size = new System.Drawing.Size(117, 17);
-            this.cbTooltipOptionETA.TabIndex = 2;
-            this.cbTooltipOptionETA.Text = "Time to Completion";
-            this.cbTooltipOptionETA.UseVisualStyleBackColor = true;
+            this.cbTooltipDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTooltipDisplay.FormattingEnabled = true;
+            this.cbTooltipDisplay.Location = new System.Drawing.Point(15, 20);
+            this.cbTooltipDisplay.Name = "cbTooltipDisplay";
+            this.cbTooltipDisplay.Size = new System.Drawing.Size(329, 21);
+            this.cbTooltipDisplay.TabIndex = 8;
+            this.cbTooltipDisplay.SelectionChangeCommitted += new System.EventHandler(this.cbTooltipDisplay_SelectionChangeCommitted);
             // 
             // groupBox12
             // 
@@ -874,7 +864,7 @@ namespace EVEMon
             this.groupBox12.Controls.Add(this.flowLayoutPanel23);
             this.groupBox12.Controls.Add(this.label17);
             this.groupBox12.Controls.Add(this.ACycleInterval);
-            this.groupBox12.Location = new System.Drawing.Point(3, 341);
+            this.groupBox12.Location = new System.Drawing.Point(3, 285);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(362, 84);
             this.groupBox12.TabIndex = 5;
@@ -951,7 +941,7 @@ namespace EVEMon
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(388, 468);
+            this.tabPage5.Size = new System.Drawing.Size(388, 422);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Look And Feel";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1197,7 +1187,7 @@ namespace EVEMon
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(388, 468);
+            this.tabPage3.Size = new System.Drawing.Size(388, 422);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Network";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1210,7 +1200,7 @@ namespace EVEMon
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel3.Name = "verticalFlowPanel3";
-            this.verticalFlowPanel3.Size = new System.Drawing.Size(382, 462);
+            this.verticalFlowPanel3.Size = new System.Drawing.Size(382, 416);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
             // groupBox6
@@ -1382,13 +1372,88 @@ namespace EVEMon
             this.tbProxyHttpPort.TabIndex = 2;
             this.tbProxyHttpPort.TextChanged += new System.EventHandler(this.tbProxyHttpPort_TextChanged);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.AutoSize = true;
+            this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.flowLayoutPanel3);
+            this.groupBox2.Location = new System.Drawing.Point(3, 150);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(365, 100);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "IGB Mini-server";
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoSize = true;
+            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel3.Controls.Add(this.cbRunIGBServer);
+            this.flowLayoutPanel3.Controls.Add(this.cbIGBPublic);
+            this.flowLayoutPanel3.Controls.Add(this.flowLayoutPanel27);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 17);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(359, 80);
+            this.flowLayoutPanel3.TabIndex = 4;
+            // 
+            // cbRunIGBServer
+            // 
+            this.cbRunIGBServer.AutoSize = true;
+            this.cbRunIGBServer.Location = new System.Drawing.Point(12, 3);
+            this.cbRunIGBServer.Name = "cbRunIGBServer";
+            this.cbRunIGBServer.Size = new System.Drawing.Size(217, 17);
+            this.cbRunIGBServer.TabIndex = 3;
+            this.cbRunIGBServer.Text = "Run IGB Mini-server on http://localhost/";
+            this.cbRunIGBServer.UseVisualStyleBackColor = true;
+            // 
+            // cbIGBPublic
+            // 
+            this.cbIGBPublic.AutoSize = true;
+            this.cbIGBPublic.Location = new System.Drawing.Point(12, 26);
+            this.cbIGBPublic.Name = "cbIGBPublic";
+            this.cbIGBPublic.Size = new System.Drawing.Size(162, 17);
+            this.cbIGBPublic.TabIndex = 4;
+            this.cbIGBPublic.Text = "Make IGB Mini-server public?";
+            this.cbIGBPublic.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel27
+            // 
+            this.flowLayoutPanel27.Controls.Add(this.label23);
+            this.flowLayoutPanel27.Controls.Add(this.tb_IgbPort);
+            this.flowLayoutPanel27.Location = new System.Drawing.Point(12, 49);
+            this.flowLayoutPanel27.Name = "flowLayoutPanel27";
+            this.flowLayoutPanel27.Size = new System.Drawing.Size(132, 28);
+            this.flowLayoutPanel27.TabIndex = 7;
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(3, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(62, 24);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "IGB Port";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tb_IgbPort
+            // 
+            this.tb_IgbPort.Location = new System.Drawing.Point(71, 3);
+            this.tb_IgbPort.Name = "tb_IgbPort";
+            this.tb_IgbPort.Size = new System.Drawing.Size(48, 21);
+            this.tb_IgbPort.TabIndex = 5;
+            this.tb_IgbPort.Text = "80";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.verticalFlowPanel2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(388, 468);
+            this.tabPage2.Size = new System.Drawing.Size(388, 422);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Alerts";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1403,7 +1468,7 @@ namespace EVEMon
             this.verticalFlowPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
-            this.verticalFlowPanel2.Size = new System.Drawing.Size(382, 462);
+            this.verticalFlowPanel2.Size = new System.Drawing.Size(382, 416);
             this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
@@ -1415,7 +1480,7 @@ namespace EVEMon
             this.groupBox4.Controls.Add(this.flowLayoutPanel5);
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(368, 89);
+            this.groupBox4.Size = new System.Drawing.Size(272, 89);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Alerts";
@@ -1432,7 +1497,7 @@ namespace EVEMon
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(362, 69);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(266, 69);
             this.flowLayoutPanel5.TabIndex = 1;
             // 
             // cbShowBalloonTips
@@ -1462,7 +1527,7 @@ namespace EVEMon
             this.groupBox3.AutoSize = true;
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
-            this.groupBox3.Location = new System.Drawing.Point(3, 98);
+            this.groupBox3.Location = new System.Drawing.Point(281, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(368, 328);
             this.groupBox3.TabIndex = 1;
@@ -1502,7 +1567,7 @@ namespace EVEMon
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(388, 468);
+            this.tabPage4.Size = new System.Drawing.Size(388, 422);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Updates";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1518,7 +1583,7 @@ namespace EVEMon
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel11.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(382, 462);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(382, 416);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1815,81 +1880,6 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.AutoSize = true;
-            this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox2.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 150);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(365, 100);
-            this.groupBox2.TabIndex = 6;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "IGB Mini-server";
-            // 
-            // flowLayoutPanel3
-            // 
-            this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel3.Controls.Add(this.cbRunIGBServer);
-            this.flowLayoutPanel3.Controls.Add(this.cbIGBPublic);
-            this.flowLayoutPanel3.Controls.Add(this.flowLayoutPanel27);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 17);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(359, 80);
-            this.flowLayoutPanel3.TabIndex = 4;
-            // 
-            // cbRunIGBServer
-            // 
-            this.cbRunIGBServer.AutoSize = true;
-            this.cbRunIGBServer.Location = new System.Drawing.Point(12, 3);
-            this.cbRunIGBServer.Name = "cbRunIGBServer";
-            this.cbRunIGBServer.Size = new System.Drawing.Size(217, 17);
-            this.cbRunIGBServer.TabIndex = 3;
-            this.cbRunIGBServer.Text = "Run IGB Mini-server on http://localhost/";
-            this.cbRunIGBServer.UseVisualStyleBackColor = true;
-            // 
-            // cbIGBPublic
-            // 
-            this.cbIGBPublic.AutoSize = true;
-            this.cbIGBPublic.Location = new System.Drawing.Point(12, 26);
-            this.cbIGBPublic.Name = "cbIGBPublic";
-            this.cbIGBPublic.Size = new System.Drawing.Size(162, 17);
-            this.cbIGBPublic.TabIndex = 4;
-            this.cbIGBPublic.Text = "Make IGB Mini-server public?";
-            this.cbIGBPublic.UseVisualStyleBackColor = true;
-            // 
-            // tb_IgbPort
-            // 
-            this.tb_IgbPort.Location = new System.Drawing.Point(71, 3);
-            this.tb_IgbPort.Name = "tb_IgbPort";
-            this.tb_IgbPort.Size = new System.Drawing.Size(48, 21);
-            this.tb_IgbPort.TabIndex = 5;
-            this.tb_IgbPort.Text = "80";
-            // 
-            // label23
-            // 
-            this.label23.Location = new System.Drawing.Point(3, 0);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(62, 24);
-            this.label23.TabIndex = 6;
-            this.label23.Text = "IGB Port";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // flowLayoutPanel27
-            // 
-            this.flowLayoutPanel27.Controls.Add(this.label23);
-            this.flowLayoutPanel27.Controls.Add(this.tb_IgbPort);
-            this.flowLayoutPanel27.Location = new System.Drawing.Point(12, 49);
-            this.flowLayoutPanel27.Name = "flowLayoutPanel27";
-            this.flowLayoutPanel27.Size = new System.Drawing.Size(132, 28);
-            this.flowLayoutPanel27.TabIndex = 7;
-            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -1970,6 +1960,12 @@ namespace EVEMon
             this.vfpCustomProxySettings.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel27.ResumeLayout(false);
+            this.flowLayoutPanel27.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.verticalFlowPanel2.ResumeLayout(false);
@@ -2006,12 +2002,6 @@ namespace EVEMon
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
-            this.flowLayoutPanel27.ResumeLayout(false);
-            this.flowLayoutPanel27.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2107,10 +2097,6 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel14;
         private System.Windows.Forms.CheckBox cbHighlightPrerequisites;
         private System.Windows.Forms.GroupBox gboxTooltipOptions;
-        private System.Windows.Forms.CheckBox cbTooltipOptionDate;
-        private System.Windows.Forms.CheckBox cbTooltipOptionETA;
-        private System.Windows.Forms.CheckBox cbTooltipOptionName;
-        private System.Windows.Forms.CheckBox cbTooltipOptionSkill;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TreeView tvlist;
@@ -2152,5 +2138,9 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel27;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox tb_IgbPort;
+        private System.Windows.Forms.TextBox tbTooltipString;
+        private System.Windows.Forms.TextBox tbTooltipTestDisplay;
+        private System.Windows.Forms.ComboBox cbTooltipDisplay;
+        private System.Windows.Forms.ToolTip ttToolTipCodes;
     }
 }

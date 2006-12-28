@@ -2068,7 +2068,7 @@ namespace EVEMon
             get { return m_grandCharacterInfo; }
         }
 
-
+        public TimeSpan ShortTimeSpan { get { return m_lcdTimeSpan; } }
         #endregion
 
         #region Saving the Character

@@ -117,4 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ttToolTipCodes.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="tbTooltipTestDisplay.ToolTip" xml:space="preserve">
+    <value>Create a tray icon tooltip, using the following codes
+
+%n - character's name
+%b - character's isk balance
+%s - character's currently training skill
+%d - estimated completion date of the skill
+%r - estimated time till completetion of the skill
+%ci - current level of the skill
+%cr - current level of the skill, as a roman numeral
+%ti - target level of the skill
+%tr - target level of the skill, as a roman numeral</value>
+  </data>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>49</value>
+  </metadata>
 </root>

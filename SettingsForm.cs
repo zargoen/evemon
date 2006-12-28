@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using EVEMon.Common;
 using EVEMon.WindowRelocator;
 using Microsoft.Win32;
@@ -87,22 +88,7 @@ namespace EVEMon
             s.IGBServerPublic = cbIGBPublic.Checked;
             s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);                
 
-            // Tooltips
-            ToolTipDisplayOptions tipOptions = ToolTipDisplayOptions.Blank;
-
-            if (cbTooltipOptionDate.Checked)
-                tipOptions = tipOptions | ToolTipDisplayOptions.TimeFinished;
-
-            if (cbTooltipOptionETA.Checked)
-                tipOptions = tipOptions | ToolTipDisplayOptions.TimeRemaining;
-            
-            if (cbTooltipOptionName.Checked)
-                tipOptions = tipOptions | ToolTipDisplayOptions.Name;
-            
-            if (cbTooltipOptionSkill.Checked)
-                tipOptions = tipOptions | ToolTipDisplayOptions.Skill;
-
-            s.TooltipOptions = tipOptions;
+            s.TooltipString = tbTooltipString.Text;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
             ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
@@ -198,7 +184,7 @@ namespace EVEMon
 
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
-            cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout -1;
+            cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout - 1;
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
@@ -253,10 +239,12 @@ namespace EVEMon
             cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;
             cbHighlightPrerequisites.Checked = m_settings.SkillPlannerHighlightPrerequisites;
 
-            cbTooltipOptionDate.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished);
-            cbTooltipOptionETA.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining);
-            cbTooltipOptionSkill.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill);
-            cbTooltipOptionName.Checked = ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name);
+            cbTooltipDisplay.Items.Clear();
+            for (int i = 0; i < tooltipCodes.Length; i++)
+                cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltipCodes[i]));
+            cbTooltipDisplay.Items.Add(" -- Custom -- ");
+
+            tbTooltipString.Text = m_settings.TooltipString;
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
@@ -485,6 +473,97 @@ namespace EVEMon
             }
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
+        }
+
+        // Array containing the example tooltip formats that are populated into the dropdown box.
+        static string[] tooltipCodes = {
+            "%n - %s %tr - %r",
+            "%n - %s [%cr->%tr]: %r",
+            "%n : %s - %d : %b isk",
+            "%s %ci to %ti, %r left"
+        };
+
+        private void tbTooltipString_TextChanged(object sender, EventArgs e)
+        {
+            tbTooltipTestDisplay.Text = FormatExampleTooltipText(tbTooltipString.Text);
+
+            if (cbTooltipDisplay.SelectedIndex == -1)
+            {
+                int index = tooltipCodes.Length;
+
+                for (int i = 0; i < tooltipCodes.Length; i++)
+                    if (tooltipCodes[i].Equals(tbTooltipString.Text))
+                        index = i;
+
+                cbTooltipDisplay.SelectedIndex = index;
+                DisplayCustomControls(index == tooltipCodes.Length);
+            }
+        }
+
+        // Formats the argument format string with hardcoded exampe values.  Works basically the
+        // same as MainWindow.FormatTooltipText(...), with the exception of the exampe values.
+        private string FormatExampleTooltipText(string fmt)
+        {
+            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
+                {
+                    string value = String.Empty;
+                    char capture = m.Groups[1].Value[0];
+
+                    if (capture == 'n')
+                        value = "John Doe";
+                    else if (capture == 'b')
+                        value = "183,415,254.05";
+                    else if (capture == 's')
+                        value = "Gunnery";
+                    else if (capture == 'd')
+                        value = "9/15/2006 6:36 PM";
+                    else if (capture == 'r')
+                        value = "2h, 53m, 28s";
+                    else
+                    {
+                        int level = -1;
+                        if (capture == 'c')
+                            level = 3;
+                        else if (capture == 't')
+                            level = 4;
+
+                        if (m.Groups[1].Value.Length > 1 && level >= 0)
+                        {
+                            capture = m.Groups[1].Value[1];
+
+                            if (capture == 'i')
+                                value = level.ToString();
+                            else if (capture == 'r')
+                                value = Skill.GetRomanForInt(level);
+                        }
+                    }
+
+                    return value;
+                }), RegexOptions.Compiled);
+        }
+
+        private void cbTooltipDisplay_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            int index = cbTooltipDisplay.SelectedIndex;
+
+            if (index == tooltipCodes.Length)
+            {
+                tbTooltipString.Text = m_settings.TooltipString;
+                DisplayCustomControls(true);
+            }
+            else
+            {
+                tbTooltipString.Text = tooltipCodes[index];
+                DisplayCustomControls(false);
+            }
+        }
+
+        // Toggles the visibility of the tooltip example display and code label,
+        // as well as the readonly status of the tooltip string itself.
+        private void DisplayCustomControls(bool custom)
+        {
+            tbTooltipTestDisplay.Visible = custom;
+            tbTooltipString.ReadOnly = !custom;
         }
 
         private void rbSystemTrayOptionsNever_CheckedChanged(object sender, EventArgs e)

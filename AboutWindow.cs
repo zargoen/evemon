@@ -36,6 +36,7 @@ namespace EVEMon
             slDevelopers.Add("Anders Chydenius","02");
            
             slDevelopers.Add("Brad Stone", "03");
+            slDevelopers.Add("DCShadow", "03");
             slDevelopers.Add("Eewec","03");
             slDevelopers.Add("Jalon Mevek", "03");
             slDevelopers.Add("Labogh", "03");
@@ -48,9 +49,11 @@ namespace EVEMon
             slDevelopers.Add("Adam Butt", "04");
             slDevelopers.Add("bugusnot", "04");
             slDevelopers.Add("cgrady", "04");
+            slDevelopers.Add("cybertech", "04");
             slDevelopers.Add("FangVV", "04");
             slDevelopers.Add("Femaref", "04");
             slDevelopers.Add("Flash", "04");
+            slDevelopers.Add("gavinl", "04");
             slDevelopers.Add("happyslinky", "04");
             slDevelopers.Add("justinian", "04");
             slDevelopers.Add("Lexiica", "04");

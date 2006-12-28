@@ -103,12 +103,12 @@ namespace EVEMon.Common
             set { m_characterList = value; }
         }
 
-        private ToolTipDisplayOptions m_tooltipOptions = ToolTipDisplayOptions.Name | ToolTipDisplayOptions.Skill | ToolTipDisplayOptions.TimeRemaining;
+        private string m_tooltipString = "%n - %s %tr - %r";
 
-        public ToolTipDisplayOptions TooltipOptions
+        public string TooltipString
         {
-            get { return m_tooltipOptions; }
-            set { m_tooltipOptions = value; }
+            get { return m_tooltipString; }
+            set { m_tooltipString = value; }
         }
 
         private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
@@ -1065,16 +1065,6 @@ namespace EVEMon.Common
         None,
         SystemDefault,
         Specified
-    }
-
-    [Flags]
-    public enum ToolTipDisplayOptions
-    {
-        Name = 1,
-        Skill = 2,
-        TimeRemaining = 4,
-        TimeFinished = 8,
-        Blank = 16
     }
 
     public enum SystemTrayDisplayOptions

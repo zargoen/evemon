@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Sales;
@@ -251,157 +252,137 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                SortedList<TimeSpan, CharacterInfo> gcis = new SortedList<TimeSpan, CharacterInfo>();
-                int selectedCharId = 0;
-                foreach (TabPage tp in tcCharacterTabs.TabPages)
-                {
-                    CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                    if (cm != null && cm.GrandCharacterInfo != null && cm.GrandCharacterInfo.CurrentlyTrainingSkill != null)
-                    {
-                        CharacterInfo gci = cm.GrandCharacterInfo;
-                        // Remember the Char ID of the currently selected TabPage
-                        if (tcCharacterTabs.SelectedTab.Text.Equals(tp.Text)) selectedCharId = gci.CharacterId;
-                        Skill gs = gci.CurrentlyTrainingSkill;
-                        TimeSpan ts = gs.EstimatedCompletion - DateTime.Now;
-                        if (ts > TimeSpan.Zero)
-                        {
-                            while (gcis.ContainsKey(ts))
-                                ts = ts + TimeSpan.FromMilliseconds(1);
-                            gcis.Add(ts, gci);
-                        }
-                    }
-                }
-                //there are real optimization opportunities here - this gets updated every second
-                StringBuilder sb = new StringBuilder();
-                StringBuilder tsb = new StringBuilder();
-                sb.Append("EVEMon");
-                foreach (CharacterInfo gci in gcis.Values)
-                {
-                    sb.Append("\n");
-                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Name) == ToolTipDisplayOptions.Name)
-                    {
-                        sb.Append(gci.Name);
-                        sb.Append(" - ");
-                    }
-                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.Skill) == ToolTipDisplayOptions.Skill)
-                    {
-                        sb.Append(gci.CurrentlyTrainingSkill.Name);
-                        sb.Append(" ");
-                        sb.Append(Skill.GetRomanForInt(gci.CurrentlyTrainingSkill.TrainingToLevel));
-                        sb.Append(" - ");
-                    }
+                SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
+                int selectedCharId = (tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor).GrandCharacterInfo.CharacterId;
 
-                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeFinished) == ToolTipDisplayOptions.TimeFinished)
-                    {
-                        sb.Append(gci.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g"));      // This can probably be formatted better
-                        sb.Append(" - ");
-                    }
-                    if ((m_settings.TooltipOptions & ToolTipDisplayOptions.TimeRemaining) == ToolTipDisplayOptions.TimeRemaining)
-                    {
-                        //show the time to completion
-                        sb.Append(Skill.TimeSpanToDescriptiveText(gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now, DescriptiveTextOptions.IncludeCommas));
-                        sb.Append(" - ");
-                    }
-                    if (sb.Length > 7)
-                    {
-                        sb.Remove(sb.Length - 3, 3);
-                    }
-                    if (m_settings.TitleToTime && gcis.Count > 0)
+                //there are real optimization opportunities here - this gets updated every second
+
+                string tooltipText = m_tooltipText;
+                StringBuilder tsb = new StringBuilder();
+                foreach (TimeSpan ts in gcis.Keys)
+                {
+                    CharacterInfo gci = gcis[ts];
+
+                    //Splice in the estimated time till completion, using the TimeSpan that is the key in the gcis List.
+                    tooltipText = Regex.Replace(tooltipText, '%' + gci.CharacterId.ToString() + 'r', 
+                        Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
+
+                    string gciTimeSpanText = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default) + " " + gci.Name;
+                    if (m_settings.TitleToTime)
                     {
                         switch (m_settings.TitleToTimeLayout)
                         {
                             case 1: // single Char - finishing skill next
                                 if (tsb.Length == 0)
-                                {
-                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
-                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                    DescriptiveTextOptions.Default) + " " + gci.Name);
-                                }
+                                    tsb.Append(gciTimeSpanText);
                                 break;
                             case 2: // single Char - selected char
                                 if (selectedCharId == gci.CharacterId)
-                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
-                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                    DescriptiveTextOptions.Default) + " " + gci.Name);
+                                    tsb.Append(gciTimeSpanText);
                                 break;
                             case 0: //this is the default
                             case 3: // multi Char - finishing skill next first
-                                tsb.Append((tsb.Length > 0 ? " | " : "") + Skill.TimeSpanToDescriptiveText(
-                                gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                DescriptiveTextOptions.Default) + " " + gci.Name);
+                                tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
                                 break;
                             case 4: // multi Char - selected char first 
                                 if (selectedCharId == gci.CharacterId)
-                                {
-                                    tsb.Insert(0, Skill.TimeSpanToDescriptiveText(
-                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                    DescriptiveTextOptions.Default) + " " + gci.Name + (tsb.Length > 0 ? " | " : ""));
-                                }
+                                    tsb.Insert(0, gciTimeSpanText + (tsb.Length > 0 ? " | " : String.Empty));
                                 else
-                                {
-                                    if (tsb.Length > 0) tsb.Append(" | ");
-                                    tsb.Append(Skill.TimeSpanToDescriptiveText(
-                                    gci.CurrentlyTrainingSkill.EstimatedCompletion - DateTime.Now,
-                                    DescriptiveTextOptions.Default) + " " + gci.Name);
-                                }
+                                    tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
                                 break;
                         }
                     }
                 }
-                string sbOut = sb.ToString();
-                if (sbOut.Equals("EVEMon\n"))
-                {
-                    sbOut = sb.ToString() + "You can configure this tooltip in the options/general panel";
-                }
+                SetMinimizedIconTooltipText(tooltipText);
 
-                SetMinimizedIconTooltipText(sbOut);
-                tsb.Append(" - EVEMon");
+                tsb.Append(tsb.Length > 0 ? " - " : String.Empty).Append(Application.ProductName);
                 this.Text = tsb.ToString();
-
-                //SortedList<TimeSpan, string> shortInfos = new SortedList<TimeSpan, string>();
-                //foreach (TabPage tp in tcCharacterTabs.TabPages)
-                //{
-                //    CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                //    if (cm != null && !String.IsNullOrEmpty(cm.ShortText) && cm.ShortTimeSpan > TimeSpan.Zero)
-                //    {
-                //        TimeSpan ts = cm.ShortTimeSpan;
-                //        while (shortInfos.ContainsKey(ts))
-                //            ts = ts + TimeSpan.FromMilliseconds(1);
-                //        shortInfos.Add(ts, cm.ShortText);
-                //    }
-                //}
-                //StringBuilder sb = new StringBuilder();
-                //sb.Append("EVEMon");
-                //for (int i = 0; i < shortInfos.Count; i++)
-                //{
-                //    string tKey = shortInfos[shortInfos.Keys[i]];
-                //    if (sb.Length > 0)
-                //        tKey = "\n" + tKey;
-                //    sb.Append(tKey);
-                //}
-                //if (shortInfos.Count == 0)
-                //    sb.Append("\nNo skills in training!");
-                ////niMinimizeIcon.Text = sb.ToString();
-                //SetMinimizedIconTooltipText(sb.ToString());
-
-                //if (m_settings.TitleToTime && shortInfos.Count > 0)
-                //{
-                //    string s = shortInfos[shortInfos.Keys[0]];
-                //    Match m = Regex.Match(s, "^(.*?): (.*)$");
-                //    if (m.Success)
-                //    {
-                //        this.Text = m.Groups[2] + ": " + m.Groups[1] + " - EVEMon";
-                //    }
-                //    else
-                //    {
-                //        this.Text = s + " - EVEMon";
-                //    }
-                //}
-                //else
-                //{
-                //    this.Text = "EVEMon";
-                //}
             }));
+        }
+
+        // Formats everything on the tooltip that isn't changed every second.
+        private string FormatTooltipText(string prefix, string fmt, SortedList<TimeSpan, CharacterInfo> gcis)
+        {
+            StringBuilder sb = new StringBuilder(prefix);
+
+            if (String.IsNullOrEmpty(fmt) || gcis == null)
+            {
+                if (String.Empty.Equals(fmt))
+                    sb.Append("\nYou can configure this tooltip in the options/general panel");
+                return sb.ToString();
+            }
+
+            foreach (CharacterInfo gci in gcis.Values)
+            {
+                sb.Append('\n').Append(Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
+                {
+                    string value = String.Empty;
+                    char capture = m.Groups[1].Value[0];
+
+                    if (capture == 'n')
+                        value = gci.Name;
+                    else if (capture == 'b')
+                        value = gci.Balance.ToString("#,##0.00");
+                    else if (capture == 's')
+                        value = gci.CurrentlyTrainingSkill.Name;
+                    else if (capture == 'd')
+                        value = gci.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g");
+                    else if (capture == 'r')
+                        value = '%' + gci.CharacterId.ToString() + 'r';
+                    else
+                    {
+                        int level = -1;
+                        if (capture == 'c')
+                            level = gci.CurrentlyTrainingSkill.Level;
+                        else if (capture == 't')
+                            level = gci.CurrentlyTrainingSkill.TrainingToLevel;
+
+                        if (m.Groups[1].Value.Length > 1 && level >= 0)
+                        {
+                            capture = m.Groups[1].Value[1];
+
+                            if (capture == 'i')
+                                value = level.ToString();
+                            else if (capture == 'r')
+                                value = Skill.GetRomanForInt(level);
+                        }
+                    }
+
+                    return value;
+                }), RegexOptions.Compiled));
+            }
+            return sb.ToString();
+        }
+
+        // Pulled this code out of cm_ShortInfoChanged, as I needed to use the returned List in multiple places
+        private SortedList<TimeSpan, CharacterInfo> gcisByTimeSpan()
+        {
+            //selectedCharId = 0;
+
+            SortedList<TimeSpan, CharacterInfo> gcis = new SortedList<TimeSpan, CharacterInfo>();
+            foreach (TabPage tp in tcCharacterTabs.TabPages)
+            {
+                CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
+                if (cm != null && cm.GrandCharacterInfo != null && cm.GrandCharacterInfo.CurrentlyTrainingSkill != null && cm.ShortTimeSpan != null)
+                {
+                    CharacterInfo gci = cm.GrandCharacterInfo;
+
+                    //Use the TimeSpan from current CharacterMonitor, since it is freshly re-calculated every timer tick
+                    //in 'CharacterMonitor.CalcSkillRemainText' just a few steps up the call stack.
+                    TimeSpan ts = cm.ShortTimeSpan;
+
+                    if (ts > TimeSpan.Zero)
+                    {
+                        while (gcis.ContainsKey(ts))
+                            ts = ts + TimeSpan.FromMilliseconds(1);
+                        gcis.Add(ts, gci);
+                    }
+
+                    //if (tcCharacterTabs.SelectedTab.Text.Equals(tp.Text))
+                        //selectedCharId = gci.CharacterId;
+                }
+            }
+            return gcis;
         }
 
         private List<string> m_completedSkills = new List<string>();
@@ -771,10 +752,24 @@ namespace EVEMon
                             // be shown or hidden via the "Customize Notifications..." Windows setting
                             niMinimizeIcon.Text = Application.ProductName;
 
+                            m_tooltipText = Application.ProductName;
                             m_tooltipWindow = null;
                             ttw.Dispose();
                         };
-                        ttw.Text = m_tooltipText;
+
+                        //Mostly format the tooltip text, using the current contents of m_tooltipText as the first line.
+                        SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
+                        m_tooltipText = FormatTooltipText(m_tooltipText, m_settings.TooltipString, gcis);
+
+                        //Splice in the estimated time till completion.
+                        string tooltipText = m_tooltipText;
+                        foreach (TimeSpan ts in gcis.Keys)
+                        {
+                            tooltipText = Regex.Replace(tooltipText, '%' + gcis[ts].CharacterId.ToString() + 'r', 
+                                Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
+                        }
+                        
+                        ttw.Text = tooltipText;
                         ttw.Show();
                     }
                     else
@@ -789,7 +784,7 @@ namespace EVEMon
             }
         }
 
-        private string m_tooltipText = "EVEMon";
+        private string m_tooltipText = Application.ProductName;
 
         private void SetMinimizedIconTooltipText(string txt)
         {
@@ -803,7 +798,7 @@ namespace EVEMon
             {
                 ttw.Text = txt;
             }
-            m_tooltipText = txt;
+            //m_tooltipText = txt;
         }
 
         private WeakReference<Schedule.ScheduleEditorWindow> m_scheduler;
