@@ -178,9 +178,6 @@ namespace EVEMon.SkillPlanner
                         {
                             lbShipResults.Items.Add(shipName);
                         }
-                        lbShipResults.Location = tvShips.Location;
-                        lbShipResults.Size = tvShips.Size;
-                        lbShipResults.Anchor = tvShips.Anchor;
                     }
                     finally
                     {
@@ -244,10 +241,5 @@ namespace EVEMon.SkillPlanner
         }
 
         public event EventHandler<EventArgs> SelectedShipChanged;
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

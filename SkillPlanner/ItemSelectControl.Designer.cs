@@ -60,10 +60,13 @@ namespace EVEMon.SkillPlanner
             // 
             // lbItemResults
             // 
+            this.lbItemResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbItemResults.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbItemResults.FormattingEnabled = true;
-            this.lbItemResults.Location = new System.Drawing.Point(42, 57);
+            this.lbItemResults.IntegralHeight = false;
+            this.lbItemResults.Location = new System.Drawing.Point(0, 0);
             this.lbItemResults.Name = "lbItemResults";
-            this.lbItemResults.Size = new System.Drawing.Size(77, 56);
+            this.lbItemResults.Size = new System.Drawing.Size(185, 380);
             this.lbItemResults.TabIndex = 31;
             this.lbItemResults.Visible = false;
             this.lbItemResults.SelectedIndexChanged += new System.EventHandler(this.lbItemResults_SelectedIndexChanged);
@@ -84,6 +87,8 @@ namespace EVEMon.SkillPlanner
             // tvItems
             // 
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvItems.FullRowSelect = true;
+            this.tvItems.ItemHeight = 16;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Name = "tvItems";
             this.tvItems.Size = new System.Drawing.Size(185, 348);

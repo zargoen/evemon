@@ -108,11 +108,13 @@ namespace EVEMon.SkillPlanner
             // 
             // lbShipResults
             // 
+            this.lbShipResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbShipResults.FormattingEnabled = true;
-            this.lbShipResults.Location = new System.Drawing.Point(50, 18);
+            this.lbShipResults.IntegralHeight = false;
+            this.lbShipResults.Location = new System.Drawing.Point(0, 0);
             this.lbShipResults.Margin = new System.Windows.Forms.Padding(2);
             this.lbShipResults.Name = "lbShipResults";
-            this.lbShipResults.Size = new System.Drawing.Size(86, 17);
+            this.lbShipResults.Size = new System.Drawing.Size(185, 368);
             this.lbShipResults.TabIndex = 25;
             this.lbShipResults.Visible = false;
             this.lbShipResults.SelectedIndexChanged += new System.EventHandler(this.lbShipResults_SelectedIndexChanged);
@@ -154,7 +156,6 @@ namespace EVEMon.SkillPlanner
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 24;
             this.label1.Text = "Filter:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel2
             // 

@@ -185,8 +185,6 @@ namespace EVEMon.SkillPlanner
             {
                 lbItemResults.EndUpdate();
             }
-            lbItemResults.Location = tvItems.Location;
-            lbItemResults.Size = tvItems.Size;
 
             lbItemResults.Visible = true;
             tvItems.Visible = false;
