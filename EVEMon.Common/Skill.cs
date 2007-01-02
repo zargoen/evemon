@@ -707,7 +707,11 @@ namespace EVEMon.Common
 
         public static int Height
         {
-            get { return SKILL_DETAIL_HEIGHT; }
+            get {
+                Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+                int PAD_TOP = 2;
+                return Math.Max(fontr.Height * 2 + PAD_TOP * 2, SKILL_DETAIL_HEIGHT);
+            }
         }
 
         public void Draw(DrawItemEventArgs e)

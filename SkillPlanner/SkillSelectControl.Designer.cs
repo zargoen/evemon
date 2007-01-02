@@ -58,22 +58,21 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFilter.FormattingEnabled = true;
-            // Changes to the values in this list need propagated to UpdateSkillFilter()
             this.cbFilter.Items.AddRange(new object[] {
             "All",
             "Known",
             "Level I Ready",
             "Not Known",
+            "Not Planned",
+            "Not Planned - Trainable",
             "Partially Trained",
             "Planned",
-            "Trainable",
-            "Not Planned",
-            "Not Planned - Trainable"});
-            this.cbFilter.Location = new System.Drawing.Point(31, 3);
-            this.cbFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            "Trainable"});
+            this.cbFilter.Location = new System.Drawing.Point(39, 4);
+            this.cbFilter.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.cbFilter.MaxDropDownItems = 12;
             this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(231, 21);
+            this.cbFilter.Size = new System.Drawing.Size(288, 25);
             this.cbFilter.Sorted = true;
             this.cbFilter.TabIndex = 0;
             this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
@@ -82,10 +81,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.tbSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearch.Location = new System.Drawing.Point(22, 54);
-            this.tbSearch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.tbSearch.Location = new System.Drawing.Point(39, 68);
+            this.tbSearch.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(240, 21);
+            this.tbSearch.Size = new System.Drawing.Size(288, 24);
             this.tbSearch.TabIndex = 1;
             this.tbSearch.Enter += new System.EventHandler(this.tbSearch_Enter);
             this.tbSearch.Leave += new System.EventHandler(this.tbSearch_Leave);
@@ -95,10 +94,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(4, 54);
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 68);
             this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
             this.pbSearchImage.Name = "pbSearchImage";
-            this.pbSearchImage.Size = new System.Drawing.Size(13, 17);
+            this.pbSearchImage.Size = new System.Drawing.Size(25, 25);
             this.pbSearchImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbSearchImage.TabIndex = 19;
             this.pbSearchImage.TabStop = false;
@@ -111,7 +110,7 @@ namespace EVEMon.SkillPlanner
             this.tvSkillList.Location = new System.Drawing.Point(0, 0);
             this.tvSkillList.Margin = new System.Windows.Forms.Padding(2);
             this.tvSkillList.Name = "tvSkillList";
-            this.tvSkillList.Size = new System.Drawing.Size(262, 313);
+            this.tvSkillList.Size = new System.Drawing.Size(326, 389);
             this.tvSkillList.TabIndex = 20;
             this.tvSkillList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
             // 
@@ -122,22 +121,25 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbSearchList.FormattingEnabled = true;
             this.lbSearchList.IntegralHeight = false;
-            this.lbSearchList.Location = new System.Drawing.Point(2, 197);
+            this.lbSearchList.ItemHeight = 17;
+            this.lbSearchList.Location = new System.Drawing.Point(2, 246);
             this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
             this.lbSearchList.Name = "lbSearchList";
-            this.lbSearchList.Size = new System.Drawing.Size(260, 108);
+            this.lbSearchList.Size = new System.Drawing.Size(324, 133);
             this.lbSearchList.TabIndex = 21;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
             // lblSearchTip
             // 
+            this.lblSearchTip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.lblSearchTip.BackColor = System.Drawing.SystemColors.Window;
             this.lblSearchTip.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblSearchTip.Location = new System.Drawing.Point(23, 56);
-            this.lblSearchTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblSearchTip.Location = new System.Drawing.Point(40, 70);
+            this.lblSearchTip.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSearchTip.Name = "lblSearchTip";
-            this.lblSearchTip.Size = new System.Drawing.Size(70, 14);
+            this.lblSearchTip.Size = new System.Drawing.Size(85, 18);
             this.lblSearchTip.TabIndex = 22;
             this.lblSearchTip.Text = "Search Text";
             this.lblSearchTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -149,11 +151,11 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNoMatches.BackColor = System.Drawing.SystemColors.Window;
             this.lblNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoMatches.Location = new System.Drawing.Point(4, 23);
+            this.lblNoMatches.Location = new System.Drawing.Point(5, 29);
             this.lblNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNoMatches.Name = "lblNoMatches";
-            this.lblNoMatches.Padding = new System.Windows.Forms.Padding(4);
-            this.lblNoMatches.Size = new System.Drawing.Size(256, 22);
+            this.lblNoMatches.Padding = new System.Windows.Forms.Padding(5);
+            this.lblNoMatches.Size = new System.Drawing.Size(320, 28);
             this.lblNoMatches.TabIndex = 23;
             this.lblNoMatches.Text = "No skills match your search.";
             this.lblNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -162,11 +164,11 @@ namespace EVEMon.SkillPlanner
             // cbShowNonPublic
             // 
             this.cbShowNonPublic.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.cbShowNonPublic.Location = new System.Drawing.Point(0, 391);
+            this.cbShowNonPublic.Location = new System.Drawing.Point(0, 488);
             this.cbShowNonPublic.Margin = new System.Windows.Forms.Padding(2);
             this.cbShowNonPublic.Name = "cbShowNonPublic";
             this.cbShowNonPublic.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
-            this.cbShowNonPublic.Size = new System.Drawing.Size(262, 22);
+            this.cbShowNonPublic.Size = new System.Drawing.Size(328, 28);
             this.cbShowNonPublic.TabIndex = 24;
             this.cbShowNonPublic.Text = "Show Non-Public Skills";
             this.cbShowNonPublic.UseVisualStyleBackColor = true;
@@ -175,10 +177,10 @@ namespace EVEMon.SkillPlanner
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 6);
+            this.label1.Location = new System.Drawing.Point(-1, 8);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(41, 17);
             this.label1.TabIndex = 25;
             this.label1.Text = "Filter:";
             // 
@@ -192,20 +194,20 @@ namespace EVEMon.SkillPlanner
             "No Sorting",
             "Time to Next Level",
             "Time to Level V"});
-            this.cbSorting.Location = new System.Drawing.Point(31, 29);
-            this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cbSorting.Location = new System.Drawing.Point(39, 36);
+            this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.cbSorting.Name = "cbSorting";
-            this.cbSorting.Size = new System.Drawing.Size(231, 21);
+            this.cbSorting.Size = new System.Drawing.Size(288, 25);
             this.cbSorting.TabIndex = 26;
             this.cbSorting.SelectedIndexChanged += new System.EventHandler(this.cbSorting_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 31);
+            this.label2.Location = new System.Drawing.Point(-1, 39);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.Size = new System.Drawing.Size(39, 17);
             this.label2.TabIndex = 27;
             this.label2.Text = "Sort:";
             // 
@@ -218,10 +220,10 @@ namespace EVEMon.SkillPlanner
             this.chName,
             this.chSortKey});
             this.lvSortedSkillList.FullRowSelect = true;
-            this.lvSortedSkillList.Location = new System.Drawing.Point(2, 62);
+            this.lvSortedSkillList.Location = new System.Drawing.Point(2, 78);
             this.lvSortedSkillList.Margin = new System.Windows.Forms.Padding(2);
             this.lvSortedSkillList.Name = "lvSortedSkillList";
-            this.lvSortedSkillList.Size = new System.Drawing.Size(258, 106);
+            this.lvSortedSkillList.Size = new System.Drawing.Size(322, 132);
             this.lvSortedSkillList.TabIndex = 28;
             this.lvSortedSkillList.TileSize = new System.Drawing.Size(16, 16);
             this.lvSortedSkillList.UseCompatibleStateImageBehavior = false;
@@ -264,7 +266,7 @@ namespace EVEMon.SkillPlanner
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(262, 78);
+            this.panel1.Size = new System.Drawing.Size(328, 98);
             this.panel1.TabIndex = 29;
             // 
             // panel2
@@ -275,15 +277,15 @@ namespace EVEMon.SkillPlanner
             this.panel2.Controls.Add(this.lbSearchList);
             this.panel2.Controls.Add(this.tvSkillList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 78);
+            this.panel2.Location = new System.Drawing.Point(0, 98);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(262, 313);
+            this.panel2.Size = new System.Drawing.Size(328, 390);
             this.panel2.TabIndex = 30;
             // 
             // SkillSelectControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.panel2);
@@ -292,7 +294,7 @@ namespace EVEMon.SkillPlanner
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SkillSelectControl";
-            this.Size = new System.Drawing.Size(262, 413);
+            this.Size = new System.Drawing.Size(328, 516);
             this.Load += new System.EventHandler(this.SkillSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.panel1.ResumeLayout(false);

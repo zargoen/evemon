@@ -202,7 +202,6 @@ namespace EVEMon.SkillPlanner
             this.tpSkillBrowser.Controls.Add(this.skillBrowser);
             this.tpSkillBrowser.Location = new System.Drawing.Point(4, 22);
             this.tpSkillBrowser.Name = "tpSkillBrowser";
-            this.tpSkillBrowser.Padding = new System.Windows.Forms.Padding(3);
             this.tpSkillBrowser.Size = new System.Drawing.Size(650, 413);
             this.tpSkillBrowser.TabIndex = 0;
             this.tpSkillBrowser.Text = "Skill Browser";
@@ -234,21 +233,21 @@ namespace EVEMon.SkillPlanner
             this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.planEditor.HighlightPlannedSkills = false;
             this.planEditor.HighlightPrerequisites = false;
-            this.planEditor.Location = new System.Drawing.Point(3, 3);
+            this.planEditor.Location = new System.Drawing.Point(0, 0);
             this.planEditor.Name = "planEditor";
             this.planEditor.Plan = null;
-            this.planEditor.Size = new System.Drawing.Size(644, 407);
+            this.planEditor.Size = new System.Drawing.Size(650, 413);
             this.planEditor.TabIndex = 2;
             this.planEditor.WorksafeMode = false;
             // 
             // skillBrowser
             // 
             this.skillBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillBrowser.Location = new System.Drawing.Point(3, 3);
+            this.skillBrowser.Location = new System.Drawing.Point(0, 0);
             this.skillBrowser.Name = "skillBrowser";
             this.skillBrowser.Plan = null;
             this.skillBrowser.SelectedSkill = null;
-            this.skillBrowser.Size = new System.Drawing.Size(644, 407);
+            this.skillBrowser.Size = new System.Drawing.Size(650, 413);
             this.skillBrowser.TabIndex = 0;
             // 
             // shipBrowser
