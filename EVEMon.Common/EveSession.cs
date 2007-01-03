@@ -381,8 +381,18 @@ namespace EVEMon.Common
             {
                 string character = charName as string;
                 WebClient client = new WebClient();
-                byte[] bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);                
-                string response = Encoding.UTF8.GetString(bytes);
+                byte[] bytes = null;
+                try
+                {
+                    bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);
+
+                }
+                catch (WebException)
+                {
+                    //just fail and trust that we'll try again next time.
+                    return;
+                }
+                    string response = Encoding.UTF8.GetString(bytes);
             }            
             
             /*string encoded = string.Empty;
