@@ -139,9 +139,9 @@ namespace EVEMon.SkillPlanner
                     System.Resources.IResourceReader basic;
                     if (i.ParentCategory != null && i.ParentCategory.Name != "Drone Upgrades" && i.ParentCategory.ParentCategory != null && ((i.ParentCategory.ParentCategory.Name == "Drones") || (i.ParentCategory.ParentCategory.ParentCategory != null && i.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Drones64_64.resources"))
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Drones64_64.resources"))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Drones64_64.resources");
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Drones64_64.resources");
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
@@ -155,9 +155,9 @@ namespace EVEMon.SkillPlanner
                     }
                     else
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Items64_64.resources"))
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Items64_64.resources"))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resources//Optional//Items64_64.resources");
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Items64_64.resources");
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
