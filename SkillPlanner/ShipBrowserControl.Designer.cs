@@ -30,6 +30,9 @@ namespace EVEMon.SkillPlanner
         {
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
+            this.lvShipProperties = new System.Windows.Forms.ListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pnlShipDescription = new System.Windows.Forms.Panel();
@@ -44,9 +47,9 @@ namespace EVEMon.SkillPlanner
             this.panel3 = new System.Windows.Forms.Panel();
             this.pbShipImage = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbShipProperties = new System.Windows.Forms.ListBox();
             this.lblShipName = new System.Windows.Forms.Label();
             this.lblShipClass = new System.Windows.Forms.Label();
+            this.btnCompareWith = new System.Windows.Forms.Button();
             this.scShipSelect.Panel1.SuspendLayout();
             this.scShipSelect.Panel2.SuspendLayout();
             this.scShipSelect.SuspendLayout();
@@ -73,8 +76,8 @@ namespace EVEMon.SkillPlanner
             // 
             // scShipSelect.Panel2
             // 
+            this.scShipSelect.Panel2.Controls.Add(this.lvShipProperties);
             this.scShipSelect.Panel2.Controls.Add(this.panel2);
-            this.scShipSelect.Panel2.Controls.Add(this.lbShipProperties);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
             this.scShipSelect.RememberDistanceKey = null;
@@ -91,9 +94,37 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Location = new System.Drawing.Point(0, 0);
             this.shipSelectControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.shipSelectControl.Name = "shipSelectControl";
+            this.shipSelectControl.Plan = null;
             this.shipSelectControl.Size = new System.Drawing.Size(163, 508);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedShipChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
+            // 
+            // lvShipProperties
+            // 
+            this.lvShipProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvShipProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.lvShipProperties.FullRowSelect = true;
+            this.lvShipProperties.Location = new System.Drawing.Point(4, 46);
+            this.lvShipProperties.Margin = new System.Windows.Forms.Padding(4);
+            this.lvShipProperties.Name = "lvShipProperties";
+            this.lvShipProperties.Size = new System.Drawing.Size(340, 458);
+            this.lvShipProperties.TabIndex = 3;
+            this.lvShipProperties.UseCompatibleStateImageBehavior = false;
+            this.lvShipProperties.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Attribute";
+            this.columnHeader1.Width = 200;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Width = 140;
             // 
             // panel2
             // 
@@ -151,6 +182,7 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnCompareWith);
             this.groupBox1.Controls.Add(this.btnShipSkillsAdd);
             this.groupBox1.Controls.Add(this.lblShipTimeRequired);
             this.groupBox1.Controls.Add(this.lblShipSkill3);
@@ -246,20 +278,6 @@ namespace EVEMon.SkillPlanner
             this.panel1.Size = new System.Drawing.Size(337, 0);
             this.panel1.TabIndex = 9;
             // 
-            // lbShipProperties
-            // 
-            this.lbShipProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbShipProperties.FormattingEnabled = true;
-            this.lbShipProperties.IntegralHeight = false;
-            this.lbShipProperties.ItemHeight = 16;
-            this.lbShipProperties.Location = new System.Drawing.Point(4, 46);
-            this.lbShipProperties.Margin = new System.Windows.Forms.Padding(4);
-            this.lbShipProperties.Name = "lbShipProperties";
-            this.lbShipProperties.Size = new System.Drawing.Size(340, 458);
-            this.lbShipProperties.TabIndex = 3;
-            // 
             // lblShipName
             // 
             this.lblShipName.AutoSize = true;
@@ -280,6 +298,17 @@ namespace EVEMon.SkillPlanner
             this.lblShipClass.Size = new System.Drawing.Size(86, 17);
             this.lblShipClass.TabIndex = 1;
             this.lblShipClass.Text = "Ship > Class";
+            // 
+            // btnCompareWith
+            // 
+            this.btnCompareWith.Location = new System.Drawing.Point(8, 104);
+            this.btnCompareWith.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCompareWith.Name = "btnCompareWith";
+            this.btnCompareWith.Size = new System.Drawing.Size(127, 28);
+            this.btnCompareWith.TabIndex = 11;
+            this.btnCompareWith.Text = "Compare With…";
+            this.btnCompareWith.UseVisualStyleBackColor = true;
+            this.btnCompareWith.Click += new System.EventHandler(this.btnCompareWith_Click);
             // 
             // ShipBrowserControl
             // 
@@ -317,7 +346,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblShipSkill3;
         private System.Windows.Forms.Label lblShipSkill2;
         private System.Windows.Forms.Label lblShipSkill1;
-        private System.Windows.Forms.ListBox lbShipProperties;
         private System.Windows.Forms.Label lblShipName;
         private System.Windows.Forms.Label lblShipClass;
         private System.Windows.Forms.PictureBox pbShipImage;
@@ -328,6 +356,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.ListView lvShipProperties;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button btnCompareWith;
 
 
     }

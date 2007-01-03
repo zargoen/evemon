@@ -229,6 +229,7 @@ namespace EVEMon.SkillPlanner
         public Ship SelectedShip
         {
             get { return m_selectedShip; }
+            set { m_selectedShip = value; }
         }
 
         private void OnSelectedShipChanged(Ship s)

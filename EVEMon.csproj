@@ -208,8 +208,20 @@
     <Compile Include="SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\ItemCompareWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ItemCompareWindow.Designer.cs">
+      <DependentUpon>ItemCompareWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\PersistentSplitContainer.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ShipCompareWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ShipCompareWindow.Designer.cs">
+      <DependentUpon>ShipCompareWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\SkillBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -437,6 +449,14 @@
     <EmbeddedResource Include="Schedule\ScheduleEditorWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ItemCompareWindow.resx">
+      <DependentUpon>ItemCompareWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ShipCompareWindow.resx">
+      <DependentUpon>ShipCompareWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\SkillBrowserControl.resx">
       <SubType>Designer</SubType>

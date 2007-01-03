@@ -46,10 +46,10 @@ namespace EVEMon.SkillPlanner
                 Ship s = shipSelectControl.SelectedShip;
                 int shipId = s.Id;
 
-                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Ships256_256.resources"))
+                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources"))
                 {
                     System.Resources.IResourceReader basic;
-                    basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Ships256_256.resources");
+                    basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources");
                     System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                     while (basicx.MoveNext())
                     {
@@ -112,18 +112,24 @@ namespace EVEMon.SkillPlanner
                     btnShipSkillsAdd.Enabled = false;
                 }
 
-                lbShipProperties.BeginUpdate();
+                lvShipProperties.BeginUpdate();
                 try
                 {
-                    lbShipProperties.Items.Clear();
+                    // remove excess columns that might have been added by 'compare with' earlier
+                    while (lvShipProperties.Columns.Count > 2)
+                        lvShipProperties.Columns.RemoveAt(2);
+                    // (re)construct ship properties list
+                    lvShipProperties.Items.Clear();
                     foreach (ShipProperty prop in s.Properties)
                     {
-                        lbShipProperties.Items.Add(prop);
+                        ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                        listItem.Name = prop.Name;
+                        lvShipProperties.Items.Add(listItem);
                     }
                 }
                 finally
                 {
-                    lbShipProperties.EndUpdate();
+                    lvShipProperties.EndUpdate();
                 }
 
                 foreach (Control c in scShipSelect.Panel2.Controls)
@@ -215,6 +221,57 @@ namespace EVEMon.SkillPlanner
                 int xw = pnlShipDescription.ClientSize.Width;
                 lblShipDescription.MaximumSize = new Size(xw, Int32.MaxValue);
                 pnlShipDescription.Visible = true;
+            }
+        }
+
+        private void btnCompareWith_Click(object sender, EventArgs e)
+        {
+            // ask user to select a ship for comparison
+            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedShip);
+            if (selectedShip != null)
+            {
+                lvShipProperties.BeginUpdate();
+                try
+                {
+                    // add new column header and values
+                    lvShipProperties.Columns.Add(selectedShip.Name);
+                    foreach (ShipProperty prop in selectedShip.Properties)
+                    {
+                        ListViewItem[] items = lvShipProperties.Items.Find(prop.Name, false);
+                        if (items.Length != 0)
+                        {
+                            // existing property
+                            ListViewItem oldItem = items[0];
+                            oldItem.SubItems.Add(prop.Value);
+                        }
+                        else
+                        {
+                            // new property
+                            int skipColumns = lvShipProperties.Columns.Count - 2;
+                            ListViewItem newItem = lvShipProperties.Items.Add(prop.Name);
+                            newItem.Name = prop.Name;
+                            while (skipColumns-- > 0)
+                                newItem.SubItems.Add("");
+                            newItem.SubItems.Add(prop.Value);
+                        }
+                    }
+                    // mark properties with changed value in blue
+                    foreach (ListViewItem listItem in lvShipProperties.Items)
+                    {
+                        for (int i = 2; i < listItem.SubItems.Count; i++)
+                        {
+                            if (listItem.SubItems[i - 1].Text.CompareTo(listItem.SubItems[i].Text) != 0)
+                            {
+                                listItem.BackColor = Color.LightBlue;
+                                break;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    lvShipProperties.EndUpdate();
+                }
             }
         }
     }

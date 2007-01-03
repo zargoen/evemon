@@ -60,40 +60,24 @@ namespace EVEMon.SkillPlanner
                 lblItemCategory.Text = sb.ToString();
                 lblItemName.Text = i.Name;
                 lblItemDescription.Text = i.Description;
-                lbItemProperties.BeginUpdate();
+                lvItemProperties.BeginUpdate();
                 try
                 {
-                    lbItemProperties.Items.Clear();
-                    foreach (ItemProperty ip in i.Properties)
+                    // remove excess columns that might have been added by 'compare with' earlier
+                    while (lvItemProperties.Columns.Count > 2)
+                        lvItemProperties.Columns.RemoveAt(2);
+                    // (re)construct item properties list
+                    lvItemProperties.Items.Clear();
+                    foreach (ItemProperty prop in i.Properties)
                     {
-                        decimal DecimalValue;
-                        string  ItemValue = ip.Value;
-                        ItemValue = ItemValue.Replace("%", "");
-                        ItemValue = ItemValue.Replace(",", ".");
-                        try
-                        {
-                            DecimalValue = System.Convert.ToDecimal(ItemValue);
-                            if ((ip.Name.Contains("bonus") || ip.Name.Contains("multiplier")) && ip.Value.Contains("%") &&
-                               (2 > DecimalValue))
-                            {
-                                ItemValue = ItemPropertyBonusToPercent(DecimalValue);
-                            }
-                            else
-                            {
-                                ItemValue = ip.Value;
-                            }
-                        }
-                        catch(FormatException)
-                        {
-                            ItemValue = ip.Value;
-                        }
-
-                        lbItemProperties.Items.Add(ip.Name + ": " + ItemValue);
+                        ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                        listItem.Name = prop.Name;
+                        lvItemProperties.Items.Add(listItem);
                     }
                 }
                 finally
                 {
-                    lbItemProperties.EndUpdate();
+                    lvItemProperties.EndUpdate();
                 }
 
                 m_allSkillsKnown = true;
@@ -139,9 +123,9 @@ namespace EVEMon.SkillPlanner
                     System.Resources.IResourceReader basic;
                     if (i.ParentCategory != null && i.ParentCategory.Name != "Drone Upgrades" && i.ParentCategory.ParentCategory != null && ((i.ParentCategory.ParentCategory.Name == "Drones") || (i.ParentCategory.ParentCategory.ParentCategory != null && i.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Drones64_64.resources"))
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Drones64_64.resources"))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Drones64_64.resources");
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Drones64_64.resources");
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
@@ -155,9 +139,9 @@ namespace EVEMon.SkillPlanner
                     }
                     else
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Items64_64.resources"))
+                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Items64_64.resources"))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources//Optional//Items64_64.resources");
+                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Items64_64.resources");
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
@@ -184,19 +168,6 @@ namespace EVEMon.SkillPlanner
                     }
                 }
             }
-        }
-
-        private static string ItemPropertyBonusToPercent(Decimal Value)
-        {
-            if (Value > 0)
-            {
-                Value = (1 - Value) * 100;
-            }
-            else
-            {
-                Value = Value * -1;
-            }
-            return System.Convert.ToString(Math.Round(Value, 2)) + " %";
         }
 
         private void SetSkillLabel(int skillNum, Label lblSkill, Item i)
@@ -278,6 +249,57 @@ namespace EVEMon.SkillPlanner
             }
             AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
             itemSelectControl1_SelectedItemChanged(new Object(), new EventArgs());
+        }
+
+        private void btnCompareWith_Click(object sender, EventArgs e)
+        {
+            // ask user to select an item for comparison
+            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedItem);
+            if (selectedItem != null)
+            {
+                lvItemProperties.BeginUpdate();
+                try
+                {
+                    // add new column header and values
+                    lvItemProperties.Columns.Add(selectedItem.Name);
+                    foreach (ItemProperty prop in selectedItem.Properties)
+                    {
+                        ListViewItem[] items = lvItemProperties.Items.Find(prop.Name, false);
+                        if (items.Length != 0)
+                        {
+                            // existing property
+                            ListViewItem oldItem = items[0];
+                            oldItem.SubItems.Add(prop.Value);
+                        }
+                        else
+                        {
+                            // new property
+                            int skipColumns = lvItemProperties.Columns.Count - 2;
+                            ListViewItem newItem = lvItemProperties.Items.Add(prop.Name);
+                            newItem.Name = prop.Name;
+                            while (skipColumns-- > 0)
+                                newItem.SubItems.Add("");
+                            newItem.SubItems.Add(prop.Value);
+                        }
+                    }
+                    // mark items with changed value in blue
+                    foreach (ListViewItem listItem in lvItemProperties.Items)
+                    {
+                        for (int i = 2; i < listItem.SubItems.Count; i++)
+                        {
+                            if (listItem.SubItems[i - 1].Text.CompareTo(listItem.SubItems[i].Text) != 0)
+                            {
+                                listItem.BackColor = Color.LightBlue;
+                                break;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    lvItemProperties.EndUpdate();
+                }
+            }
         }
     }
 }

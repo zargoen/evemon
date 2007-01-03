@@ -703,14 +703,24 @@ namespace EVEMon.Common
         }
 
         #region Appearance in List Box
+        // Region & text padding
+        private const int PAD_TOP = 2;
+        private const int PAD_LEFT = 6;
+        private const int PAD_RIGHT = 7;
+        private const int LINE_VPAD = 0;
+        // Boxes
+        private const int BOX_WIDTH = 57;
+        private const int BOX_HEIGHT = 14;
+        private const int SUBBOX_HEIGHT = 8;
+        private const int BOX_HPAD = 6;
+        private const int BOX_VPAD = 2;
         private const int SKILL_DETAIL_HEIGHT = 31;
 
         public static int Height
         {
             get {
                 Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
-                int PAD_TOP = 2;
-                return Math.Max(fontr.Height * 2 + PAD_TOP * 2, SKILL_DETAIL_HEIGHT);
+                return Math.Max(fontr.Height * 2 + PAD_TOP + LINE_VPAD + PAD_TOP, SKILL_DETAIL_HEIGHT);
             }
         }
 
@@ -757,10 +767,7 @@ namespace EVEMon.Common
                 string levelText = "Level " + this.Level.ToString();
                 string pctText = percentComplete.ToString("0%") + " Done";
 
-                int PAD_TOP = 2;
-                int PAD_LEFT = 6;
-                int PAD_RIGHT = 7;
-                int LINE_VPAD = 0;
+                // Text
 
                 Size skillNameSize =
                     TextRenderer.MeasureText(g, skillName, boldf, new Size(0, 0),
@@ -782,11 +789,6 @@ namespace EVEMon.Common
                                                 e.Bounds.Top + PAD_TOP + skillNameSize.Height + LINE_VPAD), Color.Black);
 
                 // Boxes
-                int BOX_WIDTH = 57;
-                int BOX_HEIGHT = 14;
-                int SUBBOX_HEIGHT = 8;
-                int BOX_HPAD = 6;
-                int BOX_VPAD = 2;
                 g.DrawRectangle(Pens.Black,
                                 new Rectangle(e.Bounds.Right - BOX_WIDTH - PAD_RIGHT, e.Bounds.Top + PAD_TOP, BOX_WIDTH,
                                               BOX_HEIGHT));

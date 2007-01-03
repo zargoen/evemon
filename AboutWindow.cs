@@ -54,6 +54,7 @@ namespace EVEMon
             slDevelopers.Add("Femaref", "04");
             slDevelopers.Add("Flash", "04");
             slDevelopers.Add("gavinl", "04");
+            slDevelopers.Add("Grauw", "04");
             slDevelopers.Add("happyslinky", "04");
             slDevelopers.Add("justinian", "04");
             slDevelopers.Add("Lexiica", "04");

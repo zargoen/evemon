@@ -88,14 +88,51 @@ namespace EVEMon.Common
         [XmlAttribute]
         public string Value
         {
-            get { return m_value; }
+            get
+            {
+                // why oh why all this complicated stuff
+                string Value = m_value;
+                Value = Value.Replace("%", "").Replace(",", ".");
+                try
+                {
+                    decimal DecimalValue = System.Convert.ToDecimal(Value);
+                    if ((Name.Contains("bonus") || Name.Contains("multiplier")) && m_value.Contains("%") &&
+                       (DecimalValue < 2))
+                    {
+                        Value = PropertyBonusToPercent(DecimalValue);
+                    }
+                    else
+                    {
+                        Value = m_value;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Value = m_value;
+                }
+                return Value.Trim();
+            }
             set { m_value = StringTable.GetSharedString(value); }
+        }
+
+        private static string PropertyBonusToPercent(Decimal Value)
+        {
+            if (Value > 0)
+            {
+                Value = (1 - Value) * 100;
+            }
+            else
+            {
+                Value = Value * -1;
+            }
+            return System.Convert.ToString(Math.Round(Value, 2)) + " %";
         }
 
         public override string ToString()
         {
             return m_name + ": " + m_value;
         }
+
     }
 
     public class ItemRequiredSkill
