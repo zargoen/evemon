@@ -19,6 +19,31 @@ namespace EVEMon.SkillPlanner
             m_plan = p;
         }
 
+        public int intellegence
+        {
+            get { return Convert.ToInt32(nudIntelligence.Value); }
+        }
+
+        public int charisma
+        {
+            get { return Convert.ToInt32(nudCharisma.Value); }
+        }
+
+        public int perception
+        {
+            get { return Convert.ToInt32(nudPerception.Value); }
+        }
+
+        public int memory
+        {
+            get { return Convert.ToInt32(nudMemory.Value); }
+        }
+
+        public int willpower
+        {
+            get { return Convert.ToInt32(nudWillpower.Value); }
+        }
+
         private CharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
 

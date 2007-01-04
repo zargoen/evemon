@@ -192,6 +192,7 @@ namespace EVEMon.SkillPlanner
                     }
 
                     TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                    TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad,false);
                     int currentSP = gs.CurrentSkillPoints;
                     int reqBeforeThisLevel = gs.GetPointsRequiredForLevel(pe.Level - 1);
                     int reqToThisLevel = gs.GetPointsRequiredForLevel(pe.Level);
@@ -238,6 +239,10 @@ namespace EVEMon.SkillPlanner
                             case ColumnPreference.ColumnType.TrainingTime:
                                 res =
                                     Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                                break;
+                            case ColumnPreference.ColumnType.TrainingTimeNatural:
+                                res =
+                                    Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
                                 break;
                             case ColumnPreference.ColumnType.EarliestStart:
                                 res = thisStart.ToString();

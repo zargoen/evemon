@@ -184,13 +184,13 @@ namespace EVEMon.Common
         /// <returns>Time it will take.</returns>
         private TimeSpan GetTimeSpanForPoints(int points)
         {
-            return GetTimeSpanForPoints(points, null);
+            return GetTimeSpanForPoints(points, null,true);
         }
 
-        private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad)
+        private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad,Boolean includeImplants)
         {
-            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad);
-            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad);
+            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad,true,includeImplants);
+            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad,true,includeImplants);
             double minutes = Convert.ToDouble(points) / (primAttr + (secondaryAttr / 2));
             return TimeSpan.FromMinutes(minutes);
         }
@@ -555,6 +555,11 @@ namespace EVEMon.Common
 
         public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad)
         {
+            return GetTrainingTimeOfLevelOnly(level, includeCurrentSP, scratchpad, true);
+        }
+        
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad,Boolean includeImplants)
+        {
             int startSp = GetPointsRequiredForLevel(level - 1);
             int endSp = GetPointsRequiredForLevel(level);
             if (includeCurrentSP)
@@ -565,7 +570,7 @@ namespace EVEMon.Common
             {
                 return TimeSpan.Zero;
             }
-            return this.GetTimeSpanForPoints(endSp - startSp, scratchpad);
+            return this.GetTimeSpanForPoints(endSp - startSp, scratchpad,includeImplants);
         }
 
         #region GetPrerequisiteTime overloads

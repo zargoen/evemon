@@ -49,6 +49,7 @@ namespace EVEMon.Common
             [ColumnDisplay("Skill Name")] SkillName,
             [ColumnDisplay("Plan Group")] PlanGroup,
             [ColumnDisplay("Training Time")] TrainingTime,
+            [ColumnDisplay("Training Time (no implants)","Train Time (no implants)")]TrainingTimeNatural,
             [ColumnDisplay("Earliest Start")] EarliestStart,
             [ColumnDisplay("Earliest End")] EarliestEnd,
             [ColumnDisplay("Percent Complete", "%")] PercentComplete,
@@ -176,6 +177,13 @@ namespace EVEMon.Common
         {
             get { return this[ColumnType.TrainingTime]; }
             set { this[ColumnType.TrainingTime] = value; }
+        }
+
+        [XmlAttribute]
+        public bool TrainingTimeNatural
+        {
+            get { return this[ColumnType.TrainingTimeNatural]; }
+            set { this[ColumnType.TrainingTimeNatural] = value; }
         }
 
         [XmlAttribute]
