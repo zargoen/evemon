@@ -72,7 +72,7 @@ namespace EVEMon
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(159, 74);
+            this.btnCancel.Location = new System.Drawing.Point(240, 74);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -83,7 +83,7 @@ namespace EVEMon
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(240, 74);
+            this.btnOk.Location = new System.Drawing.Point(159, 74);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
@@ -96,11 +96,11 @@ namespace EVEMon
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(327, 109);
-            this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbFilename);
+            this.Controls.Add(this.btnOk);
+            this.Controls.Add(this.btnCancel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EVEFolderWindow";
             this.Text = "EVE Folder";

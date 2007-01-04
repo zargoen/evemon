@@ -31,16 +31,16 @@ namespace EVEMon.NetworkLogger
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoggerWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbAll = new System.Windows.Forms.RadioButton();
-            this.rbNoPassword = new System.Windows.Forms.RadioButton();
-            this.rbNoUsername = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
+            this.rbNoUsername = new System.Windows.Forms.RadioButton();
+            this.rbNoPassword = new System.Windows.Forms.RadioButton();
+            this.rbAll = new System.Windows.Forms.RadioButton();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbFilename = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.tbFilename = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.sfdSaveLocation = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -69,16 +69,24 @@ namespace EVEMon.NetworkLogger
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Logging Filters";
             // 
-            // rbAll
+            // label2
             // 
-            this.rbAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.rbAll.AutoSize = true;
-            this.rbAll.Location = new System.Drawing.Point(18, 139);
-            this.rbAll.Name = "rbAll";
-            this.rbAll.Size = new System.Drawing.Size(97, 17);
-            this.rbAll.TabIndex = 0;
-            this.rbAll.Text = "Log everything";
-            this.rbAll.UseVisualStyleBackColor = true;
+            this.label2.Location = new System.Drawing.Point(15, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(301, 73);
+            this.label2.TabIndex = 2;
+            this.label2.Text = resources.GetString("label2.Text");
+            // 
+            // rbNoUsername
+            // 
+            this.rbNoUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.rbNoUsername.AutoSize = true;
+            this.rbNoUsername.Location = new System.Drawing.Point(18, 93);
+            this.rbNoUsername.Name = "rbNoUsername";
+            this.rbNoUsername.Size = new System.Drawing.Size(279, 17);
+            this.rbNoUsername.TabIndex = 2;
+            this.rbNoUsername.Text = "Do not include my usernames or passwords in the log";
+            this.rbNoUsername.UseVisualStyleBackColor = true;
             // 
             // rbNoPassword
             // 
@@ -93,29 +101,21 @@ namespace EVEMon.NetworkLogger
             this.rbNoPassword.Text = "Do not include my passwords in the log";
             this.rbNoPassword.UseVisualStyleBackColor = true;
             // 
-            // rbNoUsername
+            // rbAll
             // 
-            this.rbNoUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.rbNoUsername.AutoSize = true;
-            this.rbNoUsername.Location = new System.Drawing.Point(18, 93);
-            this.rbNoUsername.Name = "rbNoUsername";
-            this.rbNoUsername.Size = new System.Drawing.Size(279, 17);
-            this.rbNoUsername.TabIndex = 2;
-            this.rbNoUsername.Text = "Do not include my usernames or passwords in the log";
-            this.rbNoUsername.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(15, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(301, 73);
-            this.label2.TabIndex = 2;
-            this.label2.Text = resources.GetString("label2.Text");
+            this.rbAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.rbAll.AutoSize = true;
+            this.rbAll.Location = new System.Drawing.Point(18, 139);
+            this.rbAll.Name = "rbAll";
+            this.rbAll.Size = new System.Drawing.Size(97, 17);
+            this.rbAll.TabIndex = 0;
+            this.rbAll.Text = "Log everything";
+            this.rbAll.UseVisualStyleBackColor = true;
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(228, 346);
+            this.btnOk.Location = new System.Drawing.Point(154, 346);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(109, 23);
             this.btnOk.TabIndex = 2;
@@ -127,7 +127,7 @@ namespace EVEMon.NetworkLogger
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(154, 346);
+            this.btnCancel.Location = new System.Drawing.Point(269, 346);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(68, 23);
             this.btnCancel.TabIndex = 3;
@@ -147,23 +147,6 @@ namespace EVEMon.NetworkLogger
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Log File Name";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(182, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Where do you want to save the log?";
-            // 
-            // tbFilename
-            // 
-            this.tbFilename.Location = new System.Drawing.Point(18, 34);
-            this.tbFilename.Name = "tbFilename";
-            this.tbFilename.ReadOnly = true;
-            this.tbFilename.Size = new System.Drawing.Size(211, 21);
-            this.tbFilename.TabIndex = 1;
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(235, 32);
@@ -173,6 +156,23 @@ namespace EVEMon.NetworkLogger
             this.button1.Text = "Browse...";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // tbFilename
+            // 
+            this.tbFilename.Location = new System.Drawing.Point(18, 34);
+            this.tbFilename.Name = "tbFilename";
+            this.tbFilename.ReadOnly = true;
+            this.tbFilename.Size = new System.Drawing.Size(211, 21);
+            this.tbFilename.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(15, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(182, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Where do you want to save the log?";
             // 
             // sfdSaveLocation
             // 

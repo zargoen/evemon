@@ -28,7 +28,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CancelChoiceWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.btnThisOnly = new System.Windows.Forms.Button();
             this.btnAll = new System.Windows.Forms.Button();
@@ -48,7 +47,7 @@ namespace EVEMon.SkillPlanner
             // 
             // btnThisOnly
             // 
-            this.btnThisOnly.Location = new System.Drawing.Point(93, 58);
+            this.btnThisOnly.Location = new System.Drawing.Point(12, 58);
             this.btnThisOnly.Name = "btnThisOnly";
             this.btnThisOnly.Size = new System.Drawing.Size(86, 23);
             this.btnThisOnly.TabIndex = 1;
@@ -58,7 +57,7 @@ namespace EVEMon.SkillPlanner
             // 
             // btnAll
             // 
-            this.btnAll.Location = new System.Drawing.Point(185, 58);
+            this.btnAll.Location = new System.Drawing.Point(104, 58);
             this.btnAll.Name = "btnAll";
             this.btnAll.Size = new System.Drawing.Size(126, 23);
             this.btnAll.TabIndex = 2;
@@ -69,7 +68,7 @@ namespace EVEMon.SkillPlanner
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(12, 58);
+            this.btnCancel.Location = new System.Drawing.Point(236, 58);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 0;
@@ -97,7 +96,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnAll);
             this.Controls.Add(this.btnThisOnly);
             this.Controls.Add(this.label1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "CancelChoiceWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -47,7 +47,6 @@ namespace EVEMon
             treeNode6,
             treeNode7,
             treeNode8});
-            this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -94,10 +93,6 @@ namespace EVEMon
             this.label9 = new System.Windows.Forms.Label();
             this.cbScreenList = new System.Windows.Forms.ComboBox();
             this.btnIdentifyScreens = new System.Windows.Forms.Button();
-            this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
-            this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
-            this.tbTooltipString = new System.Windows.Forms.TextBox();
-            this.cbTooltipDisplay = new System.Windows.Forms.ComboBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
@@ -113,6 +108,10 @@ namespace EVEMon
             this.flowLayoutPanel22 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbTitleToTime = new System.Windows.Forms.CheckBox();
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
+            this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
+            this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
+            this.tbTooltipString = new System.Windows.Forms.TextBox();
+            this.cbTooltipDisplay = new System.Windows.Forms.ComboBox();
             this.gbSkillPlannerHighlighting = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
@@ -180,6 +179,7 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
+            this.btnOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -195,7 +195,6 @@ namespace EVEMon
             this.flowLayoutPanel1.SuspendLayout();
             this.flpScreenSelect.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.gboxTooltipOptions.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.flowLayoutPanel23.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
@@ -204,6 +203,7 @@ namespace EVEMon
             this.groupBox11.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
             this.flowLayoutPanel22.SuspendLayout();
+            this.gboxTooltipOptions.SuspendLayout();
             this.gbSkillPlannerHighlighting.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -238,22 +238,11 @@ namespace EVEMon
             this.flowLayoutPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnOk
-            // 
-            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(84, 3);
-            this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 1;
-            this.btnOk.Text = "OK";
-            this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(3, 3);
+            this.btnCancel.Location = new System.Drawing.Point(84, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -810,50 +799,6 @@ namespace EVEMon
             this.btnIdentifyScreens.UseVisualStyleBackColor = true;
             this.btnIdentifyScreens.Click += new System.EventHandler(this.btnIdentifyScreens_Click);
             // 
-            // gboxTooltipOptions
-            // 
-            this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
-            this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 79);
-            this.gboxTooltipOptions.Name = "gboxTooltipOptions";
-            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 101);
-            this.gboxTooltipOptions.TabIndex = 7;
-            this.gboxTooltipOptions.TabStop = false;
-            this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
-            // 
-            // tbTooltipTestDisplay
-            // 
-            this.tbTooltipTestDisplay.BackColor = System.Drawing.SystemColors.Info;
-            this.tbTooltipTestDisplay.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tbTooltipTestDisplay.Location = new System.Drawing.Point(15, 74);
-            this.tbTooltipTestDisplay.Name = "tbTooltipTestDisplay";
-            this.tbTooltipTestDisplay.ReadOnly = true;
-            this.tbTooltipTestDisplay.Size = new System.Drawing.Size(329, 21);
-            this.tbTooltipTestDisplay.TabIndex = 8;
-            this.ttToolTipCodes.SetToolTip(this.tbTooltipTestDisplay, resources.GetString("tbTooltipTestDisplay.ToolTip"));
-            this.tbTooltipTestDisplay.Visible = false;
-            // 
-            // tbTooltipString
-            // 
-            this.tbTooltipString.BackColor = System.Drawing.SystemColors.Window;
-            this.tbTooltipString.Location = new System.Drawing.Point(15, 47);
-            this.tbTooltipString.Name = "tbTooltipString";
-            this.tbTooltipString.ReadOnly = true;
-            this.tbTooltipString.Size = new System.Drawing.Size(329, 21);
-            this.tbTooltipString.TabIndex = 6;
-            this.tbTooltipString.TextChanged += new System.EventHandler(this.tbTooltipString_TextChanged);
-            // 
-            // cbTooltipDisplay
-            // 
-            this.cbTooltipDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTooltipDisplay.FormattingEnabled = true;
-            this.cbTooltipDisplay.Location = new System.Drawing.Point(15, 20);
-            this.cbTooltipDisplay.Name = "cbTooltipDisplay";
-            this.cbTooltipDisplay.Size = new System.Drawing.Size(329, 21);
-            this.cbTooltipDisplay.TabIndex = 8;
-            this.cbTooltipDisplay.SelectionChangeCommitted += new System.EventHandler(this.cbTooltipDisplay_SelectionChangeCommitted);
-            // 
             // groupBox12
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -1048,6 +993,50 @@ namespace EVEMon
             this.cbWindowsTitleList.Name = "cbWindowsTitleList";
             this.cbWindowsTitleList.Size = new System.Drawing.Size(224, 21);
             this.cbWindowsTitleList.TabIndex = 1;
+            // 
+            // gboxTooltipOptions
+            // 
+            this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
+            this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
+            this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 79);
+            this.gboxTooltipOptions.Name = "gboxTooltipOptions";
+            this.gboxTooltipOptions.Size = new System.Drawing.Size(359, 101);
+            this.gboxTooltipOptions.TabIndex = 7;
+            this.gboxTooltipOptions.TabStop = false;
+            this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
+            // 
+            // tbTooltipTestDisplay
+            // 
+            this.tbTooltipTestDisplay.BackColor = System.Drawing.SystemColors.Info;
+            this.tbTooltipTestDisplay.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tbTooltipTestDisplay.Location = new System.Drawing.Point(15, 74);
+            this.tbTooltipTestDisplay.Name = "tbTooltipTestDisplay";
+            this.tbTooltipTestDisplay.ReadOnly = true;
+            this.tbTooltipTestDisplay.Size = new System.Drawing.Size(329, 21);
+            this.tbTooltipTestDisplay.TabIndex = 8;
+            this.ttToolTipCodes.SetToolTip(this.tbTooltipTestDisplay, resources.GetString("tbTooltipTestDisplay.ToolTip"));
+            this.tbTooltipTestDisplay.Visible = false;
+            // 
+            // tbTooltipString
+            // 
+            this.tbTooltipString.BackColor = System.Drawing.SystemColors.Window;
+            this.tbTooltipString.Location = new System.Drawing.Point(15, 47);
+            this.tbTooltipString.Name = "tbTooltipString";
+            this.tbTooltipString.ReadOnly = true;
+            this.tbTooltipString.Size = new System.Drawing.Size(329, 21);
+            this.tbTooltipString.TabIndex = 6;
+            this.tbTooltipString.TextChanged += new System.EventHandler(this.tbTooltipString_TextChanged);
+            // 
+            // cbTooltipDisplay
+            // 
+            this.cbTooltipDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTooltipDisplay.FormattingEnabled = true;
+            this.cbTooltipDisplay.Location = new System.Drawing.Point(15, 20);
+            this.cbTooltipDisplay.Name = "cbTooltipDisplay";
+            this.cbTooltipDisplay.Size = new System.Drawing.Size(329, 21);
+            this.cbTooltipDisplay.TabIndex = 8;
+            this.cbTooltipDisplay.SelectionChangeCommitted += new System.EventHandler(this.cbTooltipDisplay_SelectionChangeCommitted);
             // 
             // gbSkillPlannerHighlighting
             // 
@@ -1822,8 +1811,8 @@ namespace EVEMon
             this.flowLayoutPanel8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel8.AutoSize = true;
             this.flowLayoutPanel8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel8.Controls.Add(this.btnOk);
             this.flowLayoutPanel8.Controls.Add(this.btnCancel);
+            this.flowLayoutPanel8.Controls.Add(this.btnOk);
             this.flowLayoutPanel8.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel8.Location = new System.Drawing.Point(237, 500);
             this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
@@ -1880,9 +1869,18 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // btnOk
+            // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Location = new System.Drawing.Point(3, 3);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.TabIndex = 3;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
-            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
@@ -1926,8 +1924,6 @@ namespace EVEMon
             this.flpScreenSelect.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
-            this.gboxTooltipOptions.ResumeLayout(false);
-            this.gboxTooltipOptions.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             this.flowLayoutPanel23.ResumeLayout(false);
@@ -1942,6 +1938,8 @@ namespace EVEMon
             this.flowLayoutPanel15.PerformLayout();
             this.flowLayoutPanel22.ResumeLayout(false);
             this.flowLayoutPanel22.PerformLayout();
+            this.gboxTooltipOptions.ResumeLayout(false);
+            this.gboxTooltipOptions.PerformLayout();
             this.gbSkillPlannerHighlighting.ResumeLayout(false);
             this.gbSkillPlannerHighlighting.PerformLayout();
             this.flowLayoutPanel13.ResumeLayout(false);
@@ -2009,7 +2007,6 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox cbSendEmail;
         private System.Windows.Forms.TableLayoutPanel tlpEmailSettings;
@@ -2142,5 +2139,6 @@ namespace EVEMon
         private System.Windows.Forms.TextBox tbTooltipTestDisplay;
         private System.Windows.Forms.ComboBox cbTooltipDisplay;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
+        private System.Windows.Forms.Button btnOk;
     }
 }
