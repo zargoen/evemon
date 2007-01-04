@@ -220,6 +220,7 @@ namespace EVEMon
             this.btnOk.TabIndex = 2;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // ProxyAuthenticationWindow
             // 

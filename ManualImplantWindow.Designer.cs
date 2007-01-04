@@ -31,6 +31,7 @@ namespace EVEMon
             this.components = new System.ComponentModel.Container();
             this.lvImplants = new System.Windows.Forms.ListView();
             this.chAttribute = new System.Windows.Forms.ColumnHeader();
+            this.chFrom = new System.Windows.Forms.ColumnHeader();
             this.chAdjust = new System.Windows.Forms.ColumnHeader();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.cmsImplantCommands = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -40,10 +41,9 @@ namespace EVEMon
             this.miAddNew = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.chFrom = new System.Windows.Forms.ColumnHeader();
+            this.btnOk = new System.Windows.Forms.Button();
             this.cmsImplantCommands.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -77,6 +77,10 @@ namespace EVEMon
             this.chAttribute.Text = "Attribute";
             this.chAttribute.Width = 74;
             // 
+            // chFrom
+            // 
+            this.chFrom.Text = "From";
+            // 
             // chAdjust
             // 
             this.chAdjust.Text = "Adjust";
@@ -95,32 +99,32 @@ namespace EVEMon
             this.msEditSep,
             this.miAddNew});
             this.cmsImplantCommands.Name = "cmsImplantCommands";
-            this.cmsImplantCommands.Size = new System.Drawing.Size(169, 76);
+            this.cmsImplantCommands.Size = new System.Drawing.Size(180, 76);
             this.cmsImplantCommands.Opening += new System.ComponentModel.CancelEventHandler(this.cmsImplantCommands_Opening);
             // 
             // miModify
             // 
             this.miModify.Name = "miModify";
-            this.miModify.Size = new System.Drawing.Size(168, 22);
+            this.miModify.Size = new System.Drawing.Size(179, 22);
             this.miModify.Text = "Modify Implant...";
             this.miModify.Click += new System.EventHandler(this.miModify_Click);
             // 
             // miDelete
             // 
             this.miDelete.Name = "miDelete";
-            this.miDelete.Size = new System.Drawing.Size(168, 22);
+            this.miDelete.Size = new System.Drawing.Size(179, 22);
             this.miDelete.Text = "Delete Implant...";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
             // msEditSep
             // 
             this.msEditSep.Name = "msEditSep";
-            this.msEditSep.Size = new System.Drawing.Size(165, 6);
+            this.msEditSep.Size = new System.Drawing.Size(176, 6);
             // 
             // miAddNew
             // 
             this.miAddNew.Name = "miAddNew";
-            this.miAddNew.Size = new System.Drawing.Size(168, 22);
+            this.miAddNew.Size = new System.Drawing.Size(179, 22);
             this.miAddNew.Text = "Add New Implant...";
             this.miAddNew.Click += new System.EventHandler(this.miAddNew_Click);
             // 
@@ -148,8 +152,8 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.btnOk);
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
+            this.flowLayoutPanel1.Controls.Add(this.btnOk);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(282, 285);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
@@ -158,20 +162,10 @@ namespace EVEMon
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
-            // btnOk
-            // 
-            this.btnOk.Location = new System.Drawing.Point(84, 3);
-            this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 0;
-            this.btnOk.Text = "OK";
-            this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(3, 3);
+            this.btnCancel.Location = new System.Drawing.Point(84, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -188,13 +182,18 @@ namespace EVEMon
             this.label1.TabIndex = 1;
             this.label1.Text = "Tip: Right-click to add, change, or remove implants.";
             // 
-            // chFrom
+            // btnOk
             // 
-            this.chFrom.Text = "From";
+            this.btnOk.Location = new System.Drawing.Point(3, 3);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.TabIndex = 2;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // ManualImplantWindow
             // 
-            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(456, 326);
@@ -221,7 +220,6 @@ namespace EVEMon
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ContextMenuStrip cmsImplantCommands;
@@ -230,5 +228,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator msEditSep;
         private System.Windows.Forms.ToolStripMenuItem miAddNew;
         private System.Windows.Forms.ColumnHeader chFrom;
+        private System.Windows.Forms.Button btnOk;
     }
 }
