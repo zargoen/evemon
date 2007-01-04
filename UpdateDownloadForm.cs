@@ -36,7 +36,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = (HttpWebRequest) WebRequest.Create(m_url);
+                m_request = EVEMonWebRequest.GetWebRequest(m_url);
                 m_request.BeginGetResponse(new AsyncCallback(GotResponse), null);
             }
             catch (Exception ex)
