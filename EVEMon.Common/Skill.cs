@@ -39,6 +39,9 @@ namespace EVEMon.Common
             m_lastConfirmedLvl = 0;
         }
 
+        /// <summary>
+        /// Gets or sets the most recent skill level that was confirmed from the CCP server or an XML file.
+        /// </summary>
         public int LastConfirmedLvl
         {
             get { return m_lastConfirmedLvl; }
@@ -47,6 +50,9 @@ namespace EVEMon.Common
 
         private SkillGroup m_skillGroup;
 
+        /// <summary>
+        /// Gets the skill group this skill is part of.
+        /// </summary>
         public SkillGroup SkillGroup
         {
             get { return m_skillGroup; }
@@ -62,6 +68,9 @@ namespace EVEMon.Common
             m_skillGroup = gsg;
         }
 
+        /// <summary>
+        /// Gets the current skill points of this skill.
+        /// </summary>
         public int CurrentSkillPoints
         {
             get
@@ -91,11 +100,17 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Gets whether this skill is a learning skill.
+        /// </summary>
         public bool IsLearningSkill
         {
             get { return (this.AttributeModified != EveAttribute.None); }
         }
 
+        /// <summary>
+        /// Gets which attribute this skill modifies.
+        /// </summary>
         public EveAttribute AttributeModified
         {
             get
@@ -126,6 +141,9 @@ namespace EVEMon.Common
 
         private bool m_known = false;
 
+        /// <summary>
+        /// Gets whether this skill is known.
+        /// </summary>
         public bool Known
         {
             get { return m_known; }
@@ -139,6 +157,11 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Calculate the amount of skill points that is trained during a certain timespan.
+        /// </summary>
+        /// <param name="span">The timespan.</param>
+        /// <returns>Amount of skill points.</returns>
         private int GetPointsForTimeSpan(TimeSpan span)
         {
             // m = points/(primAttr+(secondaryAttr/2))
@@ -151,6 +174,14 @@ namespace EVEMon.Common
             return Convert.ToInt32(Math.Ceiling(points));
         }
 
+        /// <summary>
+        /// Calculate the time it will take to train a certain amount of skill points.
+        /// </summary>
+        /// <remarks>
+        /// Note: This does not take into account the attribute increase for each level of the learning skills!
+        /// </remarks>
+        /// <param name="points">The amount of skill points.</param>
+        /// <returns>Time it will take.</returns>
         private TimeSpan GetTimeSpanForPoints(int points)
         {
             return GetTimeSpanForPoints(points, null);
@@ -164,6 +195,11 @@ namespace EVEMon.Common
             return TimeSpan.FromMinutes(minutes);
         }
 
+        /// <summary>
+        /// Calculates the points required for a level of this skill.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <returns>The required nr. of points.</returns>
         public int GetPointsRequiredForLevel(int level)
         {
             if (level == 0)
@@ -180,10 +216,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Calculates the percentage trained (in terms of skill points) of the next level of this skill.
-        /// If the skill is already at level 5, we return 100.0
+        /// Calculates the percentage trained (in terms of skill points) to the next level of this skill.
+        /// If the skill is already at level 5, we return 100.0.
         /// </summary>
-        /// <returns>percent of skill points for the next level that have already been trained</returns>
+        /// <returns>Percentage of skill points to the next level that have already been trained.</returns>
         public double GetPercentDone()
         {
             if (Level == 5) return 100.0;
@@ -294,56 +330,63 @@ namespace EVEMon.Common
             return strWrapped;
         }
 
+        /// <summary>
+        /// Gets the primary attribute of this skill.
+        /// </summary>
         public EveAttribute PrimaryAttribute
         {
             get { return m_primaryAttribute; }
         }
 
+        /// <summary>
+        /// Gets the secondary attribute of this skill.
+        /// </summary>
         public EveAttribute SecondaryAttribute
         {
             get { return m_secondaryAttribute; }
         }
 
+        /// <summary>
+        /// Gets the rank of this skill.
+        /// </summary>
         public int Rank
         {
             get { return m_rank; }
         }
 
+        /// <summary>
+        /// Gets the current level of this skill.
+        /// </summary>
         public int Level
         {
-            get { return CalculateLevel(); }
-        }
-
-        private int CalculateLevel()
-        {
-            if (m_inTraining)
+            get
             {
-                return this.TrainingToLevel - 1;
-            }
-            int csp = this.CurrentSkillPoints;
-            int result = 0;
-            for (int i = 1; i <= 5; i++)
-            {
-                if (GetPointsRequiredForLevel(i) <= csp)
+                if (m_inTraining)
                 {
-                    result = i;
+                    return this.TrainingToLevel - 1;
                 }
+                int csp = this.CurrentSkillPoints;
+                int result = 0;
+                for (int i = 1; i <= 5; i++)
+                {
+                    if (GetPointsRequiredForLevel(i) <= csp)
+                    {
+                        result = i;
+                    }
+                }
+                return result;
             }
-            return result;
         }
 
-        public bool IsFullyTrained()
+        /// <summary>
+        /// Gets whether this skill is partially trained (true) or fully trained (false).
+        /// </summary>
+        public bool PartiallyTrained
         {
-            int csp = this.CurrentSkillPoints;
-            int lvl = CalculateLevel();
-            return (csp == GetPointsRequiredForLevel(lvl + 1));
-        }
-
-        public bool IsPartiallyTrained()
-        {
-            int csp = this.CurrentSkillPoints;
-            int lvl = CalculateLevel();
-            return (csp > GetPointsRequiredForLevel(lvl));
+            get
+            {
+                return CurrentSkillPoints > GetPointsRequiredForLevel(Level);
+            }
         }
 
         public IEnumerable<Prereq> Prereqs
@@ -440,16 +483,25 @@ namespace EVEMon.Common
         private int m_trainingToLevel = 0;
         private DateTime m_estimatedCompletion = DateTime.MaxValue;
 
+        /// <summary>
+        /// Gets whether this skill is currently training.
+        /// </summary>
         public bool InTraining
         {
             get { return m_inTraining; }
         }
 
+        /// <summary>
+        /// Gets the level this skill is training to.
+        /// </summary>
         public int TrainingToLevel
         {
             get { return m_trainingToLevel; }
         }
 
+        /// <summary>
+        /// Gets the estimated time of completion.
+        /// </summary>
         public DateTime EstimatedCompletion
         {
             get { return m_estimatedCompletion; }
@@ -475,6 +527,11 @@ namespace EVEMon.Common
             OnChanged();
         }
 
+        /// <summary>
+        /// Calculate the time to train this skill to a certain level.
+        /// </summary>
+        /// <param name="level">The level to calculate for.</param>
+        /// <returns>Time it will take.</returns>
         public TimeSpan GetTrainingTimeToLevel(int level)
         {
             int currentSp = this.CurrentSkillPoints;
@@ -574,17 +631,37 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Checks whether a certain skill is a prerequisite of this skill.
+        /// The check is performed recursively through all prerequisites.
+        /// </summary>
+        /// <param name="gs">Skill to check.</param>
+        /// <returns><code>true</code> if it is a prerequisite.</returns>
         public bool HasAsPrerequisite(Skill gs)
         {
             int neededLevel;
             return HasAsPrerequisite(gs, out neededLevel, true);
         }
 
+        /// <summary>
+        /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
+        /// The check is performed recursively through all prerequisites.
+        /// </summary>
+        /// <param name="gs">Skill to check.</param>
+        /// <param name="neededLevel">The level that is needed. Out parameter.</param>
+        /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         public bool HasAsPrerequisite(Skill gs, out int neededLevel)
         {
             return HasAsPrerequisite(gs, out neededLevel, true);
         }
 
+        /// <summary>
+        /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
+        /// </summary>
+        /// <param name="gs">Skill to check.</param>
+        /// <param name="neededLevel">The level that is needed. Out parameter.</param>
+        /// <param name="recurse">Pass <code>true</code> to check recursively.</param>
+        /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         public bool HasAsPrerequisite(Skill gs, out int neededLevel, bool recurse)
         {
             foreach (Prereq pp in this.Prereqs)
@@ -594,7 +671,7 @@ namespace EVEMon.Common
                     neededLevel = pp.RequiredLevel;
                     return true;
                 }
-                if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel))
+                if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel, true))
                 {
                     return true;
                 }
@@ -603,6 +680,12 @@ namespace EVEMon.Common
             return false;
         }
 
+        /// <summary>
+        /// Convert a timespan into English text.
+        /// </summary>
+        /// <param name="ts">The timespan.</param>
+        /// <param name="dto">Formatting options.</param>
+        /// <returns>Timespan formatted as English text.</returns>
         public static string TimeSpanToDescriptiveText(TimeSpan ts, DescriptiveTextOptions dto)
         {
             StringBuilder sb = new StringBuilder();
@@ -653,6 +736,11 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Converts an integer into a roman number.
+        /// </summary>
+        /// <param name="number">Number from 1 to 5.</param>
+        /// <returns>Roman number string.</returns>
         public static string GetRomanForInt(int number)
         {
             switch (number)
@@ -672,6 +760,11 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Converts a roman number into an integer.
+        /// </summary>
+        /// <param name="r">Roman number from I to V.</param>
+        /// <returns>Integer number.</returns>
         public static int GetIntForRoman(string r)
         {
             if (r == "I")
@@ -697,6 +790,10 @@ namespace EVEMon.Common
             return 0;
         }
 
+        /// <summary>
+        /// Returns the string representation of this skill (the name).
+        /// </summary>
+        /// <returns>The name of the skill.</returns>
         public override string ToString()
         {
             return this.Name;

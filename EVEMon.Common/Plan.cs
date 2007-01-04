@@ -1081,12 +1081,18 @@ namespace EVEMon.Common
                 m_prerequisiteCache = null;
             }
 
+            /// <summary>
+            /// Gets or sets the name of this plan entry's skill.
+            /// </summary>
             public string SkillName
             {
                 get { return m_skillName; }
                 set { m_skillName = value; }
             }
 
+            /// <summary>
+            /// Gets or sets the skill level of this plan entry.
+            /// </summary>
             public int Level
             {
                 get { return m_level; }
@@ -1124,7 +1130,9 @@ namespace EVEMon.Common
                 set { m_addNoteonly = value; }
             }
 
-            [XmlIgnore]
+            /// <summary>
+            /// Gets the skill of this plan entry.
+            /// </summary>
             public Skill Skill
             {
                 get
@@ -1134,6 +1142,17 @@ namespace EVEMon.Common
                         return null;
                     }
                     return m_owner.GrandCharacterInfo.GetSkill(m_skillName);
+                }
+            }
+
+            /// <summary>
+            /// Gets whether this entry can be trained now.
+            /// </summary>
+            public bool CanTrainNow
+            {
+                get
+                {
+                    return Skill.PrerequisitesMet && Level == Skill.Level + 1;
                 }
             }
 

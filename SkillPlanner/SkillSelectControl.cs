@@ -137,20 +137,20 @@ namespace EVEMon.SkillPlanner
                 case "Level I Ready": // Level I Ready Skills
                     sf = delegate(Skill gs)
                              {
-                                 return (gs.Level == 0 && gs.PrerequisitesMet);
+                                 return gs.Level == 0 && gs.PrerequisitesMet;
                              };
                     break;
                 case "Trainable": // Trainable Skills
                     sf = delegate(Skill gs)
                              {
-                                 return (gs.PrerequisitesMet && gs.Level < 5);
+                                 return gs.PrerequisitesMet && gs.Level < 5;
                              };
                     break;
 
                 case "Partially Trained": // partially trained skils
                     sf = delegate(Skill gs)
                              {
-                                 return (gs.IsPartiallyTrained());
+                                 return gs.PartiallyTrained;
                              };
                     break;
                 case "Not Planned": // Not Planned Skills
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
                 case "Not Planned - Trainable": // Not Planned & Trainable Skills
                     sf = delegate(Skill gs)
                              {
-                                 return (!m_plan.IsPlanned(gs) && (gs.PrerequisitesMet && gs.Level < 5));
+                                 return !m_plan.IsPlanned(gs) && gs.PrerequisitesMet && gs.Level < 5;
                              };
                     break;
             }
@@ -217,7 +217,7 @@ namespace EVEMon.SkillPlanner
                         TreeNode stn;
                         if (gs.Level == 0)
                         {
-                            if (gs.IsPartiallyTrained())
+                            if (gs.PartiallyTrained)
                             {
                                 stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl0"), tvSkillList.ImageList.Images.IndexOfKey("lvl0"));
                             }

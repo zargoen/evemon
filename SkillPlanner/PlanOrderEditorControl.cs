@@ -15,16 +15,14 @@ namespace EVEMon.SkillPlanner
     {
         private System.Drawing.Font m_plannedSkillFont;
         private System.Drawing.Font m_prerequisiteSkillFont;
-        private System.Drawing.Color m_plannedSkillColor;
-        private System.Drawing.Color m_prerequisiteSkillColor;
+        private System.Drawing.Color m_trainablePlanEntryColor;
 
         public PlanOrderEditorControl()
         {
             InitializeComponent();
             m_plannedSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Bold);
             m_prerequisiteSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Regular);
-            m_plannedSkillColor = System.Drawing.Color.Black;
-            m_prerequisiteSkillColor = System.Drawing.Color.Black;
+            m_trainablePlanEntryColor = SystemColors.GrayText;
         }
 
         private NewPlannerWindow m_plannerWindow;
@@ -124,17 +122,23 @@ namespace EVEMon.SkillPlanner
                     {
                         ListViewItem lvi = new ListViewItem();
                         lvi.Tag = pe;
+
+                        // Highlight entries that were planned, if option enabled.
                         if (!m_WorksafeMode &&
                             m_HighlightPlannedSkills &&
                             pe.EntryType == Plan.Entry.Type.Planned)
                         {
                             lvi.Font = m_plannedSkillFont;
-                            lvi.ForeColor = m_plannedSkillColor;
                         }
                         else
                         {
                             lvi.Font = m_prerequisiteSkillFont;
-                            lvi.ForeColor = m_prerequisiteSkillColor;
+                        }
+
+                        // Gray out entries that can not be trained immediately.
+                        if (!pe.CanTrainNow)
+                        {
+                            lvi.ForeColor = m_trainablePlanEntryColor;
                         }
 
                         lvSkills.Items.Add(lvi);
