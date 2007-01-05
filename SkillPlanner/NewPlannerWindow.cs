@@ -58,12 +58,19 @@ namespace EVEMon.SkillPlanner
 
             foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
             {
-                ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
-                tsddiTemp.MouseEnter += new EventHandler(tsddiTemp_MouseEnter);
-                tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
-                if (planName == m_plan.Name)
+                try
                 {
-                    tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
+                    tsddiTemp.MouseEnter += new EventHandler(tsddiTemp_MouseEnter);
+                    tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
+                    if (planName == m_plan.Name)
+                    {
+                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                    }
+                }
+                catch (InvalidCastException)
+                {
+                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
                 }
             }
         }
@@ -261,11 +268,19 @@ namespace EVEMon.SkillPlanner
 
             foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
             {
-                ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
-                if (planName == m_plan.Name)
+                try
                 {
-                    tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
+                    if (planName == m_plan.Name)
+                    {
+                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                    }
                 }
+                catch (InvalidCastException) 
+                {
+                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
+                }
+
             }
             UpdateStatusBar();
         }

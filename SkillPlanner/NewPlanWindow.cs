@@ -27,6 +27,11 @@ namespace EVEMon.SkillPlanner
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            if (textBox1.Text.Equals("-"))
+            {
+                MessageBox.Show("You cannot chose \"-\" as your plan name!","Bad Pan Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             m_result = textBox1.Text;
             DialogResult = DialogResult.OK;
             this.Close();
