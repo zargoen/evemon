@@ -28,7 +28,8 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            cbFilter.SelectedIndex = 0;
+            cbSkillFilter.SelectedIndex = 0;
+            cbSlotFilter.SelectedIndex = 0;
 
             try
             {
@@ -47,21 +48,22 @@ namespace EVEMon.SkillPlanner
 
         // Filtering code
         private delegate bool ItemFilter(Item i);
-        private ItemFilter itemf = delegate { return true; };
+        private static ItemFilter showAll = delegate { return true; };
 
-        private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private ItemFilter skillFilter = showAll;
+        
+        private ItemFilter slotFilter = showAll;
+
+        private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (cbFilter.SelectedIndex)
+            switch (cbSkillFilter.SelectedIndex)
             {
                 default:
                 case 0: // All Items
-                    itemf = delegate
-                             {
-                                 return true;
-                             };
+                    skillFilter = showAll;
                     break;
-                case 1: // Ships I can fly
-                    itemf = delegate(Item i)
+                case 1: // Items I can use
+                    skillFilter = delegate(Item i)
                              {
                                  Skill gs = null;
                                  for (int x = 0; x < i.RequiredSkills.Count; x++)
@@ -77,15 +79,35 @@ namespace EVEMon.SkillPlanner
                                          return true;
                                      }
 
-                                 }
-                                 return true;
-                             };
+             }
+             return true;
+         };
                     break;
             }
             if (m_rootCategory != null)
                 BuildTreeView();
         }
 
+        private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbSlotFilter.SelectedIndex)
+            {
+                default:
+                case 0: // All items
+                    slotFilter = showAll;
+                    break;
+                case 1: // High slot
+                case 2: // Mid slot
+                case 3: // Low slot
+                    slotFilter = delegate(Item i) { return i.SlotIndex == cbSlotFilter.SelectedIndex; };
+                    break;
+                case 4: // No-slot items
+                    slotFilter = delegate(Item i) { return i.SlotIndex == 0; };
+                    break;
+            }
+            if (m_rootCategory != null)
+                BuildTreeView();
+        }
 
         private void BuildTreeView()
         {
@@ -123,7 +145,7 @@ namespace EVEMon.SkillPlanner
             SortedDictionary<string, Item> sortedItems = new SortedDictionary<string, Item>();
             foreach (Item titem in cat.Items)
             {
-                if (itemf(titem))
+                if (skillFilter(titem) && slotFilter(titem))
                     sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)

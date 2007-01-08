@@ -93,7 +93,7 @@ namespace EVEMon.SkillPlanner
 
         private delegate bool SkillFilter(Skill gs);
 
-        private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSkillDisplay();
         }
@@ -107,7 +107,7 @@ namespace EVEMon.SkillPlanner
 
             SkillFilter sf;
 
-            switch (cbFilter.SelectedItem.ToString())
+            switch (cbSkillFilter.SelectedItem.ToString())
             {
                 default:
                 case "All": // All Skills
@@ -483,7 +483,7 @@ namespace EVEMon.SkillPlanner
 
         private void SkillSelectControl_Load(object sender, EventArgs e)
         {
-            cbFilter.SelectedIndex = 0;
+            cbSkillFilter.SelectedIndex = 0;
             cbSorting.SelectedIndex = 0;
         }
 

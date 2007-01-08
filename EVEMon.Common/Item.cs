@@ -70,6 +70,39 @@ namespace EVEMon.Common
         {
             return m_name;
         }
+
+        private int m_slotIndex = -1;
+        public int SlotIndex
+        {
+            get
+            {
+                if (m_slotIndex != -1)
+                    return m_slotIndex;
+                foreach (ItemProperty prop in m_properties)
+                {
+                    if (prop.Name != "Slot type")
+                        continue;
+                    switch (prop.Value)
+                    {
+                        default:
+                            m_slotIndex = 0; // FIXME: debug warning?
+                            break;
+                        case "High slot":
+                            m_slotIndex = 1;
+                            break;
+                        case "Mid slot":
+                            m_slotIndex = 2;
+                            break;
+                        case "Low slot":
+                            m_slotIndex = 3;
+                            break;
+                    }
+                    return m_slotIndex;
+                }
+                m_slotIndex = 0; // No slot
+                return m_slotIndex;
+            }
+        }
     }
 
     public class ItemProperty

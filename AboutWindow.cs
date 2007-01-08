@@ -62,6 +62,7 @@ namespace EVEMon
             slDevelopers.Add("Nascent Nimbus", "04");
             slDevelopers.Add("Richard Slater", "04");
             slDevelopers.Add("Ruldar", "04");
+            slDevelopers.Add("shaver", "04");
             slDevelopers.Add("Shocky", "04");
             slDevelopers.Add("Spiff Nutter", "04");
 

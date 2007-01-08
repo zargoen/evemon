@@ -36,7 +36,7 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbShipResults = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbFilter = new System.Windows.Forms.ComboBox();
+            this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -123,7 +123,7 @@ namespace EVEMon.SkillPlanner
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.cbFilter);
+            this.panel1.Controls.Add(this.cbSkillFilter);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pbSearchImage);
             this.panel1.Controls.Add(this.lbSearchTextHint);
@@ -135,21 +135,21 @@ namespace EVEMon.SkillPlanner
             this.panel1.Size = new System.Drawing.Size(185, 54);
             this.panel1.TabIndex = 26;
             // 
-            // cbFilter
+            // cbSkillFilter
             // 
-            this.cbFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilter.FormattingEnabled = true;
-            this.cbFilter.Items.AddRange(new object[] {
+            this.cbSkillFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSkillFilter.FormattingEnabled = true;
+            this.cbSkillFilter.Items.AddRange(new object[] {
             "All Ships",
             "Ships I Can Fly"});
-            this.cbFilter.Location = new System.Drawing.Point(31, 3);
-            this.cbFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(154, 21);
-            this.cbFilter.TabIndex = 0;
-            this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
+            this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
+            this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cbSkillFilter.Name = "cbSkillFilter";
+            this.cbSkillFilter.Size = new System.Drawing.Size(154, 21);
+            this.cbSkillFilter.TabIndex = 0;
+            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -204,7 +204,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListBox lbShipResults;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ComboBox cbFilter;
+        private System.Windows.Forms.ComboBox cbSkillFilter;
         private System.Windows.Forms.Label label1;
     }
 }

@@ -23,7 +23,7 @@ namespace EVEMon.SkillPlanner
 
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
-            cbFilter.SelectedIndex = 0;
+            cbSkillFilter.SelectedIndex = 0;
             m_ships = Ship.GetShips();
             if (m_ships != null)
                 BuildTreeView();
@@ -33,9 +33,9 @@ namespace EVEMon.SkillPlanner
         private delegate bool ShipFilter(Ship s);
         private ShipFilter sf = delegate { return true; };
 
-        private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (cbFilter.SelectedIndex)
+            switch (cbSkillFilter.SelectedIndex)
             {
                 default:
                 case 0: // All Ships
