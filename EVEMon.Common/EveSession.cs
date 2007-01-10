@@ -201,7 +201,7 @@ namespace EVEMon.Common
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("ReLogin() issue: " + ex.Message);
+                throw new ApplicationException("ReLogin() issue: " + ex.Message + "\nPlease confirm that the \"My Character\" page is functional on the eve-online website as that is where you are trying to access!");
             }
             try
             {
