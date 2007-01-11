@@ -131,6 +131,8 @@ namespace EVEMon.SkillPlanner
                     // Fittings
 
                     String[] shipAttributeList = new String[]{
+                        // Price
+                        "Base price",
                         // Fitting
                         "CPU Output",
                         "powergrid Output",
@@ -169,7 +171,7 @@ namespace EVEMon.SkillPlanner
                         "Recharge time",
                         // Attributes - Targetting
                         "Maximum Targeting Range",
-                        "Max Locked Targets",
+                        "Max  Locked Targets",
                         "Scan Resolution",
                         "Gravimetric Sensor Strength",
                         "LADAR Sensor Strength",
