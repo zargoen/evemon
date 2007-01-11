@@ -34,6 +34,7 @@ namespace EVEMon
             // Look and feel options
             s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
+            s.SkillPlannerDimUntrainable = cbDimUntrainable.Checked;
 
             if (rbSystemTrayOptionsNever.Checked)
                 s.SystemTrayOptions = SystemTrayDisplayOptions.Never;
@@ -238,6 +239,7 @@ namespace EVEMon
 
             cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;
             cbHighlightPrerequisites.Checked = m_settings.SkillPlannerHighlightPrerequisites;
+            cbDimUntrainable.Checked = m_settings.SkillPlannerDimUntrainable;
 
             cbTooltipDisplay.Items.Clear();
             for (int i = 0; i < tooltipCodes.Length; i++)

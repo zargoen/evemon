@@ -93,6 +93,22 @@ namespace EVEMon.Common
             if (HighlightPrerequisitesChanged != null)
                 HighlightPrerequisitesChanged(this, new EventArgs());
         }
+
+        private bool m_DimUntrainable;
+        public event EventHandler<EventArgs> DimUntrainableChanged;
+        public bool SkillPlannerDimUntrainable
+        {
+            get { return m_DimUntrainable; }
+            set { m_DimUntrainable = value; OnDimUntrainableChanged(); }
+        }
+
+        private void OnDimUntrainableChanged()
+        {
+            if (DimUntrainableChanged != null)
+                DimUntrainableChanged(this, new EventArgs());
+        }
+
+
         #endregion
 
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();

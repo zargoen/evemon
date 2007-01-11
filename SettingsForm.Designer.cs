@@ -117,6 +117,7 @@ namespace EVEMon
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel14 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbHighlightPrerequisites = new System.Windows.Forms.CheckBox();
+            this.cbDimUntrainable = new System.Windows.Forms.CheckBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tvlist = new System.Windows.Forms.TreeView();
@@ -552,7 +553,7 @@ namespace EVEMon
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(396, 494);
+            this.tabControl1.Size = new System.Drawing.Size(396, 510);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -885,7 +886,7 @@ namespace EVEMon
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(388, 468);
+            this.tabPage5.Size = new System.Drawing.Size(388, 484);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Look And Feel";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -902,7 +903,7 @@ namespace EVEMon
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(376, 456);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(376, 482);
             this.flowLayoutPanel16.TabIndex = 10;
             // 
             // groupBox11
@@ -1047,7 +1048,7 @@ namespace EVEMon
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
             this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 186);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
-            this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(362, 66);
+            this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(362, 89);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
             this.gbSkillPlannerHighlighting.TabStop = false;
             this.gbSkillPlannerHighlighting.Text = "Skill Planner";
@@ -1059,12 +1060,13 @@ namespace EVEMon
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightPlannedSkills);
             this.flowLayoutPanel13.Controls.Add(this.flowLayoutPanel14);
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightPrerequisites);
+            this.flowLayoutPanel13.Controls.Add(this.cbDimUntrainable);
             this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel13.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel13.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel13.Name = "flowLayoutPanel13";
             this.flowLayoutPanel13.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel13.Size = new System.Drawing.Size(356, 46);
+            this.flowLayoutPanel13.Size = new System.Drawing.Size(356, 69);
             this.flowLayoutPanel13.TabIndex = 1;
             this.flowLayoutPanel13.WrapContents = false;
             // 
@@ -1100,6 +1102,16 @@ namespace EVEMon
             this.cbHighlightPrerequisites.Text = "Highlight Pre-requisites";
             this.cbHighlightPrerequisites.UseVisualStyleBackColor = true;
             // 
+            // cbDimUntrainable
+            // 
+            this.cbDimUntrainable.AutoSize = true;
+            this.cbDimUntrainable.Location = new System.Drawing.Point(12, 49);
+            this.cbDimUntrainable.Name = "cbDimUntrainable";
+            this.cbDimUntrainable.Size = new System.Drawing.Size(126, 17);
+            this.cbDimUntrainable.TabIndex = 9;
+            this.cbDimUntrainable.Text = "Dim Untrainable Skills";
+            this.cbDimUntrainable.UseVisualStyleBackColor = true;
+            // 
             // groupBox10
             // 
             this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -1107,7 +1119,7 @@ namespace EVEMon
             this.groupBox10.AutoSize = true;
             this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 258);
+            this.groupBox10.Location = new System.Drawing.Point(3, 281);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(362, 143);
             this.groupBox10.TabIndex = 13;
@@ -1802,7 +1814,7 @@ namespace EVEMon
             this.flowLayoutPanel7.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel7.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(404, 552);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(404, 573);
             this.flowLayoutPanel7.TabIndex = 1;
             this.flowLayoutPanel7.WrapContents = false;
             // 
@@ -1814,7 +1826,7 @@ namespace EVEMon
             this.flowLayoutPanel8.Controls.Add(this.btnCancel);
             this.flowLayoutPanel8.Controls.Add(this.btnOk);
             this.flowLayoutPanel8.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(237, 500);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(237, 516);
             this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(162, 29);
@@ -1887,7 +1899,7 @@ namespace EVEMon
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(404, 552);
+            this.ClientSize = new System.Drawing.Size(404, 573);
             this.Controls.Add(this.flowLayoutPanel7);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -2141,5 +2153,6 @@ namespace EVEMon
         private System.Windows.Forms.ComboBox cbTooltipDisplay;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.CheckBox cbDimUntrainable;
     }
 }

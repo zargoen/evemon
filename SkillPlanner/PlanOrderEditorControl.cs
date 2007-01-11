@@ -101,6 +101,13 @@ namespace EVEMon.SkillPlanner
             set { m_HighlightPlannedSkills = value; UpdateSkillList(); }
         }
 
+        private bool m_DimUntrainable = false;
+        public bool DimUntrainable
+        {
+            get { return m_DimUntrainable; }
+            set { m_DimUntrainable = value; UpdateSkillList(); }
+        }
+
         private bool m_WorksafeMode = false;
         public bool WorksafeMode
         {
@@ -136,7 +143,7 @@ namespace EVEMon.SkillPlanner
                         }
 
                         // Gray out entries that can not be trained immediately.
-                        if (!pe.CanTrainNow)
+                        if (!pe.CanTrainNow && m_DimUntrainable)
                         {
                             lvi.ForeColor = m_trainablePlanEntryColor;
                         }
