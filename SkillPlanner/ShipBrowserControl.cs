@@ -32,6 +32,12 @@ namespace EVEMon.SkillPlanner
             shipSelectControl_SelectedShipChanged(null, null);
         }
 
+        private static string m_propName;
+        private static bool findShipProperty(ShipProperty p)
+        {
+            return p.Name.Equals(ShipBrowserControl.m_propName);
+        }
+        
         private void shipSelectControl_SelectedShipChanged(object sender, EventArgs e)
         {
             Bitmap b = new Bitmap(256, 256);
@@ -120,11 +126,83 @@ namespace EVEMon.SkillPlanner
                         lvShipProperties.Columns.RemoveAt(2);
                     // (re)construct ship properties list
                     lvShipProperties.Items.Clear();
+
+                    // display the properties in a logical sequence
+                    // Fittings
+
+                    String[] shipAttributeList = new String[]{
+                        // Fitting
+                        "CPU Output",
+                        "powergrid Output",
+                        "Calibration",
+                        "Low Slots",
+                        "Med Slots",
+                        "High Slots",
+                        "Launcher hardpoints",
+                        "Turret hardpoints",
+                        "Rig Slots",
+                        // Attributes - structure
+                        "hp",
+                        "Capacity",
+                        "Drone Capacity",
+                        "Mass",
+                        "Volume",
+                        "EM dmg resistance",
+                        "Explosive dmg resistance",
+                        "Kinetic dmg resistance",
+                        "Thermal dmg resistance",
+                        // Attributes - Armor
+                        "Armor Hitpoints",
+                        "Armor Em Damage Resistance",
+                        "Armor Explosive Damage Resistance",
+                        "Armor Kinetic Damage Resistance",
+                        "Armor Thermal Damage Resistance",
+                        // Attributes - Shield
+                        "Shield Capacity",
+                        "Shield recharge time",
+                        "Shield Em Damage Resistance",
+                        "Shield Explosive Damage Resistance",
+                        "Shield Kinetic Damage Resistance",
+                        "Shield Thermal Damage Resistance",
+                        // Attributes - cap
+                        "Capacitor Capacity",
+                        "Recharge time",
+                        // Attributes - Targetting
+                        "Maximum Targeting Range",
+                        "Max Locked Targets",
+                        "Scan Resolution",
+                        "Gravimetric Sensor Strength",
+                        "LADAR Sensor Strength",
+                        "Magnetometric Sensor Strength",
+                        "RADAR Sensor Strength",
+                        "Signature Radius",
+                        // Attributes - Propulsion
+                        "Max Velocity"
+                    };
+
+                    
+                    foreach (String att in shipAttributeList)
+                    {
+                       m_propName = att;
+                       ShipProperty sp = s.Properties.Find(findShipProperty);
+                       ListViewItem listItem1 = null;
+                       if (sp != null)
+                       {
+                         listItem1 = new ListViewItem(new string[] { sp.Name, sp.Value });
+                         listItem1.Name = sp.Name;
+                         lvShipProperties.Items.Add(listItem1);
+                       }
+                    }                    
+                    
                     foreach (ShipProperty prop in s.Properties)
                     {
-                        ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
-                        listItem.Name = prop.Name;
-                        lvShipProperties.Items.Add(listItem);
+                        // make sure we havn't already displayed this property
+                        if (Array.IndexOf(shipAttributeList, prop.Name) < 0)
+                        {
+                            ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                            listItem.Name = prop.Name;
+                            lvShipProperties.Items.Add(listItem);
+                        }
                     }
                 }
                 finally
@@ -192,6 +270,7 @@ namespace EVEMon.SkillPlanner
             pbShipImage.Image = i;
         }
 
+        
         private void btnShipSkillsAdd_Click(object sender, EventArgs e)
         {
             Ship s = shipSelectControl.SelectedShip;
@@ -275,4 +354,5 @@ namespace EVEMon.SkillPlanner
             }
         }
     }
+
 }
