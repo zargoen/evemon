@@ -94,7 +94,7 @@ namespace EVEMon.Common
                 HighlightPrerequisitesChanged(this, new EventArgs());
         }
 
-        private bool m_DimUntrainable;
+        private bool m_DimUntrainable=true;
         public event EventHandler<EventArgs> DimUntrainableChanged;
         public bool SkillPlannerDimUntrainable
         {
