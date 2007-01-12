@@ -154,7 +154,6 @@ namespace EVEMon.LogitechG15
         private string[] _lines;
         //private string[] _lastLines;
         private Byte[] _bufferOut;
-        private long _buttonstate;
         private string[] _charlist;
         private uint _oldbuttonstate;
         private DateTime _btnstatehld;
