@@ -127,13 +127,22 @@ namespace EVEMon.SkillPlanner
                     // (re)construct ship properties list
                     lvShipProperties.Items.Clear();
 
-                    // display the properties in a logical sequence
-                    // Fittings
-
+                    /* display the properties in a logical sequence
+                     
+                     If  the starts with =, then it will be displayed as a heading and not
+                     a value. 
+                     NB: In Compare mode, only the FIRST selected ship will have sorted attributes 
+                     so if there is an attribute in this list that the first ship doesn't have
+                      but the second does, then it will be listed in the unsorted part of the
+                     list for the second ship - such occurences are rare.
+                     (e.g. comparing a freighter to a battleship - slot configuration will be shown in 
+                      the "other" section) */
+                    
                     String[] shipAttributeList = new String[]{
                         // Price
                         "Base price",
                         // Fitting
+                        "=Fitting",
                         "CPU Output",
                         "powergrid Output",
                         "Calibration",
@@ -144,6 +153,7 @@ namespace EVEMon.SkillPlanner
                         "Turret hardpoints",
                         "Rig Slots",
                         // Attributes - structure
+                        "=Structure",
                         "hp",
                         "Capacity",
                         "Drone Capacity",
@@ -154,12 +164,14 @@ namespace EVEMon.SkillPlanner
                         "Kinetic dmg resistance",
                         "Thermal dmg resistance",
                         // Attributes - Armor
+                        "=Armor",
                         "Armor Hitpoints",
                         "Armor Em Damage Resistance",
                         "Armor Explosive Damage Resistance",
                         "Armor Kinetic Damage Resistance",
                         "Armor Thermal Damage Resistance",
                         // Attributes - Shield
+                        "=Shield",
                         "Shield Capacity",
                         "Shield recharge time",
                         "Shield Em Damage Resistance",
@@ -167,11 +179,14 @@ namespace EVEMon.SkillPlanner
                         "Shield Kinetic Damage Resistance",
                         "Shield Thermal Damage Resistance",
                         // Attributes - cap
+                        "=Capacitor",
                         "Capacitor Capacity",
                         "Recharge time",
-                        // Attributes - Targetting
+                        // Attributes - Targeting
+                        "=Targeting",
                         "Maximum Targeting Range",
-                        "Max  Locked Targets",
+                        "Max  Locked Targets", // Yes, it has a double space in the xml!
+                        "Max Locked Targets", // And sometimes it doesn't!
                         "Scan Resolution",
                         "Gravimetric Sensor Strength",
                         "LADAR Sensor Strength",
@@ -179,29 +194,41 @@ namespace EVEMon.SkillPlanner
                         "RADAR Sensor Strength",
                         "Signature Radius",
                         // Attributes - Propulsion
-                        "Max Velocity"
+                        "=Propulsion",
+                        "Max Velocity",
+                        "=Other"
                     };
 
-                    
+
+                    ListViewItem listItem = null;
                     foreach (String att in shipAttributeList)
                     {
-                       m_propName = att;
-                       ShipProperty sp = s.Properties.Find(findShipProperty);
-                       ListViewItem listItem1 = null;
-                       if (sp != null)
-                       {
-                         listItem1 = new ListViewItem(new string[] { sp.Name, sp.Value });
-                         listItem1.Name = sp.Name;
-                         lvShipProperties.Items.Add(listItem1);
+                        if (att.StartsWith("="))
+                        {
+                            listItem = new ListViewItem(att.Substring(1));
+                            listItem.BackColor = System.Drawing.SystemColors.MenuHighlight;
+                            lvShipProperties.Items.Add(listItem);
+                        }
+                        else
+                        {
+                            m_propName = att;
+                            ShipProperty sp = s.Properties.Find(findShipProperty);
+                            if (sp != null)
+                            {
+                                listItem = new ListViewItem(new string[] { sp.Name, sp.Value });
+                                listItem.Name = sp.Name;
+                                lvShipProperties.Items.Add(listItem);
+                            }
                        }
                     }                    
                     
+                    // Display any properties not shown in the sorted list
                     foreach (ShipProperty prop in s.Properties)
                     {
-                        // make sure we havn't already displayed this property
+                        // make sure we haven't already displayed this property
                         if (Array.IndexOf(shipAttributeList, prop.Name) < 0)
                         {
-                            ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                            listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
                             listItem.Name = prop.Name;
                             lvShipProperties.Items.Add(listItem);
                         }
