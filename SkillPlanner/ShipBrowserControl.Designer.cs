@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
             this.btnCompareWith.Name = "btnCompareWith";
             this.btnCompareWith.Size = new System.Drawing.Size(127, 28);
             this.btnCompareWith.TabIndex = 11;
-            this.btnCompareWith.Text = "Compare With…";
+            this.btnCompareWith.Text = "Compare With...";
             this.btnCompareWith.UseVisualStyleBackColor = true;
             this.btnCompareWith.Click += new System.EventHandler(this.btnCompareWith_Click);
             // 

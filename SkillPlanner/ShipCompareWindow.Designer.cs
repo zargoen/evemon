@@ -95,7 +95,7 @@ namespace EVEMon.SkillPlanner
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ShipCompareWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Compare With…";
+            this.Text = "Compare With...";
             this.ResumeLayout(false);
             this.PerformLayout();
 
