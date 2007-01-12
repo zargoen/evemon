@@ -206,7 +206,7 @@ namespace EVEMon.SkillPlanner
                         if (att.StartsWith("="))
                         {
                             listItem = new ListViewItem(att.Substring(1));
-                            listItem.BackColor = System.Drawing.SystemColors.MenuHighlight;
+                            listItem.BackColor = Color.LightGray;
                             lvShipProperties.Items.Add(listItem);
                         }
                         else
