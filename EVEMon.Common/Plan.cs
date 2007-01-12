@@ -794,6 +794,11 @@ namespace EVEMon.Common
 
         private WeakReference<Form> m_plannerWindow;
 
+        public WeakReference<Form> PlannerWindow 
+        {
+            set { m_plannerWindow = value; }
+        }
+
         public void ShowEditor(Settings s, CharacterInfo gci)
         {
             if (m_plannerWindow != null)

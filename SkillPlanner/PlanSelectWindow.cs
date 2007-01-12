@@ -260,6 +260,7 @@ namespace EVEMon.SkillPlanner
                     try
                     {
                         m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName);
+                        
                     }
                     catch (ApplicationException err)
                     {

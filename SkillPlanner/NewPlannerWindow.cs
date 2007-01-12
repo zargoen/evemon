@@ -22,6 +22,17 @@ namespace EVEMon.SkillPlanner
         {
             m_settings = s;
             m_plan = p;
+            m_planKey = p.GrandCharacterInfo.Name;
+
+            // see if this character is file based (for select plan button)
+            foreach (CharFileInfo cfi in m_settings.CharFileList)
+            {
+                if (cfi.CharacterName.Equals(p.GrandCharacterInfo.Name))
+                {
+                    m_cfi = cfi;
+                    m_planKey = cfi.Filename;
+                }
+            }
 
             skillBrowser.Plan = m_plan;
             // Shouldn't need this
@@ -57,7 +68,7 @@ namespace EVEMon.SkillPlanner
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.Add("<New Plan>");
 
-            foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
+            foreach (string planName in m_settings.GetPlansForCharacter(m_planKey))
             {
                 try
                 {
@@ -141,6 +152,10 @@ namespace EVEMon.SkillPlanner
         }
 
         Settings m_settings;
+        
+        private CharFileInfo m_cfi = null;
+        private String m_planKey;
+        
         public Settings Settings
         {
             get { return m_settings; }
@@ -270,8 +285,8 @@ namespace EVEMon.SkillPlanner
 
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.Add("<New Plan>");
-
-            foreach (string planName in m_settings.GetPlansForCharacter(m_plan.GrandCharacterInfo.Name))
+                      
+            foreach (string planName in m_settings.GetPlansForCharacter(m_planKey))
             {
                 try
                 {
@@ -302,7 +317,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            m_settings.RemovePlanFor(m_plan.GrandCharacterInfo.Name, m_plan.Name);
+            m_settings.RemovePlanFor(m_planKey, m_plan.Name);
         }
 
         private void tslSuggestion_Click(object sender, EventArgs e)
@@ -346,7 +361,7 @@ namespace EVEMon.SkillPlanner
             Plan p = null;
             if (s != null && s != "<New Plan>" && s != m_plan.Name)
             {
-                p = m_settings.GetPlanByName(m_plan.GrandCharacterInfo.Name, s);
+                p = m_settings.GetPlanByName(m_planKey, s);
                 ChangePlan(p);
             }
             else
@@ -371,7 +386,9 @@ namespace EVEMon.SkillPlanner
                             }
                             try
                             {
-                                m_settings.AddPlanFor(m_plan.GrandCharacterInfo.Name, p, planName);
+                               
+                                m_settings.AddPlanFor(m_planKey, p, planName);
+                                p.PlannerWindow = new WeakReference<Form>(this);
                                 doAgain = false;
                             }
                             catch (ApplicationException err)

@@ -1666,15 +1666,15 @@ namespace EVEMon
         private void btnPlan_ContextMenuShowing(object sender, EventArgs e)
         {
             ContextMenuStrip plans = new ContextMenuStrip();
-
-            foreach (string plan in m_settings.GetPlansForCharacter(m_grandCharacterInfo.Name))
+            String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
+            foreach (string plan in m_settings.GetPlansForCharacter(planKey))
             {
 
                 ToolStripMenuItem planItem = new ToolStripMenuItem(plan);
                 planItem.Click += delegate(object o, EventArgs ev)
                 {
                     ToolStripMenuItem item = o as ToolStripMenuItem;
-                    m_settings.GetPlanByName(m_grandCharacterInfo.Name, item.Text).ShowEditor(m_settings, m_grandCharacterInfo);
+                    m_settings.GetPlanByName(planKey, item.Text).ShowEditor(m_settings, m_grandCharacterInfo);
                 };
                 plans.Items.Add(planItem);
             }
