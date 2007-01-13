@@ -303,6 +303,7 @@ namespace EVEMon.SkillPlanner
 
             }
             UpdateStatusBar();
+            planEditor.UpdateListColumns();
         }
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
@@ -405,7 +406,7 @@ namespace EVEMon.SkillPlanner
                         }
                     }
                     ChangePlan(p);
-                }                
+                }
             }
         }
 

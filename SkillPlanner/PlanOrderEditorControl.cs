@@ -494,7 +494,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void UpdateListColumns()
+        public void UpdateListColumns()
         {
             if (m_plan != null)
             {

@@ -208,6 +208,7 @@
     <Compile Include="SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\AttributeDisplayControl.cs" />
     <Compile Include="SkillPlanner\ItemCompareWindow.cs">
       <SubType>Form</SubType>
     </Compile>
