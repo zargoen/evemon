@@ -80,11 +80,24 @@ namespace EVEMon.Common
 
         private MarkupType m_markupType;
 
-        [XmlAttribute]
+        /// <summary>
+        /// Output markup type.
+        /// </summary>
         public MarkupType Markup
         {
             get { return m_markupType; }
             set { m_markupType = value; }
+        }
+
+        private bool m_shoppingList;
+
+        /// <summary>
+        /// If <code>true</code>, known skills are filtered out.
+        /// </summary>
+        public bool ShoppingList
+        {
+            get { return m_shoppingList; }
+            set { m_shoppingList = value; }
         }
 
         #region ICloneable Members

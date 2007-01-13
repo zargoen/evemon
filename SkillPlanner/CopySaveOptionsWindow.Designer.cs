@@ -47,6 +47,7 @@ namespace EVEMon.SkillPlanner
             this.cmbFormatting = new System.Windows.Forms.ComboBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cbShoppingList = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -248,7 +249,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.cbRememberOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbRememberOptions.AutoSize = true;
-            this.cbRememberOptions.Location = new System.Drawing.Point(11, 87);
+            this.cbRememberOptions.Location = new System.Drawing.Point(24, 493);
             this.cbRememberOptions.Margin = new System.Windows.Forms.Padding(4);
             this.cbRememberOptions.Name = "cbRememberOptions";
             this.cbRememberOptions.Size = new System.Drawing.Size(171, 21);
@@ -272,8 +273,8 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.cbShoppingList);
             this.groupBox5.Controls.Add(this.label1);
-            this.groupBox5.Controls.Add(this.cbRememberOptions);
             this.groupBox5.Controls.Add(this.cmbFormatting);
             this.groupBox5.Location = new System.Drawing.Point(263, 181);
             this.groupBox5.Name = "groupBox5";
@@ -291,10 +292,21 @@ namespace EVEMon.SkillPlanner
             this.label1.TabIndex = 4;
             this.label1.Text = "Formatting:";
             // 
+            // cbShoppingList
+            // 
+            this.cbShoppingList.AutoSize = true;
+            this.cbShoppingList.Location = new System.Drawing.Point(11, 87);
+            this.cbShoppingList.Name = "cbShoppingList";
+            this.cbShoppingList.Size = new System.Drawing.Size(107, 21);
+            this.cbShoppingList.TabIndex = 0;
+            this.cbShoppingList.Text = "Shopping list";
+            this.cbShoppingList.UseVisualStyleBackColor = true;
+            // 
             // CopySaveOptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.ClientSize = new System.Drawing.Size(493, 530);
+            this.Controls.Add(this.cbRememberOptions);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -321,6 +333,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -345,5 +358,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ComboBox cmbFormatting;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox cbShoppingList;
     }
 }

@@ -901,7 +901,14 @@ namespace EVEMon.Common
             if (pto.IncludeHeader)
             {
                 boldStart();
-                sw.Write("Skill Plan for {0}", this.GrandCharacterInfo.Name);
+                if (pto.ShoppingList)
+                {
+                    sw.Write("Shopping list for {0}", this.GrandCharacterInfo.Name);
+                }
+                else
+                {
+                    sw.Write("Skill plan for {0}", this.GrandCharacterInfo.Name);
+                }
                 boldEnd();
                 writeLine();
                 writeLine();
@@ -913,10 +920,15 @@ namespace EVEMon.Common
             int num = 0;
             foreach (Plan.Entry pe in this.Entries)
             {
+                if (pto.ShoppingList && (pe.Skill.Known || pe.Level != 1))
+                {
+                    // for shopping list, if the skill is known or a non-level-1-unknown, skip
+                    continue;
+                }
                 num++;
                 if (pto.EntryNumber)
                 {
-                    sw.Write("{0}: ", num);
+                    sw.Write("{0}. ", num);
                 }
                 boldStart();
                 if (markupType == MarkupType.Html)
@@ -928,8 +940,11 @@ namespace EVEMon.Common
                 {
                     sw.Write("</a>");
                 }
-                sw.Write(' ');
-                sw.Write(Skill.GetRomanForInt(pe.Level));
+                if (!pto.ShoppingList)
+                {
+                    sw.Write(' ');
+                    sw.Write(Skill.GetRomanForInt(pe.Level));
+                }
                 boldEnd();
 
                 TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);

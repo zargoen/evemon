@@ -181,9 +181,12 @@ namespace EVEMon.IGBService
                 sw.WriteLine("not trusted");
                 return;
             }
-            if (requestUrl.StartsWith("/viewplan.x?p="))
+            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/"))
             {
-                string planName = HttpUtility.UrlDecode(requestUrl.Substring(14));
+                bool shopping = requestUrl.StartsWith("/shopping/");
+                string planName = HttpUtility.UrlDecode(requestUrl.Substring(
+                        shopping ? "/shopping/".Length : "/plan/".Length
+                    ));
                 sw.WriteLine("<html><head><title>Plan</title></head><body>");
                 sw.WriteLine(String.Format("<h1>Plan: {0}</h1>",
                                            HttpUtility.HtmlEncode(planName)));
@@ -206,11 +209,13 @@ namespace EVEMon.IGBService
                     else
                     {
                         PlanTextOptions x = new PlanTextOptions();
-                        x.EntryStartDate = true;
-                        x.EntryFinishDate = true;
-                        x.FooterTotalTime = true;
+                        x.EntryTrainingTimes = !shopping; // only if not shopping
+                        x.EntryStartDate = !shopping; // only if not shopping
+                        x.EntryFinishDate = !shopping; // only if not shopping
+                        x.FooterTotalTime = !shopping; // only if not shopping
                         x.FooterCount = true;
-                        x.FooterDate = true;
+                        x.FooterDate = !shopping; // only if not shopping
+                        x.ShoppingList = shopping;
                         x.Markup = MarkupType.Html;
                         p.SaveAsText(sw, x);
                     }
@@ -228,7 +233,7 @@ namespace EVEMon.IGBService
                 sw.WriteLine("<h2>Your Plans:</h2>");
                 foreach (string s in Program.Settings.GetPlansForCharacter(headers["eve.charname"]))
                 {
-                    sw.WriteLine(String.Format("<a href=\"/viewplan.x?p={0}\">{1}</a><br>",
+                    sw.WriteLine(String.Format("<a href=\"/plan/{0}\">{1}</a> (<a href=\"/shopping/{0}\">shopping list</a>)<br>",
                                                HttpUtility.UrlEncode(s),
                                                HttpUtility.HtmlEncode(s)));
                 }
