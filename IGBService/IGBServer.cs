@@ -214,10 +214,6 @@ namespace EVEMon.IGBService
                         x.Markup = MarkupType.Html;
                         p.SaveAsText(sw, x);
                     }
-                    //foreach (PlanEntry pe in p.Entries)
-                    //{
-                    //    sw.WriteLine(pe.SkillName + " " + GrandSkill.GetRomanForInt(pe.Level) + "<br>");
-                    //}
                 }
 
                 sw.WriteLine("<hr><a href=\"/\">Back</a>");
