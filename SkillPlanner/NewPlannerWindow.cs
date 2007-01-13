@@ -416,6 +416,10 @@ namespace EVEMon.SkillPlanner
             PlanTextOptions pto = (PlanTextOptions) m_settings.DefaultCopyOptions.Clone();
             using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, true))
             {
+                if (pto.Markup == MarkupType.Undefined)
+                {
+                    pto.Markup = MarkupType.Forum;
+                }
                 f.ShowDialog();
                 if (f.DialogResult == DialogResult.Cancel)
                 {
@@ -431,7 +435,7 @@ namespace EVEMon.SkillPlanner
             using (MemoryStream ms = new MemoryStream())
             using (StreamWriter sw = new StreamWriter(ms))
             {
-                m_plan.SaveAsText(sw, pto, true);
+                m_plan.SaveAsText(sw, pto);
                 sw.Flush();
                 string s = Encoding.Default.GetString(ms.ToArray());
                 Clipboard.SetText(s);
@@ -469,6 +473,10 @@ namespace EVEMon.SkillPlanner
                     pto = (PlanTextOptions) m_settings.DefaultSaveOptions.Clone();
                     using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, false))
                     {
+                        if (pto.Markup == MarkupType.Undefined)
+                        {
+                            pto.Markup = MarkupType.None;
+                        }
                         f.ShowDialog();
                         if (f.DialogResult == DialogResult.Cancel)
                         {
@@ -496,7 +504,10 @@ namespace EVEMon.SkillPlanner
                             SerializePlanTo(fs);
                             break;
                         case SaveType.Text:
-                            SaveAsText(fs, pto);
+                            using (StreamWriter sw = new StreamWriter(fs))
+                            {
+                                m_plan.SaveAsText(sw, pto);
+                            }
                             break;
                         default:
                             return;
@@ -515,14 +526,6 @@ namespace EVEMon.SkillPlanner
         {
             XmlSerializer xs = new XmlSerializer(typeof (Plan));
             xs.Serialize(s, m_plan);
-        }
-
-        private void SaveAsText(Stream fs, PlanTextOptions pto)
-        {
-            using (StreamWriter sw = new StreamWriter(fs))
-            {
-                m_plan.SaveAsText(sw, pto, false);
-            }
         }
         #endregion Plan serialization
 

@@ -45,6 +45,8 @@ namespace EVEMon.SkillPlanner
             cbFooterCount.Checked = m_planTextOptions.FooterCount;
             cbFooterTotalTime.Checked = m_planTextOptions.FooterTotalTime;
             cbFooterDate.Checked = m_planTextOptions.FooterDate;
+            cmbFormatting.SelectedIndex = m_planTextOptions.Markup == MarkupType.Forum ? 0 :
+                    m_planTextOptions.Markup == MarkupType.Html ? 1 : 2;
 
             RecurseUnder(this);
             OptionChange();
@@ -68,6 +70,11 @@ namespace EVEMon.SkillPlanner
             OptionChange();
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            OptionChange();
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -84,6 +91,8 @@ namespace EVEMon.SkillPlanner
             m_planTextOptions.FooterCount = cbFooterCount.Checked;
             m_planTextOptions.FooterTotalTime = cbFooterTotalTime.Checked;
             m_planTextOptions.FooterDate = cbFooterDate.Checked;
+            m_planTextOptions.Markup = cmbFormatting.SelectedIndex == 0 ? MarkupType.Forum :
+                    cmbFormatting.SelectedIndex == 1 ? MarkupType.Html : MarkupType.None;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -101,7 +110,7 @@ namespace EVEMon.SkillPlanner
             using (MemoryStream ms = new MemoryStream())
             using (StreamWriter sw = new StreamWriter(ms))
             {
-                m_plan.SaveAsText(sw, m_planTextOptions, m_isForCopy);
+                m_plan.SaveAsText(sw, m_planTextOptions);
                 sw.Flush();
                 string s = Encoding.Default.GetString(ms.ToArray());
                 tbPreview.Text = s;

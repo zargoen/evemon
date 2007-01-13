@@ -855,18 +855,14 @@ namespace EVEMon.Common
         }
         #endregion Planner Window
 
-        public void SaveAsText(StreamWriter sw, PlanTextOptions pto, bool includeForumMarkup)
+        public void SaveAsText(StreamWriter sw, PlanTextOptions pto)
         {
-            SaveAsText(sw, pto, includeForumMarkup ? MarkupType.Forum : MarkupType.None);
-        }
-
-        public void SaveAsText(StreamWriter sw, PlanTextOptions pto, MarkupType markupType)
-        {
+            MarkupType markupType = pto.Markup;
             MethodInvoker writeLine = delegate
                                           {
                                               if (markupType == MarkupType.Html)
                                               {
-                                                  sw.WriteLine("<br>");
+                                                  sw.WriteLine("<br />");
                                               }
                                               else
                                               {
@@ -1221,6 +1217,7 @@ namespace EVEMon.Common
 
     public enum MarkupType
     {
+        Undefined,
         None,
         Forum,
         Html

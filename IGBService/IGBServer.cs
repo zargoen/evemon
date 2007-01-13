@@ -211,7 +211,8 @@ namespace EVEMon.IGBService
                         x.FooterTotalTime = true;
                         x.FooterCount = true;
                         x.FooterDate = true;
-                        p.SaveAsText(sw, x, MarkupType.Html);
+                        x.Markup = MarkupType.Html;
+                        p.SaveAsText(sw, x);
                     }
                     //foreach (PlanEntry pe in p.Entries)
                     //{

@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopyForum.Name = "tsbCopyForum";
             this.tsbCopyForum.Size = new System.Drawing.Size(102, 22);
-            this.tsbCopyForum.Text = "Copy for Forum";
+            this.tsbCopyForum.Text = "Copy to Clipboard";
             this.tsbCopyForum.Click += new System.EventHandler(this.tsbCopyForum_Click);
             // 
             // toolStripSeparator2

@@ -78,6 +78,15 @@ namespace EVEMon.Common
             set { m_footerDate = value; }
         }
 
+        private MarkupType m_markupType;
+
+        [XmlAttribute]
+        public MarkupType Markup
+        {
+            get { return m_markupType; }
+            set { m_markupType = value; }
+        }
+
         #region ICloneable Members
         public object Clone()
         {
