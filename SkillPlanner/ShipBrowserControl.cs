@@ -51,10 +51,10 @@ namespace EVEMon.SkillPlanner
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"CPU Output","CPU",false,true));
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"powergrid Output","Powergrid",false,true));
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Calibration","Calibration",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Low Slots","Low Slots",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Med Slots","Med Slots",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"High Slots","High Slots",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Launcher hardpoints","Launcher Hardpoints",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"High Slots", "High Slots", false, true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Med Slots","Med Slots",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Low Slots", "Low Slots", false, true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Launcher hardpoints","Launcher Hardpoints",false,true));
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Turret hardpoints","Turret Hardpoints",false,true));
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Rig Slots","Rig Slots",false,true));
         	    // Attributes - structure
@@ -101,6 +101,7 @@ namespace EVEMon.SkillPlanner
         	    // Attributes - Propulsion
         	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Propulsion","Propulsion",false,true));
         	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Max Velocity","Max Velocity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "agility", "Agility", false, false));
         	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Other","Other",false,true));
             }
         }
@@ -406,7 +407,7 @@ namespace EVEMon.SkillPlanner
                         else if (att.alwaysShow)
                         {
                             // Ship is missing a displayed attribute - fake one!
-                            AddAnotherValue(att.xmlName ,"0");
+                            lastpos = AddAnotherValue(att.xmlName ,"0");
                         }
                     }
 
