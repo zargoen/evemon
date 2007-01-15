@@ -130,41 +130,48 @@ namespace EVEMon.SkillPlanner
             // Order borrowed with slight modification from
             // http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=242786&page=1#2
 
+            // ... and corrected to reflect Revelation
+
             List<Pair<string, int>> idealBuilder = new List<Pair<string, int>>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 idealBuilder.Add(new Pair<string, int>("Instant Recall", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Analytical Mind", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Learning", i + 1));
             }
-            idealBuilder.Add(new Pair<string, int>("Instant Recall", 5));
-            for (int i = 0; i < 4; i++)
+            idealBuilder.Add(new Pair<string, int>("Instant Recall", 4));
+            for (int i = 0; i < 3; i++)
             {
                 idealBuilder.Add(new Pair<string, int>("Eidetic Memory", i + 1));
             }
-            idealBuilder.Add(new Pair<string, int>("Analytical Mind", 5));
-            for (int i = 0; i < 4; i++)
+            idealBuilder.Add(new Pair<string, int>("Analytical Mind", 4));
+            for (int i = 0; i < 3; i++)
             {
                 idealBuilder.Add(new Pair<string, int>("Logic", i + 1));
             }
+            idealBuilder.Add(new Pair<string, int>("Learning", 4));
+
+            idealBuilder.Add(new Pair<string, int>("Eidetic Memory", 4));
+            idealBuilder.Add(new Pair<string, int>("Logic", 4));
+            idealBuilder.Add(new Pair<string, int>("Instant Recall", 5));
+            idealBuilder.Add(new Pair<string, int>("Analytical Mind", 5));
             idealBuilder.Add(new Pair<string, int>("Learning", 5));
+            idealBuilder.Add(new Pair<string, int>("Eidetic Memory", 5));
+            idealBuilder.Add(new Pair<string, int>("Logic", 5));
+
+
             for (int i = 0; i < 5; i++)
             {
                 idealBuilder.Add(new Pair<string, int>("Spatial Awareness", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Iron Will", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Empathy", i + 1));
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 idealBuilder.Add(new Pair<string, int>("Focus", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Clarity", i + 1));
                 idealBuilder.Add(new Pair<string, int>("Presence", i + 1));
             }
-            idealBuilder.Add(new Pair<string, int>("Eidetic Memory", 5));
-            idealBuilder.Add(new Pair<string, int>("Logic", 5));
-            idealBuilder.Add(new Pair<string, int>("Focus", 5));
-            idealBuilder.Add(new Pair<string, int>("Clarity", 5));
-            idealBuilder.Add(new Pair<string, int>("Presence", 5));
             sm_idealLearningSkillOrder = idealBuilder.ToArray();
         }
 
