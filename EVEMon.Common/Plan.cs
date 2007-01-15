@@ -257,10 +257,20 @@ namespace EVEMon.Common
             {
                 int level;
                 Skill gs;
-                if (i < 5)
+                if (i < 4)
                 {
                     gs = gsa;
                     level = i + 1;
+                }
+                else if (i < 8)
+                {
+                    gs = gsb;
+                    level = i - 3;
+                }
+                else if (i < 9)
+                {
+                    gs = gsa;
+                    level = i - 3;
                 }
                 else
                 {
@@ -291,10 +301,20 @@ namespace EVEMon.Common
                 {
                     int level;
                     Skill gs;
-                    if (i < 5)
+                    if (i < 4)
                     {
                         gs = gsa;
                         level = i + 1;
+                    }
+                    else if (i < 8)
+                    {
+                        gs = gsb;
+                        level = i - 3;
+                    }
+                    else if (i < 9)
+                    {
+                        gs = gsa;
+                        level = i - 3;
                     }
                     else
                     {
@@ -303,7 +323,8 @@ namespace EVEMon.Common
                     }
                     if (gs.Level < level && !this.IsPlanned(gs, level))
                     {
-                        if ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa))
+                        if ((level < 5 && ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa))) ||
+                            ((level == 5 && bestLevel == 5) && ((gs == bestGs) || (bestGs == gsb && gs == gsa))))
                         {
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
