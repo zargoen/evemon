@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.LogitechG15", "EveMo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lgLcdClassLibrary", "lgLcdClassLibrary\lgLcdClassLibrary.vcproj", "{4DC1603E-1EB1-40BE-AF82-637820765659}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EVEMon.WinHook", "EVEMon.WinHook\EVEMon.WinHook.vcproj", "{F9553086-E8BE-463B-9A68-1F7794EB060D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,18 @@ Global
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Win32.ActiveCfg = Release|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Win32.Build.0 = Release|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|x86.ActiveCfg = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|Win32.Build.0 = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Debug|x86.ActiveCfg = Debug|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Win32.ActiveCfg = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Win32.Build.0 = Release|Win32
+		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
