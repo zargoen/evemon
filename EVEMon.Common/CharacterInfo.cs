@@ -24,6 +24,8 @@ namespace EVEMon.Common
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
         private MonitoredList<GrandEveAttributeBonus> m_attributeBonuses = new MonitoredList<GrandEveAttributeBonus>();
+        private int m_activeImplantSet;
+        private Dictionary<int, ImplantSet> m_implantSets = new Dictionary<int, ImplantSet>();
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
 
         public CharacterInfo(int characterId, string name)
@@ -94,15 +96,12 @@ namespace EVEMon.Common
 
             Skill.PrepareAllPrerequisites();
         }
-
         
-
         private int m_suppressed;
         private Queue<InternalEvent> m_events = new Queue<InternalEvent>();
         private Dictionary<string, bool> m_coalescedEventTable = new Dictionary<string, bool>();
 
         private delegate void InternalEvent();
-
 
         private void FireEvent(InternalEvent evt, string coalesceKey)
         {
@@ -174,6 +173,32 @@ namespace EVEMon.Common
                 if (m_name != value)
                 {
                     m_name = value;
+                    OnBioInfoChanged();
+                }
+            }
+        }
+
+        public int activeImplantSet
+        {
+            get { return m_activeImplantSet; }
+            set
+            {
+                if (m_activeImplantSet != value)
+                {
+                    m_activeImplantSet = value;
+                    OnBioInfoChanged();
+                }
+            }
+        }
+
+        public Dictionary<int,ImplantSet> implantSets
+        {
+            get { return m_implantSets; }
+            set 
+            {
+                if (m_implantSets != value)
+                {
+                    m_implantSets = value;
                     OnBioInfoChanged();
                 }
             }
@@ -460,6 +485,29 @@ namespace EVEMon.Common
             return result;
         }
 
+        public string getImplantName(EveAttribute eveAttribute)
+        {
+            string result = string.Empty;
+            bool manual_override = false;
+            foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+            {
+                if (geab.EveAttribute == eveAttribute)
+                {
+                    if (geab.Manual == false && manual_override == false)
+                        result = geab.Name;
+                    if (geab.Manual == true)
+                    {
+                        if (manual_override == false)
+                        {
+                            result = geab.Name;
+                            manual_override = true;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         public double LearningBonus
         {
             get { return 1 + (m_skillGroups["Learning"]["Learning"].Level * 0.02); }
@@ -716,6 +764,18 @@ namespace EVEMon.Common
                 this.EVEFolder = ci.EVEFolder;
             }
             this.Balance = ci.Balance;
+            this.activeImplantSet = ci.ActiveImplantSet;
+
+            this.implantSets.Clear();
+            foreach (SerializableImplantSet x in ci.ImplantSets)
+            {
+                string[] z = new string[10] { "", "", "", "", "", "", "", "", "", "" };
+                foreach (SerializableImplantName y in x.Implants)
+                {
+                    z[y.Number - 1] = y.Name;
+                }
+                this.implantSets.Add(x.Number, new ImplantSet(z));
+            }
 
             this.BaseIntelligence = ci.Attributes.BaseIntelligence;
             this.BaseCharisma = ci.Attributes.BaseCharisma;
@@ -1067,6 +1127,15 @@ namespace EVEMon.Common
             ci.CorpName = this.CorporationName;
             ci.EVEFolder = this.EVEFolder; // to CI
             ci.Balance = this.Balance;
+            ci.ActiveImplantSet = this.activeImplantSet;
+
+            ci.ImplantSets.Clear();
+            foreach (int x in this.implantSets.Keys)
+            {
+                SerializableImplantSet z = new SerializableImplantSet(this.implantSets[x].Array);
+                z.Number = x;
+                ci.ImplantSets.Add(z);
+            }
 
             ci.Attributes.BaseIntelligence = this.BaseIntelligence;
             ci.Attributes.BaseCharisma = this.BaseCharisma;
@@ -1176,8 +1245,6 @@ namespace EVEMon.Common
         }
     }
 
-
-
     public delegate void SkillChangedHandler(object sender, SkillChangedEventArgs e);
 
     public class SkillChangedEventArgs : EventArgs
@@ -1246,8 +1313,6 @@ namespace EVEMon.Common
         }
     }
 
-
-
     public class GrandEveAttributes
     {
         private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
@@ -1299,8 +1364,4 @@ namespace EVEMon.Common
             m_manual = manual;
         }
     }
-
-
-
-
 }

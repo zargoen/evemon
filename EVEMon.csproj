@@ -83,6 +83,12 @@
       <DependentUpon>EVEFolderWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="IGBService\IGBServer.cs" />
+    <Compile Include="ImpGroups\ImpGroups.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImpGroups\ImpGroups.Designer.cs">
+      <DependentUpon>ImpGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="InstallerDeleter.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="Login.cs">
@@ -403,6 +409,10 @@
     <EmbeddedResource Include="EVEFolderWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImpGroups\ImpGroups.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ImpGroups.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManualImplantDetailWindow.resx">
       <SubType>Designer</SubType>
