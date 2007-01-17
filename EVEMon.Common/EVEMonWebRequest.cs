@@ -7,6 +7,29 @@ using System.Xml;
 
 namespace EVEMon.Common
 {
+
+    /// <summary>
+    /// EVEMonWebRequest should be used for any HTTP requests that EVEMon needs to make.
+    /// </sumary>
+    ///<remarks>
+    /// The class contains some toplevel  staic methods to retrieve various types of data from a url. Genrally, only these 3 methods should
+    /// be used by other classes that require data from the web.
+    ///
+    /// LoadXml()       gets an XmlDocument from a URL
+    /// GetUrlImage()   gets an Image object from a URL
+    /// GetUrlString()  gets the HTTP reponse from a URL as a String
+    ///
+    /// These 3 methods all use :
+    ///
+    /// GetUrlSteam()   The core method that reads the raw response from an HTTP request as a Stream object and is used by all the methods above.
+    /// This method uses GetWebRequest.
+    ///
+    /// GetWebRequest() creates a new HttpWebRequest object that is configured with the EVEMon user agent string and the user's proxy setting.
+    /// ANY  HttpWebRequest object required by EVEMon MUST be obtained using this method.
+    ///
+    /// WebRequestState is a helper class used by the methods in EVEMonWebRequest to configure the HttpWebRequest object in the GetWebRequest() method.
+    ///</remarks>
+    
     public static class EVEMonWebRequest
     {
         public static XmlDocument LoadXml(string url)
