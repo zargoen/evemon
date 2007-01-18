@@ -1433,44 +1433,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the Click event of the miManualImplants control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void miManualImplants_Click(object sender, EventArgs e)
-        {
-            using (ManualImplantWindow f = new ManualImplantWindow(m_grandCharacterInfo.AttributeBonuses))
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    m_grandCharacterInfo.SuppressEvents();
-                    try
-                    {
-                        for (int i = 0; i < m_grandCharacterInfo.AttributeBonuses.Count; i++)
-                        {
-                            GrandEveAttributeBonus geab = m_grandCharacterInfo.AttributeBonuses[i];
-                            if (geab.Manual)
-                            {
-                                m_grandCharacterInfo.AttributeBonuses.RemoveAt(i);
-                                i--;
-                            }
-                        }
-                        foreach (GrandEveAttributeBonus b in f.ResultBonuses)
-                        {
-                            if (b.Manual)
-                                m_grandCharacterInfo.AttributeBonuses.Add(b);
-                        }
-                    }
-                    finally
-                    {
-                        m_grandCharacterInfo.ResumeEvents();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Handles the DrawItem event of the lbSkills control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -2330,6 +2292,9 @@ namespace EVEMon
         }
         #endregion
 
+        /// <summary>
+        /// Deals with the implant changes
+        /// </summary>
         private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (ImpGroups.ImpGroups f = new ImpGroups.ImpGroups(m_grandCharacterInfo))
@@ -2341,44 +2306,6 @@ namespace EVEMon
                     try
                     {
                         m_grandCharacterInfo.implantSets = f.ResultBonuses;
-
-                        for (int i = 0; i < m_grandCharacterInfo.AttributeBonuses.Count; i++)
-                        {
-                            GrandEveAttributeBonus geab = m_grandCharacterInfo.AttributeBonuses[i];
-                            if (geab.Manual)
-                            {
-                                m_grandCharacterInfo.AttributeBonuses.RemoveAt(i);
-                                i--;
-                            }
-                        }
-                        foreach (UserImplant b in f.ResultBonuses["Current"].Array)
-                        {
-                            if (b != null && b.Manual && b.Slot <= 5)
-                            {
-                                EveAttribute a;
-                                switch (b.Slot)
-                                {
-                                    case 1:
-                                        a = EveAttribute.Perception;
-                                        break;
-                                    case 2:
-                                        a = EveAttribute.Memory;
-                                        break;
-                                    case 3:
-                                        a = EveAttribute.Willpower;
-                                        break;
-                                    case 4:
-                                        a = EveAttribute.Intelligence;
-                                        break;
-                                    case 5:
-                                        a = EveAttribute.Charisma;
-                                        break;
-                                    default:
-                                        continue;
-                                }
-                                m_grandCharacterInfo.AttributeBonuses.Add(new GrandEveAttributeBonus(b.Name, a, b.Bonus, true));
-                            }
-                        }
                         m_grandCharacterInfo.ImplantBonuses.Clear();
                         if (m_grandCharacterInfo.implantSets.ContainsKey("Auto"))
                         {
@@ -2417,7 +2344,6 @@ namespace EVEMon
                                     m_grandCharacterInfo.ImplantBonuses.Add(x);
                             }
                         }
-
                     }
                     finally
                     {

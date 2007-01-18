@@ -11,11 +11,17 @@ namespace EVEMon.Common
     public class ImplantSet
     {
         // This stores the implant details.
-        private UserImplant[] m_values = new UserImplant[10];
+        private UserImplant[] m_values;
 
         public ImplantSet(UserImplant[] a)
+            : this()
         {
             a.CopyTo(m_values,0);
+        }
+
+        public ImplantSet()
+        {
+            m_values = new UserImplant[10];
         }
 
         public UserImplant this[int implant]
@@ -101,7 +107,7 @@ namespace EVEMon.Common
             m_tech2 = false;
             m_bonus = 0;
             m_id = -1;
-            m_name = String.Empty;
+            m_name = "<None>";
             m_manual = false;
         }
 
@@ -130,29 +136,47 @@ namespace EVEMon.Common
             }
         }
 
-        public UserImplant(GrandEveAttributeBonus a, bool T2, int ID)
+        public static EveAttribute SlotToAttrib(int slot)
         {
-            switch (a.EveAttribute)
+            switch (slot)
+            {
+                case 1:
+                    return EveAttribute.Perception;
+                case 2:
+                    return EveAttribute.Memory;
+                case 3:
+                    return EveAttribute.Willpower;
+                case 4:
+                    return EveAttribute.Intelligence;
+                case 5:
+                    return EveAttribute.Charisma;
+                default:
+                    return EveAttribute.None;
+            }
+        }
+
+        public static int AttribToSlot(EveAttribute attr)
+        {
+            switch (attr)
             {
                 case EveAttribute.Perception:
-                    m_slot = 1;
-                    break;
+                    return 1;
                 case EveAttribute.Memory:
-                    m_slot = 2;
-                    break;
+                    return 2;
                 case EveAttribute.Willpower:
-                    m_slot = 3;
-                    break;
+                    return 3;
                 case EveAttribute.Intelligence:
-                    m_slot = 4;
-                    break;
+                    return 4;
                 case EveAttribute.Charisma:
-                    m_slot = 5;
-                    break;
+                    return 5;
                 default:
-                    m_slot = 0;
-                    break;
+                    return -1;
             }
+        }
+
+        public UserImplant(GrandEveAttributeBonus a, bool T2, int ID)
+        {
+            m_slot = AttribToSlot(a.EveAttribute);
             m_name = a.Name;
             m_bonus = a.Amount;
             m_manual = a.Manual;
@@ -198,6 +222,22 @@ namespace EVEMon.Common
                 {
                     m_dictImplants.Add(x.ID, x);
                 }
+            }
+        }
+
+        [XmlIgnore]
+        public Dictionary<int, Implant> ImplantDict
+        {
+            get
+            {
+                if (m_dictImplants.Count == 0 && m_Implants.Count != 0)
+                {
+                    foreach (Implant x in m_Implants)
+                    {
+                        m_dictImplants.Add(x.ID, x);
+                    }
+                }
+                return m_dictImplants; 
             }
         }
 
@@ -341,7 +381,7 @@ namespace EVEMon.Common
             m_bonus = 0;
             m_id = -1;
             m_icon = String.Empty;
-            m_name = String.Empty;
+            m_name = "<None>";
             m_description = String.Empty;
             m_properties = new List<ImplantProperty>();
             m_requiredSkills = new List<ImplantRequiredSkill>();

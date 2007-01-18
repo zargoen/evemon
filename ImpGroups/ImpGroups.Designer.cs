@@ -174,7 +174,6 @@ namespace EVEMon.ImpGroups
             this.panel1.Controls.Add(this.txtImplant3);
             this.panel1.Controls.Add(this.txtImplant2);
             this.panel1.Controls.Add(this.txtImplant1);
-            this.panel1.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.panel1.Location = new System.Drawing.Point(15, 71);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(4);
@@ -191,7 +190,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot10.TabIndex = 29;
             this.btnSlot10.Text = "...";
             this.btnSlot10.UseVisualStyleBackColor = true;
-            this.btnSlot10.Click += new System.EventHandler(this.btnSlot10_Click);
+            this.btnSlot10.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot9
             // 
@@ -203,7 +202,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot9.TabIndex = 28;
             this.btnSlot9.Text = "...";
             this.btnSlot9.UseVisualStyleBackColor = true;
-            this.btnSlot9.Click += new System.EventHandler(this.btnSlot9_Click);
+            this.btnSlot9.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot8
             // 
@@ -215,7 +214,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot8.TabIndex = 27;
             this.btnSlot8.Text = "...";
             this.btnSlot8.UseVisualStyleBackColor = true;
-            this.btnSlot8.Click += new System.EventHandler(this.btnSlot8_Click);
+            this.btnSlot8.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot7
             // 
@@ -227,7 +226,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot7.TabIndex = 26;
             this.btnSlot7.Text = "...";
             this.btnSlot7.UseVisualStyleBackColor = true;
-            this.btnSlot7.Click += new System.EventHandler(this.btnSlot7_Click);
+            this.btnSlot7.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot6
             // 
@@ -239,7 +238,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot6.TabIndex = 25;
             this.btnSlot6.Text = "...";
             this.btnSlot6.UseVisualStyleBackColor = true;
-            this.btnSlot6.Click += new System.EventHandler(this.btnSlot6_Click);
+            this.btnSlot6.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot5
             // 
@@ -251,7 +250,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot5.TabIndex = 24;
             this.btnSlot5.Text = "...";
             this.btnSlot5.UseVisualStyleBackColor = true;
-            this.btnSlot5.Click += new System.EventHandler(this.btnSlot5_Click);
+            this.btnSlot5.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot4
             // 
@@ -263,7 +262,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot4.TabIndex = 23;
             this.btnSlot4.Text = "...";
             this.btnSlot4.UseVisualStyleBackColor = true;
-            this.btnSlot4.Click += new System.EventHandler(this.btnSlot4_Click);
+            this.btnSlot4.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot3
             // 
@@ -275,7 +274,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot3.TabIndex = 22;
             this.btnSlot3.Text = "...";
             this.btnSlot3.UseVisualStyleBackColor = true;
-            this.btnSlot3.Click += new System.EventHandler(this.btnSlot3_Click);
+            this.btnSlot3.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot2
             // 
@@ -287,7 +286,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot2.TabIndex = 21;
             this.btnSlot2.Text = "...";
             this.btnSlot2.UseVisualStyleBackColor = true;
-            this.btnSlot2.Click += new System.EventHandler(this.btnSlot2_Click);
+            this.btnSlot2.Click += new System.EventHandler(this.Get_Implant);
             // 
             // btnSlot1
             // 
@@ -299,7 +298,7 @@ namespace EVEMon.ImpGroups
             this.btnSlot1.TabIndex = 20;
             this.btnSlot1.Text = "...";
             this.btnSlot1.UseVisualStyleBackColor = true;
-            this.btnSlot1.Click += new System.EventHandler(this.btnSlot1_Click);
+            this.btnSlot1.Click += new System.EventHandler(this.Get_Implant);
             // 
             // label8
             // 
@@ -407,7 +406,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant10.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant10.Location = new System.Drawing.Point(50, 250);
             this.txtImplant10.Name = "txtImplant10";
             this.txtImplant10.ReadOnly = true;
@@ -420,7 +418,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant9.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant9.Location = new System.Drawing.Point(50, 223);
             this.txtImplant9.Name = "txtImplant9";
             this.txtImplant9.ReadOnly = true;
@@ -433,7 +430,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant8.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant8.Location = new System.Drawing.Point(50, 196);
             this.txtImplant8.Name = "txtImplant8";
             this.txtImplant8.ReadOnly = true;
@@ -446,7 +442,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant7.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant7.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant7.Location = new System.Drawing.Point(50, 169);
             this.txtImplant7.Name = "txtImplant7";
             this.txtImplant7.ReadOnly = true;
@@ -459,7 +454,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant6.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant6.Location = new System.Drawing.Point(50, 142);
             this.txtImplant6.Name = "txtImplant6";
             this.txtImplant6.ReadOnly = true;
@@ -472,7 +466,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant5.Location = new System.Drawing.Point(50, 115);
             this.txtImplant5.Name = "txtImplant5";
             this.txtImplant5.ReadOnly = true;
@@ -485,7 +478,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant4.Location = new System.Drawing.Point(50, 88);
             this.txtImplant4.Name = "txtImplant4";
             this.txtImplant4.ReadOnly = true;
@@ -498,7 +490,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant3.Location = new System.Drawing.Point(50, 61);
             this.txtImplant3.Name = "txtImplant3";
             this.txtImplant3.ReadOnly = true;
@@ -511,7 +502,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant2.Location = new System.Drawing.Point(50, 34);
             this.txtImplant2.Name = "txtImplant2";
             this.txtImplant2.ReadOnly = true;
@@ -524,7 +514,6 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtImplant1.Location = new System.Drawing.Point(50, 7);
             this.txtImplant1.Name = "txtImplant1";
             this.txtImplant1.ReadOnly = true;
@@ -537,6 +526,7 @@ namespace EVEMon.ImpGroups
             this.tvlist.Name = "tvlist";
             this.tvlist.Size = new System.Drawing.Size(120, 53);
             this.tvlist.TabIndex = 8;
+            this.tvlist.Visible = false;
             // 
             // ImpGroups
             // 
@@ -551,6 +541,7 @@ namespace EVEMon.ImpGroups
             this.Controls.Add(this.JumpCloneTxt);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "ImpGroups";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Tag = "Jump Clone";
             this.Text = "Jump Clones";
             this.Load += new System.EventHandler(this.ImpGroups_Load);

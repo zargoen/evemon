@@ -63,8 +63,8 @@ namespace EVEMon
             this.llToggleAll = new System.Windows.Forms.LinkLabel();
             this.btnMoreOptions = new System.Windows.Forms.Button();
             this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.miManualImplants = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
+            this.manualImplantGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnPlan = new EVEMon.Common.SplitButton();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
@@ -518,17 +518,10 @@ namespace EVEMon
             // cmsMoreOptions
             // 
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miManualImplants,
+            this.manualImplantGroupsToolStripMenuItem,
             this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 48);
-            // 
-            // miManualImplants
-            // 
-            this.miManualImplants.Name = "miManualImplants";
-            this.miManualImplants.Size = new System.Drawing.Size(220, 22);
-            this.miManualImplants.Text = "Manual Implants...";
-            this.miManualImplants.Click += new System.EventHandler(this.miManualImplants_Click);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
             // 
             // tsbIneveSync
             // 
@@ -538,6 +531,13 @@ namespace EVEMon
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
+            // 
+            // manualImplantGroupsToolStripMenuItem
+            // 
+            this.manualImplantGroupsToolStripMenuItem.Name = "manualImplantGroupsToolStripMenuItem";
+            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.manualImplantGroupsToolStripMenuItem.Text = "Manual Implant Groups...";
+            this.manualImplantGroupsToolStripMenuItem.Click += new System.EventHandler(this.manualImplantGroupsToolStripMenuItem_Click);
             // 
             // btnSave
             // 
@@ -757,7 +757,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem miHitEveO;
         private System.Windows.Forms.ToolStripMenuItem miChangeInfo;
         private System.Windows.Forms.ContextMenuStrip cmsMoreOptions;
-        private System.Windows.Forms.ToolStripMenuItem miManualImplants;
         private System.Windows.Forms.FlowLayoutPanel flpStatusLabels;
         private System.Windows.Forms.Label lblSPPerHour;
         private System.Windows.Forms.ToolStripMenuItem updatePicture;
@@ -767,5 +766,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
         private EVEMon.Common.SplitButton btnPlan;
         private System.Windows.Forms.Label lblScheduleWarning;
+        private System.Windows.Forms.ToolStripMenuItem manualImplantGroupsToolStripMenuItem;
     }
 }

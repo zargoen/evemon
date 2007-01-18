@@ -155,25 +155,7 @@ namespace EVEMon.SkillPlanner
             for (int an = 0; an < 5; an++)
             {
                 EveAttribute thisAttrib = (EveAttribute) an;
-                int implantAmount = 0;
-                bool manual_override = false;
-                foreach (GrandEveAttributeBonus geab in m_grandCharacterInfo.AttributeBonuses)
-                {
-                    if (geab.EveAttribute == thisAttrib)
-                    {
-                        if (geab.Manual == false && manual_override == false)
-                            implantAmount += geab.Amount;
-                        if (geab.Manual == true)
-                        {
-                            if (manual_override == false)
-                            {
-                                implantAmount = 0;
-                                manual_override = true;
-                            }
-                            implantAmount += geab.Amount;
-                        }
-                    }
-                }
+                int implantAmount = (int)m_grandCharacterInfo.getImplantValue(thisAttrib);
                 baseScratchpad.AdjustAttributeBonus(thisAttrib, 0 - implantAmount);
             }
             TimeSpan baseSpan = CalculatePlanTimes(baseScratchpad, lblBaseSpan, lblBaseDate);
