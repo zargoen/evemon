@@ -23,9 +23,14 @@ namespace EVEMon.Common
         private string m_EVEFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
+        
+        // This is the value that is becoming history
         private MonitoredList<GrandEveAttributeBonus> m_attributeBonuses = new MonitoredList<GrandEveAttributeBonus>();
-        private int m_activeImplantSet;
-        private Dictionary<int, ImplantSet> m_implantSets = new Dictionary<int, ImplantSet>();
+        
+        // These are the new replacements for m_attributeBonuses
+        private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
+        private Dictionary<string, ImplantSet> m_implantSets = new Dictionary<string, ImplantSet>();
+
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
 
         public CharacterInfo(int characterId, string name)
@@ -36,6 +41,8 @@ namespace EVEMon.Common
             BuildSkillTree();
             m_attributeBonuses.Changed +=
                 new EventHandler<ChangedEventArgs<GrandEveAttributeBonus>>(m_attributeBonuses_Changed);
+            m_CurrentImplants.Changed +=
+                new EventHandler<ChangedEventArgs<UserImplant>>(m_implantSet_Changed);
         }
 
         private void BuildSkillTree()
@@ -178,20 +185,7 @@ namespace EVEMon.Common
             }
         }
 
-        public int activeImplantSet
-        {
-            get { return m_activeImplantSet; }
-            set
-            {
-                if (m_activeImplantSet != value)
-                {
-                    m_activeImplantSet = value;
-                    OnBioInfoChanged();
-                }
-            }
-        }
-
-        public Dictionary<int,ImplantSet> implantSets
+        public Dictionary<string,ImplantSet> implantSets
         {
             get { return m_implantSets; }
             set 
@@ -393,7 +387,7 @@ namespace EVEMon.Common
             if (includeImplants)
             {
                 bool manual_override = false;
-                foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+                foreach (GrandEveAttributeBonus geab in AttributeBonuses)
                 {
                     if (geab.EveAttribute == attribute)
                     {
@@ -465,7 +459,7 @@ namespace EVEMon.Common
         {
             double result = 0.0;
             bool manual_override = false;
-            foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+            foreach (GrandEveAttributeBonus geab in AttributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
                 {
@@ -489,7 +483,7 @@ namespace EVEMon.Common
         {
             string result = string.Empty;
             bool manual_override = false;
-            foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+            foreach (GrandEveAttributeBonus geab in AttributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
                 {
@@ -543,7 +537,7 @@ namespace EVEMon.Common
             double result = 0.0F;
             double learningBonus = 1.0F;
             bool manual_override = false;
-            foreach (GrandEveAttributeBonus geab in m_attributeBonuses)
+            foreach (GrandEveAttributeBonus geab in AttributeBonuses)
             {
                 if (geab.EveAttribute == eveAttribute)
                 {
@@ -565,6 +559,11 @@ namespace EVEMon.Common
             return result * learningBonus;
         }
 
+        public IList<UserImplant> ImplantBonuses
+        {
+            get { return m_CurrentImplants; }
+        }
+
         public IList<GrandEveAttributeBonus> AttributeBonuses
         {
             get { return m_attributeBonuses; }
@@ -573,6 +572,11 @@ namespace EVEMon.Common
         private void m_attributeBonuses_Changed(object sender, EventArgs e)
         {
             OnAttributeBonusChanged();
+        }
+
+        private void m_implantSet_Changed(object sender, EventArgs e)
+        {
+            OnImplantSetChanged();
         }
 
         private void OnAttributeBonusChanged()
@@ -587,7 +591,21 @@ namespace EVEMon.Common
                           }, "attributebonus");
         }
 
+        private void OnImplantSetChanged()
+        {
+            OnAttributeChanged();
+            FireEvent(delegate
+                          {
+                              if (ImplantSetChanged != null)
+                              {
+                                  ImplantSetChanged(this, new EventArgs());
+                              }
+                          }, "implantset");
+        }
+
         public event EventHandler AttributeBonusChanged;
+
+        public event EventHandler ImplantSetChanged;
 
         public Dictionary<string, SkillGroup> SkillGroups
         {
@@ -764,17 +782,39 @@ namespace EVEMon.Common
                 this.EVEFolder = ci.EVEFolder;
             }
             this.Balance = ci.Balance;
-            this.activeImplantSet = ci.ActiveImplantSet;
 
-            this.implantSets.Clear();
-            foreach (SerializableImplantSet x in ci.ImplantSets)
+            if (this.implantSets.Count == 0)
             {
-                string[] z = new string[10] { "", "", "", "", "", "", "", "", "", "" };
-                foreach (SerializableImplantName y in x.Implants)
+                foreach (SerializableImplantSet x in ci.ImplantSets)
                 {
-                    z[y.Number - 1] = y.Name;
+                    UserImplant[] z = new UserImplant[10];
+                    foreach (UserImplant y in x.Implants)
+                    {
+                        if (y != null)
+                            z[y.Slot - 1] = y;
+                    }
+                    string key = string.Empty;
+                    switch (x.Number)
+                    {
+                        case 0:
+                            key = "Auto";
+                            break;
+                        case 1:
+                            key = "Current";
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            key = "Clone " + (x.Number - 1);
+                            break;
+                        default:
+                            key = "Unknown";
+                            break;
+                    }
+                    this.implantSets.Add(key, new ImplantSet(z));
                 }
-                this.implantSets.Add(x.Number, new ImplantSet(z));
             }
 
             this.BaseIntelligence = ci.Attributes.BaseIntelligence;
@@ -793,15 +833,123 @@ namespace EVEMon.Common
             }
 
             this.AttributeBonuses.Clear();
+            Slot[] Implants = Slot.GetImplants();
+
+            if (this.implantSets.ContainsKey("Auto"))
+                this.implantSets.Remove("Auto");
+            bool addcurrent = !this.implantSets.ContainsKey("Current");
+
             foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
             {
+                int slot = 0;
+                switch (bonus.EveAttribute)
+                {
+                    case EveAttribute.Perception:
+                        slot = 1;
+                        break;
+                    case EveAttribute.Memory:
+                        slot = 2;
+                        break;
+                    case EveAttribute.Willpower:
+                        slot = 3;
+                        break;
+                    case EveAttribute.Intelligence:
+                        slot = 4;
+                        break;
+                    case EveAttribute.Charisma:
+                        slot = 5;
+                        break;
+                    default:
+                        break;
+                }
+                if (slot != 0)
+                {
+                    if (!this.implantSets.ContainsKey("Auto"))
+                    {
+                        UserImplant[] z = new UserImplant[10];
+                        string key = "Auto";
+                        this.implantSets.Add(key, new ImplantSet(z));
+                    }
+                    this.implantSets["Auto"][slot - 1] = new UserImplant(slot, Implants[slot - 1][bonus.Name], bonus.Manual);
+                }
                 GrandEveAttributeBonus geab =
                     new GrandEveAttributeBonus(bonus.Name, bonus.EveAttribute, bonus.Amount, bonus.Manual);
                 this.AttributeBonuses.Add(geab);
             }
             foreach (GrandEveAttributeBonus tb in manualBonuses)
             {
+                if (addcurrent)
+                {
+                    int slot = 0;
+                    switch (tb.EveAttribute)
+                    {
+                        case EveAttribute.Perception:
+                            slot = 1;
+                            break;
+                        case EveAttribute.Memory:
+                            slot = 2;
+                            break;
+                        case EveAttribute.Willpower:
+                            slot = 3;
+                            break;
+                        case EveAttribute.Intelligence:
+                            slot = 4;
+                            break;
+                        case EveAttribute.Charisma:
+                            slot = 5;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (slot != 0)
+                    {
+                        if (!this.implantSets.ContainsKey("Current"))
+                        {
+                            UserImplant[] z = new UserImplant[10];
+                            string key = "Current";
+                            this.implantSets.Add(key, new ImplantSet(z));
+                        }
+                        this.implantSets["Current"][slot - 1] = new UserImplant(slot, Implants[slot - 1][tb.Name], tb.Manual);
+                    }
+                }
                 this.AttributeBonuses.Add(tb);
+            }
+            if (this.implantSets.ContainsKey("Auto"))
+            {
+                if (!this.implantSets.ContainsKey("Current"))
+                {
+                    for (int i = 0; i < this.implantSets["Auto"].Array.GetLength(0); i++)
+                    {
+                        UserImplant x = this.implantSets["Auto"].Array[i];
+                        if (x != null)
+                            this.ImplantBonuses.Add(x);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Math.Max(this.implantSets["Auto"].Array.GetLength(0), this.implantSets["Current"].Array.GetLength(0)); i++)
+                    {
+                        UserImplant x = null;
+                        if (i < this.implantSets["Auto"].Array.GetLength(0))
+                            x = this.implantSets["Auto"].Array[i];
+                        UserImplant y = null;
+                        if (i < this.implantSets["Current"].Array.GetLength(0))
+                            y = this.implantSets["Current"].Array[i];
+                        if (y != null)
+                            this.ImplantBonuses.Add(y);
+                        else if (x != null)
+                            this.ImplantBonuses.Add(x);
+                    }
+                }
+            }
+            else if (this.implantSets.ContainsKey("Current"))
+            {
+                for (int i = 0; i < this.implantSets["Current"].Array.GetLength(0); i++)
+                {
+                    UserImplant x = this.implantSets["Current"].Array[i];
+                    if (x != null)
+                        this.ImplantBonuses.Add(x);
+                }
             }
 
             foreach (SerializableSkillGroup sg in ci.SkillGroups)
@@ -1127,13 +1275,38 @@ namespace EVEMon.Common
             ci.CorpName = this.CorporationName;
             ci.EVEFolder = this.EVEFolder; // to CI
             ci.Balance = this.Balance;
-            ci.ActiveImplantSet = this.activeImplantSet;
 
             ci.ImplantSets.Clear();
-            foreach (int x in this.implantSets.Keys)
+            foreach (string x in this.implantSets.Keys)
             {
                 SerializableImplantSet z = new SerializableImplantSet(this.implantSets[x].Array);
-                z.Number = x;
+                switch (x)
+                { 
+                    case "Auto":
+                        z.Number = 0;
+                        break;
+                    case "Current":
+                        z.Number = 1;
+                        break;
+                    case "Clone 1":
+                        z.Number = 2;
+                        break;
+                    case "Clone 2":
+                        z.Number = 3;
+                        break;
+                    case "Clone 3":
+                        z.Number = 4;
+                        break;
+                    case "Clone 4":
+                        z.Number = 5;
+                        break;
+                    case "Clone 5":
+                        z.Number = 6;
+                        break;
+                    default:
+                        z.Number = -1;
+                        break;
+                }
                 ci.ImplantSets.Add(z);
             }
 

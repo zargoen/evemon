@@ -14,6 +14,7 @@ using System.Xml.Xsl;
 using EVEMon.Common;
 using EVEMon.Common.Schedule;
 using EVEMon.SkillPlanner;
+using EVEMon.ImpGroups;
 using System.Web;
 
 namespace EVEMon
@@ -232,6 +233,7 @@ namespace EVEMon
 
             m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
+
             m_grandCharacterInfo.AttributeChanged -= new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(CharacterSkillChangedCallback);
             m_grandCharacterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
@@ -2327,6 +2329,103 @@ namespace EVEMon
             }
         }
         #endregion
+
+        private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (ImpGroups.ImpGroups f = new ImpGroups.ImpGroups(m_grandCharacterInfo))
+            {
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    m_grandCharacterInfo.SuppressEvents();
+                    try
+                    {
+                        m_grandCharacterInfo.implantSets = f.ResultBonuses;
+
+                        for (int i = 0; i < m_grandCharacterInfo.AttributeBonuses.Count; i++)
+                        {
+                            GrandEveAttributeBonus geab = m_grandCharacterInfo.AttributeBonuses[i];
+                            if (geab.Manual)
+                            {
+                                m_grandCharacterInfo.AttributeBonuses.RemoveAt(i);
+                                i--;
+                            }
+                        }
+                        foreach (UserImplant b in f.ResultBonuses["Current"].Array)
+                        {
+                            if (b != null && b.Manual && b.Slot <= 5)
+                            {
+                                EveAttribute a;
+                                switch (b.Slot)
+                                {
+                                    case 1:
+                                        a = EveAttribute.Perception;
+                                        break;
+                                    case 2:
+                                        a = EveAttribute.Memory;
+                                        break;
+                                    case 3:
+                                        a = EveAttribute.Willpower;
+                                        break;
+                                    case 4:
+                                        a = EveAttribute.Intelligence;
+                                        break;
+                                    case 5:
+                                        a = EveAttribute.Charisma;
+                                        break;
+                                    default:
+                                        continue;
+                                }
+                                m_grandCharacterInfo.AttributeBonuses.Add(new GrandEveAttributeBonus(b.Name, a, b.Bonus, true));
+                            }
+                        }
+                        m_grandCharacterInfo.AttributeBonuses.Clear();
+                        if (m_grandCharacterInfo.implantSets.ContainsKey("Auto"))
+                        {
+                            if (!m_grandCharacterInfo.implantSets.ContainsKey("Current"))
+                            {
+                                for (int i = 0; i < m_grandCharacterInfo.implantSets["Auto"].Array.GetLength(0); i++)
+                                {
+                                    UserImplant x = m_grandCharacterInfo.implantSets["Auto"].Array[i];
+                                    if (x != null)
+                                        m_grandCharacterInfo.ImplantBonuses.Add(x);
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Math.Max(m_grandCharacterInfo.implantSets["Auto"].Array.GetLength(0), m_grandCharacterInfo.implantSets["Current"].Array.GetLength(0)); i++)
+                                {
+                                    UserImplant x = null;
+                                    if (i < m_grandCharacterInfo.implantSets["Auto"].Array.GetLength(0))
+                                        x = m_grandCharacterInfo.implantSets["Auto"].Array[i];
+                                    UserImplant y = null;
+                                    if (i < m_grandCharacterInfo.implantSets["Current"].Array.GetLength(0))
+                                        y = m_grandCharacterInfo.implantSets["Current"].Array[i];
+                                    if (y != null)
+                                        m_grandCharacterInfo.ImplantBonuses.Add(y);
+                                    else if (x != null)
+                                        m_grandCharacterInfo.ImplantBonuses.Add(x);
+                                }
+                            }
+                        }
+                        else if (m_grandCharacterInfo.implantSets.ContainsKey("Current"))
+                        {
+                            for (int i = 0; i < m_grandCharacterInfo.implantSets["Current"].Array.GetLength(0); i++)
+                            {
+                                UserImplant x = m_grandCharacterInfo.implantSets["Current"].Array[i];
+                                if (x != null)
+                                    m_grandCharacterInfo.ImplantBonuses.Add(x);
+                            }
+                        }
+
+                    }
+                    finally
+                    {
+                        m_grandCharacterInfo.ResumeEvents();
+                    }
+                }
+            }
+        }
 
         #region Garbage?
 

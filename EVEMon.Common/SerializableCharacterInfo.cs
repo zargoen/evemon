@@ -219,15 +219,6 @@ namespace EVEMon.Common
             set { m_balance = value; }
         }
 
-        private int m_activeImplantSet;
-
-        [XmlElement("activeImplantSet")]
-        public int ActiveImplantSet
-        {
-            get { return m_activeImplantSet; }
-            set { m_activeImplantSet = value; }
-        }
-
         private List<SerializableImplantSet> m_implantSets = new List<SerializableImplantSet>();
 
         [XmlArrayItem("ImplantSet")]
@@ -638,71 +629,31 @@ namespace EVEMon.Common
             set { m_number = value; }
         }
 
-        private SerializableImplantName[] m_values = new SerializableImplantName[10];
+        private UserImplant[] m_values;
 
         public SerializableImplantSet()
         {
-            for (int i = 0; i < 10; i++)
-            {
-                m_values[i].Name = String.Empty;
-                m_values[i].Number = i + 1;
-            }
+            m_values = new UserImplant[10];
         }
 
-        public SerializableImplantSet(string[] a)
+        public SerializableImplantSet(UserImplant[] a)
         {
-            for (int i = 0; i < a.Length && i < 10; i++)
-            {
-                m_values[i].Name = a[i];
-                m_values[i].Number = i + 1;
-            }
+            m_values = a;
         }
 
         [XmlIgnore]
-        public SerializableImplantName this[int name]
+        public UserImplant this[int name]
         {
             get { return m_values[name]; }
             set { m_values[name] = value; }
         }
 
         [XmlArray]
-        [XmlArrayItem("ImplantName")]
-        public SerializableImplantName[] Implants
+        [XmlArrayItem("UserImplant")]
+        public UserImplant[] Implants
         {
             get { return m_values; }
             set { m_values = value; }
-        }
-    }
-
-    [XmlRoot("ImplantName")]
-    public class SerializableImplantName
-    {
-        private string m_name;
-
-        [XmlElement]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        private int m_number;
-
-        [XmlElement("Number")]
-        public int Number
-        {
-            get { return m_number; }
-            set { m_number = value; }
-        }
-
-        public SerializableImplantName()
-        {
-            m_name = String.Empty;
-        }
-
-        public SerializableImplantName(string a)
-        {
-            m_name = a;
         }
     }
 }

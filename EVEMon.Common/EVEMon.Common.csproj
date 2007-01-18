@@ -116,6 +116,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\eve-implants2.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\eve-items2.xml.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

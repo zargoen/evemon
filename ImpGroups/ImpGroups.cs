@@ -28,68 +28,118 @@ namespace EVEMon.ImpGroups
             InitializeComponent();
         }
 
-        public ImpGroups(Settings s, CharacterInfo gci)
+        public ImpGroups(CharacterInfo gci)
             : this()
         {
-            m_settings = s;
             m_grandCharacterInfo = gci;
             m_charKey = m_grandCharacterInfo.Name;
+            m_implants = Slot.GetImplants();
         }
 
-        private Settings m_settings;
         private CharacterInfo m_grandCharacterInfo;
         private string m_charKey;
+
+        // This is the main collection of Implants you can chose from
+        private Slot[] m_implants;
+
+        // Here is the result set you return
+        private Dictionary<string, ImplantSet> m_resultSets = null;
+
+        public Dictionary<string, ImplantSet> ResultBonuses
+        {
+            get { return m_resultSets; }
+        }
+
+        // Here is the local store for the implants you are changing
+        private Dictionary<string, ImplantSet> m_workingSets = new Dictionary<string, ImplantSet>();
 
         private void ImpGroups_Load(object sender, EventArgs e)
         {
             int JumpClones = m_grandCharacterInfo.GetSkill("Infomorph Psychology").Level;
+            /// Total number of implant sets should be:
+            ///    1 for the implants generated in EVEMon from the CCP supplied XML
+            ///  + 1 for the current head full according to EVEmon
+            ///  + the number equivalent to the level of "Infomorph Psychology"
             JumpCloneTxt.Text = String.Format("{0} has the skill for {1} Jump Clones\n(plus 1 for the implants in your active body)",
                                       m_charKey, JumpClones.ToString());
+            lbJumpClone.Items.Add("Auto");
             lbJumpClone.Items.Add("Current");
-            for (int i = 0; i < JumpClones; i++)
+            m_workingSets = m_grandCharacterInfo.implantSets;
+            for (int i = 1; i <= JumpClones; i++)
             {
                 lbJumpClone.Items.Add("Clone " + i);
             }
-            lbJumpClone.SelectedIndex = 0;
+
+            lbJumpClone.SelectedIndex = 1;
         }
 
         private void Buildtxt()
         {
-/*            SortedList<string, Slot> Slots = new SortedList<string, Slot>();
-            foreach (Slot i in m_implants)
+            if (m_implants != null && tvlist.Nodes.Count == 0)
             {
-                if (!Slots.ContainsKey(i.Number.ToString()))
+                SortedList<int, Slot> Slots = new SortedList<int, Slot>();
+                foreach (Slot i in m_implants)
                 {
-                    Slots.Add(i.Number.ToString(), i);
+                    if (!Slots.ContainsKey(i.Number))
+                    {
+                        Slots.Add(i.Number, i);
+                    }
                 }
+                TreeNode root = new TreeNode("Implants");
+                foreach (KeyValuePair<int, Slot> kvp in Slots)
+                {
+                    TreeNode tvn = new TreeNode();
+                    tvn.Text = "Slot " + kvp.Key.ToString();
+                    //System.Windows.Forms.ComboBox x = (System.Windows.Forms.ComboBox)this.panel1.Controls["txtImplant" + kvp.Key];
+                    SortedList<string, Implant> implants = new SortedList<string, Implant>();
+                    foreach (Implant i in kvp.Value.ImplantList)
+                    {
+                        implants[i.Name] = i;
+                    }
+                    //x.Items.Add("<None>");
+                    foreach (Implant i in implants.Values)
+                    {
+                        tvn.Nodes.Add(i.Name);
+                        //x.Items.Add(i);
+                    }
+                    //x.SelectedIndex = 0;
+                    root.Nodes.Add(tvn);
+                }
+                tvlist.Nodes.Add(root);
             }
-
-            foreach (KeyValuePair<string, Slot> kvp in Slots)
-            {
-                TreeNode tvn = new TreeNode();
-                tvn.Text = "Slot " + kvp.Key;
-                System.Windows.Forms.ComboBox x = (System.Windows.Forms.ComboBox)this.panel1.Controls["txtImplant" + kvp.Key];
-                SortedList<string, Implant> implants = new SortedList<string, Implant>();
-                foreach (Implant i in kvp.Value.ImplantList)
-                {
-                    implants[i.Name] = i;
-                }
-                x.Items.Add("<None>");
-                foreach (Implant i in implants.Values)
-                {
-                    x.Items.Add(i);
-                }
-                x.SelectedIndex = 0;
-            }*/
             for (int i = 1; i <= 10; i++)
             {
+
+                
                 System.Windows.Forms.TextBox x = (System.Windows.Forms.TextBox)this.panel1.Controls["txtImplant" + i];
-                if (m_grandCharacterInfo.implantSets.Count != 0 && m_grandCharacterInfo.implantSets.ContainsKey(lbJumpClone.SelectedIndex))
+                if (m_grandCharacterInfo.implantSets.Count != 0 && m_grandCharacterInfo.implantSets.ContainsKey(lbJumpClone.SelectedItem.ToString()))
                 {
                     // Set the text to show the selected implants
-                    x.Text = m_grandCharacterInfo.implantSets[lbJumpClone.SelectedIndex][i-1];
+                    if (m_grandCharacterInfo.implantSets[lbJumpClone.SelectedItem.ToString()][i - 1] != null)
+                        x.Text = m_grandCharacterInfo.implantSets[lbJumpClone.SelectedItem.ToString()][i - 1].Name;
+                    else
+                        x.Text = "";
+
+                    if (x.Text == "")
+                        x.Text = "<None>";
+                    else
+                    {
+                        bool found = false;
+                        foreach (Implant z in m_implants[i - 1].ImplantList)
+                        {
+                            if (z == null)
+                                continue;
+                            if (z.Name == x.Text)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                            x.Text = "<Invalid Implant name, please update>";
+                    }
                 }
-                else if (m_grandCharacterInfo.implantSets.Count == 0 && lbJumpClone.SelectedIndex == 0 && i <= 5)
+                else if (m_grandCharacterInfo.implantSets.Count == 0 && lbJumpClone.SelectedIndex == 1 && i <= 5)
                 {
                     // if we don't have anything set here, then we need to check the old type
                     switch (i)
@@ -115,6 +165,20 @@ namespace EVEMon.ImpGroups
                     }
                     if (x.Text == "")
                         x.Text = "<None>";
+                    else
+                    {
+                        bool found = false;
+                        foreach (Implant z in m_implants[i - 1].ImplantList)
+                        {
+                            if (z.Name == x.Text)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                            x.Text = "<Invalid Implant name, please update>";
+                    }
                 }
                 else
                     x.Text = "<None>";
@@ -129,6 +193,11 @@ namespace EVEMon.ImpGroups
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            m_resultSets = new Dictionary<string, ImplantSet>();
+            foreach (string x in m_workingSets.Keys)
+            {
+                m_resultSets.Add(x, m_workingSets[x]);
+            }
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
