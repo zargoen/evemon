@@ -841,36 +841,39 @@ namespace EVEMon.Common
 
             foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
             {
-                int slot = 0;
-                switch (bonus.EveAttribute)
+                if (!bonus.Manual)
                 {
-                    case EveAttribute.Perception:
-                        slot = 1;
-                        break;
-                    case EveAttribute.Memory:
-                        slot = 2;
-                        break;
-                    case EveAttribute.Willpower:
-                        slot = 3;
-                        break;
-                    case EveAttribute.Intelligence:
-                        slot = 4;
-                        break;
-                    case EveAttribute.Charisma:
-                        slot = 5;
-                        break;
-                    default:
-                        break;
-                }
-                if (slot != 0)
-                {
-                    if (!this.implantSets.ContainsKey("Auto"))
+                    int slot = 0;
+                    switch (bonus.EveAttribute)
                     {
-                        UserImplant[] z = new UserImplant[10];
-                        string key = "Auto";
-                        this.implantSets.Add(key, new ImplantSet(z));
+                        case EveAttribute.Perception:
+                            slot = 1;
+                            break;
+                        case EveAttribute.Memory:
+                            slot = 2;
+                            break;
+                        case EveAttribute.Willpower:
+                            slot = 3;
+                            break;
+                        case EveAttribute.Intelligence:
+                            slot = 4;
+                            break;
+                        case EveAttribute.Charisma:
+                            slot = 5;
+                            break;
+                        default:
+                            break;
                     }
-                    this.implantSets["Auto"][slot - 1] = new UserImplant(slot, Implants[slot - 1][bonus.Name], bonus.Manual);
+                    if (slot != 0)
+                    {
+                        if (!this.implantSets.ContainsKey("Auto"))
+                        {
+                            UserImplant[] z = new UserImplant[10];
+                            string key = "Auto";
+                            this.implantSets.Add(key, new ImplantSet(z));
+                        }
+                        this.implantSets["Auto"][slot - 1] = new UserImplant(slot, Implants[slot - 1][bonus.Name], bonus.Manual);
+                    }
                 }
                 GrandEveAttributeBonus geab =
                     new GrandEveAttributeBonus(bonus.Name, bonus.EveAttribute, bonus.Amount, bonus.Manual);
@@ -878,7 +881,7 @@ namespace EVEMon.Common
             }
             foreach (GrandEveAttributeBonus tb in manualBonuses)
             {
-                if (addcurrent)
+                if (addcurrent && tb.Manual)
                 {
                     int slot = 0;
                     switch (tb.EveAttribute)
@@ -909,7 +912,14 @@ namespace EVEMon.Common
                             string key = "Current";
                             this.implantSets.Add(key, new ImplantSet(z));
                         }
-                        this.implantSets["Current"][slot - 1] = new UserImplant(slot, Implants[slot - 1][tb.Name], tb.Manual);
+                        Implant x = Implants[slot - 1][tb.Name];
+                        if (x == null)
+                        {
+                            x = new Implant();
+                            x.Name = tb.Name;
+                            x.Bonus = tb.Amount;
+                        }
+                        this.implantSets["Current"][slot - 1] = new UserImplant(slot, x, tb.Manual);
                     }
                 }
                 this.AttributeBonuses.Add(tb);

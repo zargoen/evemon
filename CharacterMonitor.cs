@@ -2379,7 +2379,7 @@ namespace EVEMon
                                 m_grandCharacterInfo.AttributeBonuses.Add(new GrandEveAttributeBonus(b.Name, a, b.Bonus, true));
                             }
                         }
-                        m_grandCharacterInfo.AttributeBonuses.Clear();
+                        m_grandCharacterInfo.ImplantBonuses.Clear();
                         if (m_grandCharacterInfo.implantSets.ContainsKey("Auto"))
                         {
                             if (!m_grandCharacterInfo.implantSets.ContainsKey("Current"))
