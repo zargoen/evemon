@@ -356,7 +356,7 @@ namespace EVEMon.SkillPlanner
         private void btnCompareWith_Click(object sender, EventArgs e)
         {
             // ask user to select a ship for comparison
-            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedShip);
+            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedShip,m_plan);
             if (selectedShip != null)
             {
                 lvShipProperties.BeginUpdate();

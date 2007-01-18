@@ -30,10 +30,11 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        public static Ship CompareWithShipInput(Ship selectedShip)
+        public static Ship CompareWithShipInput(Ship selectedShip,Plan plan)
         {
             using (ShipCompareWindow f = new ShipCompareWindow())
             {
+                f.shipSelectControl.Plan = plan;
                 f.SelectedShip = selectedShip;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
