@@ -60,7 +60,9 @@ namespace EVEMon.Common
 
         public static void GetCharacterImageAsync(int charId, GetImageCallback callback)
         {
-            GetImageAsync("http://img.eve.is/serv.asp?s=512&c=" + charId.ToString(), false, callback);
+            // t20 from CCP has broken the 512 sized image
+            //GetImageAsync("http://img.eve.is/serv.asp?s=512&c=" + charId.ToString(), false, callback);
+            GetImageAsync("http://img.eve.is/serv.asp?s=256&c=" + charId.ToString(), false, callback);
         }
 
         public static string ImageCacheDirectory
