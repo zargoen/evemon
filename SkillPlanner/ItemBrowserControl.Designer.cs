@@ -53,6 +53,7 @@ namespace EVEMon.SkillPlanner
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -73,6 +74,7 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.RememberDistanceKey = null;
             this.splitContainer1.Size = new System.Drawing.Size(650, 413);
             this.splitContainer1.SplitterDistance = 163;
+            this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 0;
             // 
             // itemSelectControl1
@@ -81,11 +83,11 @@ namespace EVEMon.SkillPlanner
             this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
-            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(4);
             this.itemSelectControl1.Name = "itemSelectControl1";
             this.itemSelectControl1.Plan = null;
             this.itemSelectControl1.SelectedItem = null;
-            this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
+            this.itemSelectControl1.Size = new System.Drawing.Size(159, 409);
             this.itemSelectControl1.TabIndex = 1;
             this.itemSelectControl1.SelectedItemChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
             // 
@@ -101,7 +103,7 @@ namespace EVEMon.SkillPlanner
             this.lvItemProperties.FullRowSelect = true;
             this.lvItemProperties.Location = new System.Drawing.Point(3, 73);
             this.lvItemProperties.Name = "lvItemProperties";
-            this.lvItemProperties.Size = new System.Drawing.Size(203, 337);
+            this.lvItemProperties.Size = new System.Drawing.Size(200, 333);
             this.lvItemProperties.TabIndex = 8;
             this.lvItemProperties.UseCompatibleStateImageBehavior = false;
             this.lvItemProperties.View = System.Windows.Forms.View.Details;
@@ -120,9 +122,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.lblItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblItemDescription.Location = new System.Drawing.Point(213, 73);
+            this.lblItemDescription.Location = new System.Drawing.Point(210, 73);
             this.lblItemDescription.Name = "lblItemDescription";
-            this.lblItemDescription.Size = new System.Drawing.Size(268, 215);
+            this.lblItemDescription.Size = new System.Drawing.Size(268, 211);
             this.lblItemDescription.TabIndex = 10;
             this.lblItemDescription.Text = "label1";
             // 
@@ -135,7 +137,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.Controls.Add(this.lblItemSkill3);
             this.groupBox2.Controls.Add(this.lblItemSkill2);
             this.groupBox2.Controls.Add(this.lblItemSkill1);
-            this.groupBox2.Location = new System.Drawing.Point(213, 291);
+            this.groupBox2.Location = new System.Drawing.Point(210, 287);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(268, 119);
             this.groupBox2.TabIndex = 9;
