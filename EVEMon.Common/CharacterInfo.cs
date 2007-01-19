@@ -24,9 +24,6 @@ namespace EVEMon.Common
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
         
-        // This is the value that is becoming history
-        //private MonitoredList<GrandEveAttributeBonus> m_attributeBonuses = new MonitoredList<GrandEveAttributeBonus>();
-        
         // These are the new replacements for m_attributeBonuses
         private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
         private Dictionary<string, ImplantSet> m_implantSets = new Dictionary<string, ImplantSet>();
@@ -39,8 +36,6 @@ namespace EVEMon.Common
             m_name = name;
 
             BuildSkillTree();
-            //m_attributeBonuses.Changed +=
-            //    new EventHandler<ChangedEventArgs<GrandEveAttributeBonus>>(m_attributeBonuses_Changed);
             m_CurrentImplants.Changed +=
                 new EventHandler<ChangedEventArgs<UserImplant>>(m_implantSet_Changed);
         }
@@ -513,32 +508,10 @@ namespace EVEMon.Common
             get { return m_CurrentImplants; }
         }
 
-        /*public IList<GrandEveAttributeBonus> AttributeBonuses
-        {
-            get { return m_attributeBonuses; }
-        }*/
-
-        /*private void m_attributeBonuses_Changed(object sender, EventArgs e)
-        {
-            OnAttributeBonusChanged();
-        }*/
-
         private void m_implantSet_Changed(object sender, EventArgs e)
         {
             OnImplantSetChanged();
         }
-
-        /*private void OnAttributeBonusChanged()
-        {
-            OnAttributeChanged();
-            FireEvent(delegate
-                          {
-                              if (AttributeBonusChanged != null)
-                              {
-                                  AttributeBonusChanged(this, new EventArgs());
-                              }
-                          }, "attributebonus");
-        }*/
 
         private void OnImplantSetChanged()
         {
@@ -551,8 +524,6 @@ namespace EVEMon.Common
                               }
                           }, "implantset");
         }
-
-        //public event EventHandler AttributeBonusChanged;
 
         public event EventHandler ImplantSetChanged;
 
@@ -772,29 +743,21 @@ namespace EVEMon.Common
             this.BaseIntelligence = ci.Attributes.BaseIntelligence;
             this.BaseCharisma = ci.Attributes.BaseCharisma;
 
-            /*List<GrandEveAttributeBonus> manualBonuses = new List<GrandEveAttributeBonus>();
-            foreach (GrandEveAttributeBonus tb in this.AttributeBonuses)
-            {
-                if (tb.Manual)
-                {
-                    manualBonuses.Add(tb);
-                }
-            }*/
+            bool getcurrent = !this.implantSets.ContainsKey("Current");
 
             List<UserImplant> manualBonuses = new List<UserImplant>();
             foreach (UserImplant x in this.ImplantBonuses)
             {
-                if (x.Manual)
+                if (x.Manual && getcurrent)
                     manualBonuses.Add(x);
             }
 
             this.ImplantBonuses.Clear();
+
             Slot[] Implants = Slot.GetImplants();
 
             if (this.implantSets.ContainsKey("Auto"))
                 this.implantSets.Remove("Auto");
-            if (this.implantSets.ContainsKey("Current"))
-                this.implantSets.Remove("Current");
 
             foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
             {
@@ -812,7 +775,7 @@ namespace EVEMon.Common
                 }
                 else
                 {
-                    if (slot != 0)
+                    if (slot != 0 && getcurrent)
                     {
                         if (!this.implantSets.ContainsKey("Current"))
                         {
@@ -828,9 +791,6 @@ namespace EVEMon.Common
                         this.implantSets["Current"][slot - 1] = new UserImplant(slot, x, bonus.Manual);
                     }
                 }
-                /*GrandEveAttributeBonus geab =
-                    new GrandEveAttributeBonus(bonus.Name, bonus.EveAttribute, bonus.Amount, bonus.Manual);
-                this.AttributeBonuses.Add(geab);*/
             }
             foreach (UserImplant tb in manualBonuses)
             {
@@ -852,7 +812,6 @@ namespace EVEMon.Common
                         this.implantSets["Current"][tb.Slot - 1] = new UserImplant(tb.Slot, x, tb.Manual);
                     }
                 }
-                //this.AttributeBonuses.Add(tb);
             }
             if (this.implantSets.ContainsKey("Auto"))
             {
