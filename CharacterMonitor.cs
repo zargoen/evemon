@@ -2320,6 +2320,16 @@ namespace EVEMon
                             if (s != "Auto")
                                 m_grandCharacterInfo.implantSets[s] = new ImplantSet(f.ResultBonuses[s].Array);
                         }
+                        List<string> removesets = new List<string>();
+                        foreach (string s in m_grandCharacterInfo.implantSets.Keys)
+                        {
+                            if (!f.ResultBonuses.ContainsKey(s) && s != "Auto")
+                                removesets.Add(s);
+                        }
+                        foreach (string s in removesets)
+                        {
+                            m_grandCharacterInfo.implantSets.Remove(s);
+                        }
                         m_grandCharacterInfo.ImplantBonuses.Clear();
                         if (m_grandCharacterInfo.implantSets.ContainsKey("Auto"))
                         {
