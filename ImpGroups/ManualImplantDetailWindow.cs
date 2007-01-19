@@ -94,8 +94,8 @@ namespace EVEMon
         {
             if (chkbDelete.Checked)
                 m_implant = null;
-            else if (cbImplant.SelectedItem.ToString() == "<None>")
-                m_implant = null;
+            else if (cbImplant.SelectedItem.ToString() == "<None>") // Handy for nulling out "Auto" implants in "Current"
+                m_implant = new UserImplant(m_inBonus.Slot, new Implant(), true);
             else
             {
                 bool manual = false;

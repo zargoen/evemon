@@ -25,6 +25,15 @@ namespace EVEMon.ImpGroups
             m_grandCharacterInfo = gci;
             m_charKey = m_grandCharacterInfo.Name;
             m_implants = Slot.GetImplants();
+            // m_input and m_workingSets are NOT the same,
+            // if you simply use the = operator to copy them,
+            // then you actually end up with two references to the same object,
+            // which causes some really daft errors.
+            m_input = m_grandCharacterInfo.implantSets;
+            foreach (string s in m_input.Keys)
+            {
+                m_workingSets.Add(s, new ImplantSet(m_input[s].Array));
+            }
         }
 
         private CharacterInfo m_grandCharacterInfo;
@@ -41,6 +50,7 @@ namespace EVEMon.ImpGroups
             get { return m_resultSets; }
         }
 
+        private Dictionary<string, ImplantSet> m_input;
         // Here is the local store for the implants you are changing
         private Dictionary<string, ImplantSet> m_workingSets = new Dictionary<string, ImplantSet>();
 
@@ -55,13 +65,15 @@ namespace EVEMon.ImpGroups
                                       m_charKey, JumpClones.ToString());
             lbJumpClone.Items.Add("Auto");
             lbJumpClone.Items.Add("Current");
-            m_workingSets = m_grandCharacterInfo.implantSets;
             for (int i = 1; i <= JumpClones; i++)
             {
                 lbJumpClone.Items.Add("Clone " + i);
             }
 
             lbJumpClone.SelectedIndex = 1;
+
+            Buildtxt();
+            panel1.Refresh();
         }
 
         private void Buildtxt()
@@ -98,36 +110,61 @@ namespace EVEMon.ImpGroups
                 }
                 tvlist.Nodes.Add(root);
             }*/
+
             for (int i = 1; i <= 10; i++)
             {
                 System.Windows.Forms.TextBox x = (System.Windows.Forms.TextBox)this.panel1.Controls["txtImplant" + i];
 
-                if (lbJumpClone.SelectedItem.ToString() == "Current")
+                if (m_workingSets.ContainsKey(lbJumpClone.SelectedItem.ToString()))
                 {
-                    if (i <= 5)
-                        x.Text = m_grandCharacterInfo.getImplantName(UserImplant.SlotToAttrib(i));
-                    else
+                    if (lbJumpClone.SelectedItem.ToString() == "Current")
                     {
-                        if (m_grandCharacterInfo.implantSets.ContainsKey("Current"))
+                        if (i <= 5)
                         {
-                            UserImplant a = m_grandCharacterInfo.implantSets["Current"][i - 1];
+                            UserImplant a = m_workingSets["Current"][i - 1];
+                            if (a != null)
+                                x.Text = a.Name;
+                            else
+                            {
+                                UserImplant s;
+                                if (m_workingSets.ContainsKey("Auto"))
+                                    s = m_workingSets["Auto"][i - 1];
+                                else
+                                    s = null;
+                                UserImplant t;
+                                if (m_input.ContainsKey("Current"))
+                                    t = m_input["Current"][i - 1];
+                                else
+                                    t = null;
+                                if (t == null)
+                                {
+                                    if (s != null)
+                                        x.Text = s.Name;
+                                    else
+                                        x.Text = "";
+                                }
+                                else
+                                    x.Text = "";
+                            }
+                        }
+                        else
+                        {
+                            UserImplant a = m_workingSets["Current"][i - 1];
                             if (a != null)
                                 x.Text = a.Name;
                             else
                                 x.Text = "";
                         }
+                    }
+                    else
+                    {
+                        // Set the text to show the selected implants
+                        UserImplant a = m_workingSets[lbJumpClone.SelectedItem.ToString()][i - 1];
+                        if (a != null)
+                            x.Text = a.Name;
                         else
                             x.Text = "";
                     }
-                }
-                else if (m_grandCharacterInfo.implantSets.Count != 0 && m_grandCharacterInfo.implantSets.ContainsKey(lbJumpClone.SelectedItem.ToString()))
-                {
-                    // Set the text to show the selected implants
-                    UserImplant a = m_grandCharacterInfo.implantSets[lbJumpClone.SelectedItem.ToString()][i - 1];
-                    if (a != null)
-                        x.Text = a.Name;
-                    else
-                        x.Text = "";
                 }
                 else
                     x.Text = "";
@@ -164,7 +201,7 @@ namespace EVEMon.ImpGroups
             m_resultSets = new Dictionary<string, ImplantSet>();
             foreach (string x in m_workingSets.Keys)
             {
-                m_resultSets.Add(x, m_workingSets[x]);
+                m_resultSets.Add(x, new ImplantSet(m_workingSets[x].Array));
             }
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -193,13 +230,28 @@ namespace EVEMon.ImpGroups
                 if (dr == DialogResult.OK)
                 {
                     if (lbJumpClone.SelectedItem.ToString() != "Auto")
+                    {
                         m_workingSets[lbJumpClone.SelectedItem.ToString()][Slot - 1] = f.ResultBonus;
+                    }
                     else
                     { // Give the user a message to tell them that they can't modify the implants dl'd from CCP "Auto", only overload them in a set such as "Current"
                     }
                 }
             }
+
+            // if there are no implants in the group then delete the group
+            // adding an implant in will re-add the group in the code above.
+            bool delete = true;
+            foreach (UserImplant temp in m_workingSets[lbJumpClone.SelectedItem.ToString()].Array)
+            {
+                if (temp != null)
+                    delete = false;
+            }
+            if (delete)
+                m_workingSets.Remove(lbJumpClone.SelectedItem.ToString());
+
             Buildtxt();
+            panel1.Refresh();
         }
     }
 }
