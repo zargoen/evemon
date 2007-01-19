@@ -615,6 +615,12 @@ namespace EVEMon.SkillPlanner
 
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
+            //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key
+            RemoveEntry();            
+        }
+
+        private void RemoveEntry()
+        {
             if (lvSkills.SelectedItems.Count != 1)
             {
                 return;
@@ -804,6 +810,14 @@ namespace EVEMon.SkillPlanner
                                 "The plan for this skill could not be cancelled because this skill is " +
                                 "required for another skill you have planned.",
                                 "Skill Needed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        private void lvSkills_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                RemoveEntry();
             }
         }
     }

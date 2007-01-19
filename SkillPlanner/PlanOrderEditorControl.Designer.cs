@@ -65,44 +65,44 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(228, 112);
+            this.cmsContextMenu.Size = new System.Drawing.Size(197, 104);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
             // 
             this.miChangeNote.Name = "miChangeNote";
-            this.miChangeNote.Size = new System.Drawing.Size(227, 24);
+            this.miChangeNote.Size = new System.Drawing.Size(196, 22);
             this.miChangeNote.Text = "View/Change Note...";
             this.miChangeNote.Click += new System.EventHandler(this.miChangeNote_Click);
             // 
             // miShowInSkillBrowser
             // 
             this.miShowInSkillBrowser.Name = "miShowInSkillBrowser";
-            this.miShowInSkillBrowser.Size = new System.Drawing.Size(227, 24);
+            this.miShowInSkillBrowser.Size = new System.Drawing.Size(196, 22);
             this.miShowInSkillBrowser.Text = "Show in Skill Browser...";
             this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(224, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(193, 6);
             // 
             // miRemoveFromPlan
             // 
             this.miRemoveFromPlan.Name = "miRemoveFromPlan";
-            this.miRemoveFromPlan.Size = new System.Drawing.Size(227, 24);
+            this.miRemoveFromPlan.Size = new System.Drawing.Size(196, 22);
             this.miRemoveFromPlan.Text = "Remove from Plan...";
             this.miRemoveFromPlan.Click += new System.EventHandler(this.miRemoveFromPlan_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(224, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
             // 
             // miPlanGroups
             // 
             this.miPlanGroups.Name = "miPlanGroups";
-            this.miPlanGroups.Size = new System.Drawing.Size(227, 24);
+            this.miPlanGroups.Size = new System.Drawing.Size(196, 22);
             this.miPlanGroups.Text = "Plan Groups";
             // 
             // sfdSave
@@ -128,14 +128,14 @@ namespace EVEMon.SkillPlanner
             this.tsbSort});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(50, 558);
+            this.toolStrip1.Size = new System.Drawing.Size(38, 558);
             this.toolStrip1.TabIndex = 10;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(47, 20);
+            this.toolStripLabel1.Size = new System.Drawing.Size(35, 13);
             this.toolStripLabel1.Text = "Move:";
             // 
             // tsbMoveUp
@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveUp.Image")));
             this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveUp.Name = "tsbMoveUp";
-            this.tsbMoveUp.Size = new System.Drawing.Size(47, 20);
+            this.tsbMoveUp.Size = new System.Drawing.Size(35, 20);
             this.tsbMoveUp.Text = "Move Up";
             this.tsbMoveUp.Click += new System.EventHandler(this.tsbMoveUp_Click);
             // 
@@ -156,20 +156,20 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveDown.Image")));
             this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveDown.Name = "tsbMoveDown";
-            this.tsbMoveDown.Size = new System.Drawing.Size(47, 20);
+            this.tsbMoveDown.Size = new System.Drawing.Size(35, 20);
             this.tsbMoveDown.Text = "Move Down";
             this.tsbMoveDown.Click += new System.EventHandler(this.tsbMoveDown_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(47, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(35, 6);
             this.toolStripSeparator1.Visible = false;
             // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(47, 20);
+            this.toolStripLabel3.Size = new System.Drawing.Size(35, 13);
             this.toolStripLabel3.Text = "Sort:";
             // 
             // tsbSort
@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
             this.tsbSort.Image = ((System.Drawing.Image)(resources.GetObject("tsbSort.Image")));
             this.tsbSort.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSort.Name = "tsbSort";
-            this.tsbSort.Size = new System.Drawing.Size(47, 20);
+            this.tsbSort.Size = new System.Drawing.Size(35, 20);
             this.tsbSort.Text = "Sort Plan Entries";
             this.tsbSort.Click += new System.EventHandler(this.tsbSort_Click);
             // 
@@ -186,15 +186,15 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel1.Controls.Add(this.llSuggestionLink);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(50, 0);
+            this.panel1.Location = new System.Drawing.Point(38, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(633, 21);
+            this.panel1.Size = new System.Drawing.Size(645, 21);
             this.panel1.TabIndex = 11;
             // 
             // llSuggestionLink
             // 
             this.llSuggestionLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.llSuggestionLink.Location = new System.Drawing.Point(452, -1);
+            this.llSuggestionLink.Location = new System.Drawing.Point(464, -1);
             this.llSuggestionLink.Name = "llSuggestionLink";
             this.llSuggestionLink.Size = new System.Drawing.Size(181, 22);
             this.llSuggestionLink.TabIndex = 0;
@@ -219,10 +219,10 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.ContextMenuStrip = this.cmsContextMenu;
             this.lvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSkills.FullRowSelect = true;
-            this.lvSkills.Location = new System.Drawing.Point(50, 21);
+            this.lvSkills.Location = new System.Drawing.Point(38, 21);
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
-            this.lvSkills.Size = new System.Drawing.Size(633, 537);
+            this.lvSkills.Size = new System.Drawing.Size(645, 537);
             this.lvSkills.StateImageList = this.ilSkillDependency;
             this.lvSkills.TabIndex = 3;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
@@ -231,10 +231,11 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
+            this.lvSkills.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyUp);
             // 
             // PlanOrderEditorControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvSkills);
             this.Controls.Add(this.panel1);
