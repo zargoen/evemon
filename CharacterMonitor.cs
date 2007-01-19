@@ -2305,7 +2305,11 @@ namespace EVEMon
                     m_grandCharacterInfo.SuppressEvents();
                     try
                     {
-                        m_grandCharacterInfo.implantSets = f.ResultBonuses;
+                        foreach (string s in f.ResultBonuses.Keys)
+                        {
+                            if (s != "Auto")
+                                m_grandCharacterInfo.implantSets[s] = new ImplantSet(f.ResultBonuses[s].Array);
+                        }
                         m_grandCharacterInfo.ImplantBonuses.Clear();
                         if (m_grandCharacterInfo.implantSets.ContainsKey("Auto"))
                         {

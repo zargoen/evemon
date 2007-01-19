@@ -28,6 +28,7 @@ namespace EVEMon.ImpGroups
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.JumpCloneTxt = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -65,7 +66,9 @@ namespace EVEMon.ImpGroups
             this.txtImplant3 = new System.Windows.Forms.TextBox();
             this.txtImplant2 = new System.Windows.Forms.TextBox();
             this.txtImplant1 = new System.Windows.Forms.TextBox();
-            this.tvlist = new System.Windows.Forms.TreeView();
+            this.btnSwapWithCurrent = new System.Windows.Forms.Button();
+            this.btnDeleteCurrent = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -520,20 +523,42 @@ namespace EVEMon.ImpGroups
             this.txtImplant1.Size = new System.Drawing.Size(241, 21);
             this.txtImplant1.TabIndex = 0;
             // 
-            // tvlist
+            // btnSwapWithCurrent
             // 
-            this.tvlist.Location = new System.Drawing.Point(237, 12);
-            this.tvlist.Name = "tvlist";
-            this.tvlist.Size = new System.Drawing.Size(120, 53);
-            this.tvlist.TabIndex = 8;
-            this.tvlist.Visible = false;
+            this.btnSwapWithCurrent.Enabled = false;
+            this.btnSwapWithCurrent.Location = new System.Drawing.Point(237, 44);
+            this.btnSwapWithCurrent.Name = "btnSwapWithCurrent";
+            this.btnSwapWithCurrent.Size = new System.Drawing.Size(120, 21);
+            this.btnSwapWithCurrent.TabIndex = 8;
+            this.btnSwapWithCurrent.Tag = "Weeee, jumpy jumpy";
+            this.btnSwapWithCurrent.Text = "Swap with \"Current\"";
+            this.btnSwapWithCurrent.UseVisualStyleBackColor = true;
+            this.btnSwapWithCurrent.Click += new System.EventHandler(this.btnSwapWithCurrent_Click);
+            this.btnSwapWithCurrent.MouseHover += new System.EventHandler(this.btnSwapWithCurrent_MouseHover);
+            // 
+            // btnDeleteCurrent
+            // 
+            this.btnDeleteCurrent.Location = new System.Drawing.Point(237, 17);
+            this.btnDeleteCurrent.Name = "btnDeleteCurrent";
+            this.btnDeleteCurrent.Size = new System.Drawing.Size(120, 21);
+            this.btnDeleteCurrent.TabIndex = 9;
+            this.btnDeleteCurrent.Tag = "Arrggg, podded again!";
+            this.btnDeleteCurrent.Text = "Delete \"Current\"";
+            this.btnDeleteCurrent.UseVisualStyleBackColor = true;
+            this.btnDeleteCurrent.Click += new System.EventHandler(this.btnDeleteCurrent_Click);
+            this.btnDeleteCurrent.MouseHover += new System.EventHandler(this.btnDeleteCurrent_MouseHover);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.Tag = "Arrrggg, podded again";
             // 
             // ImpGroups
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 401);
-            this.Controls.Add(this.tvlist);
+            this.Controls.Add(this.btnDeleteCurrent);
+            this.Controls.Add(this.btnSwapWithCurrent);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblJumpClone);
             this.Controls.Add(this.lbJumpClone);
@@ -592,6 +617,8 @@ namespace EVEMon.ImpGroups
         private System.Windows.Forms.TextBox txtImplant3;
         private System.Windows.Forms.TextBox txtImplant2;
         private System.Windows.Forms.TextBox txtImplant1;
-        private System.Windows.Forms.TreeView tvlist;
+        private System.Windows.Forms.Button btnSwapWithCurrent;
+        private System.Windows.Forms.Button btnDeleteCurrent;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
