@@ -84,7 +84,8 @@ namespace EVEMon.Common
         {
             get
             {
-                string encodedName = Base64Encode(charName);
+                //string encodedName = Base64Encode(charName);
+                string encodedName = charName;
                 return new FileInfo(_cacheDirectory + encodedName);
             }
         }
@@ -92,7 +93,8 @@ namespace EVEMon.Common
         public XmlDocument GetCharacterXml(string charName)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(_cacheDirectory + Base64Encode(charName));
+            //doc.Load(_cacheDirectory + Base64Encode(charName));
+            doc.Load(_cacheDirectory + charName);
             return doc;
         }
 
@@ -115,7 +117,8 @@ namespace EVEMon.Common
         {
             XmlNode characterNode = xdoc.SelectSingleNode("//character[race]");
             string name = characterNode.Attributes["name"].Value;
-            string encodedName = Base64Encode(name);
+            //string encodedName = Base64Encode(name);
+            string encodedName = name;
 
             using (XmlTextWriter writer = new XmlTextWriter(new FileStream(_cacheDirectory + encodedName, FileMode.OpenOrCreate), Encoding.GetEncoding("iso-8859-1")))
             {

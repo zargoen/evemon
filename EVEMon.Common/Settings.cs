@@ -51,6 +51,18 @@ namespace EVEMon.Common
             set { m_g15acycle = value; }
         }
 
+        public event EventHandler<EventArgs> NotificationOffsetChanged;
+        private int m_notificationOffset = 0;
+        public int NotificationOffset
+        {
+            get { return m_notificationOffset; }
+            set {
+                m_notificationOffset = value;
+                if (NotificationOffsetChanged != null)
+                    NotificationOffsetChanged(this, new EventArgs());
+                 }
+        }
+
         public int m_g15acycleint = 20;
         public int G15ACycleint
         {

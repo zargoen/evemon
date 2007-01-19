@@ -50,6 +50,8 @@ namespace EVEMon
             s.RelocateTargetScreen = cbScreenList.SelectedIndex;
             s.SkillIconGroup = cbSkillIconSet.SelectedIndex + 1;
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
+            s.NotificationOffset = tbNotificationOffset.Value;
+            lblNotificationOffset.Text = s.NotificationOffset.ToString() + " sec";
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
             s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
@@ -209,6 +211,11 @@ namespace EVEMon
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbShowCompletedSkillsDialog.Checked = m_settings.EnableSkillCompleteDialog;
+
+            if (m_settings.NotificationOffset > 600)
+                m_settings.NotificationOffset = 600;
+            tbNotificationOffset.Value = m_settings.NotificationOffset;
+            lblNotificationOffset.Text = m_settings.NotificationOffset.ToString() + " sec";
 
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
             tbMailServer.Text = m_settings.EmailServer;
@@ -570,6 +577,11 @@ namespace EVEMon
         {
             cbCloseToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
             gboxTooltipOptions.Enabled = !rbSystemTrayOptionsNever.Checked;
+        }
+
+        private void tbNotificationOffset_ValueChanged(object sender, EventArgs e)
+        {
+            lblNotificationOffset.Text = tbNotificationOffset.Value + " sec";
         }
     }
 }

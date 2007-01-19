@@ -32,6 +32,7 @@ namespace EVEMon
         private DateTime m_nextScheduledUpdateAt = DateTime.MinValue;
         private string m_skillTrainingName;
         private DateTime m_estimatedCompletion;
+        private DateTime m_realCompletion;
         private CharacterInfo m_grandCharacterInfo;
         private int m_lastTickSPPaint = 0;
         private bool m_updatingPortrait = false;
@@ -192,6 +193,7 @@ namespace EVEMon
             WorksafeChangedCallback(null, null);
 
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
+            m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
 
             if (m_settings != null)
             {
@@ -199,6 +201,8 @@ namespace EVEMon
                 tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
             }
         }
+
+        
 
         private void ReloadFromFile()
         {
@@ -523,7 +527,7 @@ namespace EVEMon
                 lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
                 if (m_estimatedCompletion > now)
                 {
-                    lblTrainingEst.Text = m_estimatedCompletion.ToString();
+                    lblTrainingEst.Text = (m_estimatedCompletion).ToString();
                 }
                 else
                 {
@@ -983,6 +987,12 @@ namespace EVEMon
 
         }
 
+        void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
+        {
+            if(m_realCompletion != DateTime.MinValue)
+                m_estimatedCompletion = m_realCompletion.AddSeconds(-m_settings.NotificationOffset);
+        }
+
         /// <summary>
         /// Handles everything when the character's training skill has changed.  Called by GrandCharacterInfo.
         /// </summary>
@@ -1086,8 +1096,8 @@ namespace EVEMon
                         double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(gs.PrimaryAttribute) +
                                                (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
-                        m_estimatedCompletion = gs.EstimatedCompletion;
-
+                        m_estimatedCompletion = gs.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
+                        m_realCompletion = gs.EstimatedCompletion;
                         //downtime finish?
                         DateTime universalFinish = m_estimatedCompletion.ToUniversalTime();
                         //lblScheduleWarning.Visible = (universalFinish.Hour == 11);
@@ -2120,7 +2130,7 @@ namespace EVEMon
                         {
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
-                                         ci.SkillInTraining.EstimatedCompletion.ToString());
+                                         (ci.SkillInTraining.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset)).ToString());
                         }
                     }
                     writeSubSep();

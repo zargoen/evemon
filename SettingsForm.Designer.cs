@@ -30,23 +30,23 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -119,8 +119,8 @@ namespace EVEMon
             this.cbHighlightPrerequisites = new System.Windows.Forms.CheckBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.tvlist = new System.Windows.Forms.TreeView();
             this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
+            this.tvlist = new System.Windows.Forms.TreeView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.verticalFlowPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -149,6 +149,7 @@ namespace EVEMon
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbShowBalloonTips = new System.Windows.Forms.CheckBox();
             this.cbShowCompletedSkillsDialog = new System.Windows.Forms.CheckBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbEmailUseShortFormat = new System.Windows.Forms.CheckBox();
@@ -180,6 +181,8 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
+            this.tbNotificationOffset = new System.Windows.Forms.TrackBar();
+            this.lblNotificationOffset = new System.Windows.Forms.Label();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -221,6 +224,7 @@ namespace EVEMon
             this.verticalFlowPanel2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -236,6 +240,7 @@ namespace EVEMon
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNotificationOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -561,7 +566,7 @@ namespace EVEMon
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(388, 484);
+            this.tabPage1.Size = new System.Drawing.Size(452, 484);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -577,7 +582,7 @@ namespace EVEMon
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel1.Name = "verticalFlowPanel1";
-            this.verticalFlowPanel1.Size = new System.Drawing.Size(382, 478);
+            this.verticalFlowPanel1.Size = new System.Drawing.Size(446, 478);
             this.verticalFlowPanel1.TabIndex = 7;
             // 
             // groupBox1
@@ -1130,36 +1135,6 @@ namespace EVEMon
             this.tableLayoutPanel4.Size = new System.Drawing.Size(407, 123);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
-            // tvlist
-            // 
-            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvlist.Location = new System.Drawing.Point(3, 30);
-            this.tvlist.Name = "tvlist";
-            treeNode10.Name = "Node1";
-            treeNode10.Text = "Node1";
-            treeNode11.Name = "Node2";
-            treeNode11.Text = "Node2";
-            treeNode12.Name = "Node3";
-            treeNode12.Text = "Node3";
-            treeNode13.Name = "Node4";
-            treeNode13.Text = "Node4";
-            treeNode14.Name = "Node5";
-            treeNode14.Text = "Node5";
-            treeNode15.Name = "Node6";
-            treeNode15.Text = "Node6";
-            treeNode16.Name = "Node7";
-            treeNode16.Text = "Node7";
-            treeNode17.Name = "Node8";
-            treeNode17.Text = "Node8";
-            treeNode18.Name = "Node0";
-            treeNode18.Text = "Node0";
-            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode18});
-            this.tvlist.Size = new System.Drawing.Size(401, 90);
-            this.tvlist.TabIndex = 9;
-            // 
             // cbSkillIconSet
             // 
             this.cbSkillIconSet.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1170,13 +1145,43 @@ namespace EVEMon
             this.cbSkillIconSet.TabIndex = 3;
             this.cbSkillIconSet.SelectedIndexChanged += new System.EventHandler(this.cbSkillIconSet_SelectedIndexChanged);
             // 
+            // tvlist
+            // 
+            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvlist.Location = new System.Drawing.Point(3, 30);
+            this.tvlist.Name = "tvlist";
+            treeNode19.Name = "Node1";
+            treeNode19.Text = "Node1";
+            treeNode20.Name = "Node2";
+            treeNode20.Text = "Node2";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "Node3";
+            treeNode22.Name = "Node4";
+            treeNode22.Text = "Node4";
+            treeNode23.Name = "Node5";
+            treeNode23.Text = "Node5";
+            treeNode24.Name = "Node6";
+            treeNode24.Text = "Node6";
+            treeNode25.Name = "Node7";
+            treeNode25.Text = "Node7";
+            treeNode26.Name = "Node8";
+            treeNode26.Text = "Node8";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Node0";
+            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode27});
+            this.tvlist.Size = new System.Drawing.Size(401, 90);
+            this.tvlist.TabIndex = 9;
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.verticalFlowPanel3);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(388, 484);
+            this.tabPage3.Size = new System.Drawing.Size(452, 484);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Network";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1189,7 +1194,7 @@ namespace EVEMon
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel3.Name = "verticalFlowPanel3";
-            this.verticalFlowPanel3.Size = new System.Drawing.Size(382, 478);
+            this.verticalFlowPanel3.Size = new System.Drawing.Size(446, 478);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
             // groupBox6
@@ -1442,7 +1447,7 @@ namespace EVEMon
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(388, 484);
+            this.tabPage2.Size = new System.Drawing.Size(452, 484);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Alerts";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1452,12 +1457,12 @@ namespace EVEMon
             this.verticalFlowPanel2.AutoSize = true;
             this.verticalFlowPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.verticalFlowPanel2.Controls.Add(this.groupBox4);
+            this.verticalFlowPanel2.Controls.Add(this.groupBox13);
             this.verticalFlowPanel2.Controls.Add(this.groupBox3);
-            this.verticalFlowPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
-            this.verticalFlowPanel2.Size = new System.Drawing.Size(382, 478);
+            this.verticalFlowPanel2.Size = new System.Drawing.Size(374, 488);
             this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
@@ -1509,6 +1514,17 @@ namespace EVEMon
             this.cbShowCompletedSkillsDialog.Text = "Show completed skills dialog";
             this.cbShowCompletedSkillsDialog.UseVisualStyleBackColor = true;
             // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.lblNotificationOffset);
+            this.groupBox13.Controls.Add(this.tbNotificationOffset);
+            this.groupBox13.Location = new System.Drawing.Point(3, 98);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(365, 53);
+            this.groupBox13.TabIndex = 2;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Notification Offset";
+            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -1516,7 +1532,7 @@ namespace EVEMon
             this.groupBox3.AutoSize = true;
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
-            this.groupBox3.Location = new System.Drawing.Point(3, 98);
+            this.groupBox3.Location = new System.Drawing.Point(3, 157);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(368, 328);
             this.groupBox3.TabIndex = 1;
@@ -1556,7 +1572,7 @@ namespace EVEMon
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(388, 484);
+            this.tabPage4.Size = new System.Drawing.Size(452, 484);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Updates";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1572,7 +1588,7 @@ namespace EVEMon
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel11.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(382, 478);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(446, 478);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1880,6 +1896,29 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // tbNotificationOffset
+            // 
+            this.tbNotificationOffset.AutoSize = false;
+            this.tbNotificationOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbNotificationOffset.LargeChange = 60;
+            this.tbNotificationOffset.Location = new System.Drawing.Point(6, 20);
+            this.tbNotificationOffset.Maximum = 600;
+            this.tbNotificationOffset.Name = "tbNotificationOffset";
+            this.tbNotificationOffset.Size = new System.Drawing.Size(290, 27);
+            this.tbNotificationOffset.SmallChange = 15;
+            this.tbNotificationOffset.TabIndex = 0;
+            this.tbNotificationOffset.TickFrequency = 60;
+            this.tbNotificationOffset.ValueChanged += new System.EventHandler(this.tbNotificationOffset_ValueChanged);
+            // 
+            // lblNotificationOffset
+            // 
+            this.lblNotificationOffset.AutoSize = true;
+            this.lblNotificationOffset.Location = new System.Drawing.Point(302, 20);
+            this.lblNotificationOffset.Name = "lblNotificationOffset";
+            this.lblNotificationOffset.Size = new System.Drawing.Size(32, 13);
+            this.lblNotificationOffset.TabIndex = 1;
+            this.lblNotificationOffset.Text = "0 sec";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1973,6 +2012,8 @@ namespace EVEMon
             this.groupBox4.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.flowLayoutPanel6.ResumeLayout(false);
@@ -2001,6 +2042,7 @@ namespace EVEMon
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNotificationOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2141,5 +2183,8 @@ namespace EVEMon
         private System.Windows.Forms.ComboBox cbTooltipDisplay;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.TrackBar tbNotificationOffset;
+        private System.Windows.Forms.Label lblNotificationOffset;
     }
 }
