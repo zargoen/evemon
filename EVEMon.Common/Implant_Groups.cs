@@ -111,6 +111,16 @@ namespace EVEMon.Common
             m_manual = false;
         }
 
+        public UserImplant(UserImplant UI)
+        {
+            m_slot = UI.Slot;
+            m_name = UI.Name;
+            m_bonus = UI.Bonus;
+            m_manual = UI.Manual;
+            m_tech2 = UI.Tech2;
+            m_id = UI.ID;
+        }
+
         public UserImplant(int Slot, Implant a)
             : this(Slot, a, false)
         {

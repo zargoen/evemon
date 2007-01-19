@@ -703,8 +703,12 @@ namespace EVEMon.Common
             }
             this.Balance = ci.Balance;
 
+            bool getcurrent = false;
+
             if (this.implantSets.Count == 0)
             {
+                if (ci.ImplantSets.Count == 0)
+                    getcurrent = true;
                 foreach (SerializableImplantSet x in ci.ImplantSets)
                 {
                     UserImplant[] z = new UserImplant[10];
@@ -742,8 +746,6 @@ namespace EVEMon.Common
             this.BaseWillpower = ci.Attributes.BaseWillpower;
             this.BaseIntelligence = ci.Attributes.BaseIntelligence;
             this.BaseCharisma = ci.Attributes.BaseCharisma;
-
-            bool getcurrent = !this.implantSets.ContainsKey("Current");
 
             List<UserImplant> manualBonuses = new List<UserImplant>();
             foreach (UserImplant x in this.ImplantBonuses)

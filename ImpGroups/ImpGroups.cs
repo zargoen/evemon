@@ -91,23 +91,11 @@ namespace EVEMon.ImpGroups
                                 x.Text = a.Name;
                             else
                             {
-                                UserImplant s;
+                                UserImplant s = null;
                                 if (m_workingSets.ContainsKey("Auto"))
                                     s = m_workingSets["Auto"][i - 1];
-                                else
-                                    s = null;
-                                UserImplant t;
-                                if (m_input.ContainsKey("Current"))
-                                    t = m_input["Current"][i - 1];
-                                else
-                                    t = null;
-                                if (t == null)
-                                {
-                                    if (s != null)
-                                        x.Text = s.Name;
-                                    else
-                                        x.Text = "";
-                                }
+                                if (s != null)
+                                    x.Text = s.Name;
                                 else
                                     x.Text = "";
                             }
@@ -130,6 +118,14 @@ namespace EVEMon.ImpGroups
                         else
                             x.Text = "";
                     }
+                }
+                else if (lbJumpClone.SelectedItem.ToString() == "Current" && m_workingSets.ContainsKey("Auto"))
+                {
+                    UserImplant a = m_workingSets["Auto"][i - 1];
+                    if (a != null)
+                        x.Text = a.Name;
+                    else
+                        x.Text = "";
                 }
                 else
                     x.Text = "";
@@ -175,7 +171,7 @@ namespace EVEMon.ImpGroups
         private void lbJumpClone_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnSwapWithCurrent.Enabled = ((lbJumpClone.SelectedItem.ToString() != "Auto") && (lbJumpClone.SelectedItem.ToString() != "Current"));
-            btnDeleteCurrent.Enabled = (lbJumpClone.SelectedItem.ToString() == "Current");
+            btnDeleteCurrent.Enabled = ((lbJumpClone.SelectedItem.ToString() == "Current") && (m_workingSets.ContainsKey("Current")));
             Buildtxt();
             panel1.Refresh();
         }
@@ -238,11 +234,45 @@ namespace EVEMon.ImpGroups
             ImplantSet cur = null;
             ImplantSet b = null;
             string name_to_swap = lbJumpClone.SelectedItem.ToString();
+
             if (m_workingSets.ContainsKey("Current"))
-                cur = m_workingSets["Current"];
+            {
+                cur = new ImplantSet(m_workingSets["Current"].Array);
+            }
             if (m_workingSets.ContainsKey(name_to_swap))
             {
-                b = m_workingSets[name_to_swap];
+                b = new ImplantSet(m_workingSets[name_to_swap].Array);
+            }
+            if (m_workingSets.ContainsKey("Auto"))
+            {
+                for (int slot = 1; slot < 10; slot++)
+                {
+                    if (m_workingSets["Auto"][slot - 1] != null)
+                    {
+                        if (cur == null)
+                            cur = new ImplantSet();
+                        if (cur[slot - 1] == null)
+                        {
+                            cur[slot - 1] = new UserImplant(m_workingSets["Auto"][slot - 1]);
+                            cur[slot - 1].Manual = true;
+                        }
+                        if (b == null)
+                            b = new ImplantSet();
+                        if (b[slot - 1] == null)
+                            b[slot - 1] = new UserImplant(slot, new Implant(), true);
+                    }
+                }
+            }
+            bool delete = true;
+            foreach (UserImplant temp in cur.Array)
+            {
+                if (temp != null && temp.Name != "<None>")
+                    delete = false;
+            }
+            if (delete)
+            {
+                m_workingSets.Remove("Current");
+                cur = null;
             }
             if (cur != null)
             {
