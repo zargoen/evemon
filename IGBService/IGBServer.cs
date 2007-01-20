@@ -157,7 +157,7 @@ namespace EVEMon.IGBService
                 client.Write("Content-Type: text/html; charset=utf-8\n");
                 if (headers["eve.trusted"].ToLower() == "no")
                 {
-                    client.Write("eve.trustme: http://localhost/::EVEMon needs your pilot information.\n");
+                    client.Write("eve.trustme: http://" +  BuildHostAndPort(headers["host"]) + "/::EVEMon needs your pilot information.\n");
                 }
                 client.Write("Connection: close\n");
                 client.Write("Content-Length: " + ms.Length.ToString() + "\n\n");
@@ -174,6 +174,32 @@ namespace EVEMon.IGBService
             client.Close();
         }
 
+        /// <summary>
+        /// Create the host:port string for the trustme request
+        /// </summary>
+        /// <param name="host">The host header from the IGB</param>
+        /// <returns>hostname:port number</returns>
+        private String BuildHostAndPort(String host)
+        {
+            // Currently IGB returns host:port as the host header, it shouldn't
+            // really do this
+
+            String hostPort = host;
+            // if the host string already contains a port then do nothing
+            // (IOGB shouldnt really do this but it is!
+            if (!host.Contains(":")) 
+            {
+                // now cater for when/if CCP fix the IGB to not send port as part of the host header
+                if (m_port != 80)
+                {
+                    // non-standard port - let's add it
+                    hostPort = String.Format("{0}:{1}",host,m_port);
+                }
+            }
+            return hostPort;
+        }
+
+
         private void ProcessRequest(string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
         {
             if (headers["eve.trusted"].ToLower() != "yes")
@@ -183,6 +209,11 @@ namespace EVEMon.IGBService
             }
             if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/"))
             {
+                // strip off the bad trailing / added by IGB (Trac ticket 425)
+                if (requestUrl.EndsWith("/"))
+                {
+                    requestUrl=requestUrl.Substring(0,requestUrl.Length-1);
+                }
                 bool shopping = requestUrl.StartsWith("/shopping/");
                 string planName = HttpUtility.UrlDecode(requestUrl.Substring(
                         shopping ? "/shopping/".Length : "/plan/".Length
