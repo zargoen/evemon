@@ -33,6 +33,7 @@ namespace EVEMon.Sales
             this.btnLockPrices = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsddFetch = new System.Windows.Forms.ToolStripDropDownButton();
+            this.btnReset = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.mt_tritanium = new EVEMon.Sales.MineralTile();
             this.mt_nocxium = new EVEMon.Sales.MineralTile();
@@ -59,7 +60,8 @@ namespace EVEMon.Sales
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnLockPrices,
             this.toolStripSeparator1,
-            this.tsddFetch});
+            this.tsddFetch,
+            this.btnReset});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(654, 25);
@@ -87,6 +89,15 @@ namespace EVEMon.Sales
             this.tsddFetch.Name = "tsddFetch";
             this.tsddFetch.Size = new System.Drawing.Size(127, 22);
             this.tsddFetch.Text = "Fetch Online Prices";
+            // 
+            // btnReset
+            // 
+            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
+            this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(107, 22);
+            this.btnReset.Text = "Reset Quantities";
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -412,6 +423,7 @@ namespace EVEMon.Sales
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel tslTotal;
         private System.Windows.Forms.ToolStripStatusLabel tslCourtesy;
+        private System.Windows.Forms.ToolStripButton btnReset;
 
     }
 }

@@ -154,5 +154,21 @@ namespace EVEMon.Sales
         {
             tslCourtesy.Visible = false;
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            foreach (MineralTile mt in Tiles)
+            {
+                mt.Quantity=0;
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            foreach (MineralTile mt in Tiles)
+            {
+                mt.Quantity=0;
+            }
+        }
     }
 }
