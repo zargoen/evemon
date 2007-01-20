@@ -254,7 +254,7 @@ namespace EVEMon.SkillPlanner
         private void btnCompareWith_Click(object sender, EventArgs e)
         {
             // ask user to select an item for comparison
-            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedItem);
+            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedItem,m_plan);
             if (selectedItem != null)
             {
                 lvItemProperties.BeginUpdate();

@@ -30,10 +30,11 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        public static Item CompareWithItemInput(Item selectedItem)
+        public static Item CompareWithItemInput(Item selectedItem, Plan p)
         {
             using (ItemCompareWindow f = new ItemCompareWindow())
             {
+                f.itemSelectControl1.Plan = p;
                 f.SelectedItem = selectedItem;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
