@@ -104,7 +104,7 @@ namespace EVEMon
                 }
             }
         }
-
+  
         /// <summary>
         /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed,
         /// the FileSystemWatcher
@@ -1103,52 +1103,63 @@ namespace EVEMon
                         //lblScheduleWarning.Visible = (universalFinish.Hour == 11);
 
                         bool isBlocked = (universalFinish.Hour == 11);
-                        for (int i = 0; i < m_settings.Schedule.Count; i++)
+                        //isBlocked = true;
+                        if (isBlocked)
                         {
-                            ScheduleEntry temp = m_settings.Schedule[i];
-                            if (temp.GetType() == typeof(SimpleScheduleEntry))
-                            {
-                                SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
-                                {
-                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
-                                    {
-                                        if (x.StartDateTime <= universalFinish && universalFinish <= x.EndDateTime)
-                                        {
-                                            // This blocks in EVE Time
-                                            isBlocked = true;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (x.StartDateTime <= m_estimatedCompletion && m_estimatedCompletion <= x.EndDateTime)
-                                        {
-                                            // This blocks in local Time
-                                            isBlocked = true;
-                                        }
-                                    }
-                                }
-                            }
-                            else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                            {
-                                RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
-                                {
-                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
-                                    {
-                                        // Still needs to be written
-                                        // This needs to check to see if universalFinish coincides with
-                                        // any of the scheduled periods that this entry represents
-                                    }
-                                    else
-                                    {
-                                        // Still needs to be written
-                                        // This needs to check to see if m_estimatedCompletion coincides with
-                                        // any of the scheduled periods that this entry represents
-                                    }
-                                }
-                            }
+                            // downtime blocking should take prioity
+                            lblScheduleWarning.Text = "Schedule Conflict-Downtime!";
                         }
+                        else
+                        {
+                            for (int i = 0; i < m_settings.Schedule.Count; i++)
+                            {
+                                ScheduleEntry temp = m_settings.Schedule[i];
+                                if (temp.GetType() == typeof(SimpleScheduleEntry))
+                                {
+                                    SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                                    {
+                                        if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                        {
+                                            if (x.StartDateTime <= universalFinish && universalFinish <= x.EndDateTime)
+                                            {
+                                                // This blocks in EVE Time
+                                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                isBlocked = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (x.StartDateTime <= m_estimatedCompletion && m_estimatedCompletion <= x.EndDateTime)
+                                            {
+                                                // This blocks in local Time
+                                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                isBlocked = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                                {
+                                    RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                                    {
+                                        if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                        {
+                                            // Still needs to be written
+                                            // This needs to check to see if universalFinish coincides with
+                                            // any of the scheduled periods that this entry represents
+                                        }
+                                        else
+                                        {
+                                            // Still needs to be written
+                                            // This needs to check to see if m_estimatedCompletion coincides with
+                                            // any of the scheduled periods that this entry represents
+                                        }
+                                    }
+                                }
+                            }
+                    }
                         lblScheduleWarning.Visible = isBlocked;
                         CalculateLcdData();
 
