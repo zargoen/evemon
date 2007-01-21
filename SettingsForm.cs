@@ -215,7 +215,7 @@ namespace EVEMon
             if (m_settings.NotificationOffset > 600)
                 m_settings.NotificationOffset = 600;
             tbNotificationOffset.Value = m_settings.NotificationOffset;
-            lblNotificationOffset.Text = m_settings.NotificationOffset.ToString() + " sec";
+            lblNotificationOffset.Text = FormatOffset(m_settings.NotificationOffset);
 
             cbSendEmail.Checked = m_settings.EnableEmailAlert;
             tbMailServer.Text = m_settings.EmailServer;
@@ -263,6 +263,14 @@ namespace EVEMon
                 cbRunAtStartup.Checked = true;
             }
             UpdateDisables();
+        }
+
+        private string FormatOffset(int offset)
+        {
+            int m, s;
+            m = offset / 60;
+            s = offset - (m * 60);
+            return String.Format("{0}m, {1}s", m, s);
         }
 
         private void cbRunAtStartup_CheckedChanged(object sender, EventArgs e)
@@ -581,7 +589,12 @@ namespace EVEMon
 
         private void tbNotificationOffset_ValueChanged(object sender, EventArgs e)
         {
-            lblNotificationOffset.Text = tbNotificationOffset.Value + " sec";
+            lblNotificationOffset.Text = FormatOffset(tbNotificationOffset.Value);
+        }
+
+        private void lblNotificationOffset_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
