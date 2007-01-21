@@ -1697,6 +1697,14 @@ namespace EVEMon
             else
             {
                 item = lbSkills.Items[index];
+                if (index == lbSkills.Items.Count - 1)
+                {
+                    // handle a click in the whitespace below the last item.
+                    // IndexFromPoint() returns the last item if you click in white space below it.
+                    // I consider this to be a bug. Here's a workaround...
+                    Rectangle itemRect = lbSkills.GetItemRectangle(lbSkills.Items.IndexOf(item));
+                    if (!itemRect.Contains(e.Location)) item = null;
+                }
             }
 
             ttToolTip.IsBalloon = true;
