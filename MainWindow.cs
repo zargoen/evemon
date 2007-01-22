@@ -681,11 +681,16 @@ namespace EVEMon
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!m_settings.SystemTrayOptionsIsNever && m_settings.CloseToTray && this.Visible && !this.updateFlag)
+            if (!m_settings.SystemTrayOptionsIsNever &&             // if system tray icon is always or display when minimised
+                m_settings.CloseToTray &&                           // and EVEMon is configured to close to system tray
+                this.Visible &&                                     // and main form is visable
+                !this.updateFlag &&                                 // and auto-update not currently in process
+                !(e.CloseReason == CloseReason.ApplicationExitCall) // and Application.Exit() was not called
+               )
             {
-                e.Cancel = true;
-                niMinimizeIcon.Visible = true;
-                this.Visible = false;
+                e.Cancel = true; // Cancel the close operation
+                niMinimizeIcon.Visible = true; // Display the minimize icon
+                this.Visible = false; // hide the main form
             }
         }
 
@@ -1077,6 +1082,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 
