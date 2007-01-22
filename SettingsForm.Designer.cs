@@ -565,7 +565,7 @@ namespace EVEMon
             this.tabPage1.Controls.Add(this.verticalFlowPanel1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(452, 484);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
@@ -889,7 +889,7 @@ namespace EVEMon
             this.tabPage5.Controls.Add(this.flowLayoutPanel16);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(452, 484);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Look And Feel";
@@ -1180,7 +1180,7 @@ namespace EVEMon
             this.tabPage3.Controls.Add(this.verticalFlowPanel3);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(452, 484);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Network";
@@ -1446,7 +1446,7 @@ namespace EVEMon
             this.tabPage2.Controls.Add(this.verticalFlowPanel2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(452, 484);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Alerts";
@@ -1584,9 +1584,9 @@ namespace EVEMon
             this.cbEmailUseShortFormat.AutoSize = true;
             this.cbEmailUseShortFormat.Location = new System.Drawing.Point(12, 26);
             this.cbEmailUseShortFormat.Name = "cbEmailUseShortFormat";
-            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(186, 17);
+            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(183, 17);
             this.cbEmailUseShortFormat.TabIndex = 2;
-            this.cbEmailUseShortFormat.Text = " Use Short Format (SMS-Friendly)";
+            this.cbEmailUseShortFormat.Text = "Use Short Format (SMS-Friendly)";
             this.cbEmailUseShortFormat.UseVisualStyleBackColor = true;
             // 
             // tabPage4
@@ -1594,7 +1594,7 @@ namespace EVEMon
             this.tabPage4.Controls.Add(this.flowLayoutPanel11);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(452, 484);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Updates";
