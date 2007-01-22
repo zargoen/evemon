@@ -217,6 +217,8 @@ namespace EVEMon.SkillPlanner
 
                     skillPointTotal += (reqToThisLevel - reqBeforeThisLevel - pointsInThisLevel);
 
+                    int spHour = gs.GetPointsForTimeSpan(new TimeSpan(1, 0, 0), scratchpad);
+
                     string planGroups;
                     if (pe.PlanGroups.Count == 0)
                     {
@@ -244,12 +246,10 @@ namespace EVEMon.SkillPlanner
                                 res = planGroups;
                                 break;
                             case ColumnPreference.ColumnType.TrainingTime:
-                                res =
-                                    Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                                res = Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
                                 break;
                             case ColumnPreference.ColumnType.TrainingTimeNatural:
-                                res =
-                                    Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
+                                res = Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
                                 break;
                             case ColumnPreference.ColumnType.EarliestStart:
                                 res = thisStart.ToString();
@@ -296,6 +296,9 @@ namespace EVEMon.SkillPlanner
                                 break;
                             case ColumnPreference.ColumnType.SPTotal:
                                 res = skillPointTotal.ToString("N00", nfi);
+                                break;
+                            case ColumnPreference.ColumnType.SPPerHour:
+                                res = spHour.ToString();
                                 break;
                         }
                         lvi.SubItems[x].Text = res;

@@ -59,7 +59,8 @@ namespace EVEMon.Common
             [ColumnDisplay("Skill Group", "Group")] SkillGroup,
             [ColumnDisplay("Notes", "Notes")] Notes,
             [ColumnDisplay("Plan Type (Planned/Prerequisite)", "Type")] PlanType,
-            [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal
+            [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal,
+            [ColumnDisplay("SP/Hour", "SP/Hour")] SPPerHour
         }
 
         private bool[] m_prefs;
@@ -254,6 +255,13 @@ namespace EVEMon.Common
         {
             get { return this[ColumnType.SPTotal]; }
             set { this[ColumnType.SPTotal] = value; }
+        }
+
+        [XmlAttribute]
+        public bool SPPerHour
+        {
+            get { return this[ColumnType.SPPerHour]; }
+            set { this[ColumnType.SPPerHour] = value; }
         }
     }
 }

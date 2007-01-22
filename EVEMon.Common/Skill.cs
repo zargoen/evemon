@@ -162,14 +162,19 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="span">The timespan.</param>
         /// <returns>Amount of skill points.</returns>
-        private int GetPointsForTimeSpan(TimeSpan span)
+        public int GetPointsForTimeSpan(TimeSpan span)
         {
             // m = points/(primAttr+(secondaryAttr/2))
             // ... so ...
             // m * (primAttr+(secondaryAttr/2)) = points
 
-            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute);
-            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute);
+            return GetPointsForTimeSpan(span, null);
+        }
+
+        public int GetPointsForTimeSpan(TimeSpan span, EveAttributeScratchpad scratchpad)
+        {
+            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad);
+            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad);
             double points = span.TotalMinutes * (primAttr + (secondaryAttr / 2));
             return Convert.ToInt32(Math.Ceiling(points));
         }
