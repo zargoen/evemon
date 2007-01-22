@@ -264,10 +264,13 @@ namespace EVEMon.ImpGroups
                 }
             }
             bool delete = true;
-            foreach (UserImplant temp in cur.Array)
+            if (cur != null)
             {
-                if (temp != null && temp.Name != "<None>")
-                    delete = false;
+                foreach (UserImplant temp in cur.Array)
+                {
+                    if (temp != null && temp.Name != "<None>")
+                        delete = false;
+                }
             }
             if (delete)
             {
