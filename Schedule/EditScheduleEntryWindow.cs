@@ -38,6 +38,7 @@ namespace EVEMon.Schedule
             SetRecurringDateFrom(DateTime.MinValue);
             SetRecurringDateTo(DateTime.MaxValue);
             cbRecurringFrequency.SelectedIndex = 0;
+            nUDweeklyfrequency.Value = 1;
             nudRecurDayOfMonth.Value = 1;
             cbRecurOnOverflow.SelectedIndex = 0;
             tbRecurringTimeFrom.Text = DateTime.Today.ToShortTimeString();
@@ -66,7 +67,7 @@ namespace EVEMon.Schedule
                 rbRecurring.Checked = true;
                 SetRecurringDateFrom(rse.RecurStart);
                 SetRecurringDateTo(rse.RecurEnd);
-                SetRecurringFrequencyDropdown(rse.RecurFrequency, rse.RecurDayOfWeek);
+                SetRecurringFrequencyDropdown(rse.RecurFrequency, rse.RecurDayOfWeek, rse.nWeekly);
                 nudRecurDayOfMonth.Value = rse.RecurDayOfMonth;
                 SetRecurringOverflowDropdown(rse.OverflowResolution);
                 DateTime tstart = DateTime.Today + TimeSpan.FromSeconds(rse.StartSecond);
@@ -109,7 +110,7 @@ namespace EVEMon.Schedule
             }
         }
 
-        private void SetRecurringFrequencyDropdown(RecurFrequency recurFrequency, DayOfWeek recurDow)
+        private void SetRecurringFrequencyDropdown(RecurFrequency recurFrequency, DayOfWeek recurDow, int nWeekly)
         {
             switch (recurFrequency)
             {
@@ -149,6 +150,7 @@ namespace EVEMon.Schedule
                             cbRecurringFrequency.SelectedIndex = 9;
                             break;
                     }
+                    nUDweeklyfrequency.Value = nWeekly;
                     break;
                 case RecurFrequency.Monthly:
                     cbRecurringFrequency.SelectedIndex = 10;
@@ -273,10 +275,6 @@ namespace EVEMon.Schedule
             m_oneTimeEndDate = StripToDate(dateTime);
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
         private void rbOneTime_CheckedChanged(object sender, EventArgs e)
         {
             pnlOneTime.Enabled = rbOneTime.Checked;
@@ -290,6 +288,7 @@ namespace EVEMon.Schedule
         private void cbRecurringFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
             pnlRecurMonthly.Enabled = (cbRecurringFrequency.SelectedIndex == 10);
+            pnlRecurWeekly.Enabled = (cbRecurringFrequency.SelectedIndex >= 3 && cbRecurringFrequency.SelectedIndex <= 9);
         }
 
         private void btnRecurringNoStartDate_Click(object sender, EventArgs e)
@@ -423,6 +422,10 @@ namespace EVEMon.Schedule
                 DayOfWeek dow = DayOfWeek.Monday;
                 rse.RecurFrequency = GetRecurringFrequencyDropdown(ref dow);
                 rse.RecurDayOfWeek = dow;
+                if (rse.RecurFrequency == RecurFrequency.Weekly)
+                {
+                    rse.nWeekly = Convert.ToInt32(nUDweeklyfrequency.Value);
+                }
                 rse.RecurDayOfMonth = Convert.ToInt32(nudRecurDayOfMonth.Value);
                 rse.OverflowResolution = GetRecurringOverflowDropdown();
                 rse.StartSecond = m_recurringStartTime;

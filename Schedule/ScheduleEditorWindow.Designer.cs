@@ -127,7 +127,7 @@ namespace EVEMon.Schedule
             this.splitContainer2.Panel2.Controls.Add(this.lblEntryDescription);
             this.splitContainer2.Panel2MinSize = 100;
             this.splitContainer2.Size = new System.Drawing.Size(171, 437);
-            this.splitContainer2.SplitterDistance = 250;
+            this.splitContainer2.SplitterDistance = 226;
             this.splitContainer2.TabIndex = 3;
             // 
             // lbEntries
@@ -139,7 +139,7 @@ namespace EVEMon.Schedule
             this.lbEntries.IntegralHeight = false;
             this.lbEntries.Location = new System.Drawing.Point(3, 20);
             this.lbEntries.Name = "lbEntries";
-            this.lbEntries.Size = new System.Drawing.Size(168, 227);
+            this.lbEntries.Size = new System.Drawing.Size(168, 203);
             this.lbEntries.TabIndex = 1;
             this.lbEntries.DoubleClick += new System.EventHandler(this.lbEntries_DoubleClick);
             this.lbEntries.SelectedIndexChanged += new System.EventHandler(this.lbEntries_SelectedIndexChanged);
@@ -158,7 +158,7 @@ namespace EVEMon.Schedule
             this.lblEntryDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblEntryDescription.Location = new System.Drawing.Point(0, 0);
             this.lblEntryDescription.Name = "lblEntryDescription";
-            this.lblEntryDescription.Size = new System.Drawing.Size(171, 183);
+            this.lblEntryDescription.Size = new System.Drawing.Size(171, 207);
             this.lblEntryDescription.TabIndex = 2;
             // 
             // panel1

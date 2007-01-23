@@ -17,7 +17,7 @@ namespace EVEMon.Schedule
             : this()
         {
             m_settings = s;
-            foreach(ScheduleEntry temp in m_settings.Schedule)
+            foreach (ScheduleEntry temp in m_settings.Schedule)
             {
                 lbEntries.Items.Add(temp.Title);
             }
@@ -63,7 +63,7 @@ namespace EVEMon.Schedule
         private void changedYear(object sender, EventArgs e)
         {
             int oldyearnum = currentdate.Year;
-            currentdate = currentdate.AddYears((int) nudYear.Value - currentdate.Year);
+            currentdate = currentdate.AddYears((int)nudYear.Value - currentdate.Year);
             if (currentdate.Month == 2 &&
                 (CultureInfo.CurrentCulture.Calendar.IsLeapYear(currentdate.Year) ||
                  CultureInfo.CurrentCulture.Calendar.IsLeapYear(oldyearnum)))
@@ -88,7 +88,7 @@ namespace EVEMon.Schedule
                 {
                     nudDay.Value = 1;
                 }
-                currentdate = currentdate.AddDays((int) nudDay.Value - currentdate.Day);
+                currentdate = currentdate.AddDays((int)nudDay.Value - currentdate.Day);
                 nudDay.Maximum =
                     CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(currentdate.Year, currentdate.Month) + 1;
                 if (nudDay.Value == 0)
@@ -108,7 +108,7 @@ namespace EVEMon.Schedule
                 }
                 else if (!doney)
                 {
-                    currentdate = currentdate.AddDays((int) nudDay.Value - currentdate.Day);
+                    currentdate = currentdate.AddDays((int)nudDay.Value - currentdate.Day);
                     nudDay.Value = 1;
                     nudDay.Maximum =
                         CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(currentdate.Year, currentdate.Month) + 1;
@@ -117,7 +117,7 @@ namespace EVEMon.Schedule
             }
             else if (!donex)
             {
-                currentdate = currentdate.AddDays((int) nudDay.Value - currentdate.Day);
+                currentdate = currentdate.AddDays((int)nudDay.Value - currentdate.Day);
             }
             calControl.Date = currentdate;
             nudYear.Value = currentdate.Year;
@@ -137,7 +137,7 @@ namespace EVEMon.Schedule
             }
             currentdate =
                 currentdate.AddMonths((((nudMonth.Items.Count - 1) - nudMonth.SelectedIndex) - currentdate.Month));
-            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3))%(nudMonth.Items.Count - 2)) +
+            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) +
                                      1;
             if (nudDay.Value > CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(currentdate.Year, currentdate.Month))
             {
@@ -186,14 +186,17 @@ namespace EVEMon.Schedule
                     label_text = label_text + "\nRecurring Entry:\n Start: " + x.RecurStart + "\n End: " + x.RecurEnd + "\n Frequency: " + x.RecurFrequency;
                     if (x.RecurFrequency == RecurFrequency.Monthly)
                     {
-                        label_text = label_text + "\n Day of Month: " + x.RecurDayOfMonth + "\n On Overflow: " + x.OverflowResolution;
+                        label_text = label_text + "\n  Day of Month: " + x.RecurDayOfMonth + "\n  On Overflow: " + x.OverflowResolution;
                     }
                     else if (x.RecurFrequency == RecurFrequency.Weekly)
                     {
-                        label_text = label_text + "\n Day of Week: " + x.RecurDayOfWeek;
+                        DateTime nowish = DateTime.Now.Date;
+                        DateTime Initial = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
+                        Double datediff = ((7 * x.nWeekly) - (nowish.Subtract(Initial).Days % (7 * x.nWeekly))) % (7 * x.nWeekly);
+                        label_text = label_text + "\n  Day of Week: " + x.RecurDayOfWeek + "\n  Every: " + x.nWeekly + " weeks\n  Next: " + (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(x.StartSecond));
                     }
                     label_text = label_text + "\n Start Time: " + TimeSpan.FromSeconds(x.StartSecond).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndSecond).ToString() + "\n Expired: " + x.Expired;
-                    label_text += "\n\n Options\n  Blocking: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
+                    label_text += "\n Options\n  Blocking: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0);
                     label_text += "\n  Silent: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.Quiet) != 0);
                     label_text += "\n  Uses Eve Time: " + ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0);
                 }

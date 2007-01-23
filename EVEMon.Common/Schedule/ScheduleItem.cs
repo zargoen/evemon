@@ -144,6 +144,14 @@ namespace EVEMon.Common.Schedule
             set { m_freq = value; }
         }
 
+        private int m_recurWeeklyRepeat = 1;
+
+        public int nWeekly
+        {
+            get { return m_recurWeeklyRepeat; }
+            set { m_recurWeeklyRepeat = value; }
+        }
+
         private DayOfWeek m_recurDayOfWeek = DayOfWeek.Monday;
 
         public DayOfWeek RecurDayOfWeek
@@ -262,7 +270,8 @@ namespace EVEMon.Common.Schedule
                     }
                     break;
                 case RecurFrequency.Weekly:
-                    if (wrkDt.DayOfWeek == m_recurDayOfWeek)
+                    DateTime FirstInstance = m_recurStart.AddDays((m_recurDayOfWeek - m_recurStart.DayOfWeek + 7) % 7);
+                    if (wrkDt.DayOfWeek == m_recurDayOfWeek && (wrkDt.Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat)) == 0)
                     {
                         appliesToday = true;
                     }
