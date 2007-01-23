@@ -35,7 +35,7 @@ namespace EVEMon.ImpGroups
             this.btnOK = new System.Windows.Forms.Button();
             this.lbJumpClone = new System.Windows.Forms.ComboBox();
             this.lblJumpClone = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlImplants = new System.Windows.Forms.GroupBox();
             this.btnSlot10 = new System.Windows.Forms.Button();
             this.btnSlot9 = new System.Windows.Forms.Button();
             this.btnSlot8 = new System.Windows.Forms.Button();
@@ -70,7 +70,7 @@ namespace EVEMon.ImpGroups
             this.btnDeleteCurrent = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlImplants.SuspendLayout();
             this.SuspendLayout();
             // 
             // JumpCloneTxt
@@ -91,7 +91,7 @@ namespace EVEMon.ImpGroups
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
             this.flowLayoutPanel1.Controls.Add(this.btnOK);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(195, 363);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(198, 373);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(162, 29);
@@ -140,54 +140,54 @@ namespace EVEMon.ImpGroups
             this.lblJumpClone.TabIndex = 6;
             this.lblJumpClone.Text = "Jump Clones";
             // 
-            // panel1
+            // pnlImplants
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.pnlImplants.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.btnSlot10);
-            this.panel1.Controls.Add(this.btnSlot9);
-            this.panel1.Controls.Add(this.btnSlot8);
-            this.panel1.Controls.Add(this.btnSlot7);
-            this.panel1.Controls.Add(this.btnSlot6);
-            this.panel1.Controls.Add(this.btnSlot5);
-            this.panel1.Controls.Add(this.btnSlot4);
-            this.panel1.Controls.Add(this.btnSlot3);
-            this.panel1.Controls.Add(this.btnSlot2);
-            this.panel1.Controls.Add(this.btnSlot1);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.lblImplant2);
-            this.panel1.Controls.Add(this.lblImplant1);
-            this.panel1.Controls.Add(this.txtImplant10);
-            this.panel1.Controls.Add(this.txtImplant9);
-            this.panel1.Controls.Add(this.txtImplant8);
-            this.panel1.Controls.Add(this.txtImplant7);
-            this.panel1.Controls.Add(this.txtImplant6);
-            this.panel1.Controls.Add(this.txtImplant5);
-            this.panel1.Controls.Add(this.txtImplant4);
-            this.panel1.Controls.Add(this.txtImplant3);
-            this.panel1.Controls.Add(this.txtImplant2);
-            this.panel1.Controls.Add(this.txtImplant1);
-            this.panel1.Location = new System.Drawing.Point(15, 71);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(4);
-            this.panel1.Size = new System.Drawing.Size(342, 282);
-            this.panel1.TabIndex = 7;
+            this.pnlImplants.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlImplants.Controls.Add(this.btnSlot10);
+            this.pnlImplants.Controls.Add(this.btnSlot9);
+            this.pnlImplants.Controls.Add(this.btnSlot8);
+            this.pnlImplants.Controls.Add(this.btnSlot7);
+            this.pnlImplants.Controls.Add(this.btnSlot6);
+            this.pnlImplants.Controls.Add(this.btnSlot5);
+            this.pnlImplants.Controls.Add(this.btnSlot4);
+            this.pnlImplants.Controls.Add(this.btnSlot3);
+            this.pnlImplants.Controls.Add(this.btnSlot2);
+            this.pnlImplants.Controls.Add(this.btnSlot1);
+            this.pnlImplants.Controls.Add(this.label8);
+            this.pnlImplants.Controls.Add(this.label7);
+            this.pnlImplants.Controls.Add(this.label6);
+            this.pnlImplants.Controls.Add(this.label5);
+            this.pnlImplants.Controls.Add(this.label4);
+            this.pnlImplants.Controls.Add(this.label3);
+            this.pnlImplants.Controls.Add(this.label2);
+            this.pnlImplants.Controls.Add(this.label1);
+            this.pnlImplants.Controls.Add(this.lblImplant2);
+            this.pnlImplants.Controls.Add(this.lblImplant1);
+            this.pnlImplants.Controls.Add(this.txtImplant10);
+            this.pnlImplants.Controls.Add(this.txtImplant9);
+            this.pnlImplants.Controls.Add(this.txtImplant8);
+            this.pnlImplants.Controls.Add(this.txtImplant7);
+            this.pnlImplants.Controls.Add(this.txtImplant6);
+            this.pnlImplants.Controls.Add(this.txtImplant5);
+            this.pnlImplants.Controls.Add(this.txtImplant4);
+            this.pnlImplants.Controls.Add(this.txtImplant3);
+            this.pnlImplants.Controls.Add(this.txtImplant2);
+            this.pnlImplants.Controls.Add(this.txtImplant1);
+            this.pnlImplants.Location = new System.Drawing.Point(15, 71);
+            this.pnlImplants.Name = "pnlImplants";
+            this.pnlImplants.Padding = new System.Windows.Forms.Padding(4);
+            this.pnlImplants.Size = new System.Drawing.Size(342, 292);
+            this.pnlImplants.TabIndex = 7;
+            this.pnlImplants.TabStop = false;
+            this.pnlImplants.Text = "Implants";
             // 
             // btnSlot10
             // 
-            this.btnSlot10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot10.Location = new System.Drawing.Point(297, 250);
+            this.btnSlot10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot10.Location = new System.Drawing.Point(301, 264);
             this.btnSlot10.Name = "btnSlot10";
             this.btnSlot10.Size = new System.Drawing.Size(34, 21);
             this.btnSlot10.TabIndex = 29;
@@ -197,9 +197,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot9
             // 
-            this.btnSlot9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot9.Location = new System.Drawing.Point(297, 223);
+            this.btnSlot9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot9.Location = new System.Drawing.Point(301, 237);
             this.btnSlot9.Name = "btnSlot9";
             this.btnSlot9.Size = new System.Drawing.Size(34, 21);
             this.btnSlot9.TabIndex = 28;
@@ -209,9 +208,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot8
             // 
-            this.btnSlot8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot8.Location = new System.Drawing.Point(297, 196);
+            this.btnSlot8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot8.Location = new System.Drawing.Point(301, 210);
             this.btnSlot8.Name = "btnSlot8";
             this.btnSlot8.Size = new System.Drawing.Size(34, 21);
             this.btnSlot8.TabIndex = 27;
@@ -221,9 +219,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot7
             // 
-            this.btnSlot7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot7.Location = new System.Drawing.Point(297, 169);
+            this.btnSlot7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot7.Location = new System.Drawing.Point(301, 183);
             this.btnSlot7.Name = "btnSlot7";
             this.btnSlot7.Size = new System.Drawing.Size(34, 21);
             this.btnSlot7.TabIndex = 26;
@@ -233,9 +230,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot6
             // 
-            this.btnSlot6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot6.Location = new System.Drawing.Point(297, 142);
+            this.btnSlot6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot6.Location = new System.Drawing.Point(301, 156);
             this.btnSlot6.Name = "btnSlot6";
             this.btnSlot6.Size = new System.Drawing.Size(34, 21);
             this.btnSlot6.TabIndex = 25;
@@ -245,9 +241,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot5
             // 
-            this.btnSlot5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot5.Location = new System.Drawing.Point(297, 115);
+            this.btnSlot5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot5.Location = new System.Drawing.Point(301, 129);
             this.btnSlot5.Name = "btnSlot5";
             this.btnSlot5.Size = new System.Drawing.Size(34, 21);
             this.btnSlot5.TabIndex = 24;
@@ -257,9 +252,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot4
             // 
-            this.btnSlot4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot4.Location = new System.Drawing.Point(297, 88);
+            this.btnSlot4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot4.Location = new System.Drawing.Point(301, 102);
             this.btnSlot4.Name = "btnSlot4";
             this.btnSlot4.Size = new System.Drawing.Size(34, 21);
             this.btnSlot4.TabIndex = 23;
@@ -269,9 +263,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot3
             // 
-            this.btnSlot3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot3.Location = new System.Drawing.Point(297, 61);
+            this.btnSlot3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot3.Location = new System.Drawing.Point(301, 75);
             this.btnSlot3.Name = "btnSlot3";
             this.btnSlot3.Size = new System.Drawing.Size(34, 21);
             this.btnSlot3.TabIndex = 22;
@@ -281,9 +274,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot2
             // 
-            this.btnSlot2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot2.Location = new System.Drawing.Point(297, 34);
+            this.btnSlot2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot2.Location = new System.Drawing.Point(301, 48);
             this.btnSlot2.Name = "btnSlot2";
             this.btnSlot2.Size = new System.Drawing.Size(34, 21);
             this.btnSlot2.TabIndex = 21;
@@ -293,9 +285,8 @@ namespace EVEMon.ImpGroups
             // 
             // btnSlot1
             // 
-            this.btnSlot1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSlot1.Location = new System.Drawing.Point(297, 7);
+            this.btnSlot1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSlot1.Location = new System.Drawing.Point(301, 21);
             this.btnSlot1.Name = "btnSlot1";
             this.btnSlot1.Size = new System.Drawing.Size(34, 21);
             this.btnSlot1.TabIndex = 20;
@@ -306,7 +297,7 @@ namespace EVEMon.ImpGroups
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(1, 253);
+            this.label8.Location = new System.Drawing.Point(1, 267);
             this.label8.Name = "label8";
             this.label8.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label8.Size = new System.Drawing.Size(43, 13);
@@ -316,7 +307,7 @@ namespace EVEMon.ImpGroups
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 226);
+            this.label7.Location = new System.Drawing.Point(7, 240);
             this.label7.Name = "label7";
             this.label7.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label7.Size = new System.Drawing.Size(37, 13);
@@ -326,7 +317,7 @@ namespace EVEMon.ImpGroups
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 199);
+            this.label6.Location = new System.Drawing.Point(7, 213);
             this.label6.Name = "label6";
             this.label6.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label6.Size = new System.Drawing.Size(37, 13);
@@ -336,7 +327,7 @@ namespace EVEMon.ImpGroups
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 172);
+            this.label5.Location = new System.Drawing.Point(7, 186);
             this.label5.Name = "label5";
             this.label5.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label5.Size = new System.Drawing.Size(37, 13);
@@ -346,7 +337,7 @@ namespace EVEMon.ImpGroups
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 145);
+            this.label4.Location = new System.Drawing.Point(7, 159);
             this.label4.Name = "label4";
             this.label4.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label4.Size = new System.Drawing.Size(37, 13);
@@ -356,7 +347,7 @@ namespace EVEMon.ImpGroups
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 118);
+            this.label3.Location = new System.Drawing.Point(7, 132);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label3.Size = new System.Drawing.Size(37, 13);
@@ -366,7 +357,7 @@ namespace EVEMon.ImpGroups
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 91);
+            this.label2.Location = new System.Drawing.Point(7, 105);
             this.label2.Name = "label2";
             this.label2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label2.Size = new System.Drawing.Size(37, 13);
@@ -376,7 +367,7 @@ namespace EVEMon.ImpGroups
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 64);
+            this.label1.Location = new System.Drawing.Point(7, 78);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label1.Size = new System.Drawing.Size(37, 13);
@@ -386,7 +377,7 @@ namespace EVEMon.ImpGroups
             // lblImplant2
             // 
             this.lblImplant2.AutoSize = true;
-            this.lblImplant2.Location = new System.Drawing.Point(7, 37);
+            this.lblImplant2.Location = new System.Drawing.Point(7, 51);
             this.lblImplant2.Name = "lblImplant2";
             this.lblImplant2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.lblImplant2.Size = new System.Drawing.Size(37, 13);
@@ -396,7 +387,7 @@ namespace EVEMon.ImpGroups
             // lblImplant1
             // 
             this.lblImplant1.AutoSize = true;
-            this.lblImplant1.Location = new System.Drawing.Point(7, 10);
+            this.lblImplant1.Location = new System.Drawing.Point(7, 25);
             this.lblImplant1.Name = "lblImplant1";
             this.lblImplant1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.lblImplant1.Size = new System.Drawing.Size(37, 13);
@@ -409,10 +400,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant10.Location = new System.Drawing.Point(50, 250);
+            this.txtImplant10.Location = new System.Drawing.Point(50, 264);
             this.txtImplant10.Name = "txtImplant10";
             this.txtImplant10.ReadOnly = true;
-            this.txtImplant10.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant10.Size = new System.Drawing.Size(245, 21);
             this.txtImplant10.TabIndex = 9;
             // 
             // txtImplant9
@@ -421,10 +412,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant9.Location = new System.Drawing.Point(50, 223);
+            this.txtImplant9.Location = new System.Drawing.Point(50, 237);
             this.txtImplant9.Name = "txtImplant9";
             this.txtImplant9.ReadOnly = true;
-            this.txtImplant9.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant9.Size = new System.Drawing.Size(245, 21);
             this.txtImplant9.TabIndex = 8;
             // 
             // txtImplant8
@@ -433,10 +424,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant8.Location = new System.Drawing.Point(50, 196);
+            this.txtImplant8.Location = new System.Drawing.Point(50, 210);
             this.txtImplant8.Name = "txtImplant8";
             this.txtImplant8.ReadOnly = true;
-            this.txtImplant8.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant8.Size = new System.Drawing.Size(245, 21);
             this.txtImplant8.TabIndex = 7;
             // 
             // txtImplant7
@@ -445,10 +436,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant7.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant7.Location = new System.Drawing.Point(50, 169);
+            this.txtImplant7.Location = new System.Drawing.Point(50, 183);
             this.txtImplant7.Name = "txtImplant7";
             this.txtImplant7.ReadOnly = true;
-            this.txtImplant7.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant7.Size = new System.Drawing.Size(245, 21);
             this.txtImplant7.TabIndex = 6;
             // 
             // txtImplant6
@@ -457,10 +448,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant6.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant6.Location = new System.Drawing.Point(50, 142);
+            this.txtImplant6.Location = new System.Drawing.Point(50, 156);
             this.txtImplant6.Name = "txtImplant6";
             this.txtImplant6.ReadOnly = true;
-            this.txtImplant6.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant6.Size = new System.Drawing.Size(245, 21);
             this.txtImplant6.TabIndex = 5;
             // 
             // txtImplant5
@@ -469,10 +460,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant5.Location = new System.Drawing.Point(50, 115);
+            this.txtImplant5.Location = new System.Drawing.Point(50, 129);
             this.txtImplant5.Name = "txtImplant5";
             this.txtImplant5.ReadOnly = true;
-            this.txtImplant5.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant5.Size = new System.Drawing.Size(245, 21);
             this.txtImplant5.TabIndex = 4;
             // 
             // txtImplant4
@@ -481,10 +472,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant4.Location = new System.Drawing.Point(50, 88);
+            this.txtImplant4.Location = new System.Drawing.Point(50, 102);
             this.txtImplant4.Name = "txtImplant4";
             this.txtImplant4.ReadOnly = true;
-            this.txtImplant4.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant4.Size = new System.Drawing.Size(245, 21);
             this.txtImplant4.TabIndex = 3;
             // 
             // txtImplant3
@@ -493,10 +484,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant3.Location = new System.Drawing.Point(50, 61);
+            this.txtImplant3.Location = new System.Drawing.Point(50, 75);
             this.txtImplant3.Name = "txtImplant3";
             this.txtImplant3.ReadOnly = true;
-            this.txtImplant3.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant3.Size = new System.Drawing.Size(245, 21);
             this.txtImplant3.TabIndex = 2;
             // 
             // txtImplant2
@@ -505,10 +496,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant2.Location = new System.Drawing.Point(50, 34);
+            this.txtImplant2.Location = new System.Drawing.Point(50, 48);
             this.txtImplant2.Name = "txtImplant2";
             this.txtImplant2.ReadOnly = true;
-            this.txtImplant2.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant2.Size = new System.Drawing.Size(245, 21);
             this.txtImplant2.TabIndex = 1;
             // 
             // txtImplant1
@@ -517,10 +508,10 @@ namespace EVEMon.ImpGroups
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtImplant1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtImplant1.Location = new System.Drawing.Point(50, 7);
+            this.txtImplant1.Location = new System.Drawing.Point(50, 21);
             this.txtImplant1.Name = "txtImplant1";
             this.txtImplant1.ReadOnly = true;
-            this.txtImplant1.Size = new System.Drawing.Size(241, 21);
+            this.txtImplant1.Size = new System.Drawing.Size(245, 21);
             this.txtImplant1.TabIndex = 0;
             // 
             // btnSwapWithCurrent
@@ -556,23 +547,23 @@ namespace EVEMon.ImpGroups
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 401);
+            this.ClientSize = new System.Drawing.Size(369, 411);
             this.Controls.Add(this.btnDeleteCurrent);
             this.Controls.Add(this.btnSwapWithCurrent);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlImplants);
             this.Controls.Add(this.lblJumpClone);
             this.Controls.Add(this.lbJumpClone);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.JumpCloneTxt);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ImpGroups";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Tag = "Jump Clone";
             this.Text = "Jump Clones";
             this.Load += new System.EventHandler(this.ImpGroups_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlImplants.ResumeLayout(false);
+            this.pnlImplants.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -586,7 +577,7 @@ namespace EVEMon.ImpGroups
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.ComboBox lbJumpClone;
         private System.Windows.Forms.Label lblJumpClone;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox pnlImplants;
         private System.Windows.Forms.Label lblImplant1;
         private System.Windows.Forms.Label lblImplant2;
         private System.Windows.Forms.Label label8;

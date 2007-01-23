@@ -71,14 +71,14 @@ namespace EVEMon.ImpGroups
             lbJumpClone.SelectedIndex = 1;
 
             Buildtxt();
-            panel1.Refresh();
+            pnlImplants.Refresh();
         }
 
         private void Buildtxt()
         {
             for (int i = 1; i <= 10; i++)
             {
-                System.Windows.Forms.TextBox x = (System.Windows.Forms.TextBox)this.panel1.Controls["txtImplant" + i];
+                System.Windows.Forms.TextBox x = (System.Windows.Forms.TextBox)this.pnlImplants.Controls["txtImplant" + i];
 
                 if (m_workingSets.ContainsKey(lbJumpClone.SelectedItem.ToString()))
                 {
@@ -173,7 +173,7 @@ namespace EVEMon.ImpGroups
             btnSwapWithCurrent.Enabled = ((lbJumpClone.SelectedItem.ToString() != "Auto") && (lbJumpClone.SelectedItem.ToString() != "Current"));
             btnDeleteCurrent.Enabled = ((lbJumpClone.SelectedItem.ToString() == "Current") && (m_workingSets.ContainsKey("Current")));
             Buildtxt();
-            panel1.Refresh();
+            pnlImplants.Refresh();
         }
 
         private void Get_Implant(object sender, EventArgs e)
@@ -216,7 +216,7 @@ namespace EVEMon.ImpGroups
                 m_workingSets.Remove(lbJumpClone.SelectedItem.ToString());
 
             Buildtxt();
-            panel1.Refresh();
+            pnlImplants.Refresh();
         }
 
         private void btnDeleteCurrent_Click(object sender, EventArgs e)
@@ -226,7 +226,7 @@ namespace EVEMon.ImpGroups
                 m_workingSets.Remove("Current");
             }
             Buildtxt();
-            panel1.Refresh();
+            pnlImplants.Refresh();
         }
 
         private void btnSwapWithCurrent_Click(object sender, EventArgs e)
@@ -299,7 +299,7 @@ namespace EVEMon.ImpGroups
                 }
             }
             Buildtxt();
-            panel1.Refresh();
+            pnlImplants.Refresh();
         }
 
         private void btnSwapWithCurrent_MouseHover(object sender, EventArgs e)
