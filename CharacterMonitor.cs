@@ -1103,6 +1103,7 @@ namespace EVEMon
                         //lblScheduleWarning.Visible = (universalFinish.Hour == 11);
 
                         bool isBlocked = (universalFinish.Hour == 11);
+                        lblScheduleWarning.Visible = false;
                         //isBlocked = true;
                         if (isBlocked)
                         {

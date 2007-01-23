@@ -193,6 +193,8 @@ namespace EVEMon.Schedule
                         DateTime nowish = DateTime.Now.Date;
                         DateTime Initial = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
                         Double datediff = ((7 * x.nWeekly) - (nowish.Subtract(Initial).Days % (7 * x.nWeekly))) % (7 * x.nWeekly);
+                        if (((nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(x.StartSecond))) < DateTime.Now)
+                            datediff = datediff + (7 * x.nWeekly);
                         label_text = label_text + "\n  Day of Week: " + x.RecurDayOfWeek + "\n  Every: " + x.nWeekly + " weeks\n  Next: " + (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(x.StartSecond));
                     }
                     label_text = label_text + "\n Start Time: " + TimeSpan.FromSeconds(x.StartSecond).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndSecond).ToString() + "\n Expired: " + x.Expired;
