@@ -542,6 +542,7 @@ namespace EVEMon.Common
         {
             m_cachedSkillPointTotal = -1;
             m_cachedKnownSkillCount = -1;
+            m_cachedMaxedSkillCount = -1;
             lock (m_skillsChanged)
             {
                 m_skillsChanged.Add(gs);
