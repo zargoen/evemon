@@ -414,6 +414,7 @@ namespace EVEMon
             }
         }
 
+ 
         /// <summary>
         /// Stop all timers, unhook all events, lie down and die.
         /// </summary>
@@ -469,7 +470,16 @@ namespace EVEMon
         private void EnableButtons()
         {
             btnSave.Enabled = true;
-            btnPlan.Enabled = true;
+            if (m_grandCharacterInfo.SkillPointTotal > 0)
+            {
+                btnPlan.Enabled = true;
+            }
+            else
+            {
+                // need to disable split so button goes dimmed.s
+                btnPlan.ShowSplit = false;
+                btnPlan.Enabled = false;
+            }
             btnMoreOptions.Enabled = true;
         }
 
