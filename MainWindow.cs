@@ -1079,12 +1079,5 @@ namespace EVEMon
                 }
             }
         }
-
     }
 }
-
-
-
-
-
-

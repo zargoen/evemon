@@ -141,7 +141,10 @@ namespace EVEMon
             m_grandCharacterInfo.AttributeChanged += new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
             m_grandCharacterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
-
+            m_settings.ScheduleEntriesChanged += new EventHandler<EventArgs>(m_settings_ScheduleEntriesChanged);
+            
+            m_settings_ScheduleEntriesChanged(null, null);
+            
             if (m_cli != null)
             {
                 SerializableCharacterInfo sci = m_settings.GetCharacterInfo(m_cli.CharacterName);
@@ -202,7 +205,199 @@ namespace EVEMon
             }
         }
 
-        
+        void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
+        {
+            // Here is where we check and change the alert on schedule collision
+            if(m_grandCharacterInfo.CurrentlyTrainingSkill != null && m_grandCharacterInfo.CurrentlyTrainingSkill.InTraining)
+            {
+                Skill gs = m_grandCharacterInfo.CurrentlyTrainingSkill;
+
+                DateTime universalFinish = m_estimatedCompletion.ToUniversalTime();
+                bool isBlocked = (universalFinish.Hour == 11);
+
+                lblScheduleWarning.Visible = false;
+                if (isBlocked)
+                {
+                    // downtime blocking should take prioity
+                    lblScheduleWarning.Text = "Schedule Conflict-Downtime!";
+                }
+                else
+                {
+                    for (int i = 0; i < m_settings.Schedule.Count; i++)
+                    {
+                        // Event to trigger these checks on a new Schedule entry still needs to be written
+                        ScheduleEntry temp = m_settings.Schedule[i];
+                        if (temp.GetType() == typeof(SimpleScheduleEntry))
+                        {
+                            SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                            if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                            {
+                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                {
+                                    if (x.StartDateTime <= universalFinish && universalFinish <= x.EndDateTime)
+                                    {
+                                        // This blocks in EVE Time
+                                        lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                        isBlocked = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (x.StartDateTime <= m_estimatedCompletion && m_estimatedCompletion <= x.EndDateTime)
+                                    {
+                                        // This blocks in local Time
+                                        lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                        isBlocked = true;
+                                    }
+                                }
+                            }
+                        }
+                        else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                        {
+                            RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                            if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
+                            {
+                                if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
+                                {
+                                    // This needs to check to see if universalFinish coincides with
+                                    // any of the scheduled periods that this entry represents
+                                    if (x.RecurStart <= universalFinish && universalFinish <= x.RecurEnd)
+                                    {
+                                        switch (x.RecurFrequency)
+                                        {
+                                            default:
+                                            case RecurFrequency.Daily:
+                                                if (DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekdays:
+                                                if ((DateTime.Now.DayOfWeek != DayOfWeek.Saturday && DateTime.Now.DayOfWeek != DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekends:
+                                                if ((DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekly:
+                                                DateTime FirstInstance = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
+                                                if (DateTime.Now.DayOfWeek == x.RecurDayOfWeek && DateTime.Now.Subtract(FirstInstance).Days % (7 * x.nWeekly) == 0 && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Monthly:
+                                                int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
+                                                switch (x.OverflowResolution)
+                                                {
+                                                    case MonthlyOverflowResolution.ClipBack:
+                                                        if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
+                                                        {
+                                                            dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+                                                        }
+                                                        break;
+                                                    case MonthlyOverflowResolution.Drop:
+                                                        dayofmonthdif = 0;
+                                                        break;
+                                                    case MonthlyOverflowResolution.OverlapForward:
+                                                        if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month))
+                                                        {
+                                                            dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
+                                                        }
+                                                        break;
+                                                }
+                                                if ((DateTime.Now.Day == x.RecurDayOfMonth || DateTime.Now.Day == dayofmonthdif) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // This needs to check to see if m_estimatedCompletion coincides with
+                                    // any of the scheduled periods that this entry represents
+                                    if (x.RecurStart <= m_estimatedCompletion && m_estimatedCompletion <= x.RecurEnd)
+                                    {
+                                        switch (x.RecurFrequency)
+                                        {
+                                            default:
+                                            case RecurFrequency.Daily:
+                                                if (DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekdays:
+                                                if ((DateTime.Now.DayOfWeek != DayOfWeek.Saturday && DateTime.Now.DayOfWeek != DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekends:
+                                                if ((DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Weekly:
+                                                DateTime FirstInstance = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
+                                                if (DateTime.Now.DayOfWeek == x.RecurDayOfWeek && DateTime.Now.Subtract(FirstInstance).Days % (7 * x.nWeekly) == 0 && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                            case RecurFrequency.Monthly:
+                                                int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
+                                                switch (x.OverflowResolution)
+                                                {
+                                                    case MonthlyOverflowResolution.ClipBack:
+                                                        if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
+                                                        {
+                                                            dayofmonthdif = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+                                                        }
+                                                        break;
+                                                    case MonthlyOverflowResolution.Drop:
+                                                        dayofmonthdif = 0;
+                                                        break;
+                                                    case MonthlyOverflowResolution.OverlapForward:
+                                                        if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month))
+                                                        {
+                                                            dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
+                                                        }
+                                                        break;
+                                                }
+                                                if ((DateTime.Now.Day == x.RecurDayOfMonth || DateTime.Now.Day == dayofmonthdif) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
+                                                {
+                                                    lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
+                                                    isBlocked = true;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                lblScheduleWarning.Visible = isBlocked;
+            }
+        }
 
         private void ReloadFromFile()
         {
@@ -1092,199 +1287,13 @@ namespace EVEMon
                     {
                         m_skillTrainingName = gs.Name + " " + Skill.GetRomanForInt(gs.TrainingToLevel);
                         lblTrainingSkill.Text = m_skillTrainingName;
-
                         double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(gs.PrimaryAttribute) +
                                                (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
                         m_estimatedCompletion = gs.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
-                        m_realCompletion = gs.EstimatedCompletion;
-                        //downtime finish?
-                        DateTime universalFinish = m_estimatedCompletion.ToUniversalTime();
-                        //lblScheduleWarning.Visible = (universalFinish.Hour == 11);
+                        
+                        m_settings_ScheduleEntriesChanged(null, null);
 
-                        bool isBlocked = (universalFinish.Hour == 11);
-                        lblScheduleWarning.Visible = false;
-                        //isBlocked = true;
-                        if (isBlocked)
-                        {
-                            // downtime blocking should take prioity
-                            lblScheduleWarning.Text = "Schedule Conflict-Downtime!";
-                        }
-                        else
-                        {
-                            for (int i = 0; i < m_settings.Schedule.Count; i++)
-                            {
-                                // Event to trigger these checks on a new Schedule entry still needs to be written
-                                ScheduleEntry temp = m_settings.Schedule[i];
-                                if (temp.GetType() == typeof(SimpleScheduleEntry))
-                                {
-                                    SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
-                                    {
-                                        if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
-                                        {
-                                            if (x.StartDateTime <= universalFinish && universalFinish <= x.EndDateTime)
-                                            {
-                                                // This blocks in EVE Time
-                                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                isBlocked = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (x.StartDateTime <= m_estimatedCompletion && m_estimatedCompletion <= x.EndDateTime)
-                                            {
-                                                // This blocks in local Time
-                                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                isBlocked = true;
-                                            }
-                                        }
-                                    }
-                                }
-                                else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                                {
-                                    RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                                    if ((x.ScheduleEntryOptions & ScheduleEntryOptions.Blocking) != 0)
-                                    {
-                                        if ((x.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != 0)
-                                        {
-                                            // This needs to check to see if universalFinish coincides with
-                                            // any of the scheduled periods that this entry represents
-                                            if (x.RecurStart <= universalFinish && universalFinish <= x.RecurEnd)
-                                            {
-                                                switch (x.RecurFrequency)
-                                                {
-                                                    default:
-                                                    case RecurFrequency.Daily:
-                                                        if (DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekdays:
-                                                        if ((DateTime.Now.DayOfWeek != DayOfWeek.Saturday && DateTime.Now.DayOfWeek != DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekends:
-                                                        if ((DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekly:
-                                                        DateTime FirstInstance = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
-                                                        if (DateTime.Now.DayOfWeek == x.RecurDayOfWeek && DateTime.Now.Subtract(FirstInstance).Days % (7 * x.nWeekly) == 0 && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Monthly:
-                                                        int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
-                                                        switch (x.OverflowResolution)
-                                                        {
-                                                            case MonthlyOverflowResolution.ClipBack:
-                                                                if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
-                                                                {
-                                                                    dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-                                                                }
-                                                                break;
-                                                            case MonthlyOverflowResolution.Drop:
-                                                                dayofmonthdif = 0;
-                                                                break;
-                                                            case MonthlyOverflowResolution.OverlapForward:
-                                                                if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month))
-                                                                {
-                                                                    dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
-                                                                }
-                                                                break;
-                                                        }
-                                                        if ((DateTime.Now.Day == x.RecurDayOfMonth || DateTime.Now.Day == dayofmonthdif) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= universalFinish && universalFinish <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // This needs to check to see if m_estimatedCompletion coincides with
-                                            // any of the scheduled periods that this entry represents
-                                            if (x.RecurStart <= m_estimatedCompletion && m_estimatedCompletion <= x.RecurEnd)
-                                            {
-                                                switch (x.RecurFrequency)
-                                                {
-                                                    default:
-                                                    case RecurFrequency.Daily:
-                                                        if (DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekdays:
-                                                        if ((DateTime.Now.DayOfWeek != DayOfWeek.Saturday && DateTime.Now.DayOfWeek != DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekends:
-                                                        if ((DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Weekly:
-                                                        DateTime FirstInstance = x.RecurStart.AddDays((x.RecurDayOfWeek - x.RecurStart.DayOfWeek + 7) % 7);
-                                                        if (DateTime.Now.DayOfWeek == x.RecurDayOfWeek && DateTime.Now.Subtract(FirstInstance).Days % (7 * x.nWeekly) == 0 && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                    case RecurFrequency.Monthly:
-                                                        int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
-                                                        switch (x.OverflowResolution)
-                                                        {
-                                                            case MonthlyOverflowResolution.ClipBack:
-                                                                if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
-                                                                {
-                                                                    dayofmonthdif = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-                                                                }
-                                                                break;
-                                                            case MonthlyOverflowResolution.Drop:
-                                                                dayofmonthdif = 0;
-                                                                break;
-                                                            case MonthlyOverflowResolution.OverlapForward:
-                                                                if (x.RecurDayOfMonth > DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month))
-                                                                {
-                                                                    dayofmonthdif = x.RecurDayOfMonth - DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
-                                                                }
-                                                                break;
-                                                        }
-                                                        if ((DateTime.Now.Day == x.RecurDayOfMonth || DateTime.Now.Day == dayofmonthdif) && DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.StartSecond)) <= m_estimatedCompletion && m_estimatedCompletion <= DateTime.Now.Date.Add(TimeSpan.FromSeconds(x.EndSecond)))
-                                                        {
-                                                            lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                                            isBlocked = true;
-                                                        }
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        lblScheduleWarning.Visible = isBlocked;
                         CalculateLcdData();
 
                         pnlTraining.Visible = true;

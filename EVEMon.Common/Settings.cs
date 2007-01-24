@@ -785,8 +785,33 @@ namespace EVEMon.Common
         public List<ScheduleEntry> Schedule
         {
             get { return m_schedule; }
-            set { m_schedule = value; }
+            set 
+            {
+                m_schedule = value;
+                OnScheduleEntriesChanged();
+            }
         }
+
+        public void ScheduleAdd(ScheduleEntry x)
+        {
+            m_schedule.Add(x);
+            OnScheduleEntriesChanged();
+        }
+
+        public void ScheduleRemoveAt(int i)
+        {
+            m_schedule.RemoveAt(i);
+            OnScheduleEntriesChanged();
+        }
+
+        private void OnScheduleEntriesChanged()
+        {
+            if (ScheduleEntriesChanged != null)
+                ScheduleEntriesChanged(this, new EventArgs());
+        }
+
+        public event EventHandler<EventArgs> ScheduleEntriesChanged;
+
         #endregion //Schedule Entries
 
         private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();
