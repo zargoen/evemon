@@ -681,11 +681,12 @@ namespace EVEMon
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!m_settings.SystemTrayOptionsIsNever &&             // if system tray icon is always or display when minimised
-                m_settings.CloseToTray &&                           // and EVEMon is configured to close to system tray
-                this.Visible &&                                     // and main form is visable
-                !this.updateFlag &&                                 // and auto-update not currently in process
-                !(e.CloseReason == CloseReason.ApplicationExitCall) // and Application.Exit() was not called
+            if (!m_settings.SystemTrayOptionsIsNever &&                 // if system tray icon is always or display when minimised
+                m_settings.CloseToTray &&                               // and EVEMon is configured to close to system tray
+                this.Visible &&                                         // and main form is visable
+                !this.updateFlag &&                                     // and auto-update not currently in process
+                !(e.CloseReason == CloseReason.ApplicationExitCall) &&  // and Application.Exit() was not called
+                !(e.CloseReason == CloseReason.WindowsShutDown)         // and Windows is not shutting down
                )
             {
                 e.Cancel = true; // Cancel the close operation
