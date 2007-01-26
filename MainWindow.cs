@@ -686,7 +686,8 @@ namespace EVEMon
                 this.Visible &&                                         // and main form is visable
                 !this.updateFlag &&                                     // and auto-update not currently in process
                 !(e.CloseReason == CloseReason.ApplicationExitCall) &&  // and Application.Exit() was not called
-                !(e.CloseReason == CloseReason.WindowsShutDown)         // and Windows is not shutting down
+                !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
+                !(e.CloseReason == CloseReason.WindowsShutDown)  // and Windows is not shutting down
                )
             {
                 e.Cancel = true; // Cancel the close operation
