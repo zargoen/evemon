@@ -52,7 +52,6 @@ namespace EVEMon
                 cli.Password = m_settings.Password;
                 cli.CharacterName = m_settings.Character;
                 m_settings.AddCharacter(cli);
-                //m_settings.CharacterList.Add(cli);
                 m_settings.Username = String.Empty;
                 m_settings.Password = String.Empty;
                 m_settings.Character = String.Empty;
@@ -62,7 +61,9 @@ namespace EVEMon
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 if (cli != null)
+                {
                     AddTab(cli);
+                }
             }
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
             foreach (CharFileInfo cfi in m_settings.CharFileList)
@@ -1080,6 +1081,32 @@ namespace EVEMon
                     MessageBox.Show("Problem resetting EVEMon cache", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void trayIconToolStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            planToolStripMenuItem.DropDownItems.Clear();
+            foreach (CharLoginInfo cli in m_settings.CharacterList)
+            {
+                if (cli != null)
+                {
+                    ToolStripMenuItem tempItem = new ToolStripMenuItem(cli.CharacterName);
+                    foreach (string planName in m_settings.GetPlansForCharacter(cli.CharacterName))
+                    {
+                        ToolStripMenuItem planItem = new ToolStripMenuItem(planName);
+                        planItem.Click += new EventHandler(planItem_Click);
+                        tempItem.DropDownItems.Add(planItem);
+                    }
+                    planToolStripMenuItem.DropDownItems.Add(tempItem);
+                }
+            }
+        }
+
+        void planItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
+            Plan plan = m_settings.GetPlanByName(planItem.OwnerItem.Text, planItem.Text);
+            plan.ShowEditor(m_settings, plan.GrandCharacterInfo);
         }
     }
 }
