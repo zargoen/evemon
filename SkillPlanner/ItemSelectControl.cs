@@ -88,6 +88,28 @@ namespace EVEMon.SkillPlanner
                 BuildTreeView();
         }
 
+        private bool ClassFilter(Item i)
+        {
+            switch (i.Metagroup)
+            {
+                case "Tech I":
+                   return cbTech1.Checked;
+                case "Named":
+                    return cbNamed.Checked;
+                case "Tech II":
+                    return cbTech2.Checked;
+                case "Officer":
+                case "Storyline":
+                    return cbOfficer.Checked;
+                case "Faction":
+                    return cbFaction.Checked;
+                case "Deadspace":
+                    return cbDeadspace.Checked;
+                default:
+                    return false;
+             }
+        }
+
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (cbSlotFilter.SelectedIndex)
@@ -105,6 +127,12 @@ namespace EVEMon.SkillPlanner
                     slotFilter = delegate(Item i) { return i.SlotIndex == 0; };
                     break;
             }
+            if (m_rootCategory != null)
+                BuildTreeView();
+        }
+
+        private void cbClass_SelectedChanged(object sender, EventArgs e)
+        {
             if (m_rootCategory != null)
                 BuildTreeView();
         }
@@ -151,7 +179,7 @@ namespace EVEMon.SkillPlanner
             SortedDictionary<string, Item> sortedItems = new SortedDictionary<string, Item>();
             foreach (Item titem in cat.Items)
             {
-                if (skillFilter(titem) && slotFilter(titem))
+                if (skillFilter(titem) && slotFilter(titem) && ClassFilter(titem))
                     sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)
