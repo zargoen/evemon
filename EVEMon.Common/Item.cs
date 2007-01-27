@@ -50,6 +50,14 @@ namespace EVEMon.Common
             set { m_description = StringTable.GetSharedString(value); }
         }
 
+        private string m_metagroup = String.Empty;
+
+        public string Metagroup
+        {
+            get { return m_metagroup; }
+            set { m_metagroup = StringTable.GetSharedString(value); }
+        }
+
         private List<ItemProperty> m_properties = new List<ItemProperty>();
 
         [XmlArrayItem("prop")]

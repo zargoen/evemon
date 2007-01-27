@@ -68,9 +68,14 @@ namespace EVEMon.SkillPlanner
                         lvItemProperties.Columns.RemoveAt(2);
                     // (re)construct item properties list
                     lvItemProperties.Items.Clear();
+
+                    ListViewItem listItem = new ListViewItem(new string[] { "Class",i.Metagroup });
+                    listItem.Name = "Class";
+                    lvItemProperties.Items.Add(listItem);
+
                     foreach (ItemProperty prop in i.Properties)
                     {
-                        ListViewItem listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                        listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
                         listItem.Name = prop.Name;
                         lvItemProperties.Items.Add(listItem);
                     }
