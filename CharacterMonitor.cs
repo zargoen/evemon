@@ -1651,9 +1651,13 @@ namespace EVEMon
             // Update the drawing based upon the mouse wheel scrolling.
             int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
             int Lines = numberOfItemLinesToMove;
-            int direction = numberOfItemLinesToMove / Math.Abs(numberOfItemLinesToMove);
-            int[] numberOfPixelsToMove = new int[numberOfItemLinesToMove * direction];
-            for (int i = 1; i <= Math.Abs(numberOfItemLinesToMove); i++)
+            
+            // Prevent a divide by zero exception here, we've had one report of this but can't figure out why.
+            if (Lines == 0) return; 
+            
+            int direction = Lines / Math.Abs(Lines);
+            int[] numberOfPixelsToMove = new int[Lines * direction];
+            for (int i = 1; i <= Math.Abs(Lines); i++)
             {
                 object item = null;
                 if (direction == Math.Abs(direction))
