@@ -341,6 +341,10 @@ namespace EVEMon.SkillPlanner
                                 // Now do something with the knowledge that this entry is blocked...
                                 // This doesn't actually do anything yet...
                                 // Anyone got any ideas?
+
+                                // Brad's idea...
+                                lvi.ForeColor=Color.Red;
+                                lvi.SubItems[x].Text += " *CONFLICT*";
                             }
                         }
                     }
