@@ -170,6 +170,7 @@ namespace EVEMon.SkillPlanner
         }
 
         private const int MAX_NOTES_PREVIEW_CHARS = 60;
+
         private void UpdateListViewItems()
         {
             if (this.InvokeRequired)
@@ -305,12 +306,15 @@ namespace EVEMon.SkillPlanner
                                 break;
                         }
                         lvi.SubItems[x].Text = res;
-                        
+
                         // OK first wait for the right column type
                         if (ct == ColumnPreference.ColumnType.EarliestEnd)
                         {
                             // Now find out if it's blocked
+                            string BlockingEntry = string.Empty;
                             bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
+                            if (isBlocked)
+                                BlockingEntry = "DOWNTIME";
                             if (!isBlocked)
                             {
                                 for (int j = 0; j < m_settings.Schedule.Count; j++)
@@ -322,6 +326,7 @@ namespace EVEMon.SkillPlanner
                                         if (y.Clash(thisEnd))
                                         {
                                             isBlocked = true;
+                                            BlockingEntry = y.Title;
                                             break;
                                         }
                                     }
@@ -331,6 +336,7 @@ namespace EVEMon.SkillPlanner
                                         if (y.Clash(thisEnd))
                                         {
                                             isBlocked = true;
+                                            BlockingEntry = y.Title;
                                             break;
                                         }
                                     }
@@ -342,9 +348,9 @@ namespace EVEMon.SkillPlanner
                                 // This doesn't actually do anything yet...
                                 // Anyone got any ideas?
 
-                                // Brad's idea...
+                                // Brad's idea... with a little something from Eewec...
                                 lvi.ForeColor=Color.Red;
-                                lvi.SubItems[x].Text += " *CONFLICT*";
+                                lvi.SubItems[x].Text += " *CONFLICT WITH " + BlockingEntry + "*";
                             }
                         }
                     }

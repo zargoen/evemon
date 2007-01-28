@@ -12,7 +12,7 @@ namespace EVEMon.SkillPlanner
         public ItemSelectControl()
         {
             InitializeComponent();
-            m_settings = Settings.LoadFromKey(String.Empty);
+            m_settings = Settings.GetInstance();
         }
 
         private Plan m_plan;
