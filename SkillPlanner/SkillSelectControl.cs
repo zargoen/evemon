@@ -13,6 +13,7 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+        private Settings m_settings;
         private CharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
 
@@ -106,6 +107,7 @@ namespace EVEMon.SkillPlanner
             }
 
             SkillFilter sf;
+            m_settings.SkillBrowserFilter = cbSkillFilter.SelectedIndex;
 
             switch (cbSkillFilter.SelectedItem.ToString())
             {
@@ -261,6 +263,7 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
+            m_settings.SkillBrowserSearch = tbSearch.Text;
             SearchTextChanged();
         }
 
@@ -483,17 +486,31 @@ namespace EVEMon.SkillPlanner
 
         private void SkillSelectControl_Load(object sender, EventArgs e)
         {
-            cbSkillFilter.SelectedIndex = 0;
-            cbSorting.SelectedIndex = 0;
+            if (this.DesignMode)
+            {
+                return;
+            }
+ 
+//            cbSkillFilter.SelectedIndex = 0;
+//            cbSorting.SelectedIndex = 0;
+
+            m_settings = Settings.GetInstance();
+            cbSkillFilter.SelectedIndex = m_settings.SkillBrowserFilter;
+            cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
+            cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
+            tbSearch.Text = m_settings.SkillBrowserSearch;
+            lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
         }
 
         private void cbShowNonPublic_CheckedChanged(object sender, EventArgs e)
         {
+            m_settings.ShowPrivateSkills = cbShowNonPublic.Checked;
             UpdateSkillDisplay();
         }
 
         private void cbSorting_SelectedIndexChanged(object sender, EventArgs e)
         {
+            m_settings.SkillBrowserSort = cbSorting.SelectedIndex;
             UpdateSkillDisplay();
         }
 

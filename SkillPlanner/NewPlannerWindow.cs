@@ -45,13 +45,38 @@ namespace EVEMon.SkillPlanner
 
             itemBrowser.Plan = m_plan;
 
-            // See if this is a new plan
+            // Open up to the user's last used tab
+            switch (m_settings.PlannerTab)
+            {
+                case 0: // plan
+                    if (m_plan.Entries.Count == 0)
+                        // jump straight to the skill browser
+                        tabControl.SelectedTab = tpSkillBrowser;
+                    else
+                        tabControl.SelectedTab = tpPlanQueue;
+                    break;
+                case 1:
+                    tabControl.SelectedTab = tpSkillBrowser;
+                    break;
+                case 2:
+                    tabControl.SelectedTab = tpShipBrowser;
+                    break;
+                case 3:
+                    tabControl.SelectedTab = tpItemBrowser;
+                    break;
+            }
+
+            /* Old behaviour 
+            
+             * // See if this is a new plan
             if (m_plan.Entries.Count == 0)
                 // jump straight to the skill browser
                 tabControl.SelectedTab = tpSkillBrowser;
             else
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
+            
+             * end of old behaviour */
 
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
@@ -556,6 +581,11 @@ namespace EVEMon.SkillPlanner
             ic.Show();
         }
         #endregion Implant Calculator
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_settings.PlannerTab = tabControl.SelectedIndex;
+        }
 
     }
 

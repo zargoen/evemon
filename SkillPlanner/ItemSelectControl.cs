@@ -12,7 +12,6 @@ namespace EVEMon.SkillPlanner
         public ItemSelectControl()
         {
             InitializeComponent();
-            m_settings = Settings.GetInstance();
         }
 
         private Plan m_plan;
@@ -31,8 +30,12 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            cbSkillFilter.SelectedIndex = 0;
-            cbSlotFilter.SelectedIndex = 0;
+ //           cbSkillFilter.SelectedIndex = 0;
+ //           cbSlotFilter.SelectedIndex = 0;
+
+            m_settings = Settings.GetInstance();
+            cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
+            cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
 
             cbTech1.Checked = m_settings.ShowT1Items;
             cbNamed.Checked = m_settings.ShowNamedItems;
@@ -40,7 +43,7 @@ namespace EVEMon.SkillPlanner
             cbOfficer.Checked = m_settings.ShowOfficerItems;
             cbFaction.Checked = m_settings.ShowFactionItems;
             cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
- 
+
             try
             {
                 m_rootCategory = ItemCategory.GetRootCategory();
@@ -53,6 +56,10 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException(err, true);
                 return;
             }
+
+            // needs to be after we set the root category.
+            tbSearchText.Text = m_settings.ItemBrowserSearch;
+            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             BuildTreeView();
         }
 
@@ -66,6 +73,7 @@ namespace EVEMon.SkillPlanner
 
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            m_settings.ItemSkillFilter=cbSkillFilter.SelectedIndex;
             switch (cbSkillFilter.SelectedIndex)
             {
                 default:
@@ -122,6 +130,7 @@ namespace EVEMon.SkillPlanner
 
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            m_settings.ItemSlotFilter=cbSlotFilter.SelectedIndex;
             switch (cbSlotFilter.SelectedIndex)
             {
                 default:
@@ -225,6 +234,8 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
+            if (m_rootCategory == null) return;
+            m_settings.ItemBrowserSearch = tbSearchText.Text;
             if (String.IsNullOrEmpty(tbSearchText.Text) ||
                 String.IsNullOrEmpty(tbSearchText.Text.Trim()))
             {

@@ -1100,9 +1100,87 @@ namespace EVEMon.Common
             set { m_ShowDeadspaceItems = value; }
         }
 
+        private int m_itemSkillFilter = 0;
 
+        public int ItemSkillFilter
+        {
+            get { return m_itemSkillFilter; }
+            set { m_itemSkillFilter = value; }
+        }
+
+        private int m_itemSlotFilter = 0;
+
+        public int ItemSlotFilter
+        {
+            get { return m_itemSlotFilter; }
+            set { m_itemSlotFilter = value; }
+        }
+
+        private String m_itemBrowserSearch = String.Empty;
+
+        public String ItemBrowserSearch
+        {
+            get { return m_itemBrowserSearch; }
+            set { m_itemBrowserSearch = value; }
+        }
+	
+	    private int m_plannerTab = 0;
+
+        public int PlannerTab
+        {
+            get { return m_plannerTab; }
+            set { m_plannerTab = value; }
+        }
+
+        private int m_skillBrowserFilter = 0;
+
+        public int SkillBrowserFilter
+        {
+            get { return m_skillBrowserFilter; }
+            set { m_skillBrowserFilter = value; }
+        }
+
+        private int m_skillBrowserSort=0;
+
+        public int SkillBrowserSort
+        {   
+            get { return m_skillBrowserSort; }
+            set { m_skillBrowserSort = value; }
+        }
+        
+        private String m_skillBrowserSearch  = String.Empty;
+
+        public String SkillBrowserSearch
+        {
+            get { return m_skillBrowserSearch; }
+            set { m_skillBrowserSearch = value; }
+        }
+
+        private bool m_showPrivateSkills = true;
+
+        public bool ShowPrivateSkills
+        {
+            get { return m_showPrivateSkills; }
+            set { m_showPrivateSkills = value; }
+        }
+	
+        private int m_shipBrowserFilter = 0;
+
+        public int ShipBrowserFilter
+        {
+            get { return m_shipBrowserFilter; }
+            set { m_shipBrowserFilter = value; }
+        }
+
+        private String m_shipBrowserSearch = String.Empty;
+
+        public String ShipBrowserSearch
+        {
+            get { return m_shipBrowserSearch; }
+            set { m_shipBrowserSearch = value; }
+        }
+        
         #endregion
-
     }
 
     
