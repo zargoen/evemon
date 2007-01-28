@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Schedule;
 using System.Drawing;
 
 namespace EVEMon.SkillPlanner
@@ -16,6 +17,7 @@ namespace EVEMon.SkillPlanner
         private System.Drawing.Font m_plannedSkillFont;
         private System.Drawing.Font m_prerequisiteSkillFont;
         private System.Drawing.Color m_trainablePlanEntryColor;
+        private Settings m_settings;
 
         public PlanOrderEditorControl()
         {
@@ -23,6 +25,7 @@ namespace EVEMon.SkillPlanner
             m_plannedSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Bold);
             m_prerequisiteSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Regular);
             m_trainablePlanEntryColor = SystemColors.GrayText;
+            m_settings = Settings.GetInstance();
         }
 
         private NewPlannerWindow m_plannerWindow;
@@ -302,6 +305,44 @@ namespace EVEMon.SkillPlanner
                                 break;
                         }
                         lvi.SubItems[x].Text = res;
+                        
+                        // OK first wait for the right column type
+                        if (ct == ColumnPreference.ColumnType.EarliestEnd)
+                        {
+                            // Now find out if it's blocked
+                            bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
+                            if (!isBlocked)
+                            {
+                                for (int j = 0; j < m_settings.Schedule.Count; j++)
+                                {
+                                    ScheduleEntry temp = m_settings.Schedule[j];
+                                    if (temp.GetType() == typeof(SimpleScheduleEntry))
+                                    {
+                                        SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
+                                        if (y.Clash(thisEnd))
+                                        {
+                                            isBlocked = true;
+                                            break;
+                                        }
+                                    }
+                                    else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                                    {
+                                        RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
+                                        if (y.Clash(thisEnd))
+                                        {
+                                            isBlocked = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (isBlocked)
+                            {
+                                // Now do something with the knowledge that this entry is blocked...
+                                // This doesn't actually do anything yet...
+                                // Anyone got any ideas?
+                            }
+                        }
                     }
 
                     lvi.SubItems[lvSkills.Columns.Count].Text = pe.EntryType.ToString();
