@@ -7,9 +7,12 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ItemSelectControl : UserControl
     {
+        private Settings m_settings;
+
         public ItemSelectControl()
         {
             InitializeComponent();
+            m_settings = Settings.LoadFromKey(String.Empty);
         }
 
         private Plan m_plan;
@@ -31,6 +34,13 @@ namespace EVEMon.SkillPlanner
             cbSkillFilter.SelectedIndex = 0;
             cbSlotFilter.SelectedIndex = 0;
 
+            cbTech1.Checked = m_settings.ShowT1Items;
+            cbNamed.Checked = m_settings.ShowNamedItems;
+            cbTech2.Checked = m_settings.ShowT2Items;
+            cbOfficer.Checked = m_settings.ShowOfficerItems;
+            cbFaction.Checked = m_settings.ShowFactionItems;
+            cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
+ 
             try
             {
                 m_rootCategory = ItemCategory.GetRootCategory();
@@ -133,6 +143,13 @@ namespace EVEMon.SkillPlanner
 
         private void cbClass_SelectedChanged(object sender, EventArgs e)
         {
+            if (sender == cbTech1) m_settings.ShowT1Items = cbTech1.Checked;
+            if (sender == cbNamed) m_settings.ShowNamedItems = cbNamed.Checked;
+            if (sender == cbTech2) m_settings.ShowT2Items = cbTech2.Checked;
+            if (sender == cbOfficer) m_settings.ShowOfficerItems = cbOfficer.Checked;
+            if (sender == cbFaction) m_settings.ShowFactionItems = cbFaction.Checked;
+            if (sender == cbDeadspace) m_settings.ShowDeadspaceItems = cbDeadspace.Checked;
+
             if (m_rootCategory != null)
                 BuildTreeView();
         }

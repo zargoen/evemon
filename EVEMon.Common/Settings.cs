@@ -1051,6 +1051,58 @@ namespace EVEMon.Common
         }
         #endregion
 
+        #region Browser Defaults
+        
+        private bool m_ShowT1Items = true;
+        
+        public bool ShowT1Items
+        {
+            get { return m_ShowT1Items; }
+            set { m_ShowT1Items = value; }
+        }
+
+        private bool m_ShowT2Items = true;
+        
+        public bool ShowT2Items
+        {
+            get { return m_ShowT2Items; }
+            set { m_ShowT2Items = value; }
+        }
+
+        private bool m_ShowNamedItems = true;
+        
+        public bool ShowNamedItems
+        {
+            get { return m_ShowNamedItems; }
+            set { m_ShowNamedItems = value; }
+        }
+
+        private bool m_ShowOfficerItems = false;
+
+        public bool ShowOfficerItems
+        {
+            get { return m_ShowOfficerItems; }
+            set { m_ShowOfficerItems = value; }
+        }
+        private bool m_ShowFactionItems = false;
+
+        public bool ShowFactionItems
+        {
+            get { return m_ShowFactionItems; }
+            set { m_ShowFactionItems = value; }
+        }
+
+        private bool m_ShowDeadspaceItems = false;
+
+        public bool ShowDeadspaceItems
+        {
+            get { return m_ShowDeadspaceItems; }
+            set { m_ShowDeadspaceItems = value; }
+        }
+
+
+        #endregion
+
     }
 
     
