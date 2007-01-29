@@ -25,7 +25,6 @@ namespace EVEMon.SkillPlanner
             m_plannedSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Bold);
             m_prerequisiteSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Regular);
             m_trainablePlanEntryColor = SystemColors.GrayText;
-            m_settings = Settings.GetInstance();
         }
 
         private NewPlannerWindow m_plannerWindow;
@@ -315,7 +314,7 @@ namespace EVEMon.SkillPlanner
                             bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
                             if (isBlocked)
                                 BlockingEntry = "DOWNTIME";
-                            if (!isBlocked)
+                            if (!isBlocked && m_settings != null)
                             {
                                 for (int j = 0; j < m_settings.Schedule.Count; j++)
                                 {
@@ -873,6 +872,15 @@ namespace EVEMon.SkillPlanner
             {
                 RemoveEntry();
             }
+        }
+
+        private void PlanOrderEditorControl_Load(object sender, EventArgs e)
+        {
+            if (this.DesignMode)
+            {
+                return;
+            }
+            m_settings = Settings.GetInstance();
         }
     }
 }

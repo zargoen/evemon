@@ -93,7 +93,6 @@ namespace EVEMon.SkillPlanner
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New Plan";
             this.Shown += new System.EventHandler(this.NewPlanWindow_Shown);
-            this.Load += new System.EventHandler(this.NewPlanWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

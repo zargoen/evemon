@@ -42,10 +42,6 @@ namespace EVEMon.SkillPlanner
             btnOk.Enabled = (!String.IsNullOrEmpty(textBox1.Text));
         }
 
-        private void NewPlanWindow_Load(object sender, EventArgs e)
-        {
-        }
-
         private void NewPlanWindow_Shown(object sender, EventArgs e)
         {
             textBox1.Text = m_result;
