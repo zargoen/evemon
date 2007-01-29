@@ -515,6 +515,7 @@ namespace EVEMon
                 CharLoginInfo cli = tp.Tag as CharLoginInfo;
                 m_settings.CharacterList.Remove(cli);
                 m_settings.RemoveAllPlansFor(cli.CharacterName);
+                m_settings.RemoveCharacterCache(cli.CharacterName);
                 m_settings.Save();
             }
             else if (tp.Tag is CharFileInfo)
@@ -533,6 +534,7 @@ namespace EVEMon
             {
                 m_settings.RemoveAllPlansFor(cfi.Filename);
             }
+            m_settings.RemoveCharacterCache(cfi.CharacterName);
             m_settings.Save();
         }
 
