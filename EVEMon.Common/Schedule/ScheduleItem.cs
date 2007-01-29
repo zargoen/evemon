@@ -391,26 +391,30 @@ namespace EVEMon.Common.Schedule
                     {
                         default:
                         case RecurFrequency.Daily:
-                            if (testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond)))
+                            if ((testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                                (testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond))))
                             {
                                 return true;
                             }
                             break;
                         case RecurFrequency.Weekdays:
-                            if ((testtime.DayOfWeek != DayOfWeek.Saturday && testtime.DayOfWeek != DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond)))
+                            if (((testtime.DayOfWeek != DayOfWeek.Saturday && testtime.DayOfWeek != DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                                (((testtime.DayOfWeek == DayOfWeek.Saturday) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
                             {
                                 return true;
                             }
                             break;
                         case RecurFrequency.Weekends:
-                            if ((testtime.DayOfWeek == DayOfWeek.Saturday || testtime.DayOfWeek == DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond)))
+                            if (((testtime.DayOfWeek == DayOfWeek.Saturday || testtime.DayOfWeek == DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                                ((testtime.DayOfWeek == DayOfWeek.Monday && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
                             {
                                 return true;
                             }
                             break;
                         case RecurFrequency.Weekly:
                             DateTime FirstInstance = m_recurStart.AddDays((m_recurDayOfWeek - m_recurStart.DayOfWeek + 7) % 7);
-                            if (testtime.DayOfWeek == m_recurDayOfWeek && (testtime.Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond)))
+                            if ((testtime.DayOfWeek == m_recurDayOfWeek && (testtime.Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                                ((testtime.AddDays(-1).DayOfWeek == m_recurDayOfWeek && (testtime.AddDays(-1).Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
                             {
                                 return true;
                             }
@@ -435,7 +439,8 @@ namespace EVEMon.Common.Schedule
                                     }
                                     break;
                             }
-                            if ((testtime.Day == m_recurDayOfMonth || testtime.Day == dayofmonthdif) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond)))
+                            if (((testtime.Day == m_recurDayOfMonth || testtime.Day == dayofmonthdif) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                                (((testtime.AddDays(-1).Day == m_recurDayOfMonth || testtime.AddDays(-1).Day == dayofmonthdif) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
                             {
                                 return true;
                             }
