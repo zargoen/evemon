@@ -24,19 +24,27 @@ namespace EVEMon.SkillPlanner
 
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode)
-            {
-                return;
-            }
+            if (this.DesignMode) return;
             m_settings = Settings.GetInstance();
  //           cbSkillFilter.SelectedIndex = 0;
             cbSkillFilter.SelectedIndex = m_settings.ShipBrowserFilter;
             m_ships = Ship.GetShips();
             tbSearchText.Text = m_settings.ShipBrowserSearch;
             lbSearchTextHint .Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            try
+            {
+                if (m_ships != null)
+                    BuildTreeView();
+            }
+            catch (Exception err)
+            {
+                // This occurs when we're in the designer. DesignMode doesn't get set
+                // when the control is a subcontrol of a user control, so we should handle
+                // this here :(
+                ExceptionHandler.LogException(err, true);
+                return;
+            }
 
-            if (m_ships != null)
-                BuildTreeView();
         }
 
         // Filtering code
