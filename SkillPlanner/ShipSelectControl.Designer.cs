@@ -67,6 +67,7 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.TabIndex = 21;
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
+            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearchText_KeyPress);
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
             // 
             // tvShips

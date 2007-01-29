@@ -542,5 +542,14 @@ namespace EVEMon.SkillPlanner
                 this.SelectedSkill = lvi.Tag as Skill;
             }
         }
+
+        private void tbSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 0x01)
+            {
+                tbSearch.SelectAll();
+                e.Handled = true;
+            }
+        }
     }
 }

@@ -36,17 +36,17 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText = new System.Windows.Forms.TextBox();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbDeadspace = new System.Windows.Forms.CheckBox();
+            this.cbOfficer = new System.Windows.Forms.CheckBox();
+            this.cbFaction = new System.Windows.Forms.CheckBox();
+            this.cbTech2 = new System.Windows.Forms.CheckBox();
+            this.cbNamed = new System.Windows.Forms.CheckBox();
+            this.cbTech1 = new System.Windows.Forms.CheckBox();
             this.cbSlotFilter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cbTech1 = new System.Windows.Forms.CheckBox();
-            this.cbNamed = new System.Windows.Forms.CheckBox();
-            this.cbTech2 = new System.Windows.Forms.CheckBox();
-            this.cbFaction = new System.Windows.Forms.CheckBox();
-            this.cbOfficer = new System.Windows.Forms.CheckBox();
-            this.cbDeadspace = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -111,6 +111,7 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.TabIndex = 27;
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
+            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearchText_KeyPress);
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
             // 
             // pbSearchImage
@@ -146,6 +147,78 @@ namespace EVEMon.SkillPlanner
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(185, 156);
             this.panel1.TabIndex = 32;
+            // 
+            // cbDeadspace
+            // 
+            this.cbDeadspace.AutoSize = true;
+            this.cbDeadspace.Location = new System.Drawing.Point(90, 106);
+            this.cbDeadspace.Name = "cbDeadspace";
+            this.cbDeadspace.Size = new System.Drawing.Size(79, 17);
+            this.cbDeadspace.TabIndex = 37;
+            this.cbDeadspace.Text = "Deadspace";
+            this.cbDeadspace.UseVisualStyleBackColor = true;
+            this.cbDeadspace.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
+            // 
+            // cbOfficer
+            // 
+            this.cbOfficer.AutoSize = true;
+            this.cbOfficer.Location = new System.Drawing.Point(6, 107);
+            this.cbOfficer.Name = "cbOfficer";
+            this.cbOfficer.Size = new System.Drawing.Size(59, 17);
+            this.cbOfficer.TabIndex = 36;
+            this.cbOfficer.Text = "Officer";
+            this.cbOfficer.UseVisualStyleBackColor = true;
+            this.cbOfficer.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
+            // 
+            // cbFaction
+            // 
+            this.cbFaction.AutoSize = true;
+            this.cbFaction.Location = new System.Drawing.Point(89, 82);
+            this.cbFaction.Name = "cbFaction";
+            this.cbFaction.Size = new System.Drawing.Size(61, 17);
+            this.cbFaction.TabIndex = 35;
+            this.cbFaction.Text = "Faction";
+            this.cbFaction.UseVisualStyleBackColor = true;
+            this.cbFaction.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
+            // 
+            // cbTech2
+            // 
+            this.cbTech2.AutoSize = true;
+            this.cbTech2.Checked = true;
+            this.cbTech2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTech2.Location = new System.Drawing.Point(6, 83);
+            this.cbTech2.Name = "cbTech2";
+            this.cbTech2.Size = new System.Drawing.Size(58, 17);
+            this.cbTech2.TabIndex = 34;
+            this.cbTech2.Text = "Tech 2";
+            this.cbTech2.UseVisualStyleBackColor = true;
+            this.cbTech2.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
+            // 
+            // cbNamed
+            // 
+            this.cbNamed.AutoSize = true;
+            this.cbNamed.Checked = true;
+            this.cbNamed.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbNamed.Location = new System.Drawing.Point(90, 59);
+            this.cbNamed.Name = "cbNamed";
+            this.cbNamed.Size = new System.Drawing.Size(59, 17);
+            this.cbNamed.TabIndex = 33;
+            this.cbNamed.Text = "Named";
+            this.cbNamed.UseVisualStyleBackColor = true;
+            this.cbNamed.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
+            // 
+            // cbTech1
+            // 
+            this.cbTech1.AutoSize = true;
+            this.cbTech1.Checked = true;
+            this.cbTech1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTech1.Location = new System.Drawing.Point(6, 59);
+            this.cbTech1.Name = "cbTech1";
+            this.cbTech1.Size = new System.Drawing.Size(56, 17);
+            this.cbTech1.TabIndex = 32;
+            this.cbTech1.Text = "Tech I";
+            this.cbTech1.UseVisualStyleBackColor = true;
+            this.cbTech1.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
             // 
             // cbSlotFilter
             // 
@@ -210,78 +283,6 @@ namespace EVEMon.SkillPlanner
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(185, 254);
             this.panel2.TabIndex = 33;
-            // 
-            // cbTech1
-            // 
-            this.cbTech1.AutoSize = true;
-            this.cbTech1.Checked = true;
-            this.cbTech1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTech1.Location = new System.Drawing.Point(6, 59);
-            this.cbTech1.Name = "cbTech1";
-            this.cbTech1.Size = new System.Drawing.Size(56, 17);
-            this.cbTech1.TabIndex = 32;
-            this.cbTech1.Text = "Tech I";
-            this.cbTech1.UseVisualStyleBackColor = true;
-            this.cbTech1.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
-            // 
-            // cbNamed
-            // 
-            this.cbNamed.AutoSize = true;
-            this.cbNamed.Checked = true;
-            this.cbNamed.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbNamed.Location = new System.Drawing.Point(90, 59);
-            this.cbNamed.Name = "cbNamed";
-            this.cbNamed.Size = new System.Drawing.Size(59, 17);
-            this.cbNamed.TabIndex = 33;
-            this.cbNamed.Text = "Named";
-            this.cbNamed.UseVisualStyleBackColor = true;
-            this.cbNamed.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
-            // 
-            // cbTech2
-            // 
-            this.cbTech2.AutoSize = true;
-            this.cbTech2.Checked = true;
-            this.cbTech2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTech2.Location = new System.Drawing.Point(6, 83);
-            this.cbTech2.Name = "cbTech2";
-            this.cbTech2.Size = new System.Drawing.Size(58, 17);
-            this.cbTech2.TabIndex = 34;
-            this.cbTech2.Text = "Tech 2";
-            this.cbTech2.UseVisualStyleBackColor = true;
-            this.cbTech2.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
-            // 
-            // cbFaction
-            // 
-            this.cbFaction.AutoSize = true;
-            this.cbFaction.Location = new System.Drawing.Point(89, 82);
-            this.cbFaction.Name = "cbFaction";
-            this.cbFaction.Size = new System.Drawing.Size(61, 17);
-            this.cbFaction.TabIndex = 35;
-            this.cbFaction.Text = "Faction";
-            this.cbFaction.UseVisualStyleBackColor = true;
-            this.cbFaction.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
-            // 
-            // cbOfficer
-            // 
-            this.cbOfficer.AutoSize = true;
-            this.cbOfficer.Location = new System.Drawing.Point(6, 107);
-            this.cbOfficer.Name = "cbOfficer";
-            this.cbOfficer.Size = new System.Drawing.Size(59, 17);
-            this.cbOfficer.TabIndex = 36;
-            this.cbOfficer.Text = "Officer";
-            this.cbOfficer.UseVisualStyleBackColor = true;
-            this.cbOfficer.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
-            // 
-            // cbDeadspace
-            // 
-            this.cbDeadspace.AutoSize = true;
-            this.cbDeadspace.Location = new System.Drawing.Point(90, 106);
-            this.cbDeadspace.Name = "cbDeadspace";
-            this.cbDeadspace.Size = new System.Drawing.Size(79, 17);
-            this.cbDeadspace.TabIndex = 37;
-            this.cbDeadspace.Text = "Deadspace";
-            this.cbDeadspace.UseVisualStyleBackColor = true;
-            this.cbDeadspace.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
             // 
             // ItemSelectControl
             // 

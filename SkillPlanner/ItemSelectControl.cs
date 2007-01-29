@@ -325,5 +325,15 @@ namespace EVEMon.SkillPlanner
         {
             SetSelectedItem(lbItemResults.SelectedItem as Item);
         }
+
+        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 0x01)
+            {
+                tbSearchText.SelectAll();
+                e.Handled = true;
+            }
+
+        }
     }
 }
