@@ -33,22 +33,28 @@ namespace EVEMon.SkillPlanner
  //           cbSkillFilter.SelectedIndex = 0;
  //           cbSlotFilter.SelectedIndex = 0;
 
-            m_settings = Settings.GetInstance();
-            cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
-            cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
-
-            cbTech1.Checked = m_settings.ShowT1Items;
-            cbNamed.Checked = m_settings.ShowNamedItems;
-            cbTech2.Checked = m_settings.ShowT2Items;
-            cbOfficer.Checked = m_settings.ShowOfficerItems;
-            cbFaction.Checked = m_settings.ShowFactionItems;
-            cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
-
             try
             {
+                m_settings = Settings.GetInstance();
+                cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
+                cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
+
+                cbTech1.Checked = m_settings.ShowT1Items;
+                cbNamed.Checked = m_settings.ShowNamedItems;
+                cbTech2.Checked = m_settings.ShowT2Items;
+                cbOfficer.Checked = m_settings.ShowOfficerItems;
+                cbFaction.Checked = m_settings.ShowFactionItems;
+                cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
+
                 m_rootCategory = ItemCategory.GetRootCategory();
+
+                // needs to be after we set the root category.
+                tbSearchText.Text = m_settings.ItemBrowserSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+                if (m_plan != null)
+                    BuildTreeView();
             }
-            catch (InvalidCastException err)
+            catch (Exception err)
             {
                 // This occurs when we're in the designer. DesignMode doesn't get set
                 // when the control is a subcontrol of a user control, so we should handle
@@ -56,11 +62,6 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException(err, true);
                 return;
             }
-
-            // needs to be after we set the root category.
-            tbSearchText.Text = m_settings.ItemBrowserSearch;
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-            BuildTreeView();
         }
 
         // Filtering code

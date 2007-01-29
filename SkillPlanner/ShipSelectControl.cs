@@ -24,15 +24,19 @@ namespace EVEMon.SkillPlanner
 
         private void ShipSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode) return;
-            m_settings = Settings.GetInstance();
- //           cbSkillFilter.SelectedIndex = 0;
-            cbSkillFilter.SelectedIndex = m_settings.ShipBrowserFilter;
-            m_ships = Ship.GetShips();
-            tbSearchText.Text = m_settings.ShipBrowserSearch;
-            lbSearchTextHint .Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            if (this.DesignMode)
+            {
+                return;
+            }
+
             try
             {
+                m_settings = Settings.GetInstance();
+                //cbSkillFilter.SelectedIndex = 0;
+                cbSkillFilter.SelectedIndex = m_settings.ShipBrowserFilter;
+                m_ships = Ship.GetShips();
+                tbSearchText.Text = m_settings.ShipBrowserSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
                 if (m_ships != null)
                     BuildTreeView();
             }
@@ -44,7 +48,6 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException(err, true);
                 return;
             }
-
         }
 
         // Filtering code

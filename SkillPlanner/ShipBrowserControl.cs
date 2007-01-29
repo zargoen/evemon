@@ -472,10 +472,7 @@ namespace EVEMon.SkillPlanner
             }
             return -1;
         }
-
-                
     }
-
 }
 
 

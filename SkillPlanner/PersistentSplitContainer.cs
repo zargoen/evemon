@@ -23,16 +23,26 @@ namespace EVEMon.SkillPlanner
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-
-            if (!String.IsNullOrEmpty(m_rememberDistanceKey))
+            try
             {
-                Settings s = Settings.GetInstance();
-                if (s.SavedSplitterDistances.ContainsKey(m_rememberDistanceKey))
+                if (!String.IsNullOrEmpty(m_rememberDistanceKey))
                 {
-                    int d = s.SavedSplitterDistances[m_rememberDistanceKey];
-                    d = this.VerifyValidSplitterDistance(d);
-                    this.SplitterDistance = d;
+                    Settings s = Settings.GetInstance();
+                    if (s.SavedSplitterDistances.ContainsKey(m_rememberDistanceKey))
+                    {
+                        int d = s.SavedSplitterDistances[m_rememberDistanceKey];
+                        d = this.VerifyValidSplitterDistance(d);
+                        this.SplitterDistance = d;
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                // This occurs when we're in the designer. DesignMode doesn't get set
+                // when the control is a subcontrol of a user control, so we should handle
+                // this here :(
+                ExceptionHandler.LogException(err, true);
+                return;
             }
         }
 

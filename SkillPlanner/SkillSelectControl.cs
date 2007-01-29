@@ -493,13 +493,23 @@ namespace EVEMon.SkillPlanner
  
 //            cbSkillFilter.SelectedIndex = 0;
 //            cbSorting.SelectedIndex = 0;
-
-            m_settings = Settings.GetInstance();
-            cbSkillFilter.SelectedIndex = m_settings.SkillBrowserFilter;
-            cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
-            cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
-            tbSearch.Text = m_settings.SkillBrowserSearch;
-            lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
+            try
+            {
+                m_settings = Settings.GetInstance();
+                cbSkillFilter.SelectedIndex = m_settings.SkillBrowserFilter;
+                cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
+                cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
+                tbSearch.Text = m_settings.SkillBrowserSearch;
+                lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
+            }
+            catch (Exception err)
+            {
+                // This occurs when we're in the designer. DesignMode doesn't get set
+                // when the control is a subcontrol of a user control, so we should handle
+                // this here :(
+                ExceptionHandler.LogException(err, true);
+                return;
+            }
         }
 
         private void cbShowNonPublic_CheckedChanged(object sender, EventArgs e)

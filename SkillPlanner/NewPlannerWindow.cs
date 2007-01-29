@@ -146,6 +146,10 @@ namespace EVEMon.SkillPlanner
 
         private void NewPlannerWindow_Load(object sender, EventArgs e)
         {
+            if (this.DesignMode)
+            {
+                return;
+            }
             // Set the title
             this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
             this.RememberPositionKey = "SkillPlannerWindow"; 
@@ -584,6 +588,10 @@ namespace EVEMon.SkillPlanner
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (this.DesignMode)
+            {
+                return;
+            }
             m_settings.PlannerTab = tabControl.SelectedIndex;
         }
 

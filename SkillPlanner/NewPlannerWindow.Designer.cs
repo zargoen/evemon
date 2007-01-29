@@ -45,12 +45,12 @@ namespace EVEMon.SkillPlanner
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpPlanQueue = new System.Windows.Forms.TabPage();
-            this.tpSkillBrowser = new System.Windows.Forms.TabPage();
-            this.tpShipBrowser = new System.Windows.Forms.TabPage();
-            this.tpItemBrowser = new System.Windows.Forms.TabPage();
             this.planEditor = new EVEMon.SkillPlanner.PlanOrderEditorControl();
+            this.tpSkillBrowser = new System.Windows.Forms.TabPage();
             this.skillBrowser = new EVEMon.SkillPlanner.SkillBrowser();
+            this.tpShipBrowser = new System.Windows.Forms.TabPage();
             this.shipBrowser = new EVEMon.SkillPlanner.ShipBrowserControl();
+            this.tpItemBrowser = new System.Windows.Forms.TabPage();
             this.itemBrowser = new EVEMon.SkillPlanner.ItemBrowserControl();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -66,7 +66,7 @@ namespace EVEMon.SkillPlanner
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.slblStatusText,
             this.tslSuggestion});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 464);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(658, 22);
             this.statusStrip1.TabIndex = 1;
@@ -183,7 +183,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Location = new System.Drawing.Point(0, 25);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(658, 439);
+            this.tabControl.Size = new System.Drawing.Size(658, 571);
             this.tabControl.TabIndex = 4;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -193,7 +193,7 @@ namespace EVEMon.SkillPlanner
             this.tpPlanQueue.Location = new System.Drawing.Point(4, 22);
             this.tpPlanQueue.Name = "tpPlanQueue";
             this.tpPlanQueue.Padding = new System.Windows.Forms.Padding(3);
-            this.tpPlanQueue.Size = new System.Drawing.Size(650, 413);
+            this.tpPlanQueue.Size = new System.Drawing.Size(650, 545);
             this.tpPlanQueue.TabIndex = 1;
             this.tpPlanQueue.Text = "Plan Queue";
             this.tpPlanQueue.UseVisualStyleBackColor = true;
@@ -203,7 +203,7 @@ namespace EVEMon.SkillPlanner
             this.tpSkillBrowser.Controls.Add(this.skillBrowser);
             this.tpSkillBrowser.Location = new System.Drawing.Point(4, 22);
             this.tpSkillBrowser.Name = "tpSkillBrowser";
-            this.tpSkillBrowser.Size = new System.Drawing.Size(650, 413);
+            this.tpSkillBrowser.Size = new System.Drawing.Size(650, 545);
             this.tpSkillBrowser.TabIndex = 0;
             this.tpSkillBrowser.Text = "Skill Browser";
             this.tpSkillBrowser.UseVisualStyleBackColor = true;
@@ -275,7 +275,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 486);
+            this.ClientSize = new System.Drawing.Size(658, 618);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
