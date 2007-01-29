@@ -129,7 +129,7 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum.Image = ((System.Drawing.Image)(resources.GetObject("tsbCopyForum.Image")));
             this.tsbCopyForum.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopyForum.Name = "tsbCopyForum";
-            this.tsbCopyForum.Size = new System.Drawing.Size(102, 22);
+            this.tsbCopyForum.Size = new System.Drawing.Size(113, 22);
             this.tsbCopyForum.Text = "Copy to Clipboard";
             this.tsbCopyForum.Click += new System.EventHandler(this.tsbCopyForum_Click);
             // 
@@ -185,6 +185,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(658, 439);
             this.tabControl.TabIndex = 4;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // tpPlanQueue
             // 
@@ -229,16 +230,18 @@ namespace EVEMon.SkillPlanner
             // 
             // planEditor
             // 
+            this.planEditor.DimUntrainable = false;
             this.planEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.planEditor.HighlightPlannedSkills = false;
             this.planEditor.HighlightPrerequisites = false;
-            this.planEditor.Location = new System.Drawing.Point(0, 0);
+            this.planEditor.Location = new System.Drawing.Point(3, 3);
             this.planEditor.Name = "planEditor";
             this.planEditor.Plan = null;
-            this.planEditor.Size = new System.Drawing.Size(650, 413);
+            this.planEditor.Size = new System.Drawing.Size(644, 407);
             this.planEditor.TabIndex = 2;
             this.planEditor.WorksafeMode = false;
+            this.planEditor.TabIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // skillBrowser
             // 
