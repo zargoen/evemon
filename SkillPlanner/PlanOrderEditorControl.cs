@@ -763,18 +763,27 @@ namespace EVEMon.SkillPlanner
             {
                 // Now reselect the skills that we had selected before
                 // the selection is lost in the call to PlanChanged()
+                int index = -1;
+                int pos = 0;
+
                 foreach (ListViewItem lvi in lvSkills.Items)
                 {
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
                     string k = pe.SkillName + " " + pe.Level.ToString();
                     if (seld.ContainsKey(k))
                     {
+                        if (index == -1)
+                        {
+                            lvSkills.EnsureVisible(pos);
+                            index = pos;
+                        }
                         lvi.Selected = true;
                     }
                     else
                     {
                         lvi.Selected = false;
                     }
+                    pos++;
                 }
                 lvSkills.EndUpdate();
             }
@@ -811,6 +820,8 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
+                int index = -1;
+                int pos = 0;
                 // Now reselect the skills that we had selected before
                 // the selection is lost in the call to PlanChanged()
                 foreach (ListViewItem lvi in lvSkills.Items)
@@ -819,12 +830,18 @@ namespace EVEMon.SkillPlanner
                     string k = pe.SkillName + " " + pe.Level.ToString();
                     if (seld.ContainsKey(k))
                     {
+                        if (index == -1)
+                        {
+                            lvSkills.EnsureVisible(pos);
+                            index = pos;
+                        }
                         lvi.Selected = true;
                     }
                     else
                     {
                         lvi.Selected = false;
                     }
+                    pos++;
                 }
                 lvSkills.EndUpdate();
             }

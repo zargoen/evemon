@@ -107,6 +107,8 @@ namespace EVEMon.SkillPlanner
             {
                 ListViewItemsDragged(this, new EventArgs());
             }
+            base.EnsureVisible(dropIndex);
+            
         }
 
         private int m_dropMarkerOn = -1;
