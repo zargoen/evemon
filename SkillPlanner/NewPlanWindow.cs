@@ -11,6 +11,12 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+        private String m_planName = String.Empty;
+        public String PlanName
+        {
+            set { m_planName = value; }
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -45,8 +51,10 @@ namespace EVEMon.SkillPlanner
         private void NewPlanWindow_Shown(object sender, EventArgs e)
         {
             textBox1.Text = m_result;
+            textBox1.Text = m_planName;
             textBox1.SelectAll();
             m_result = String.Empty;
         }
+
     }
 }

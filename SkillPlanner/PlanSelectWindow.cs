@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -26,6 +27,7 @@ namespace EVEMon.SkillPlanner
         private Settings m_settings;
         private CharacterInfo m_grandCharacterInfo;
         private string m_charKey;
+        private bool m_planOrderChanged = false;
 
         public string CharKey
         {
@@ -35,16 +37,35 @@ namespace EVEMon.SkillPlanner
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (m_planOrderChanged)
+            {
+                SavePlanOrder();
+            }
             DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void PlanSelectWindow_Load(object sender, EventArgs e)
+        private void SavePlanOrder()
         {
-            PopulatePlanList();
+            List<string> newOrder = new List<string>();
+            for (int i = 1; i < lbPlanList.Items.Count; i++)
+            {
+                newOrder.Add((string)lbPlanList.Items[i].Text);
+            }
+            m_settings.RearrangePlansFor(m_charKey, newOrder);
+
         }
 
-        private void PopulatePlanList()
+        private void PlanSelectWindow_Load(object sender, EventArgs e)
+        {
+            PopulatePlanList(true);
+            m_columnSorter = new PlanListSorter(this);
+            lbPlanList.ListViewItemSorter = null;
+        }
+
+        private Dictionary<Plan,TimeSpan> planCache = null;
+
+        private void PopulatePlanList(bool calculateTime)
         {
             lbPlanList.BeginUpdate();
             try
@@ -52,21 +73,22 @@ namespace EVEMon.SkillPlanner
                 lbPlanList.Items.Clear();
                 lbPlanList.Items.Add("<New Plan>");
 
-                foreach (string planName in m_settings.GetPlansForCharacter(m_charKey))
+                if (planCache == null || calculateTime) 
                 {
-					Plan tmp_plan = m_settings.GetPlanByName(m_charKey, planName);
-                    if (tmp_plan.GrandCharacterInfo == null)
-                    {
-                        tmp_plan.GrandCharacterInfo = m_grandCharacterInfo;
-                    }
-					TimeSpan ts_plan = tmp_plan.GetTotalTime(null);
-					ListViewItem lvi = new ListViewItem(planName);
-					lvi.Text = planName;
-					lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(	ts_plan,
+                    calculateTime = true;
+                    planCache = new Dictionary<Plan,TimeSpan>();
+                }
+                foreach (string PlanName in m_settings.GetPlansForCharacter(m_charKey))
+                {
+                    Plan tmpPlan = m_settings.GetPlanByName(m_charKey, PlanName);
+                    TimeSpan tsPlan = FindPlanTimeSpan(tmpPlan,calculateTime);
+                	ListViewItem lvi = new ListViewItem(PlanName);
+					lvi.Text = PlanName;
+					lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(	tsPlan,
                                                                             DescriptiveTextOptions.FullText |
                                                                             DescriptiveTextOptions.IncludeCommas |
                                                                             DescriptiveTextOptions.SpaceText));
-					lvi.SubItems.Add(tmp_plan.UniqueSkillCount.ToString());
+					lvi.SubItems.Add(tmpPlan.UniqueSkillCount.ToString());
 					lbPlanList.Items.Add(lvi);
                 }
             }
@@ -74,6 +96,31 @@ namespace EVEMon.SkillPlanner
             {
                 lbPlanList.EndUpdate();
             }
+        }
+
+        private TimeSpan FindPlanTimeSpan(Plan plan, bool ignoreCache)
+        {
+            if (planCache == null) 
+            {
+                ignoreCache = true;
+                planCache = new Dictionary<Plan, TimeSpan>();
+            }               
+
+            if (plan.GrandCharacterInfo == null)
+            {
+                plan.GrandCharacterInfo = m_grandCharacterInfo;
+            }
+            TimeSpan tsPlan;
+            if (!ignoreCache && planCache.ContainsKey(plan))
+            {
+                tsPlan = planCache[plan];
+            }
+            else
+            {
+                tsPlan = plan.GetTotalTime(null);
+                planCache.Add(plan,tsPlan);
+           }
+            return tsPlan;
         }
 
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
@@ -138,11 +185,11 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             entryInMergedPlan.PlanGroups.Add(p.Name);
-                            foreach (string subplanName in entry.PlanGroups)
+                            foreach (string subPlanName1 in entry.PlanGroups)
                             {
-                                if (!entryInMergedPlan.PlanGroups.Contains(subplanName))
+                                if (!entryInMergedPlan.PlanGroups.Contains(subPlanName1))
                                 {
-                                    entryInMergedPlan.PlanGroups.Add(subplanName);
+                                    entryInMergedPlan.PlanGroups.Add(subPlanName1);
                                 }
                             }
                         }
@@ -157,6 +204,10 @@ namespace EVEMon.SkillPlanner
             {
                 string s = (string) lbPlanList.SelectedItems[0].Text;
                 m_result = m_settings.GetPlanByName(m_charKey, s);
+            }
+            if (m_planOrderChanged)
+            {
+                SavePlanOrder();
             }
             DialogResult = DialogResult.OK;
             this.Close();
@@ -210,9 +261,9 @@ namespace EVEMon.SkillPlanner
 
                 using (NewPlanWindow npw = new NewPlanWindow())
                 {
-                    string oldPlanName = "";
-                    string newPlanName = "";
-                    while (newPlanName == "")
+                    string oldPlanName1 = "";
+                    string newPlanName1 = "";
+                    while (newPlanName1 == "")
                     {
                         npw.Text = "Load Plan";
                         npw.Result = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
@@ -221,21 +272,21 @@ namespace EVEMon.SkillPlanner
                         {
                             return;
                         }
-                        string planName = npw.Result;
+                        string PlanName1 = npw.Result;
 
-                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, planName);
+                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, PlanName1);
                         if (oldPlan == null)
                         {
                             // No plan of the same name, so no replacement necessary
-                            oldPlanName = "";
-                            newPlanName = planName;
+                            oldPlanName1 = "";
+                            newPlanName1 = PlanName1;
                         }
                         else
                         {
                             // Should we try replacing the original plan?
-                            string message = "Plan with name '" + planName + "' already exists. Replace plan '" +
-                                             planName + "'?";
-                            string caption = "Replace Plan '" + planName + "'";
+                            string message = "Plan with name '" + PlanName1 + "' already exists. Replace plan '" +
+                                             PlanName1 + "'?";
+                            string caption = "Replace Plan '" + PlanName1 + "'";
                             DialogResult result;
 
                             // Display the MessageBox.
@@ -243,15 +294,15 @@ namespace EVEMon.SkillPlanner
                             if (result == DialogResult.Yes)
                             {
                                 // Rename the original plan for removal once we've loaded the new one
-                                oldPlanName = planName + "_BACKUP";
-                                m_settings.RenamePlanFor(m_charKey, planName, oldPlanName);
-                                newPlanName = planName;
+                                oldPlanName1 = PlanName1 + "_BACKUP";
+                                m_settings.RenamePlanFor(m_charKey, PlanName1, oldPlanName1);
+                                newPlanName1 = PlanName1;
                             }
                             else
                             {
                                 // User does not want to replace original plan, so get them to choose a new name
-                                oldPlanName = "";
-                                newPlanName = "";
+                                oldPlanName1 = "";
+                                newPlanName1 = "";
                             }
                         }
                     }
@@ -259,16 +310,16 @@ namespace EVEMon.SkillPlanner
                     // Now we have a valid name for the new plan, and potentially an old plan to be removed.
                     try
                     {
-                        m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName);
+                        m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName1);
                         
                     }
                     catch (ApplicationException err)
                     {
                         ExceptionHandler.LogException(err, true);
                         // Rename the old plan to it's original name
-                        if (oldPlanName != "")
+                        if (oldPlanName1 != "")
                         {
-                            m_settings.RenamePlanFor(m_charKey, oldPlanName, newPlanName);
+                            m_settings.RenamePlanFor(m_charKey, oldPlanName1, newPlanName1);
                         }
 
                         MessageBox.Show("Could not add the plan:\n" + err.Message,
@@ -277,9 +328,9 @@ namespace EVEMon.SkillPlanner
                     }
 
                     // We have successfully loaded the plan so remove the old one for good if needed
-                    if (oldPlanName != "")
+                    if (oldPlanName1 != "")
                     {
-                        m_settings.RemovePlanFor(m_charKey, oldPlanName);
+                        m_settings.RemovePlanFor(m_charKey, oldPlanName1);
                     }
                 }
             }
@@ -290,8 +341,9 @@ namespace EVEMon.SkillPlanner
                                 "Could Not Load Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            PopulatePlanList();
+            PopulatePlanList(true);
         }
+
 
         private void tsbLoadPlan_Click(object sender, EventArgs e)
         {
@@ -302,13 +354,14 @@ namespace EVEMon.SkillPlanner
         {
             using (NewPlanWindow f = new NewPlanWindow())
             {
+                string oldName = (string) lbPlanList.SelectedItems[0].Text;
                 f.Text = "Rename Plan";
+                f.PlanName = oldName;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
                 {
                     return;
                 }
-                string oldName = (string) lbPlanList.SelectedItems[0].Text;
                 string newName = f.Result;
                 if (oldName == newName)
                 {
@@ -323,67 +376,47 @@ namespace EVEMon.SkillPlanner
                 m_settings.RenamePlanFor(m_charKey,
                                          oldName, f.Result);
                 lbPlanList.SelectedItems.Clear();
-                PopulatePlanList();
+                PopulatePlanList(false);
             }
         }
 
         private void tsbMoveUp_Click(object sender, EventArgs e)
         {
+            m_planOrderChanged = true;
             int idx = lbPlanList.SelectedIndices[0];
-            List<string> newOrder = new List<string>();
-            for (int i = 1; i < lbPlanList.Items.Count; i++)
-            {
-                if (i == idx - 1)
-                {
-                    newOrder.Add((string) lbPlanList.SelectedItems[0].Text);
-                }
-                if (i != idx)
-                {
-                    newOrder.Add((string) lbPlanList.Items[i].Text);
-                }
-            }
-            FinalizePlanReorder(idx - 1, newOrder);
-        }
+            // deselect
+            lbPlanList.SelectedItems[0].Selected = false;
 
-        private void FinalizePlanReorder(int idx, List<string> newOrder)
-        {
-            m_settings.RearrangePlansFor(m_charKey, newOrder);
+            // move
+            ListViewItem lvi = lbPlanList.Items[idx];
+            lbPlanList.Items.RemoveAt(idx);
+            lbPlanList.Items.Insert(idx - 1, lvi);
 
-            lbPlanList.BeginUpdate();
-            try
-            {
-                PopulatePlanList();
-                lbPlanList.Items[idx].Selected = true;
-            }
-            finally
-            {
-                lbPlanList.EndUpdate();
-            }
+            // reselect
+            lbPlanList.Items[idx - 1].Selected = true;
         }
 
         private void tsbMoveDown_Click(object sender, EventArgs e)
         {
+            m_planOrderChanged = true;
             int idx = lbPlanList.SelectedIndices[0];
-            List<string> newOrder = new List<string>();
-            for (int i = 1; i < lbPlanList.Items.Count; i++)
-            {
-                if (i != idx)
-                {
-                    newOrder.Add((string) lbPlanList.Items[i].Text);
-                }
-                if (i == idx + 1)
-                {
-                    newOrder.Add((string) lbPlanList.SelectedItems[0].Text);
-                }
-            }
-            FinalizePlanReorder(idx + 1, newOrder);
+            // deselect
+            lbPlanList.SelectedItems[0].Selected = false;
+
+            // move
+            ListViewItem lvi = lbPlanList.Items[idx];
+            lbPlanList.Items.RemoveAt(idx);
+            lbPlanList.Items.Insert(idx + 1, lvi);
+
+            // reselect
+            lbPlanList.Items[idx + 1].Selected = true;
         }
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            string planName = (string) lbPlanList.SelectedItems[0].Text;
+            string PlanName1 = (string) lbPlanList.SelectedItems[0].Text;
 
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + planName +
+            DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + PlanName1 +
                                               "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                                               MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
@@ -391,9 +424,9 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            m_settings.RemovePlanFor(m_charKey, planName);
+            m_settings.RemovePlanFor(m_charKey, PlanName1);
             lbPlanList.SelectedItems.Clear();
-            PopulatePlanList();
+            PopulatePlanList(false);
         }
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -403,5 +436,185 @@ namespace EVEMon.SkillPlanner
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e) {
 
 		}
+
+ 
+        private void contextMenuStrip1_Opening_1(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // If multiple items selected, grey out the context menu
+            if (lbPlanList.SelectedItems.Count != 1)
+            {
+                deletePlanToolStripMenuItem.Enabled = false;
+                renamePlanToolStripMenuItem.Enabled = false;
+                if (lbPlanList.SelectedItems.Count == 0)
+                {
+                    openPlanToolStripMenuItem.Enabled = false;
+                }
+                else
+                {
+                    openPlanToolStripMenuItem.Text = "Merge Plans";
+                }
+            }
+            else
+            {
+                if (lbPlanList.SelectedItems[0].Text == "<New Plan>")
+                {
+                    e.Cancel = true;
+                }
+
+                else
+                {
+                    deletePlanToolStripMenuItem.Enabled = true;
+                    renamePlanToolStripMenuItem.Enabled = true;
+                    openPlanToolStripMenuItem.Enabled = true;
+                    openPlanToolStripMenuItem.Text = "Open Plan";
+                }
+            }
+        }
+
+        private void lbPlanList_DragEnter(object sender, DragEventArgs e)
+        {
+            // Don't allow <New Plan> to be dragged!
+            if (lbPlanList.SelectedItems.Count == 1 && lbPlanList.SelectedItems[0].Index == 0)
+            {
+   
+            }
+        }
+
+        private void lbPlanList_ListViewItemsDragging(object sender, ListViewDragEventArgs e)
+        {
+            // Don't allow <New Plan> to be dragged!
+            if (lbPlanList.SelectedItems.Count == 1 && lbPlanList.SelectedItems[0].Index == 0)
+            {
+                e.Cancel = true;
+            }
+            // don't allow stuff to be dragged before <New Plan>!
+            else if (e.MovingTo == 0)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                m_planOrderChanged = true;
+            }
+        }
+
+        #region Column Sorting
+
+        private PlanListSorter m_columnSorter;
+
+        public class PlanListSorter : IComparer
+        {
+
+            public PlanListSorter(PlanSelectWindow psw)
+            {
+                OrderOfSort = SortOrder.None;
+                SortColumn = 0;
+                m_planSelectWindow = psw;
+            }
+
+            private PlanSelectWindow m_planSelectWindow;
+            private int m_sortColumn;
+
+            public int SortColumn
+            {
+                get { return m_sortColumn; }
+                set { m_sortColumn = value; }
+            }
+
+            public int Compare(object x, object y)
+            {
+                int compareResult = 0;
+                ListViewItem a = (ListViewItem)x;
+                ListViewItem b = (ListViewItem)y;
+
+                // ALWAYS ensure that New Plan is first!
+                if (a.Text == "<New Plan>") 
+                {
+                    compareResult = -1;
+                }
+                else if (b.Text == "<New Plan>")
+                {
+                    compareResult = 1;
+                }
+                else
+                {
+                    if (m_sortOrder == SortOrder.Descending)
+                    {
+                        ListViewItem tmp = b;
+                        b=a;
+                        a=tmp;
+                    }
+
+                    switch (m_sortColumn)
+                    {
+                        case 0: // sort by name
+                             compareResult = String.Compare(a.Text, b.Text);
+                            break;
+                        case 1: // Time
+                            
+                            Settings s = Settings.GetInstance();
+                            Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, a.Text);
+                            TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p,false);
+                            p = s.GetPlanByName(m_planSelectWindow.m_charKey, b.Text);
+                            TimeSpan t2 = m_planSelectWindow.FindPlanTimeSpan(p, false);
+                            compareResult = TimeSpan.Compare(t1, t2);
+                            if (compareResult == 0)
+                                compareResult = String.Compare(a.Text, b.Text);
+                            break;
+                        case 2:  //# skills
+                            int s1 = Int32.Parse(a.SubItems[2].Text);
+                            int s2 = Int32.Parse(b.SubItems[2].Text);
+                            compareResult = s1 - s2;
+                            if (compareResult == 0)
+                                compareResult = String.Compare(a.Text, b.Text);
+                            break;
+                    }
+                }
+                return compareResult;
+            }
+
+
+            private SortOrder  m_sortOrder = SortOrder.None;
+
+            public SortOrder  OrderOfSort
+            {
+                get { return m_sortOrder; }
+                set { m_sortOrder = value; }
+            }
+	
+	
+        }
+  
+        private void lbPlanList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            m_planOrderChanged = true;
+
+            if (e.Column == m_columnSorter.SortColumn)
+            {
+                // already sorting on this column so swap sort order
+                if (m_columnSorter.OrderOfSort == SortOrder.Ascending)
+                {
+                    m_columnSorter.OrderOfSort = SortOrder.Descending;
+                }
+                else
+                {
+                    m_columnSorter.OrderOfSort = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                m_columnSorter.SortColumn = e.Column;
+                m_columnSorter.OrderOfSort = SortOrder.Ascending;
+            }
+            lbPlanList.ListViewItemSorter = m_columnSorter;
+            Cursor = Cursors.WaitCursor;
+            lbPlanList.Sort();
+            Cursor = Cursors.Default;
+            // Now Disable the sort so users can still drag items manually
+            lbPlanList.ListViewItemSorter = null;
+
+        }
+
+        #endregion
     }
 }
