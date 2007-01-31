@@ -82,7 +82,7 @@ namespace EVEMon.SkillPlanner
                 {
                     Plan tmpPlan = m_settings.GetPlanByName(m_charKey, PlanName);
                     TimeSpan tsPlan = FindPlanTimeSpan(tmpPlan,calculateTime);
-                	ListViewItem lvi = new ListViewItem(PlanName);
+                	ListViewItem lvi = new ListViewItem(PlanName); 
 					lvi.Text = PlanName;
 					lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(	tsPlan,
                                                                             DescriptiveTextOptions.FullText |
@@ -375,8 +375,7 @@ namespace EVEMon.SkillPlanner
                 }
                 m_settings.RenamePlanFor(m_charKey,
                                          oldName, f.Result);
-                lbPlanList.SelectedItems.Clear();
-                PopulatePlanList(false);
+                lbPlanList.SelectedItems[0].Text = newName;
             }
         }
 
@@ -425,8 +424,8 @@ namespace EVEMon.SkillPlanner
             }
 
             m_settings.RemovePlanFor(m_charKey, PlanName1);
+            lbPlanList.Items.RemoveAt(lbPlanList.SelectedIndices[0]);
             lbPlanList.SelectedItems.Clear();
-            PopulatePlanList(false);
         }
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
