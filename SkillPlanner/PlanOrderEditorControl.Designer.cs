@@ -34,6 +34,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
             this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.miRemoveFromPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miPlanGroups = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,11 +62,12 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote,
             this.miShowInSkillBrowser,
             this.toolStripMenuItem1,
+            this.miExportPlan,
             this.miRemoveFromPlan,
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(197, 104);
+            this.cmsContextMenu.Size = new System.Drawing.Size(197, 126);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -86,6 +88,13 @@ namespace EVEMon.SkillPlanner
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(193, 6);
+            // 
+            // miExportPlan
+            // 
+            this.miExportPlan.Name = "miExportPlan";
+            this.miExportPlan.Size = new System.Drawing.Size(196, 22);
+            this.miExportPlan.Text = "Create Sub-plan...";
+            this.miExportPlan.Click += new System.EventHandler(this.miExportPlan_Click);
             // 
             // miRemoveFromPlan
             // 
@@ -275,5 +284,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miPlanGroups;
+        private System.Windows.Forms.ToolStripMenuItem miExportPlan;
     }
 }

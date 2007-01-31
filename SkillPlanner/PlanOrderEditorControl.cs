@@ -647,6 +647,15 @@ namespace EVEMon.SkillPlanner
             {
                 miPlanGroups.Enabled = false;
             }
+            if (lvSkills.SelectedItems.Count >= 1)
+            {
+                miExportPlan.Enabled = true;
+            }
+            else 
+            {
+                miExportPlan.Enabled = false;
+            }
+
         }
 
         private void tsb_Click(object sender, EventArgs e)
@@ -727,6 +736,59 @@ namespace EVEMon.SkillPlanner
                 Program.Settings.Save();
             }
         }
+        private void miExportPlan_Click(object sender, EventArgs e)
+        {
+            bool doAgain = true;
+            while (doAgain)
+            {
+
+                using (NewPlanWindow npw = new NewPlanWindow())
+                {
+                    DialogResult dr = npw.ShowDialog();
+                    if (dr == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                    string planName = npw.Result;
+                    Plan newPlan = new Plan();
+                    newPlan.Name = planName;
+
+                    foreach (ListViewItem lvi in lvSkills.SelectedItems)
+                    {
+                        Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
+                        newPlan.PlanTo(Skill.AllSkills[newPe.SkillName], newPe.Level,"Exported from " + m_plan.Name);
+                    }
+                    // Enforces proper ordering too!
+                    newPlan.CheckForMissingPrerequisites();
+                    try
+                    {
+                        string planKey = m_plan.GrandCharacterInfo.Name;
+                        // Check if the character is file based..
+                        foreach (CharFileInfo cfi in m_settings.CharFileList)
+                        {
+                            if (cfi.CharacterName.Equals(m_plan.GrandCharacterInfo.Name))
+                            {
+                                planKey = cfi.Filename;
+                            }
+                        }
+                        m_settings.AddPlanFor(planKey, newPlan, planName);
+                        doAgain = false;
+                    }
+                    catch (ApplicationException err)
+                    {
+                        ExceptionHandler.LogException(err, true);
+                        DialogResult xdr =
+                            MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel,
+                                            MessageBoxIcon.Error);
+                        if (xdr == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion Context Menu
 
         #region Plan Re-Ordering

@@ -113,6 +113,7 @@ namespace EVEMon.SkillPlanner
             this.tsddbPlans.Name = "tsddbPlans";
             this.tsddbPlans.Size = new System.Drawing.Size(88, 22);
             this.tsddbPlans.Text = "Select Plan";
+            this.tsddbPlans.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tsddbPlans_MouseDown);
             this.tsddbPlans.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsddbPlans_DropDownItemClicked);
             // 
             // tsbSaveAs
@@ -198,36 +199,6 @@ namespace EVEMon.SkillPlanner
             this.tpPlanQueue.Text = "Plan Queue";
             this.tpPlanQueue.UseVisualStyleBackColor = true;
             // 
-            // tpSkillBrowser
-            // 
-            this.tpSkillBrowser.Controls.Add(this.skillBrowser);
-            this.tpSkillBrowser.Location = new System.Drawing.Point(4, 22);
-            this.tpSkillBrowser.Name = "tpSkillBrowser";
-            this.tpSkillBrowser.Size = new System.Drawing.Size(650, 545);
-            this.tpSkillBrowser.TabIndex = 0;
-            this.tpSkillBrowser.Text = "Skill Browser";
-            this.tpSkillBrowser.UseVisualStyleBackColor = true;
-            // 
-            // tpShipBrowser
-            // 
-            this.tpShipBrowser.Controls.Add(this.shipBrowser);
-            this.tpShipBrowser.Location = new System.Drawing.Point(4, 22);
-            this.tpShipBrowser.Name = "tpShipBrowser";
-            this.tpShipBrowser.Size = new System.Drawing.Size(650, 413);
-            this.tpShipBrowser.TabIndex = 2;
-            this.tpShipBrowser.Text = "Ship Browser";
-            this.tpShipBrowser.UseVisualStyleBackColor = true;
-            // 
-            // tpItemBrowser
-            // 
-            this.tpItemBrowser.Controls.Add(this.itemBrowser);
-            this.tpItemBrowser.Location = new System.Drawing.Point(4, 22);
-            this.tpItemBrowser.Name = "tpItemBrowser";
-            this.tpItemBrowser.Size = new System.Drawing.Size(650, 413);
-            this.tpItemBrowser.TabIndex = 3;
-            this.tpItemBrowser.Text = "Item Browser";
-            this.tpItemBrowser.UseVisualStyleBackColor = true;
-            // 
             // planEditor
             // 
             this.planEditor.DimUntrainable = false;
@@ -238,10 +209,20 @@ namespace EVEMon.SkillPlanner
             this.planEditor.Location = new System.Drawing.Point(3, 3);
             this.planEditor.Name = "planEditor";
             this.planEditor.Plan = null;
-            this.planEditor.Size = new System.Drawing.Size(644, 407);
+            this.planEditor.Size = new System.Drawing.Size(644, 539);
             this.planEditor.TabIndex = 2;
             this.planEditor.WorksafeMode = false;
             this.planEditor.TabIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
+            // 
+            // tpSkillBrowser
+            // 
+            this.tpSkillBrowser.Controls.Add(this.skillBrowser);
+            this.tpSkillBrowser.Location = new System.Drawing.Point(4, 22);
+            this.tpSkillBrowser.Name = "tpSkillBrowser";
+            this.tpSkillBrowser.Size = new System.Drawing.Size(650, 545);
+            this.tpSkillBrowser.TabIndex = 0;
+            this.tpSkillBrowser.Text = "Skill Browser";
+            this.tpSkillBrowser.UseVisualStyleBackColor = true;
             // 
             // skillBrowser
             // 
@@ -250,8 +231,18 @@ namespace EVEMon.SkillPlanner
             this.skillBrowser.Name = "skillBrowser";
             this.skillBrowser.Plan = null;
             this.skillBrowser.SelectedSkill = null;
-            this.skillBrowser.Size = new System.Drawing.Size(650, 413);
+            this.skillBrowser.Size = new System.Drawing.Size(650, 545);
             this.skillBrowser.TabIndex = 0;
+            // 
+            // tpShipBrowser
+            // 
+            this.tpShipBrowser.Controls.Add(this.shipBrowser);
+            this.tpShipBrowser.Location = new System.Drawing.Point(4, 22);
+            this.tpShipBrowser.Name = "tpShipBrowser";
+            this.tpShipBrowser.Size = new System.Drawing.Size(650, 545);
+            this.tpShipBrowser.TabIndex = 2;
+            this.tpShipBrowser.Text = "Ship Browser";
+            this.tpShipBrowser.UseVisualStyleBackColor = true;
             // 
             // shipBrowser
             // 
@@ -259,8 +250,18 @@ namespace EVEMon.SkillPlanner
             this.shipBrowser.Location = new System.Drawing.Point(0, 0);
             this.shipBrowser.Name = "shipBrowser";
             this.shipBrowser.Plan = null;
-            this.shipBrowser.Size = new System.Drawing.Size(650, 413);
+            this.shipBrowser.Size = new System.Drawing.Size(650, 545);
             this.shipBrowser.TabIndex = 0;
+            // 
+            // tpItemBrowser
+            // 
+            this.tpItemBrowser.Controls.Add(this.itemBrowser);
+            this.tpItemBrowser.Location = new System.Drawing.Point(4, 22);
+            this.tpItemBrowser.Name = "tpItemBrowser";
+            this.tpItemBrowser.Size = new System.Drawing.Size(650, 545);
+            this.tpItemBrowser.TabIndex = 3;
+            this.tpItemBrowser.Text = "Item Browser";
+            this.tpItemBrowser.UseVisualStyleBackColor = true;
             // 
             // itemBrowser
             // 
@@ -268,7 +269,7 @@ namespace EVEMon.SkillPlanner
             this.itemBrowser.Location = new System.Drawing.Point(0, 0);
             this.itemBrowser.Name = "itemBrowser";
             this.itemBrowser.Plan = null;
-            this.itemBrowser.Size = new System.Drawing.Size(650, 413);
+            this.itemBrowser.Size = new System.Drawing.Size(650, 545);
             this.itemBrowser.TabIndex = 0;
             // 
             // NewPlannerWindow

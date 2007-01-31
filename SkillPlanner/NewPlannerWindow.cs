@@ -44,8 +44,11 @@ namespace EVEMon.SkillPlanner
             shipBrowser.Plan = m_plan;
 
             itemBrowser.Plan = m_plan;
+            PopulateTsPlans();
 
             // Open up to the user's last used tab
+
+            /* This wasn't popular...
             switch (m_settings.PlannerTab)
             {
                 case 0: // plan
@@ -66,9 +69,9 @@ namespace EVEMon.SkillPlanner
                     break;
             }
 
-            /* Old behaviour 
+            */ 
             
-             * // See if this is a new plan
+            // See if this is a new plan
             if (m_plan.Entries.Count == 0)
                 // jump straight to the skill browser
                 tabControl.SelectedTab = tpSkillBrowser;
@@ -76,8 +79,7 @@ namespace EVEMon.SkillPlanner
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
             
-             * end of old behaviour */
-
+             
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
@@ -89,27 +91,6 @@ namespace EVEMon.SkillPlanner
             // Force an update
             m_settings_WorksafeChanged(null, null);
             m_settings_SkillHighlightingChanged(null, null);
-
-            tsddbPlans.DropDownItems.Clear();
-            tsddbPlans.DropDownItems.Add("<New Plan>");
-
-            foreach (string planName in m_settings.GetPlansForCharacter(m_planKey))
-            {
-                try
-                {
-                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
-                    tsddiTemp.MouseEnter += new EventHandler(tsddiTemp_MouseEnter);
-                    tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
-                    if (planName == m_plan.Name)
-                    {
-                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
-                    }
-                }
-                catch (InvalidCastException)
-                {
-                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
-                }
-            }
         }
 
         void tsddiTemp_MouseEnter(object sender, EventArgs e)
@@ -311,26 +292,7 @@ namespace EVEMon.SkillPlanner
 
             this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
             this.RememberPositionKey = "SkillPlannerWindow";
-
-            tsddbPlans.DropDownItems.Clear();
-            tsddbPlans.DropDownItems.Add("<New Plan>");
-                      
-            foreach (string planName in m_settings.GetPlansForCharacter(m_planKey))
-            {
-                try
-                {
-                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
-                    if (planName == m_plan.Name)
-                    {
-                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
-                    }
-                }
-                catch (InvalidCastException) 
-                {
-                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
-                }
-
-            }
+            PopulateTsPlans();
             UpdateStatusBar();
             planEditor.UpdateListColumns();
         }
@@ -595,6 +557,35 @@ namespace EVEMon.SkillPlanner
             m_settings.PlannerTab = tabControl.SelectedIndex;
         }
 
+ 
+        private void PopulateTsPlans()
+        {
+            tsddbPlans.DropDownItems.Clear();
+            tsddbPlans.DropDownItems.Add("<New Plan>");
+
+            foreach (string planName in m_settings.GetPlansForCharacter(m_planKey))
+            {
+                try
+                {
+                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(planName);
+                    tsddiTemp.MouseEnter += new EventHandler(tsddiTemp_MouseEnter);
+                    tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
+                    if (planName == m_plan.Name)
+                    {
+                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                    }
+                }
+                catch (InvalidCastException)
+                {
+                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
+                }
+            }
+        }
+
+        private void tsddbPlans_MouseDown(object sender, MouseEventArgs e)
+        {
+            PopulateTsPlans();
+        }
     }
 
     public class PlannerWindowFactory : IPlannerWindowFactory

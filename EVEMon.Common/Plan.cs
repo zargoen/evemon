@@ -547,7 +547,22 @@ namespace EVEMon.Common
             return false;
         }
 
-        #region remove this if possible, comment if not
+        /// <summary>
+        /// Used to build a list of prerequites and preceding levels of a skill when adding a new skill
+        /// to the plan.  As we check for prereqs and previous levels of skill, we build up a candidate
+        /// list of plan entries. 
+        /// 
+        /// This method firstly ascertains that this Skill is neither already trained or already planned.
+        /// Then we examine the candidate list of skills that have been added so far, if any previous levels
+        /// of this skill are in the candidate list and we have passed in a Note,
+        /// then append the new note to those previous levels of this skill in the candiates list.
+        /// </summary>
+        /// <param name="gs">The Skill we're adding</param>
+        /// <param name="level">And the level we want to add</param>
+        /// <param name="list">The working candidate list of skills that are going to be added prior to this. NB The Note field of the entries in this list can be modified in this method.</param>
+        /// <param name="Note">If the skill should be added, then append the note to any previous levels of this skill that are in the candidate list</param>
+        /// <returns>true if the skill should be added to the candidate list or false if not</returns>
+        
         private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             // check that the current level is less than the planned level and not planned
@@ -589,9 +604,31 @@ namespace EVEMon.Common
                 }
             }
         }
-        #endregion remove this if possible, comment if not
 
+        /// <summary>
+        /// See PlanTo(Skill,level,Note)
+        /// </summary>
+        /// <param name="gs"></param>
+        /// <param name="level"></param>
         public void PlanTo(Skill gs, int level)
+        {
+            PlanTo(gs, level, gs.Name);
+        }
+
+        /// <summary>
+        /// Check if the plan contains the given Skill at the specified level.
+        /// There are 3 outcomes:
+        /// 1 If  the skill is trained or planned to that level already, do nothing.
+        /// 2 If the skill is not trained or planned to the requested level then add the skill and 
+        /// any prerequisites.
+        /// 3 If the skill is already planned to a higher level than requested, then remove the higher level plan entries.
+        /// For outcomes 1 and 2, the final skill level is tagged as "Planned" and previous levels and prereq skills are tagged as "Prerequisites"
+        /// For outcome 3, the level we want to plan to is changed from "Preqreq" to "Planned"
+        /// </summary>
+        /// <param name="gs">The skill we want to plan</param>
+        /// <param name="level">The level we want to train to</param>
+        /// <param name="note">The reason we want to train this skill</param>
+        public void PlanTo(Skill gs, int level,string note)
         {
             if (level == 0)
             {
@@ -600,21 +637,21 @@ namespace EVEMon.Common
                 return;
             }
 
-            // NOTE: This block is magic IMHO
-            // TODO: Comment this section and it's calls
+            // Build up a list of any prereqs a previous levels
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
-            // Store a note?
-            string Note = gs.Name;
-            // Add the pre-reqs?
-            AddPrerequisiteEntries(gs, planEntries, Note);
 
+            // First of all, add any untrained prerequisutes this skill needs
+            AddPrerequisiteEntries(gs, planEntries, note);
+
+            // Add all levels of this skill from 1 to required level
             for (int i = 1; i <= level; i++)
             {
-                if (ShouldAdd(gs, i, planEntries, Note))
+                // Determine if this level of skill should be added to the plan entries
+                if (ShouldAdd(gs, i, planEntries, note))
                 {
                     Plan.Entry pe = new Plan.Entry();
                     pe.SkillName = gs.Name;
-                    pe.Notes = Note;
+                    pe.Notes = note;
                     if (i == level)
                         pe.EntryType = Plan.Entry.Type.Planned;
                     else
@@ -624,9 +661,8 @@ namespace EVEMon.Common
                     planEntries.Add(pe);
                 }
             }
-            // TODO END
-            // NOTE END
 
+            // OK we've examined the prereqs and previous levels for the skill...
             // See if we need to add or remove entries
             if (planEntries.Count > 0)
             {
@@ -635,6 +671,7 @@ namespace EVEMon.Common
             }
             else
             {
+                // There's nothing to add, so we know the skill at this level...
                 // remove all levels of the skill higher than the one planned
                 for (int i = 5; i > level; i--)
                 {
