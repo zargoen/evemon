@@ -185,11 +185,11 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             entryInMergedPlan.PlanGroups.Add(p.Name);
-                            foreach (string subPlanName1 in entry.PlanGroups)
+                            foreach (string subPlanName in entry.PlanGroups)
                             {
-                                if (!entryInMergedPlan.PlanGroups.Contains(subPlanName1))
+                                if (!entryInMergedPlan.PlanGroups.Contains(subPlanName))
                                 {
-                                    entryInMergedPlan.PlanGroups.Add(subPlanName1);
+                                    entryInMergedPlan.PlanGroups.Add(subPlanName);
                                 }
                             }
                         }
@@ -261,9 +261,9 @@ namespace EVEMon.SkillPlanner
 
                 using (NewPlanWindow npw = new NewPlanWindow())
                 {
-                    string oldPlanName1 = "";
-                    string newPlanName1 = "";
-                    while (newPlanName1 == "")
+                    string oldPlanName = "";
+                    string newPlanName = "";
+                    while (newPlanName == "")
                     {
                         npw.Text = "Load Plan";
                         npw.Result = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
@@ -272,21 +272,21 @@ namespace EVEMon.SkillPlanner
                         {
                             return;
                         }
-                        string PlanName1 = npw.Result;
+                        string PlanName = npw.Result;
 
-                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, PlanName1);
+                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, PlanName);
                         if (oldPlan == null)
                         {
                             // No plan of the same name, so no replacement necessary
-                            oldPlanName1 = "";
-                            newPlanName1 = PlanName1;
+                            oldPlanName = "";
+                            newPlanName = PlanName;
                         }
                         else
                         {
                             // Should we try replacing the original plan?
-                            string message = "Plan with name '" + PlanName1 + "' already exists. Replace plan '" +
-                                             PlanName1 + "'?";
-                            string caption = "Replace Plan '" + PlanName1 + "'";
+                            string message = "Plan with name '" + PlanName + "' already exists. Replace plan '" +
+                                             PlanName + "'?";
+                            string caption = "Replace Plan '" + PlanName + "'";
                             DialogResult result;
 
                             // Display the MessageBox.
@@ -294,15 +294,15 @@ namespace EVEMon.SkillPlanner
                             if (result == DialogResult.Yes)
                             {
                                 // Rename the original plan for removal once we've loaded the new one
-                                oldPlanName1 = PlanName1 + "_BACKUP";
-                                m_settings.RenamePlanFor(m_charKey, PlanName1, oldPlanName1);
-                                newPlanName1 = PlanName1;
+                                oldPlanName = PlanName + "_BACKUP";
+                                m_settings.RenamePlanFor(m_charKey, PlanName, oldPlanName);
+                                newPlanName = PlanName;
                             }
                             else
                             {
                                 // User does not want to replace original plan, so get them to choose a new name
-                                oldPlanName1 = "";
-                                newPlanName1 = "";
+                                oldPlanName = "";
+                                newPlanName = "";
                             }
                         }
                     }
@@ -310,16 +310,16 @@ namespace EVEMon.SkillPlanner
                     // Now we have a valid name for the new plan, and potentially an old plan to be removed.
                     try
                     {
-                        m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName1);
+                        m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName);
                         
                     }
                     catch (ApplicationException err)
                     {
                         ExceptionHandler.LogException(err, true);
                         // Rename the old plan to it's original name
-                        if (oldPlanName1 != "")
+                        if (oldPlanName != "")
                         {
-                            m_settings.RenamePlanFor(m_charKey, oldPlanName1, newPlanName1);
+                            m_settings.RenamePlanFor(m_charKey, oldPlanName, newPlanName);
                         }
 
                         MessageBox.Show("Could not add the plan:\n" + err.Message,
@@ -328,9 +328,9 @@ namespace EVEMon.SkillPlanner
                     }
 
                     // We have successfully loaded the plan so remove the old one for good if needed
-                    if (oldPlanName1 != "")
+                    if (oldPlanName != "")
                     {
-                        m_settings.RemovePlanFor(m_charKey, oldPlanName1);
+                        m_settings.RemovePlanFor(m_charKey, oldPlanName);
                     }
                 }
             }
@@ -413,9 +413,9 @@ namespace EVEMon.SkillPlanner
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            string PlanName1 = (string) lbPlanList.SelectedItems[0].Text;
+            string PlanName = (string) lbPlanList.SelectedItems[0].Text;
 
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + PlanName1 +
+            DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + PlanName +
                                               "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                                               MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
@@ -423,7 +423,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            m_settings.RemovePlanFor(m_charKey, PlanName1);
+            m_settings.RemovePlanFor(m_charKey, PlanName);
             lbPlanList.Items.RemoveAt(lbPlanList.SelectedIndices[0]);
             lbPlanList.SelectedItems.Clear();
         }
