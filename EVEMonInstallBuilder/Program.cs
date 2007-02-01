@@ -11,15 +11,12 @@ namespace EVEMonInstallBuilder
     {
         static int Main(string[] args)
         {
+#if DEBUG
+            return 0;
+#else
             try
             {
-#if !DEBUG
                 string config = "Release";
-#endif
-#if DEBUG
-                string config = "Debug";
-                return 0;
-#endif
                 string projectDir = String.Join(" ", args);
                 string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
@@ -49,6 +46,7 @@ namespace EVEMonInstallBuilder
                 MessageBox.Show(ex.Message);
                 return 1;
             }
+#endif
         }
 
         private static void ProcessInstallScripts(string projectDir)
