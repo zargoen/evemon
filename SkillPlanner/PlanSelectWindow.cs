@@ -427,49 +427,7 @@ namespace EVEMon.SkillPlanner
             lbPlanList.Items.RemoveAt(lbPlanList.SelectedIndices[0]);
             lbPlanList.SelectedItems.Clear();
         }
-
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
-		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e) {
-
-		}
-
- 
-        private void contextMenuStrip1_Opening_1(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // If multiple items selected, grey out the context menu
-            if (lbPlanList.SelectedItems.Count != 1)
-            {
-                deletePlanToolStripMenuItem.Enabled = false;
-                renamePlanToolStripMenuItem.Enabled = false;
-                if (lbPlanList.SelectedItems.Count == 0)
-                {
-                    openPlanToolStripMenuItem.Enabled = false;
-                }
-                else
-                {
-                    openPlanToolStripMenuItem.Text = "Merge Plans";
-                }
-            }
-            else
-            {
-                if (lbPlanList.SelectedItems[0].Text == "<New Plan>")
-                {
-                    e.Cancel = true;
-                }
-
-                else
-                {
-                    deletePlanToolStripMenuItem.Enabled = true;
-                    renamePlanToolStripMenuItem.Enabled = true;
-                    openPlanToolStripMenuItem.Enabled = true;
-                    openPlanToolStripMenuItem.Text = "Open Plan";
-                }
-            }
-        }
-
+        #region Dragging
         private void lbPlanList_DragEnter(object sender, DragEventArgs e)
         {
             // Don't allow <New Plan> to be dragged!
@@ -496,6 +454,7 @@ namespace EVEMon.SkillPlanner
                 m_planOrderChanged = true;
             }
         }
+        #endregion
 
         #region Column Sorting
 
@@ -614,6 +573,35 @@ namespace EVEMon.SkillPlanner
 
         }
 
+        #endregion
+
+        #region Context Menu
+
+        private void lbPlanList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ListViewItem lvi = lbPlanList.GetItemAt(e.X, e.Y);
+                if (lvi != null & lvi.Text != "<New Plan>")
+                {
+                    // If multiple items selected, grey out the context menu
+                    if (lbPlanList.SelectedItems.Count > 1)
+                    {
+                        deletePlanToolStripMenuItem.Enabled = false;
+                        renamePlanToolStripMenuItem.Enabled = false;
+                        openPlanToolStripMenuItem.Text = "Merge Plans";
+                    }
+                    else
+                    {
+                        deletePlanToolStripMenuItem.Enabled = true;
+                        renamePlanToolStripMenuItem.Enabled = true;
+                        openPlanToolStripMenuItem.Enabled = true;
+                        openPlanToolStripMenuItem.Text = "Open Plan";
+                    }
+                    contextMenuStrip1.Show((lbPlanList.PointToScreen(new System.Drawing.Point(e.X,e.Y))));
+                }
+            }
+        }
         #endregion
     }
 }
