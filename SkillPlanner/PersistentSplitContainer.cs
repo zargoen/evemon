@@ -17,36 +17,39 @@ namespace EVEMon.SkillPlanner
         public string RememberDistanceKey
         {
             get { return m_rememberDistanceKey; }
-            set { m_rememberDistanceKey = value; }
-        }
-
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            try
-            {
-                if (!String.IsNullOrEmpty(m_rememberDistanceKey))
+            set 
+            { 
+                m_rememberDistanceKey = value;
+                // Set the splitter width here rather than in an override of CreateControl()
+                // because CreatControl is only called when we make the container visible
+                // so if the container is created, but never shown, the persistant splitter 
+                // width will be reset to the default for the base SplitContainer
+                try
                 {
-                    Settings s = Settings.GetInstance();
-                    if (s.SavedSplitterDistances.ContainsKey(m_rememberDistanceKey))
+                    if (!String.IsNullOrEmpty(m_rememberDistanceKey))
                     {
-                        int d = s.SavedSplitterDistances[m_rememberDistanceKey];
-                        d = this.VerifyValidSplitterDistance(d);
-                        this.SplitterDistance = d;
+                        Settings s = Settings.GetInstance();
+                        if (s.SavedSplitterDistances.ContainsKey(m_rememberDistanceKey))
+                        {
+                            int d = s.SavedSplitterDistances[m_rememberDistanceKey];
+                            d = this.VerifyValidSplitterDistance(d);
+                            this.SplitterDistance = d;
+                        }
                     }
                 }
-            }
-            catch (Exception err)
-            {
-                // This occurs when we're in the designer. DesignMode doesn't get set
-                // when the control is a subcontrol of a user control, so we should handle
-                // this here :(
-                ExceptionHandler.LogException(err, true);
-                return;
+                catch (Exception err)
+                {
+                    // This occurs when we're in the designer. DesignMode doesn't get set
+                    // when the control is a subcontrol of a user control, so we should handle
+                    // this here :(
+                    ExceptionHandler.LogException(err, true);
+                    return;
+                }
+
             }
         }
 
-        protected override void Dispose(bool disposing)
+       protected override void Dispose(bool disposing)
         {
             if (!String.IsNullOrEmpty(m_rememberDistanceKey))
             {
