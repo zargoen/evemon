@@ -623,7 +623,16 @@ namespace EVEMon.SkillPlanner
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
             miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
-            miChangeNote.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miChangeNote.Enabled = (lvSkills.SelectedItems.Count >0);
+            if (lvSkills.SelectedItems.Count == 1)
+            {
+                miChangeNote.Text = "View/Change Note...";
+            }
+            else
+            {
+                miChangeNote.Text = "Change Note...";
+            }
+
             miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
             if (lvSkills.SelectedItems.Count == 1 &&
                 GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]).PlanGroups.Count > 0)
@@ -712,30 +721,43 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            ListViewItem lvi = lvSkills.SelectedItems[0];
-            if (lvi == null)
+
+            string sn = "Selected Skills";
+            string noteText = "";
+            Plan.Entry pe = null;
+
+            if (lvSkills.SelectedItems.Count == 1)
             {
-                return;
+                pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+                sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
+                noteText = pe.Notes;
             }
-            Plan.Entry pe = lvi.Tag as Plan.Entry;
-            if (pe == null)
-            {
-                return;
-            }
-            string sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
             using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
             {
-                f.NoteText = pe.Notes;
+                f.NoteText = noteText;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
                 {
                     return;
                 }
-                pe.Notes = f.NoteText;
-                UpdateListViewItems();
-                Program.Settings.Save();
+                noteText = f.NoteText;
             }
+            if (pe != null)
+            {
+                pe.Notes = noteText;
+            }
+            else
+            {
+                foreach (ListViewItem lvi in lvSkills.SelectedItems)
+                {
+                    pe = lvi.Tag as Plan.Entry;
+                    pe.Notes = noteText;
+                }
+            }
+            UpdateListViewItems();
+            Program.Settings.Save();
         }
+
         private void miExportPlan_Click(object sender, EventArgs e)
         {
             bool doAgain = true;
