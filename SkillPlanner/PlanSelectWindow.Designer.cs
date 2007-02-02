@@ -34,10 +34,16 @@ namespace EVEMon.SkillPlanner
             this.btnCancel = new System.Windows.Forms.Button();
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbLoadPlan = new System.Windows.Forms.ToolStripButton();
+            this.tsbLoadPlan = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tsddFromFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsddFromCharacter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbRenamePlan = new System.Windows.Forms.ToolStripButton();
             this.tsbDeletePlan = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lbPlanList = new EVEMon.SkillPlanner.DraggableListView();
+            this.PlanName = new System.Windows.Forms.ColumnHeader();
+            this.PlanDate = new System.Windows.Forms.ColumnHeader();
+            this.PlanSkills = new System.Windows.Forms.ColumnHeader();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tsbMoveUp = new System.Windows.Forms.ToolStripButton();
@@ -49,10 +55,6 @@ namespace EVEMon.SkillPlanner
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.lbPlanList = new EVEMon.SkillPlanner.DraggableListView();
-            this.PlanName = new System.Windows.Forms.ColumnHeader();
-            this.PlanDate = new System.Windows.Forms.ColumnHeader();
-            this.PlanSkills = new System.Windows.Forms.ColumnHeader();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -101,12 +103,29 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbLoadPlan
             // 
+            this.tsbLoadPlan.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsddFromFile,
+            this.tsddFromCharacter});
             this.tsbLoadPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadPlan.Image")));
             this.tsbLoadPlan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbLoadPlan.Name = "tsbLoadPlan";
-            this.tsbLoadPlan.Size = new System.Drawing.Size(73, 22);
+            this.tsbLoadPlan.Size = new System.Drawing.Size(82, 22);
             this.tsbLoadPlan.Text = "Load Plan";
             this.tsbLoadPlan.Click += new System.EventHandler(this.tsbLoadPlan_Click);
+            // 
+            // tsddFromFile
+            // 
+            this.tsddFromFile.Name = "tsddFromFile";
+            this.tsddFromFile.Size = new System.Drawing.Size(172, 22);
+            this.tsddFromFile.Text = "From File...";
+            this.tsddFromFile.Click += new System.EventHandler(this.tsddFromFile_Click);
+            // 
+            // tsddFromCharacter
+            // 
+            this.tsddFromCharacter.Name = "tsddFromCharacter";
+            this.tsddFromCharacter.Size = new System.Drawing.Size(172, 22);
+            this.tsddFromCharacter.Text = "From Character...";
+            this.tsddFromCharacter.Click += new System.EventHandler(this.tsddFromCharacter_Click);
             // 
             // tsbRenamePlan
             // 
@@ -140,6 +159,42 @@ namespace EVEMon.SkillPlanner
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(473, 326);
             this.panel1.TabIndex = 6;
+            // 
+            // lbPlanList
+            // 
+            this.lbPlanList.AllowDrop = true;
+            this.lbPlanList.AllowRowReorder = true;
+            this.lbPlanList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.PlanName,
+            this.PlanDate,
+            this.PlanSkills});
+            this.lbPlanList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbPlanList.FullRowSelect = true;
+            this.lbPlanList.Location = new System.Drawing.Point(0, 0);
+            this.lbPlanList.Name = "lbPlanList";
+            this.lbPlanList.Size = new System.Drawing.Size(435, 326);
+            this.lbPlanList.TabIndex = 2;
+            this.lbPlanList.UseCompatibleStateImageBehavior = false;
+            this.lbPlanList.View = System.Windows.Forms.View.Details;
+            this.lbPlanList.DoubleClick += new System.EventHandler(this.lbPlanList_DoubleClick);
+            this.lbPlanList.SelectedIndexChanged += new System.EventHandler(this.lbPlanList_SelectedIndexChanged);
+            this.lbPlanList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lbPlanList_ColumnClick);
+            this.lbPlanList.ListViewItemsDragging += new System.EventHandler<EVEMon.SkillPlanner.ListViewDragEventArgs>(this.lbPlanList_ListViewItemsDragging);
+            this.lbPlanList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbPlanList_MouseDown);
+            // 
+            // PlanName
+            // 
+            this.PlanName.Text = "Plan Name";
+            this.PlanName.Width = 176;
+            // 
+            // PlanDate
+            // 
+            this.PlanDate.Text = "Completion Time";
+            this.PlanDate.Width = 197;
+            // 
+            // PlanSkills
+            // 
+            this.PlanSkills.Text = "Skills";
             // 
             // toolStrip2
             // 
@@ -260,42 +315,6 @@ namespace EVEMon.SkillPlanner
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // lbPlanList
-            // 
-            this.lbPlanList.AllowDrop = true;
-            this.lbPlanList.AllowRowReorder = true;
-            this.lbPlanList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.PlanName,
-            this.PlanDate,
-            this.PlanSkills});
-            this.lbPlanList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbPlanList.FullRowSelect = true;
-            this.lbPlanList.Location = new System.Drawing.Point(0, 0);
-            this.lbPlanList.Name = "lbPlanList";
-            this.lbPlanList.Size = new System.Drawing.Size(435, 326);
-            this.lbPlanList.TabIndex = 2;
-            this.lbPlanList.UseCompatibleStateImageBehavior = false;
-            this.lbPlanList.View = System.Windows.Forms.View.Details;
-            this.lbPlanList.DoubleClick += new System.EventHandler(this.lbPlanList_DoubleClick);
-            this.lbPlanList.SelectedIndexChanged += new System.EventHandler(this.lbPlanList_SelectedIndexChanged);
-            this.lbPlanList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lbPlanList_ColumnClick);
-            this.lbPlanList.ListViewItemsDragging += new System.EventHandler<EVEMon.SkillPlanner.ListViewDragEventArgs>(this.lbPlanList_ListViewItemsDragging);
-            this.lbPlanList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbPlanList_MouseDown);
-            // 
-            // PlanName
-            // 
-            this.PlanName.Text = "Plan Name";
-            this.PlanName.Width = 176;
-            // 
-            // PlanDate
-            // 
-            this.PlanDate.Text = "Completion Time";
-            this.PlanDate.Width = 197;
-            // 
-            // PlanSkills
-            // 
-            this.PlanSkills.Text = "Skills";
-            // 
             // PlanSelectWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -332,7 +351,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tsbLoadPlan;
         private System.Windows.Forms.ToolStripButton tsbRenamePlan;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStrip toolStrip2;
@@ -351,5 +369,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader PlanName;
         private System.Windows.Forms.ColumnHeader PlanDate;
         private System.Windows.Forms.ColumnHeader PlanSkills;
+        private System.Windows.Forms.ToolStripDropDownButton tsbLoadPlan;
+        private System.Windows.Forms.ToolStripMenuItem tsddFromFile;
+        private System.Windows.Forms.ToolStripMenuItem tsddFromCharacter;
     }
 }

@@ -345,9 +345,56 @@ namespace EVEMon.SkillPlanner
         }
 
 
-        private void tsbLoadPlan_Click(object sender, EventArgs e)
+        private void tsddFromFile_Click(object sender, EventArgs e)
         {
             LoadPlan();
+        }
+
+        private void tsddFromCharacter_Click(object sender, EventArgs e)
+        {
+            using (CrossPlanSelect cps = new CrossPlanSelect(m_grandCharacterInfo.Name))
+            {
+                DialogResult dr = cps.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    String planName = cps.SelectedPlan;
+                    String charKey = cps.SelectedCharKey;
+                    String charName = cps.SelectedCharName;
+                    String newPlanName;
+                    using (NewPlanWindow f = new NewPlanWindow())
+                    {
+                        f.Text = "Save Plan As";
+                        f.PlanName = charName+"-"+planName;
+                        dr = f.ShowDialog();
+                        if (dr == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                        newPlanName = f.Result;
+                    }
+                    // So we have the character and plan, and the new plan name...
+                    // Get the plan from the other character, and add it here.
+                    try
+                    {
+                        Plan otherPlan = m_settings.GetPlanByName(charKey, planName);
+                        m_settings.AddPlanFor(m_charKey, otherPlan, newPlanName);
+
+                    }
+                    catch (ApplicationException err)
+                    {
+                        // More than likely because the plan exits already...
+                        ExceptionHandler.LogException(err, true);
+                        MessageBox.Show("Could not add the plan:\n" + err.Message,
+                                        "Could Not Add Plan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+            // This line is magical!!
+            // By telling PopulatePlanList to recalculate plan times, it kicks off a check of the plan
+            // which results in removing any duplicate skills and addition of prerequisites
+            // - so we end up with the correct time and # of skills. Just Magic!!
+            PopulatePlanList(true);
         }
 
         private void tsbRenamePlan_Click(object sender, EventArgs e)
@@ -603,5 +650,12 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion
+
+        private void tsbLoadPlan_Click(object sender, EventArgs e)
+        {
+            // See if we have multiple characters to determine if load from character is enabled
+            tsddFromCharacter.Enabled = (m_settings.CharacterList.Count + m_settings.CharFileList.Count) > 1;
+        }
+
     }
 }
