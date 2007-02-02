@@ -565,6 +565,12 @@ namespace EVEMon.Common
         
         public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad,Boolean includeImplants)
         {
+            int pointsNeeded = GetPointsForLevelOnly(level,includeCurrentSP);
+            return this.GetTimeSpanForPoints(pointsNeeded, scratchpad,includeImplants);
+        }
+
+        public int GetPointsForLevelOnly(int level,bool includeCurrentSP)
+        {
             int startSp = GetPointsRequiredForLevel(level - 1);
             int endSp = GetPointsRequiredForLevel(level);
             if (includeCurrentSP)
@@ -573,9 +579,12 @@ namespace EVEMon.Common
             }
             if (endSp <= startSp)
             {
-                return TimeSpan.Zero;
+                return 0;
             }
-            return this.GetTimeSpanForPoints(endSp - startSp, scratchpad,includeImplants);
+            else
+            {
+                return endSp - startSp;
+            }
         }
 
         #region GetPrerequisiteTime overloads

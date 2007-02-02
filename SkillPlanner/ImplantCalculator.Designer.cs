@@ -536,7 +536,7 @@ namespace EVEMon.SkillPlanner
             // ImplantCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(558, 230);
+            this.ClientSize = new System.Drawing.Size(558, 227);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);

@@ -44,8 +44,43 @@ namespace EVEMon.SkillPlanner
             get { return Convert.ToInt32(nudWillpower.Value); }
         }
 
+        public double getAttributeValue(EveAttribute e)
+        {
+            double val = 0;
+            switch (e)
+            {
+                case EveAttribute.Charisma:
+                    val = EffectiveAttr((int)nudCharisma.Value);
+                    break;
+                case EveAttribute.Intelligence:
+                    val = EffectiveAttr((int)nudIntelligence.Value);
+                    break;
+                case EveAttribute.Memory:
+                    val = EffectiveAttr((int)nudMemory.Value);
+                    break;
+                case EveAttribute.Perception:
+                    val = EffectiveAttr((int)nudPerception.Value);
+                    break;
+                case EveAttribute.Willpower:
+                    val = EffectiveAttr((int)nudWillpower.Value);;
+                    break;
+                case EveAttribute.None:
+                    val = 0.0;
+                    break;
+            }
+            return val;
+        }
+
+        public PlanOrderEditorControl PlanEditor
+        {
+            set { 
+                m_planEditor = value;
+            }
+        }
+
         private CharacterInfo m_grandCharacterInfo;
         private Plan m_plan;
+        private PlanOrderEditorControl m_planEditor;
 
         private void ImplantCalculator_Shown(object sender, EventArgs e)
         {
@@ -99,6 +134,7 @@ namespace EVEMon.SkillPlanner
             AttributeUpdate(EveAttribute.Perception, Convert.ToInt32(nudPerception.Value),
                             lblAdjustPerception, lblEffectivePerception);
             CalculatePlanTimes();
+            if (m_planEditor != null) m_planEditor.ShowWithImplantCalc(this);
         }
 
         private void nudMemory_ValueChanged(object sender, EventArgs e)
@@ -117,9 +153,6 @@ namespace EVEMon.SkillPlanner
 
         private void AttributeUpdate(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffective)
         {
-            int learningLevel = m_grandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
-            double learningAdjust = 1.0 + (0.02*Convert.ToDouble(learningLevel));
-
             //int baseAttr = m_grandCharacterInfo.GetBaseAttribute(attrib);
             int baseAttr = Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, false));
 
@@ -135,8 +168,14 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString();
             }
 
-            double effectiveAttr = Convert.ToDouble(myValue)*learningAdjust;
-            lblEffective.Text = effectiveAttr.ToString("#0.00");
+            lblEffective.Text = EffectiveAttr(myValue).ToString("#0.00");
+        }
+
+        private double EffectiveAttr(int value)
+        {
+            int learningLevel = m_grandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
+            double learningAdjust = 1.0 + (0.02 * Convert.ToDouble(learningLevel));
+            return Convert.ToDouble(value) * learningAdjust;
         }
 
         private void CalculatePlanTimes()
@@ -145,6 +184,7 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
+            if (m_planEditor != null) m_planEditor.ShowWithImplantCalc(this);
 
             // Current -- empty scratchpad is fine
             EveAttributeScratchpad currentScratchpad = new EveAttributeScratchpad();
@@ -239,6 +279,12 @@ namespace EVEMon.SkillPlanner
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             LoadCurrent(true);
+        }
+
+        private void btnShowInPlan_Click(object sender, EventArgs e)
+        {
+            if (m_planEditor == null) return;
+            m_planEditor.ShowWithImplantCalc(this);
         }
     }
 }

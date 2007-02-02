@@ -149,16 +149,6 @@ namespace EVEMon.SkillPlanner
             // Remove event handlers
             m_plan.Changed -= new EventHandler<EventArgs>(m_plan_Changed);
             m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_WorksafeChanged);
-
-            foreach (WeakReference<ImplantCalculator> ric in m_calcWindows)
-            {
-                ImplantCalculator ic = ric.Target;
-                if (ic != null && ic.Visible)
-                {
-                    ic.Close();
-                }
-            }
-            m_calcWindows.Clear();
         }
 
         Settings m_settings;
@@ -521,31 +511,30 @@ namespace EVEMon.SkillPlanner
         #endregion Plan serialization
 
         #region Implant Calculator
-        private List<WeakReference<ImplantCalculator>> m_calcWindows = new List<WeakReference<ImplantCalculator>>();
+        private  ImplantCalculator m_implantCalcWindow = null;
 
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
-            // Remove closed windows
-            for (int i = 0; i < m_calcWindows.Count; i++)
+            if (m_implantCalcWindow != null)
             {
-                bool needRemove = true;
-                ImplantCalculator thisIc = m_calcWindows[i].Target;
-                if (thisIc != null)
-                {
-                    needRemove = !thisIc.Visible;
-                }
-                if (needRemove)
-                {
-                    m_calcWindows.RemoveAt(i);
-                    i--;
-                }
+
+                m_implantCalcWindow.Visible = true;
+                m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
             }
-
-            ImplantCalculator ic = new ImplantCalculator(m_plan.GrandCharacterInfo, m_plan);
-            m_calcWindows.Add(new WeakReference<ImplantCalculator>(ic));
-
-            ic.Show();
+            else
+            {
+                m_implantCalcWindow = new ImplantCalculator(m_plan.GrandCharacterInfo, m_plan);
+                m_implantCalcWindow.Show();
+                m_implantCalcWindow.Disposed +=new EventHandler(m_implantCalcWindow_Disposed);
+            }
+            m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
         }
+
+        private void m_implantCalcWindow_Disposed(Object o, EventArgs e)
+        {
+            m_implantCalcWindow = null;
+        }
+
         #endregion Implant Calculator
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -555,6 +544,10 @@ namespace EVEMon.SkillPlanner
                 return;
             }
             m_settings.PlannerTab = tabControl.SelectedIndex;
+            if (m_implantCalcWindow != null && m_implantCalcWindow.Visible)
+            {
+                m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+            }
         }
 
  

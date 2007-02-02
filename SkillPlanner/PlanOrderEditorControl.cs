@@ -203,6 +203,15 @@ namespace EVEMon.SkillPlanner
 
                     TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
                     TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad,false);
+                    TimeSpan trainTimeImpCalc = trainTime;
+                    if (m_implantCalculator != null)
+                    {
+                        int points = gs.GetPointsForLevelOnly(pe.Level,true);
+                        double p = m_implantCalculator.getAttributeValue(gs.PrimaryAttribute);
+                        double s = m_implantCalculator.getAttributeValue(gs.SecondaryAttribute);
+                        double minutes = Convert.ToDouble(points) / (p + (s / 2));
+                        trainTimeImpCalc = TimeSpan.FromMinutes(minutes);
+                    }
                     int currentSP = gs.CurrentSkillPoints;
                     int reqBeforeThisLevel = gs.GetPointsRequiredForLevel(pe.Level - 1);
                     int reqToThisLevel = gs.GetPointsRequiredForLevel(pe.Level);
@@ -238,72 +247,99 @@ namespace EVEMon.SkillPlanner
 
                     for (int x = 0; x < lvSkills.Columns.Count; x++)
                     {
-                        ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
                         string res = String.Empty;
-                        switch (ct)
+                        ColumnPreference.ColumnType ct;
+                        if (lvSkills.Columns[x].Tag != null)
                         {
-                            case ColumnPreference.ColumnType.SkillName:
-                                res = gs.Name + " " + Skill.GetRomanForInt(pe.Level);
-                                break;
-                            case ColumnPreference.ColumnType.PlanGroup:
-                                res = planGroups;
-                                break;
-                            case ColumnPreference.ColumnType.TrainingTime:
-                                res = Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
-                                break;
-                            case ColumnPreference.ColumnType.TrainingTimeNatural:
-                                res = Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
-                                break;
-                            case ColumnPreference.ColumnType.EarliestStart:
-                                res = thisStart.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.EarliestEnd:
-                                res = thisEnd.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.PercentComplete:
-                                res = pctComplete.ToString("0%");
-                                break;
-                            case ColumnPreference.ColumnType.SkillRank:
-                                res = gs.Rank.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.PrimaryAttribute:
-                                res = gs.PrimaryAttribute.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.SecondaryAttribute:
-                                res = gs.SecondaryAttribute.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.SkillGroup:
-                                res = gs.SkillGroup.Name;
-                                break;
-                            case ColumnPreference.ColumnType.Notes:
-                                string xx;
-                                if (String.IsNullOrEmpty(pe.Notes))
-                                {
-                                    res = String.Empty;
-                                }
-                                else
-                                {
-                                    xx = Regex.Replace(pe.Notes, @"(\r|\n)+", " ", RegexOptions.None);
-                                    if (xx.Length <= MAX_NOTES_PREVIEW_CHARS)
+                            ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
+                            switch (ct)
+                            {
+                                case ColumnPreference.ColumnType.SkillName:
+                                    res = gs.Name + " " + Skill.GetRomanForInt(pe.Level);
+                                    break;
+                                case ColumnPreference.ColumnType.PlanGroup:
+                                    res = planGroups;
+                                    break;
+                                case ColumnPreference.ColumnType.TrainingTime:
+                                    res = Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                                    break;
+                                case ColumnPreference.ColumnType.TrainingTimeNatural:
+                                    res = Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
+                                    break;
+                                case ColumnPreference.ColumnType.EarliestStart:
+                                    res = thisStart.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.EarliestEnd:
+                                    res = thisEnd.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.PercentComplete:
+                                    res = pctComplete.ToString("0%");
+                                    break;
+                                case ColumnPreference.ColumnType.SkillRank:
+                                    res = gs.Rank.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.PrimaryAttribute:
+                                    res = gs.PrimaryAttribute.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.SecondaryAttribute:
+                                    res = gs.SecondaryAttribute.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.SkillGroup:
+                                    res = gs.SkillGroup.Name;
+                                    break;
+                                case ColumnPreference.ColumnType.Notes:
+                                    string xx;
+                                    if (String.IsNullOrEmpty(pe.Notes))
                                     {
-                                        res = xx;
+                                        res = String.Empty;
                                     }
                                     else
                                     {
-                                        res = xx.Substring(0, MAX_NOTES_PREVIEW_CHARS) + "...";
+                                        xx = Regex.Replace(pe.Notes, @"(\r|\n)+", " ", RegexOptions.None);
+                                        if (xx.Length <= MAX_NOTES_PREVIEW_CHARS)
+                                        {
+                                            res = xx;
+                                        }
+                                        else
+                                        {
+                                            res = xx.Substring(0, MAX_NOTES_PREVIEW_CHARS) + "...";
+                                        }
                                     }
-                                }
-                                break;
-                            case ColumnPreference.ColumnType.PlanType:
-                                res = pe.EntryType.ToString();
-                                break;
-                            case ColumnPreference.ColumnType.SPTotal:
-                                res = skillPointTotal.ToString("N00", nfi);
-                                break;
-                            case ColumnPreference.ColumnType.SPPerHour:
-                                res = spHour.ToString();
-                                break;
+                                    break;
+                                case ColumnPreference.ColumnType.PlanType:
+                                    res = pe.EntryType.ToString();
+                                    break;
+                                case ColumnPreference.ColumnType.SPTotal:
+                                    res = skillPointTotal.ToString("N00", nfi);
+                                    break;
+                                case ColumnPreference.ColumnType.SPPerHour:
+                                    res = spHour.ToString();
+                                    break;
+                            }
                         }
+                        else
+                        {
+                            // Tag was null so this is the manufactured column to show the 
+                            // difference in training time using the attributes from the
+                            // implant calc
+                            TimeSpan t;
+                            res = "";
+                            if (trainTimeImpCalc > trainTime)
+                            {
+                                res = "+";
+                                t = trainTimeImpCalc - trainTime;
+                            }
+                            else
+                            {
+                                if (trainTimeImpCalc < trainTime)res = "-";
+                                t = trainTime - trainTimeImpCalc;
+                            }
+                            res += Skill.TimeSpanToDescriptiveText(t, DescriptiveTextOptions.IncludeCommas);
+
+                            // needed so Eewec's bit below compiles...
+                            ct = ColumnPreference.ColumnType.TrainingTime;
+                        }
+
                         lvi.SubItems[x].Text = res;
 
                         // OK first wait for the right column type
@@ -567,11 +603,7 @@ namespace EVEMon.SkillPlanner
                                                                                                    ColumnType), ts, true);
                             if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
                             {
-                                ColumnHeader ch = new ColumnHeader();
-                                ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
-                                ch.Text = cda.Header;
-                                ch.Tag = ct;
-                                lvSkills.Columns.Add(ch);
+                                AddColumn(ct);
                                 alreadyAdded.Add(ct);
                             }
                         }
@@ -586,11 +618,7 @@ namespace EVEMon.SkillPlanner
                         ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)i;
                         if (m_plan.ColumnPreference[i] && !alreadyAdded.Contains(ct))
                         {
-                            ColumnHeader ch = new ColumnHeader();
-                            ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
-                            ch.Text = cda.Header;
-                            ch.Tag = ct;
-                            lvSkills.Columns.Add(ch);
+                            AddColumn(ct);
                             alreadyAdded.Add(ct);
                         }
                     }
@@ -606,9 +634,12 @@ namespace EVEMon.SkillPlanner
                     for (int i = 0; i < lvSkills.Columns.Count; i++)
                     {
                         ColumnHeader ch = lvSkills.Columns[i];
-                        ColumnPreference.ColumnDisplayAttribute cda =
-                            ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
-                        ch.Width = cda.Width;
+                        if (ch.Tag != null)
+                        {
+                            ColumnPreference.ColumnDisplayAttribute cda =
+                                ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
+                            ch.Width = cda.Width;
+                        }
                     }
                 }
                 finally
@@ -617,7 +648,47 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        private void AddColumn(ColumnPreference.ColumnType ct)
+        {
+            ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute(ct);
+            ColumnHeader ch = new ColumnHeader();
+            ch.Text = cda.Header;
+            ch.Tag = ct;
+            lvSkills.Columns.Add(ch);
+            // add a temporary column if we're showing the implant calculator
+            if (m_implantCalculator != null && ch.Text == "Training Time")
+            {
+                ch = new ColumnHeader();
+                ch.Text = "Diff with Calc Atts";
+                ch.Tag = null;
+                ch.Width = 105;
+                lvSkills.Columns.Add(ch);
+            }
+        }
         #endregion Skill List View
+        
+        #region Implant Calc
+
+        private ImplantCalculator m_implantCalculator = null;
+        internal void ShowWithImplantCalc(ImplantCalculator ic)
+        {
+            if (m_implantCalculator == null)
+            {
+                m_implantCalculator = ic;
+                ic.Disposed +=new EventHandler(ic_Disposed);
+                UpdateListColumns();
+            }
+            UpdateListViewItems();
+        }
+
+        private void ic_Disposed(object o, EventArgs e)
+        {
+            m_implantCalculator = null;
+            UpdateListColumns();
+        }
+
+        #endregion
 
         #region Context Menu
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
@@ -983,5 +1054,6 @@ namespace EVEMon.SkillPlanner
             }
             m_settings = Settings.GetInstance();
         }
+    
     }
 }
