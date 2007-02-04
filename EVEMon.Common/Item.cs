@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Xml.Serialization;
+using System.Text.RegularExpressions;
 
 namespace EVEMon.Common
 {
@@ -125,48 +126,29 @@ namespace EVEMon.Common
         }
 
         private string m_value;
+        private Regex m_3dp = new Regex(@"\.dd0");
 
         [XmlAttribute]
         public string Value
         {
             get
             {
-                // why oh why all this complicated stuff
-                string Value = m_value;
-                Value = Value.Replace("%", "").Replace(",", ".");
-                try
+                // The item database sometimes shows bonus amd muliplier figures with a negative number
+                // (e.g shield hardners) so fix it...
+                if (m_value.StartsWith("-") && (Name.Contains("bonus") || Name.Contains("multiplier")) && m_value.Contains("%"))
                 {
-                    decimal DecimalValue = System.Convert.ToDecimal(Value);
-                    if ((Name.Contains("bonus") || Name.Contains("multiplier")) && m_value.Contains("%") &&
-                       (DecimalValue < 2))
-                    {
-                        Value = PropertyBonusToPercent(DecimalValue);
-                    }
-                    else
-                    {
-                        Value = m_value;
-                    }
+                    return m_value.Substring(1).Trim();
                 }
-                catch (FormatException)
+                else
                 {
-                    Value = m_value;
+                    return m_value.Trim();
                 }
-                return Value.Trim();
-            }
-            set { m_value = StringTable.GetSharedString(value); }
-        }
 
-        private static string PropertyBonusToPercent(Decimal Value)
-        {
-            if (Value > 0)
-            {
-                Value = (1 - Value) * 100;
             }
-            else
+            set 
             {
-                Value = Value * -1;
+              m_value = StringTable.GetSharedString(value); 
             }
-            return System.Convert.ToString(Math.Round(Value, 2)) + " %";
         }
 
         public override string ToString()
