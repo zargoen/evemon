@@ -534,7 +534,7 @@ namespace EVEMon.Common
 
         private int m_cachedSkillPointTotal = -1;
         private int m_cachedKnownSkillCount = -1;
-        private int m_cachedMaxedSkillCount = -1;
+        private Dictionary<int, int> m_cachedLevelSkillsCount = null;
 
         private List<Skill> m_skillsChanged = new List<Skill>();
 
@@ -542,7 +542,7 @@ namespace EVEMon.Common
         {
             m_cachedSkillPointTotal = -1;
             m_cachedKnownSkillCount = -1;
-            m_cachedMaxedSkillCount = -1;
+            m_cachedLevelSkillsCount = null;
             lock (m_skillsChanged)
             {
                 m_skillsChanged.Add(gs);
@@ -642,20 +642,21 @@ namespace EVEMon.Common
             }
         }
 
-        public int MaxedSkillCount
+        public int SkillCountAtLevel(int level)
         {
-            get
+            if (m_cachedLevelSkillsCount == null)
             {
-                if (m_cachedMaxedSkillCount == -1)
+                m_cachedLevelSkillsCount = new Dictionary<int, int>();
+                for (int i=1;i<6;i++)
                 {
-                    m_cachedMaxedSkillCount = 0;
-                    foreach (SkillGroup gsg in m_skillGroups.Values)
+                    m_cachedLevelSkillsCount.Add(i,0);
+                    foreach (SkillGroup sg in m_skillGroups.Values)
                     {
-                        m_cachedMaxedSkillCount += gsg.MaxedCount;
+                        m_cachedLevelSkillsCount[i] += sg.GetSkillsAtLevel(i);
                     }
                 }
-                return m_cachedMaxedSkillCount;
             }
+            return m_cachedLevelSkillsCount[level];
         }
 
         private Skill m_currentlyTrainingSkill;

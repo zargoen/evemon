@@ -59,12 +59,7 @@ namespace EVEMon.Common
             get { return m_skills.Count; }
         }
 
-        public int MaxedCount
-        {
-            get { return GetMaxedSkills(); }
-        }
-
-        public int KnownCount
+         public int KnownCount
         {
             get
             {
@@ -103,12 +98,12 @@ namespace EVEMon.Common
             return result;
         }
 
-        public int GetMaxedSkills()
+        public int GetSkillsAtLevel(int level)
         {
             int result = 0;
-            foreach (Skill gs in m_skills.Values)
+            foreach (Skill s in m_skills.Values)
             {
-                if (gs.Level == 5) result++;
+                if (s.Level == level) result++;
             }
             return result;
         }

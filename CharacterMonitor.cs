@@ -343,7 +343,7 @@ namespace EVEMon
             lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
                                                 m_grandCharacterInfo.KnownSkillCount,
                                                 m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
-                                                m_grandCharacterInfo.MaxedSkillCount);
+                                                m_grandCharacterInfo.SkillCountAtLevel(5));
         }
 
         /// <summary>
@@ -1950,6 +1950,27 @@ namespace EVEMon
             ttToolTip.IsBalloon = false;
             ttToolTip.Active = true;
 
+        }
+
+        /// <summary>
+        /// Show a breakdown of the number of skills at each level
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lblSkillHeader_MouseHover(object sender, EventArgs e)
+        {
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1;i<6;i++)
+            {
+                if (i > 1) sb.Append("\n");
+                int count=m_grandCharacterInfo.SkillCountAtLevel(i);
+                sb.Append(String.Format("{0} Skills at Level {1}",count,i));
+            }
+
+            ttToolTip.SetToolTip(sender as Label, sb.ToString());
+            ttToolTip.IsBalloon = false;
+            ttToolTip.Active = true;
         }
 
 
