@@ -437,6 +437,7 @@ namespace EVEMon.SkillPlanner
 
         private void tsbSaveAs_Click(object sender, EventArgs e)
         {
+            sfdSave.Title = "Save to File";
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Skill Plan";
             sfdSave.FilterIndex = (int) SaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
@@ -578,6 +579,44 @@ namespace EVEMon.SkillPlanner
         private void tsddbPlans_MouseDown(object sender, MouseEventArgs e)
         {
             PopulateTsPlans();
+        }
+
+        private void tsbExportToXml_Click (object sender, EventArgs e)
+        {
+            sfdSave.Title = "Export to XML";
+            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Planned Character Export";
+            sfdSave.FilterIndex = (int)SaveType.Xml;
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            string fileName = sfdSave.FileName;
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+                SerializableCharacterInfo ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterInfo ();
+                m_plan.Merge (ci);
+                using(FileStream fs = new FileStream(fileName, FileMode.Create))
+                {
+                    XmlSerializer ser = new XmlSerializer (typeof (SerializableCharacterInfo));
+                    ser.Serialize (fs, ci);
+                }
+                this.Cursor = Cursors.Default;
+            }
+            catch (InvalidOperationException ioe)
+            {
+                ExceptionHandler.LogException (ioe, true);
+                MessageBox.Show ("There was an error writing out the file:\n\n" + ioe.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException (err, true);
+                MessageBox.Show ("There was an error writing out the file:\n\n" + err.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 

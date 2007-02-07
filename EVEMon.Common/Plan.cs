@@ -840,6 +840,62 @@ namespace EVEMon.Common
             return GetEntry(name, level);
         }
 
+        public void Merge(SerializableCharacterInfo ci)
+        {
+            foreach(Plan.Entry entry in this.Entries)
+            {
+                SkillGroup sg = entry.Skill.SkillGroup;
+                Skill s = entry.Skill;
+
+                // Check to see if this planned skills SkilLGroup exists in this SCI
+                SerializableSkillGroup currSsg = null;
+                foreach(SerializableSkillGroup ssg in ci.SkillGroups)
+                {
+                    if(ssg.Id == sg.ID)
+                    {
+                        currSsg = ssg;
+                        break;
+                    }
+                }
+
+                // We don't currently have this skill group, so add it
+                if(currSsg == null)
+                {
+                    currSsg = new SerializableSkillGroup ();
+                    currSsg.Id = sg.ID;
+                    currSsg.Name = sg.Name;
+                    currSsg.Skills = new List<SerializableSkill> ();
+                    ci.SkillGroups.Add (currSsg);
+                }
+
+                // Now check to see if the skill already exists in the group (which will be false
+                // if we just created this group, but that's okay)
+                SerializableSkill currSs = null;
+                foreach(SerializableSkill ss in currSsg.Skills)
+                {
+                    if(ss.Id == s.Id)
+                    {
+                        currSs = ss;
+                        break;
+                    }
+                }
+
+                // If it doesn't exist, create it
+                if(currSs == null)
+                {
+                    currSs = new SerializableSkill ();
+                    currSs.Name = s.Name;
+                    currSs.Id = s.Id;
+                    currSs.GroupId = sg.ID;
+                    currSs.Rank = s.Rank;
+                    currSsg.Skills.Add (currSs);
+                }
+
+                currSs.Level = entry.Level;
+                currSs.SkillPoints = s.GetPointsRequiredForLevel (entry.Level);
+            }
+        }
+
         #region Planner Window
         private static IPlannerWindowFactory m_plannerWindowFactory;
 
