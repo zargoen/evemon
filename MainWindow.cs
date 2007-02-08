@@ -302,20 +302,21 @@ namespace EVEMon
         }
 
         // Formats everything on the tooltip that isn't changed every second.
-        private string FormatTooltipText(string prefix, string fmt, SortedList<TimeSpan, CharacterInfo> gcis)
+        private string FormatTooltipText(string fmt, SortedList<TimeSpan, CharacterInfo> gcis)
         {
-            StringBuilder sb = new StringBuilder(prefix);
+            StringBuilder sb = new StringBuilder();
 
             if (String.IsNullOrEmpty(fmt) || gcis == null)
             {
                 if (String.Empty.Equals(fmt))
-                    sb.Append("\nYou can configure this tooltip in the options/general panel");
+                    sb.Append("You can configure this tooltip in the options/general panel");
                 return sb.ToString();
             }
 
             foreach (CharacterInfo gci in gcis.Values)
             {
-                sb.Append('\n').Append(Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
+                if (sb.Length != 0) sb.Append("\n");
+                sb.Append(Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
                 {
                     string value = String.Empty;
                     char capture = m.Groups[1].Value[0];
@@ -769,7 +770,7 @@ namespace EVEMon
 
                         //Mostly format the tooltip text, using the current contents of m_tooltipText as the first line.
                         SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
-                        m_tooltipText = FormatTooltipText(m_tooltipText, m_settings.TooltipString, gcis);
+                        m_tooltipText = FormatTooltipText(m_settings.TooltipString, gcis);
 
                         //Splice in the estimated time till completion.
                         string tooltipText = m_tooltipText;
