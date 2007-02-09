@@ -236,6 +236,7 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.TabIndex = 3;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
+            this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
             this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);

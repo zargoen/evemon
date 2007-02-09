@@ -1054,6 +1054,14 @@ namespace EVEMon.SkillPlanner
             }
             m_settings = Settings.GetInstance();
         }
+
+        private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (lvSkills.SelectedItems.Count == 1)
+            {
+                miShowInSkillBrowser_Click(sender, e);
+            }
+        }
     
     }
 }
