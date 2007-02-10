@@ -209,6 +209,12 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\AttributeDisplayControl.cs" />
+    <Compile Include="SkillPlanner\ChangePriorityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ChangePriorityForm.Designer.cs">
+      <DependentUpon>ChangePriorityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\CrossPlanSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -241,12 +247,6 @@
     </Compile>
     <Compile Include="SkillCompleteDialog.Designer.cs">
       <DependentUpon>SkillCompleteDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\AddPlanConfirmWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\AddPlanConfirmWindow.Designer.cs">
-      <DependentUpon>AddPlanConfirmWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\CancelChoiceWindow.cs">
       <SubType>Form</SubType>
@@ -418,6 +418,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>ManualImplantDetailWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NoFlickerListBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>NoFlickerListBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="output-html.xsl" />
     <EmbeddedResource Include="ProxyAuthenticationWindow.resx">
       <SubType>Designer</SubType>
@@ -457,6 +461,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ChangePriorityForm.resx">
+      <DependentUpon>ChangePriorityForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\CrossPlanSelect.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CrossPlanSelect.cs</DependentUpon>
@@ -472,10 +480,6 @@
     <EmbeddedResource Include="SkillPlanner\SkillBrowserControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SkillBrowserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\AddPlanConfirmWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>AddPlanConfirmWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\CancelChoiceWindow.resx">
       <SubType>Designer</SubType>

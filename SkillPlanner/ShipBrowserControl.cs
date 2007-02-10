@@ -335,7 +335,7 @@ namespace EVEMon.SkillPlanner
             {
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }
-            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
+            m_plan.PlanSetTo(skillsToAdd, m_note, true);
             shipSelectControl_SelectedShipChanged(new Object(), new EventArgs());
         }
 

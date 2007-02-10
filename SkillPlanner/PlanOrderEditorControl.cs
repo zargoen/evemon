@@ -315,6 +315,9 @@ namespace EVEMon.SkillPlanner
                                 case ColumnPreference.ColumnType.SPPerHour:
                                     res = spHour.ToString();
                                     break;
+                                case ColumnPreference.ColumnType.Priority:
+                                    res = pe.Priority.ToString();
+                                    break;
                             }
                         }
                         else
@@ -695,6 +698,7 @@ namespace EVEMon.SkillPlanner
         {
             miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
             miChangeNote.Enabled = (lvSkills.SelectedItems.Count >0);
+            miChangePriority.Enabled = miChangeNote.Enabled;
             if (lvSkills.SelectedItems.Count == 1)
             {
                 miChangeNote.Text = "View/Change Note...";
@@ -729,11 +733,11 @@ namespace EVEMon.SkillPlanner
             }
             if (lvSkills.SelectedItems.Count >= 1)
             {
-                miExportPlan.Enabled = true;
+                miSubPlan.Enabled = true;
             }
             else 
             {
-                miExportPlan.Enabled = false;
+                miSubPlan.Enabled = false;
             }
 
         }
@@ -759,6 +763,55 @@ namespace EVEMon.SkillPlanner
         {
             //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key
             RemoveEntry();            
+        }
+
+        private void miChangePriority_Click(object sender, EventArgs e)
+        {
+            using (ChangePriorityForm f = new ChangePriorityForm())
+            {
+                if (lvSkills.SelectedItems.Count == 1)
+                {
+                    Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+                    f.Priority = pe.Priority;
+                }
+                else 
+                {
+                    f.Priority = Plan.Entry.DEFAULT_PRIORITY;
+                }
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+                Dictionary<Plan.Entry, Plan.Entry> backup = new Dictionary<Plan.Entry, Plan.Entry>();
+                foreach (ListViewItem lvi in lvSkills.SelectedItems)
+                {
+                    Plan.Entry penew = lvi.Tag as Plan.Entry;
+                    Plan.Entry peold = (Plan.Entry)penew.Clone();
+                    penew.Priority = f.Priority;
+                    backup.Add(penew,peold);
+                }
+
+                if (!m_plan.CheckPriorities(false))
+                {
+                    DialogResult drb = MessageBox.Show("This would result in a priorioty conflict. (Either pre-requisites with a lower priority, or dependant skills with a higher priorty.)\nClick Yes if you wish to do this, and adjust the other skills, or No if you do not wish to change the priority", "Priority Conflict", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (drb == DialogResult.No)
+                    {
+                        // cancel!
+                        foreach (Plan.Entry pe in backup.Keys)
+                        {
+                            pe.Priority = backup[pe].Priority;
+                        }
+                    }
+                    else
+                    {
+                        m_plan.CheckPriorities(true);
+                    }
+                }
+
+                UpdateListViewItems();
+                Program.Settings.Save();
+            }
         }
 
         private void RemoveEntry()
@@ -829,7 +882,7 @@ namespace EVEMon.SkillPlanner
             Program.Settings.Save();
         }
 
-        private void miExportPlan_Click(object sender, EventArgs e)
+        private void miSubPlan_Click(object sender, EventArgs e)
         {
             bool doAgain = true;
             while (doAgain)
@@ -1009,7 +1062,7 @@ namespace EVEMon.SkillPlanner
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst);
+                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst,f.Priority);
                     tsbMoveDown.Enabled = false;
                     tsbMoveUp.Enabled = false;
                 }
@@ -1061,7 +1114,7 @@ namespace EVEMon.SkillPlanner
             {
                 miShowInSkillBrowser_Click(sender, e);
             }
-        }
-    
+         }
+
     }
 }

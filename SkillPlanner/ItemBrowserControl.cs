@@ -252,7 +252,7 @@ namespace EVEMon.SkillPlanner
             {
                 skillsToAdd.Add(new Pair<string, int>(irs.Name, irs.Level));
             }
-            AddPlanConfirmWindow.AddSkillsWithConfirm(m_plan, skillsToAdd,m_note);
+            m_plan.PlanSetTo(skillsToAdd, m_note, true);
             itemSelectControl1_SelectedItemChanged(new Object(), new EventArgs());
         }
 

@@ -60,7 +60,8 @@ namespace EVEMon.Common
             [ColumnDisplay("Notes", "Notes")] Notes,
             [ColumnDisplay("Plan Type (Planned/Prerequisite)", "Type")] PlanType,
             [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal,
-            [ColumnDisplay("SP/Hour", "SP/Hour")] SPPerHour
+            [ColumnDisplay("SP/Hour", "SP/Hour")] SPPerHour,
+            [ColumnDisplay("Priority", "Priority")] Priority
         }
 
         private bool[] m_prefs;
@@ -73,11 +74,13 @@ namespace EVEMon.Common
                 m_prefs[i] = false;
             }
 
+            // TODO - These should be configurable defaults...
             this.SkillName = true;
             this.PlanGroup = true;
             this.TrainingTime = true;
             this.EarliestStart = true;
             this.EarliestEnd = true;
+            this.Priority = true;
         }
 
         private string m_order = String.Empty;
@@ -263,5 +266,13 @@ namespace EVEMon.Common
             get { return this[ColumnType.SPPerHour]; }
             set { this[ColumnType.SPPerHour] = value; }
         }
+
+        [XmlAttribute]
+        public bool Priority
+        {
+            get { return this[ColumnType.Priority]; }
+            set { this[ColumnType.Priority] = value; }
+        }
+
     }
 }

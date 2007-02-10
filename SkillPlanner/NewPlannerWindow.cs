@@ -320,6 +320,8 @@ namespace EVEMon.SkillPlanner
                 int i = 0;
                 foreach (Plan.Entry pe in entries)
                 {
+                    // make learning skills top priority
+                    pe.Priority = 1;
                     m_plan.Entries.Insert(i, pe);
                     i++;
                 }
@@ -329,7 +331,7 @@ namespace EVEMon.SkillPlanner
                 m_plan.CheckForMissingPrerequisites();
 
                 // Arrange the learning skills in the plan in optimal order
-                PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true);
+                PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true,false);
             }
             finally
             {

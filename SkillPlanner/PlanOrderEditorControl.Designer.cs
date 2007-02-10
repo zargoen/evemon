@@ -32,9 +32,10 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanOrderEditorControl));
             this.cmsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.miChangePriority = new System.Windows.Forms.ToolStripMenuItem();
             this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.miSubPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.miRemoveFromPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miPlanGroups = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,14 +61,15 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmsContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miChangeNote,
+            this.miChangePriority,
             this.miShowInSkillBrowser,
             this.toolStripMenuItem1,
-            this.miExportPlan,
+            this.miSubPlan,
             this.miRemoveFromPlan,
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(197, 126);
+            this.cmsContextMenu.Size = new System.Drawing.Size(197, 170);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -76,6 +78,13 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote.Size = new System.Drawing.Size(196, 22);
             this.miChangeNote.Text = "View/Change Note...";
             this.miChangeNote.Click += new System.EventHandler(this.miChangeNote_Click);
+            // 
+            // miChangePriority
+            // 
+            this.miChangePriority.Name = "miChangePriority";
+            this.miChangePriority.Size = new System.Drawing.Size(196, 22);
+            this.miChangePriority.Text = "Change Priority...";
+            this.miChangePriority.Click += new System.EventHandler(this.miChangePriority_Click);
             // 
             // miShowInSkillBrowser
             // 
@@ -89,12 +98,12 @@ namespace EVEMon.SkillPlanner
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(193, 6);
             // 
-            // miExportPlan
+            // miSubPlan
             // 
-            this.miExportPlan.Name = "miExportPlan";
-            this.miExportPlan.Size = new System.Drawing.Size(196, 22);
-            this.miExportPlan.Text = "Create Sub-plan...";
-            this.miExportPlan.Click += new System.EventHandler(this.miExportPlan_Click);
+            this.miSubPlan.Name = "miSubPlan";
+            this.miSubPlan.Size = new System.Drawing.Size(196, 22);
+            this.miSubPlan.Text = "Create Sub-plan...";
+            this.miSubPlan.Click += new System.EventHandler(this.miSubPlan_Click);
             // 
             // miRemoveFromPlan
             // 
@@ -285,6 +294,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miPlanGroups;
-        private System.Windows.Forms.ToolStripMenuItem miExportPlan;
+        private System.Windows.Forms.ToolStripMenuItem miSubPlan;
+        private System.Windows.Forms.ToolStripMenuItem miChangePriority;
     }
 }

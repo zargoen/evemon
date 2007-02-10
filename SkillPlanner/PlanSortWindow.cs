@@ -49,12 +49,14 @@ namespace EVEMon.SkillPlanner
                     (PlanSortType) cbSortType.SelectedIndex);
             if (descAttr != null)
             {
-                lblDescription.Text = descAttr.Description;
+                String txt = String.Empty;
+                lblDescription.Text = txt + descAttr.Description;
             }
             else
             {
                 lblDescription.Text = String.Empty;
             }
+
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -65,6 +67,7 @@ namespace EVEMon.SkillPlanner
 
         private PlanSortType m_resultSortType;
         private bool m_resultLearningFirst;
+        private bool m_resultUsePriority;
 
         public PlanSortType SortType
         {
@@ -76,10 +79,16 @@ namespace EVEMon.SkillPlanner
             get { return m_resultLearningFirst; }
         }
 
+        public bool Priority
+        {
+            get { return m_resultUsePriority; }
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
             m_resultSortType = (PlanSortType) cbSortType.SelectedIndex;
             m_resultLearningFirst = cbArrangeLearning.Checked;
+            m_resultUsePriority = cbUsePriority.Checked;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -175,21 +184,23 @@ namespace EVEMon.SkillPlanner
             sm_idealLearningSkillOrder = idealBuilder.ToArray();
         }
 
-        public static void SortPlan(Plan p, PlanSortType sortType, bool learningFirst)
+        public static void SortPlan(Plan p, PlanSortType sortType, bool learningFirst, bool usePriority)
         {
-            PlanSorter ps = new PlanSorter(p, sortType, learningFirst);
+            PlanSorter ps = new PlanSorter(p, sortType, learningFirst,usePriority);
             ps.Sort();
         }
 
         private Plan m_plan;
         private PlanSortType m_sortType;
         private bool m_learningFirst;
+        private bool m_usePriority;
 
-        private PlanSorter(Plan p, PlanSortType sortType, bool learningFirst)
+        private PlanSorter(Plan p, PlanSortType sortType, bool learningFirst, bool usePriority)
         {
             m_plan = p;
             m_sortType = sortType;
             m_learningFirst = learningFirst;
+            m_usePriority = usePriority;
         }
 
         private List<Plan.Entry> m_originalOrder = new List<Plan.Entry>();
@@ -211,7 +222,55 @@ namespace EVEMon.SkillPlanner
                 {
                     ArrangeLearningSkills();
                 }
-                ArrangeInSortTypeOrder();
+                m_trainedLevels = new Dictionary<string, int>();
+                if (m_usePriority)
+                {
+                    List<Plan.Entry> skillsLeft = new List<Plan.Entry>();
+                    foreach (Plan.Entry pe in m_skillsToInsert)
+                    {
+                        skillsLeft.Add(pe);
+                    }
+                    while (skillsLeft.Count > 0)
+                    {
+                        // Find the next highest priority left to insert
+                        int highestPriority = Int32.MaxValue;
+                        foreach (Plan.Entry pe1 in skillsLeft)
+                        {
+                            if (pe1.Priority < highestPriority)
+                            {
+                                highestPriority = pe1.Priority;
+                            }
+                        }
+                        // and build a list of those skills at that priority
+                        m_skillsToInsert.Clear();
+                        for (int i = 0; i < skillsLeft.Count; i++ )
+                        {
+                            if (skillsLeft[i].Priority == highestPriority)
+                            {
+                                m_skillsToInsert.Add(skillsLeft[i]);
+                            }
+                        }
+                        // and sort this priority group
+                        ArrangeInSortTypeOrder();
+
+                        // Finally, remove any entries that were just added to the plan
+                        foreach (Plan.Entry npe in m_plan.Entries)
+                        {
+                            for (int i = 0; i < skillsLeft.Count; i++)
+                            {
+                                if (skillsLeft[i].SkillName == npe.SkillName && skillsLeft[i].Level == npe.Level)
+                                {
+                                    skillsLeft.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else  // not sorting by priority
+                {
+                    ArrangeInSortTypeOrder();
+                }
             }
             catch (Exception ex)
             {
@@ -252,14 +311,16 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        Dictionary<string, int> m_trainedLevels = new Dictionary<string, int>();
+
         private void ArrangeFastestFirst()
         {
-            Dictionary<string, int> trainedLevels = new Dictionary<string, int>();
 
             while (m_skillsToInsert.Count > 0)
             {
                 TimeSpan fastestSpan = TimeSpan.MaxValue;
                 Plan.Entry fastestPe = null;
+                // find the fatstest skill that already has it's prereqs added to the plan
                 for (int i = 0; i < m_skillsToInsert.Count; i++)
                 {
                     Plan.Entry thisPe = m_skillsToInsert[i];
@@ -267,19 +328,24 @@ namespace EVEMon.SkillPlanner
                     TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, true);
                     if (thisSpan < fastestSpan)
                     {
+                        // this is potentially the fastest skill...
                         bool canInsert = true;
+
+                        // but do we have the prereqs already added to the sorted plan?
                         foreach (Skill.Prereq pp in thisSkill.Prereqs)
                         {
                             if (pp.Skill.Level < pp.RequiredLevel)
                             {
-                                if (!trainedLevels.ContainsKey(pp.Name) ||
-                                    trainedLevels[pp.Name] < pp.RequiredLevel)
+                                if (!m_trainedLevels.ContainsKey(pp.Name) ||
+                                    m_trainedLevels[pp.Name] < pp.RequiredLevel)
                                 {
+                                    // prereq not yet added to sorted plan so this isn't a candidate
                                     canInsert = false;
                                     break;
                                 }
                             }
                         }
+                        // We have the prereqs inserted for the sorted plan so this is a candidate
                         if (canInsert)
                         {
                             fastestSpan = thisSpan;
@@ -294,7 +360,7 @@ namespace EVEMon.SkillPlanner
 
                 m_plan.Entries.Add((Plan.Entry) fastestPe.Clone());
                 m_skillsToInsert.Remove(fastestPe);
-                trainedLevels[fastestPe.SkillName] = fastestPe.Level;
+                m_trainedLevels[fastestPe.SkillName] = fastestPe.Level;
             }
         }
 

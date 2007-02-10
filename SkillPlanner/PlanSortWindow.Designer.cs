@@ -29,6 +29,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbUsePriority = new System.Windows.Forms.CheckBox();
             this.cbArrangeLearning = new System.Windows.Forms.CheckBox();
             this.lblDescription = new System.Windows.Forms.Label();
             this.cbSortType = new System.Windows.Forms.ComboBox();
@@ -40,16 +41,28 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbUsePriority);
             this.groupBox1.Controls.Add(this.cbArrangeLearning);
             this.groupBox1.Controls.Add(this.lblDescription);
             this.groupBox1.Controls.Add(this.cbSortType);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(338, 149);
+            this.groupBox1.Size = new System.Drawing.Size(338, 178);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Sort Type";
+            // 
+            // cbUsePriority
+            // 
+            this.cbUsePriority.AutoSize = true;
+            this.cbUsePriority.Location = new System.Drawing.Point(23, 78);
+            this.cbUsePriority.Name = "cbUsePriority";
+            this.cbUsePriority.Size = new System.Drawing.Size(122, 17);
+            this.cbUsePriority.TabIndex = 4;
+            this.cbUsePriority.Text = "Sort By Priority First";
+            this.cbUsePriority.UseVisualStyleBackColor = true;
+            this.cbUsePriority.Click += new System.EventHandler(this.cbSortType_SelectedIndexChanged);
             // 
             // cbArrangeLearning
             // 
@@ -68,9 +81,9 @@ namespace EVEMon.SkillPlanner
             this.lblDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDescription.Location = new System.Drawing.Point(20, 75);
+            this.lblDescription.Location = new System.Drawing.Point(20, 98);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(295, 58);
+            this.lblDescription.Size = new System.Drawing.Size(295, 77);
             this.lblDescription.TabIndex = 2;
             this.lblDescription.Text = "...";
             // 
@@ -98,7 +111,7 @@ namespace EVEMon.SkillPlanner
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(194, 173);
+            this.btnOk.Location = new System.Drawing.Point(194, 205);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -110,7 +123,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(275, 173);
+            this.btnCancel.Location = new System.Drawing.Point(275, 205);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -123,7 +136,7 @@ namespace EVEMon.SkillPlanner
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(362, 208);
+            this.ClientSize = new System.Drawing.Size(362, 240);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox1);
@@ -150,5 +163,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ComboBox cbSortType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox cbArrangeLearning;
+        private System.Windows.Forms.CheckBox cbUsePriority;
     }
 }

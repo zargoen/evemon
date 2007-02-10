@@ -49,6 +49,7 @@ namespace EVEMon.Common
 
                         CheckForCompletedSkills();
                         CheckForMissingPrerequisites();
+                        // TODO this is where we need to sanity check prereqs
                     }
                 }
                 finally
@@ -329,6 +330,7 @@ namespace EVEMon.Common
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
                             pe.Level = level;
+                            new Plan.Entry();
                             pe.EntryType = Plan.Entry.Type.Planned;
                             entries.Add(pe);
                         }
@@ -411,7 +413,7 @@ namespace EVEMon.Common
                     if (gs == null)
                     {
                         this.RemoveEntry(pe);
-                        return;
+                        continue;
                     }
 
                     foreach (Skill.Prereq pp in gs.Prereqs)
@@ -424,6 +426,7 @@ namespace EVEMon.Common
                             Plan.Entry npe = new Plan.Entry();
                             npe.SkillName = pgs.Name;
                             npe.Level = pp.RequiredLevel;
+                            npe.Priority = pe.Priority;
                             npe.EntryType = Plan.Entry.Type.Prerequisite;
                             m_entries.Insert(i, npe);
                             jumpBack = true;
@@ -452,6 +455,7 @@ namespace EVEMon.Common
                                 // ...it's not in the plan.
                                 Plan.Entry ppe = new Plan.Entry();
                                 ppe.SkillName = gs.Name;
+                                ppe.Priority = pe.Priority;
                                 ppe.Level = pe.Level - 1;
                                 m_entries.Insert(i, ppe);
                                 jumpBack = true;
@@ -469,11 +473,67 @@ namespace EVEMon.Common
                         }
                     }
                 }
+                CheckPriorities(true);
+                
+                // TODO - sanity check priorities (in case this is called by learning suggestions/plan import etc
             }
             finally
             {
                 this.ResumeEvents();
             }
+        }
+
+        /// <summary>
+        /// Check that the plan has a consistant set of priorities (i.e. pre-reqs have a higher priority
+        /// than dependant skills
+        /// 
+        /// If fixConflicts is true, then we set the priority of prerequisistes to the same as the 
+        /// highest priority of any dependant skill
+        /// </summary>
+        /// <param name="fixConflicts"></param>
+        /// <returns></returns>
+        public bool CheckPriorities(bool fixConflicts)
+        {
+            bool planOK = true;
+            // start with 2nd entry in plan
+            for (int i = 0; i < m_entries.Count; i++)
+            {
+                Plan.Entry pe = m_entries[i];
+                Skill s = pe.Skill;
+                int highestDepPriority = Int32.MaxValue;
+                // find all dependants on this skill and get the highest priority
+                for (int j = i+1; j < m_entries.Count; j++)
+                {
+                    Plan.Entry ped = m_entries[j];
+                    Skill sd = ped.Skill;
+                    if (sd.Name == s.Name && pe.Level < ped.Level)
+                    {
+                        if (ped.Priority < highestDepPriority) highestDepPriority = ped.Priority;
+                    }
+                    else
+                    {
+                        int neededLevel=0;
+                        bool x = sd.HasAsPrerequisite(s, out neededLevel);
+                        if (x && neededLevel >= pe.Level)
+                        {
+                            if (ped.Priority < highestDepPriority) highestDepPriority = ped.Priority;
+                        }
+                    }
+                }
+                if (pe.Priority > highestDepPriority)
+                {
+                    planOK = false;
+                    if (fixConflicts) 
+                    {
+                        pe.Priority = highestDepPriority;
+                    }
+                    else 
+                    {
+                        break;
+                    }
+                }
+            }
+            return planOK;
         }
 
         private int GetIndexOf(string skillName, int level)
@@ -537,36 +597,42 @@ namespace EVEMon.Common
 
         public bool IsPlanned(Skill gs, int level)
         {
+            return Priority(gs,level) != Int32.MinValue;
+        }
+
+        public int Priority(Skill gs, int level)
+        {
             foreach (Plan.Entry pe in m_entries)
             {
                 if (pe.SkillName == gs.Name && pe.Level == level)
                 {
-                    return true;
+                    return pe.Priority;
                 }
             }
-            return false;
+            return Int32.MinValue;
         }
 
+
+        
         /// <summary>
-        /// Used to build a list of prerequites and preceding levels of a skill when adding a new skill
-        /// to the plan.  As we check for prereqs and previous levels of skill, we build up a candidate
-        /// list of plan entries. 
-        /// 
-        /// This method firstly ascertains that this Skill is neither already trained or already planned.
-        /// Then we examine the candidate list of skills that have been added so far, if any previous levels
-        /// of this skill are in the candidate list and we have passed in a Note,
-        /// then append the new note to those previous levels of this skill in the candiates list.
+        /// Test if this skill & level is not trained and is not already in the list of candidate entries
+        /// This is needed as sometimes the chain of prerequisites will include the same skill twice
+        /// e.g. Assuming we have Gunnery II and want to train Large hybrid turret
+        /// we need gunnery V and medium hybrid turret  and medium hybrid also requires Gunnery III so we would
+        /// have Gunnery III twice in the prereqs list.
+        /// If we do find a prereq that's alreay in the list, ensure that the note contains the reason
+        /// we're adding these skills.
         /// </summary>
-        /// <param name="gs">The Skill we're adding</param>
-        /// <param name="level">And the level we want to add</param>
-        /// <param name="list">The working candidate list of skills that are going to be added prior to this. NB The Note field of the entries in this list can be modified in this method.</param>
-        /// <param name="Note">If the skill should be added, then append the note to any previous levels of this skill that are in the candidate list</param>
-        /// <returns>true if the skill should be added to the candidate list or false if not</returns>
+        /// <param name="gs">The skill we're wanting to add</param>
+        /// <param name="level">and it's level</param>
+        /// <param name="list">The list of prereqs we're already adding</param>
+        /// <param name="Note">The reason we're adding these skills</param>
+        /// <returns>true if we should add this entry</returns>
         
         private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
-            // check that the current level is less than the planned level and not planned
-            if (gs.Level < level && !IsPlanned(gs, level))
+            // check that the current level is less than the requsted level
+            if (gs.Level < level)
             {
                 foreach (Plan.Entry pe in list)
                 {
@@ -592,8 +658,31 @@ namespace EVEMon.Common
                 AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
-                    if (ShouldAdd(pgs, i, planEntries, Note))
+                    // do we already have this planned?
+                    if (IsPlanned(pgs, i))
                     {
+                        // get the Priority and see if it's the lowest so far (higher numbers = lower priority)...
+                        int pr = Priority(pgs, i);
+                        if (pr > m_lowestPrereqPriority) m_lowestPrereqPriority = pr;
+
+                        // Yes it's planned but we need to update the note so add a "Note only" entry
+                        if (!ExistInPlannedEntries(planEntries, pgs.Name, i))
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = pgs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.AddNoteonly = true;
+                            pe.Priority = pr;
+                            pe.EntryType = Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                    }
+                    // not planned - check again  if trained or already in the candidate entries
+                    // (need a second check to ensure other prepreqs have not added this yet)
+                    else if (ShouldAdd(pgs, i, planEntries,Note))
+                    {
+
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
@@ -605,15 +694,23 @@ namespace EVEMon.Common
             }
         }
 
-        /// <summary>
-        /// See PlanTo(Skill,level,Note)
-        /// </summary>
-        /// <param name="gs"></param>
-        /// <param name="level"></param>
+        public void PlanTo(Skill gs, int level, bool confirm)
+        {
+            string n = gs.Name;
+            PlanTo(gs, level, n, confirm);
+        }
+
         public void PlanTo(Skill gs, int level)
         {
-            PlanTo(gs, level, gs.Name);
+            string n = gs.Name;
+            PlanTo(gs, level, n, false);
         }
+
+        public void PlanTo(Skill gs, int level,string note)
+        {
+            PlanTo(gs, level, note, false);
+        }
+
 
         /// <summary>
         /// Check if the plan contains the given Skill at the specified level.
@@ -628,66 +725,125 @@ namespace EVEMon.Common
         /// <param name="gs">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
         /// <param name="note">The reason we want to train this skill</param>
-        public void PlanTo(Skill gs, int level,string note)
+        /// <param name="confirm">Asks the user to confirm the addition of the skills (and geta Priority)</param>
+
+        public void PlanTo(Skill gs, int level, string Note, bool confirm)
         {
             if (level == 0)
             {
-                //RemoveFromPlan();
                 RemoveEntry(GetEntry(gs.Name, level));
                 return;
             }
 
-            // Build up a list of any prereqs a previous levels
-            List<Plan.Entry> planEntries = new List<Plan.Entry>();
-
-            // First of all, add any untrained prerequisutes this skill needs
-            AddPrerequisiteEntries(gs, planEntries, note);
-
-            // Add all levels of this skill from 1 to required level
-            for (int i = 1; i <= level; i++)
+            List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
+            skillsToAdd.Add(new Pair<string, int>(gs.Name, level));
+            bool result = PlanSetTo(skillsToAdd, Note, confirm);
+            if (!result)
             {
-                // Determine if this level of skill should be added to the plan entries
-                if (ShouldAdd(gs, i, planEntries, note))
-                {
-                    Plan.Entry pe = new Plan.Entry();
-                    pe.SkillName = gs.Name;
-                    pe.Notes = note;
-                    if (i == level)
-                        pe.EntryType = Plan.Entry.Type.Planned;
-                    else
-                        pe.EntryType = Plan.Entry.Type.Prerequisite;
-
-                    pe.Level = i;
-                    planEntries.Add(pe);
-                }
-            }
-
-            // OK we've examined the prereqs and previous levels for the skill...
-            // See if we need to add or remove entries
-            if (planEntries.Count > 0)
-            {
-                // we're increasing the level, so add the entries
-                AddList(planEntries);
-            }
-            else
-            {
-                // There's nothing to add, so we know the skill at this level...
-                // remove all levels of the skill higher than the one planned
+                // there were no skills to be added - we must be lowering the level...
                 for (int i = 5; i > level; i--)
                 {
                     Plan.Entry pe = GetEntry(gs.Name, i);
                     if (pe != null)
+                    {
                         RemoveEntry(pe);
+                    }
                 }
-            }
-
-            // Now make the planned level a planned rather than a pre-req skill
-            {
-                Plan.Entry pe = GetEntry(gs.Name, level);
-                pe.EntryType = Entry.Type.Planned;
             }
         }
 
+        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd,string Note,bool withConfirm)
+        {
+            List<Plan.Entry> planEntries = new List<Plan.Entry>();
+            m_lowestPrereqPriority = Int32.MinValue;
+
+            foreach (Pair<string, int> ts in skillsToAdd)
+            {
+                Skill gs = GrandCharacterInfo.GetSkill(ts.A);
+
+                // determine if this skill and level is either trained or already in the planned entries
+                if (ShouldAdd(gs, ts.B, planEntries, Note))
+                {
+                    // Yes it should - check the prereqs of this skill
+                    AddPrerequisiteEntries(gs, planEntries, Note);
+                    // and now add this skill and all preceding levels of it
+                    for (int i = 1; i <= ts.B; i++)
+                    {
+                        if (IsPlanned(gs, i))
+                        {
+                            // get the Priority and see if it's the lowest so far (higher numbers = lower priority)...
+                            int pr = Priority(gs, i);
+                            if (pr > m_lowestPrereqPriority) m_lowestPrereqPriority = pr;
+    
+                            //Skill at this level is planned - just update the Note.
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.AddNoteonly = true;
+                            pe.Priority = pr;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                        else if (ShouldAdd(gs, i, planEntries, Note))
+                        // check again if we should add this skill it may have been added by other prereqs
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                    }
+                }
+            }
+            bool result = false;
+            if (planEntries.Count > 0)
+            {
+                // check that we have at least  one entry not already on the plan 
+                // (we could be reducing a skill level)
+                foreach (Plan.Entry pe in planEntries)
+                {
+                    if (pe.AddNoteonly == false)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+                if (result)
+                {
+                    // OK we have a list of candidate plan entries - check with the user and add them
+                    if (withConfirm)
+                    {
+                        if (AddPlanConfirmWindow.ConfirmSkillAdd(planEntries, m_lowestPrereqPriority))
+                        {
+                            AddList(planEntries);
+                        }
+                    }
+                    else
+                    {
+                        // Not asking user for confirmation, so we need to set priorites, set them to be  current highest for any prereqs, or default if the default is a lower priority
+                        // (i.e. a higher number)
+                        if (Plan.Entry.DEFAULT_PRIORITY > m_lowestPrereqPriority) m_lowestPrereqPriority = Plan.Entry.DEFAULT_PRIORITY;
+                        foreach (Plan.Entry pe in planEntries)
+                        {
+                            if (!pe.AddNoteonly)
+                                pe.Priority = m_lowestPrereqPriority;
+                        }
+                    }
+                }
+            }
+            else if (withConfirm)
+            {
+                MessageBox.Show("All the required skills are already in your plan.",
+                                "Already Planned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            return result;
+        }
+
+        private int m_lowestPrereqPriority;
+       
         public void AddList(List<Plan.Entry> planEntries)
         {
             this.SuppressEvents();
@@ -695,6 +851,9 @@ namespace EVEMon.Common
             {
                 foreach (Plan.Entry pe in planEntries)
                 {
+                    // If we're updating an existing entry, just
+                    // change the note and the priority (user may have requested
+                    // a different prioroty for a specific ship/item
                     if (pe.AddNoteonly)
                     {
                         Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
@@ -703,6 +862,7 @@ namespace EVEMon.Common
                         {
                             if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
                             pn.Notes = pn.Notes + pe.Notes;
+                            pn.Priority = pe.Priority;
                             m_entries.ForceUpdate(pn, ChangeType.Added);
                         }
                     }
@@ -720,6 +880,7 @@ namespace EVEMon.Common
 
         public bool RemoveEntry(Plan.Entry pe)
         {
+            if (pe == null) return false;
             this.SuppressEvents();
             try
             {
@@ -895,6 +1056,16 @@ namespace EVEMon.Common
                 currSs.SkillPoints = s.GetPointsRequiredForLevel (entry.Level);
             }
         }
+
+        private bool ExistInPlannedEntries(List<Plan.Entry> planEntries, string eSkillName, int eSkillLevel)
+        {
+            foreach (Plan.Entry pe in planEntries)
+            {
+                if (pe.SkillName == eSkillName && pe.Level == eSkillLevel) return true;
+            }
+            return false;
+        }
+
 
         #region Planner Window
         private static IPlannerWindowFactory m_plannerWindowFactory;
@@ -1175,6 +1346,8 @@ namespace EVEMon.Common
                 }
             }
 
+  
+
             private Plan m_owner;
             private string m_skillName;
             private int m_level;
@@ -1182,6 +1355,8 @@ namespace EVEMon.Common
             private Entry.Type m_entryType;
             private bool m_addNoteonly = false;
             private string m_notes;
+            public static readonly int DEFAULT_PRIORITY = 3;
+            private int m_priority = DEFAULT_PRIORITY;
 
             [XmlIgnore]
             public Plan Plan
@@ -1251,6 +1426,12 @@ namespace EVEMon.Common
             {
                 get { return (m_notes == null ? "" : m_notes); }
                 set { m_notes = value; }
+            }
+
+            public int Priority
+            {
+                get { return m_priority; }
+                set { m_priority = value; }
             }
 
             [XmlIgnore]
@@ -1335,6 +1516,7 @@ namespace EVEMon.Common
                 Plan.Entry pe = new Plan.Entry();
                 pe.SkillName = this.SkillName;
                 pe.Level = this.Level;
+                pe.Priority =  this.Priority;
                 pe.PlanGroups = (System.Collections.ArrayList)this.PlanGroups.Clone();
                 pe.EntryType = this.EntryType;
                 pe.Notes = this.Notes;
