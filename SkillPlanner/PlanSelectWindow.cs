@@ -460,18 +460,31 @@ namespace EVEMon.SkillPlanner
 
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            string PlanName = (string) lbPlanList.SelectedItems[0].Text;
+            string planName;
+            string title = "Delete Plan";
+            if (lbPlanList.SelectedItems.Count > 1)
+            {
+                planName = "the selected plans";
+                title += "s";
+            }
+            else
+            {
+                planName = "\"" + lbPlanList.SelectedItems[0].Text + "\"";
+            }
 
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete \"" + PlanName +
-                                              "\"?", "Delete Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+            DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName +
+                                              "\"?", title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                                               MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
             {
                 return;
             }
-
-            m_settings.RemovePlanFor(m_charKey, PlanName);
-            lbPlanList.Items.RemoveAt(lbPlanList.SelectedIndices[0]);
+            foreach (ListViewItem lvi in lbPlanList.SelectedItems)
+            {
+                planName = lvi.Text;
+                m_settings.RemovePlanFor(m_charKey, planName);
+                lbPlanList.Items.RemoveAt(lbPlanList.Items.IndexOf(lvi));
+            }
             lbPlanList.SelectedItems.Clear();
         }
         #region Dragging
@@ -634,12 +647,14 @@ namespace EVEMon.SkillPlanner
                     // If multiple items selected, grey out the context menu
                     if (lbPlanList.SelectedItems.Count > 1)
                     {
-                        deletePlanToolStripMenuItem.Enabled = false;
+                        deletePlanToolStripMenuItem.Text = "Delete Plans";
+                        deletePlanToolStripMenuItem.Enabled = true;
                         renamePlanToolStripMenuItem.Enabled = false;
                         openPlanToolStripMenuItem.Text = "Merge Plans";
                     }
                     else
                     {
+                        deletePlanToolStripMenuItem.Text = "Delete Plan";
                         deletePlanToolStripMenuItem.Enabled = true;
                         renamePlanToolStripMenuItem.Enabled = true;
                         openPlanToolStripMenuItem.Enabled = true;
