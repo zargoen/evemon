@@ -418,10 +418,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>ManualImplantDetailWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NoFlickerListBox.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>NoFlickerListBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="output-html.xsl" />
     <EmbeddedResource Include="ProxyAuthenticationWindow.resx">
       <SubType>Designer</SubType>
