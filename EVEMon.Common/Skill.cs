@@ -390,7 +390,11 @@ namespace EVEMon.Common
         {
             get
             {
-                return CurrentSkillPoints > GetPointsRequiredForLevel(Level);
+                bool pt;
+                if (Level == 0 && Known) pt = true;
+                else
+                    pt = CurrentSkillPoints > GetPointsRequiredForLevel(Level);
+                return pt;
             }
         }
 
