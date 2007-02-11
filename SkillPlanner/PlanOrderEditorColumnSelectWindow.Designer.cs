@@ -33,6 +33,8 @@ namespace EVEMon.SkillPlanner
             this.label2 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.cbMakeDefault = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // clbColumns
@@ -45,7 +47,7 @@ namespace EVEMon.SkillPlanner
             this.clbColumns.IntegralHeight = false;
             this.clbColumns.Location = new System.Drawing.Point(12, 25);
             this.clbColumns.Name = "clbColumns";
-            this.clbColumns.Size = new System.Drawing.Size(295, 166);
+            this.clbColumns.Size = new System.Drawing.Size(295, 291);
             this.clbColumns.TabIndex = 0;
             this.clbColumns.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             // 
@@ -62,7 +64,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.Location = new System.Drawing.Point(12, 200);
+            this.label2.Location = new System.Drawing.Point(12, 348);
             this.label2.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(287, 39);
@@ -73,7 +75,7 @@ namespace EVEMon.SkillPlanner
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(147, 248);
+            this.btnOk.Location = new System.Drawing.Point(151, 396);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 0;
@@ -85,7 +87,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(232, 248);
+            this.btnCancel.Location = new System.Drawing.Point(232, 396);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -93,13 +95,37 @@ namespace EVEMon.SkillPlanner
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // btnReset
+            // 
+            this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReset.Location = new System.Drawing.Point(46, 396);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(99, 23);
+            this.btnReset.TabIndex = 3;
+            this.btnReset.Text = "Reset To Default";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // cbMakeDefault
+            // 
+            this.cbMakeDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbMakeDefault.AutoSize = true;
+            this.cbMakeDefault.Location = new System.Drawing.Point(12, 322);
+            this.cbMakeDefault.Name = "cbMakeDefault";
+            this.cbMakeDefault.Size = new System.Drawing.Size(89, 17);
+            this.cbMakeDefault.TabIndex = 4;
+            this.cbMakeDefault.Text = "Make Default";
+            this.cbMakeDefault.UseVisualStyleBackColor = true;
+            // 
             // PlanOrderEditorColumnSelectWindow
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(319, 283);
+            this.ClientSize = new System.Drawing.Size(319, 431);
+            this.Controls.Add(this.cbMakeDefault);
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.clbColumns);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
@@ -124,6 +150,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.CheckBox cbMakeDefault;
 
     }
 }

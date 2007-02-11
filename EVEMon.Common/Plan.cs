@@ -111,12 +111,19 @@ namespace EVEMon.Common
                           }, "change");
         }
         #endregion Members
-                
-        private ColumnPreference m_columnPreference = new ColumnPreference();
+
+        private ColumnPreference m_columnPreference = null;
 
         public ColumnPreference ColumnPreference
         {
-            get { return m_columnPreference; }
+            get 
+            {
+                if (m_columnPreference == null)
+                {
+                    m_columnPreference = Settings.GetInstance().ColumnPreferences;
+                }
+                return m_columnPreference; 
+            }
             set { m_columnPreference = value; }
         }
 

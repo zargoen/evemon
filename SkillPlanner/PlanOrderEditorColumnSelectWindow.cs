@@ -37,6 +37,13 @@ namespace EVEMon.SkillPlanner
                 m_preference[clbColumns.CheckedIndices[i]] = true;
             }
 
+            if (cbMakeDefault.Checked)
+            {
+                Settings settings = Settings.GetInstance();
+                ColumnPreference cp = settings.ColumnPreferences;
+                cp.CopyFrom(m_preference);
+            }
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -56,5 +63,13 @@ namespace EVEMon.SkillPlanner
                                      m_preference[i]);
             }
         }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ColumnPreference cp = Settings.GetInstance().ColumnPreferences;
+            m_preference.CopyFrom(cp);
+            this.PlanOrderEditorColumnSelectWindow_Load(null,null);
+        }
+
     }
 }

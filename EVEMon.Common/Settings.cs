@@ -364,6 +364,16 @@ namespace EVEMon.Common
         }
 
         #region Plan Settings
+
+        // needs to be before plans.
+        
+        ColumnPreference m_columnPreferences = new ColumnPreference();
+        public ColumnPreference ColumnPreferences
+        {
+            get { return m_columnPreferences; }
+            set { m_columnPreferences = value; }
+        }
+
         private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
 
         public List<Pair<string, Plan>> Plans
@@ -543,6 +553,8 @@ namespace EVEMon.Common
             }
             this.Save();
         }
+
+
         #endregion Plan Settings
 
         #region Character Cache

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common
 {
     [XmlRoot("ColumnPreference")]
-    public class ColumnPreference
+    public class ColumnPreference : ICloneable
     {
         public class ColumnDisplayAttribute : Attribute
         {
@@ -274,5 +274,28 @@ namespace EVEMon.Common
             set { this[ColumnType.Priority] = value; }
         }
 
+        #region ICloneable Members
+       
+        public object Clone()
+        {
+            ColumnPreference cp = new ColumnPreference();
+            for (int i = 0; i < this.m_prefs.Length; i++)
+            {
+                cp.m_prefs[i] = this.m_prefs[i];
+            }
+            cp.m_order = (string)this.m_order.Clone();
+            return cp;
+        }
+        
+        public void CopyFrom(ColumnPreference cp)
+        {
+            for (int i = 0; i < this.m_prefs.Length; i++)
+            {
+                this.m_prefs[i] = cp.m_prefs[i];
+            }
+            this.m_order = (string)cp.m_order.Clone();
+        }
+        #endregion
+ 
     }
 }
