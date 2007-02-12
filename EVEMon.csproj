@@ -91,12 +91,6 @@
     </Compile>
     <Compile Include="InstallerDeleter.cs" />
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="Login.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Login.Designer.cs">
-      <DependentUpon>Login.cs</DependentUpon>
-    </Compile>
     <Compile Include="LoginCharSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,10 +122,6 @@
     <EmbeddedResource Include="CharSelect.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CharSelect.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Login.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginCharSelect.resx">
       <SubType>Designer</SubType>

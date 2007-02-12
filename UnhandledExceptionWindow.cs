@@ -101,7 +101,7 @@ namespace EVEMon
             if (dr == DialogResult.Yes)
             {
                 Program.Settings.NeverSave();
-                Settings.ResetKey(Program.SettingKey);
+                Settings.Reset();
                 MessageBox.Show("Your settings have been reset.",
                                 "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;

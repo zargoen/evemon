@@ -43,39 +43,19 @@ namespace EVEMon
             niMinimizeIcon.Text = Application.ProductName;
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
 
-            if (!String.IsNullOrEmpty(m_settings.Username) &&
-                !String.IsNullOrEmpty(m_settings.Password) &&
-                !String.IsNullOrEmpty(m_settings.Character))
-            {
-                CharLoginInfo cli = new CharLoginInfo();
-                cli.Username = m_settings.Username;
-                cli.Password = m_settings.Password;
-                cli.CharacterName = m_settings.Character;
-                m_settings.AddCharacter(cli);
-                m_settings.Username = String.Empty;
-                m_settings.Password = String.Empty;
-                m_settings.Character = String.Empty;
-                m_settings.Save();
-            }
-
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
-                if (cli != null)
-                {
-                    AddTab(cli);
-                }
+                AddTab(cli);
             }
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
             foreach (CharFileInfo cfi in m_settings.CharFileList)
             {
-                if (cfi != null)
+                if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
                 {
-                    if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
-                    {
-                        invalidFiles.Add(cfi);
-                    }
+                    invalidFiles.Add(cfi);
                 }
             }
+    
             foreach (CharFileInfo cfi in invalidFiles)
             {
                 RemoveCharFileInfo(cfi);
@@ -201,25 +181,12 @@ namespace EVEMon
             }));
         }
 
-        private bool AddTab(CharLoginInfo cli)
-        {
-            TabPage tp = new TabPage(cli.CharacterName);
-            tp.UseVisualStyleBackColor = true;
-            tp.Tag = cli;
-            tp.Padding = new Padding(5);
-            CharacterMonitor cm = new CharacterMonitor(m_settings, cli);
-            cm.Parent = tp;
-            cm.Dock = DockStyle.Fill;
-            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
-            cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
-            cm.Start();
-            tcCharacterTabs.TabPages.Add(tp);
-            cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
-            SetRemoveEnable();
-            return true;
-
-        }
-
+        /// <summary>
+        /// Add a tab to the form for a file based character
+        /// </summary>
+        /// <param name="cfi">The object containing the character info</param>
+        /// <param name="silent">if true, prompt if the file is missing, else remove the character silently</param>
+        /// <returns>true if the character was added</returns>
         private bool AddTab(CharFileInfo cfi, bool silent)
         {
             SerializableCharacterInfo sci = SerializableCharacterInfo.CreateFromFile(cfi.Filename);
@@ -233,20 +200,42 @@ namespace EVEMon
                 return false;
             }
             cfi.CharacterName = sci.Name;
-            TabPage tp = new TabPage("(File) " + sci.Name);
-            tp.UseVisualStyleBackColor = true;
-            tp.Tag = cfi;
-            tp.Padding = new Padding(5);
             CharacterMonitor cm = new CharacterMonitor(m_settings, cfi, sci);
+            AddTab(cfi,"(File) " + sci.Name,cm);
+            return true;
+        }
+        /// <summary>
+        /// Adds a tab for an online based character
+        /// </summary>
+        /// <param name="cli">Object representing the character data</param>
+        /// <returns>true if the tab was added ok</returns>
+        private bool AddTab(CharLoginInfo cli)
+        {
+            CharacterMonitor cm = new CharacterMonitor(m_settings, cli);
+            AddTab(cli,cli.CharacterName,cm);
+            return true;
+        }
+
+        /// <summary>
+        /// Common method used to add either file based or online based character tab
+        /// This is where we actally create the tab and kick off the update thread
+        /// </summary>
+        /// <param name="charInfo">either a file based on online based info object</param>
+        /// <param name="title">Titke for the tab  - "character name" or "(file) character name"</param>
+        /// <param name="cm">The Character Monitor object to attach to this tab</param>
+        private void AddTab(object charInfo,string title,CharacterMonitor cm)
+        {
+            TabPage tp = new TabPage(title);
+            tp.UseVisualStyleBackColor = true;
+            tp.Tag = charInfo;
+            tp.Padding = new Padding(5);
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
-            //cm.SkillTrainingCompleted += new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
             cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
-            return true;
         }
 
         private void cm_ShortInfoChanged(object sender, EventArgs e)
@@ -389,37 +378,7 @@ namespace EVEMon
 
         private List<string> m_completedSkills = new List<string>();
 
-        /*private void cm_SkillTrainingCompleted(object sender, SkillTrainingCompletedEventArgs e)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                if (m_settings.PlaySoundOnSkillComplete)
-                    MP3Player.Play("SkillTrained.mp3", true);
-
-                if (m_settings.EnableBalloonTips)
-                {
-                    string sa = e.CharacterName + " has finished learning " + e.SkillName + ".";
-                    m_completedSkills.Add(sa);
-
-                    niAlertIcon.Text = "EVEMon - Skill Training Completed";
-                    niAlertIcon.BalloonTipTitle = "Skill Training Completed";
-                    if (m_completedSkills.Count == 1)
-                        niAlertIcon.BalloonTipText = sa;
-                    else if (m_completedSkills.Count > 1)
-                        niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
-                    niAlertIcon.BalloonTipIcon = ToolTipIcon.Info;
-                    niAlertIcon.Visible = true;
-                    niAlertIcon.ShowBalloonTip(30000);
-                    tmrAlertRefresh.Enabled = false;
-                    tmrAlertRefresh.Interval = 60000;
-                    tmrAlertRefresh.Enabled = true;
-                }
-
-                if (m_settings.EnableEmailAlert)
-                    Emailer.SendAlertMail(m_settings, e.SkillName, e.CharacterName);
-            }));
-        }*/
-
+       
         private void cm_DownloadAttemptCompleted(object sender, CharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
@@ -481,7 +440,6 @@ namespace EVEMon
                             if (m_completedSkills.Count == 0)
                             {
                                 // need to disable the alert and associated stuff 
-                                // Is this really as simple as: 
                                 niAlertIcon.Visible = false;
                                 tmrAlertRefresh.Enabled = false;
                             }
@@ -508,7 +466,6 @@ namespace EVEMon
             CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
             if (cm != null)
                 cm.Stop();
-            //cm.SkillTrainingCompleted -= new SkillTrainingCompletedHandler(cm_SkillTrainingCompleted);
             cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
             if (tp.Tag is CharLoginInfo)

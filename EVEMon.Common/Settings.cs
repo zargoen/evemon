@@ -14,29 +14,6 @@ namespace EVEMon.Common
     [XmlRoot("logindata2")]
     public class Settings
     {
-        private string m_username;
-
-        public string Username
-        {
-            get { return m_username; }
-            set { m_username = value; }
-        }
-
-        private string m_password;
-
-        public string Password
-        {
-            get { return m_password; }
-            set { m_password = value; }
-        }
-
-        private string m_character;
-
-        public string Character
-        {
-            get { return m_character; }
-            set { m_character = value; }
-        }        
 
         private bool m_useLogitechG15Display = false;
         public bool UseLogitechG15Display {
@@ -44,7 +21,7 @@ namespace EVEMon.Common
             set { m_useLogitechG15Display = value; OnUseLogitechG15DisplayChanged(); }
         }
 
-        public bool m_g15acycle = false;
+        private bool m_g15acycle = false;
         public bool G15ACycle
         {
             get { return m_g15acycle; }
@@ -63,7 +40,7 @@ namespace EVEMon.Common
                  }
         }
 
-        public int m_g15acycleint = 20;
+        private int m_g15acycleint = 20;
         public int G15ACycleint
         {
             get { return m_g15acycleint; }
@@ -843,21 +820,15 @@ namespace EVEMon.Common
         }
 
         #region Settings File Save / Load
-        private const string STORE_FILE_NAME = "evemon-logindata{0}.xml";
-
-        private static string StoreFileName(string key)
-        {
-            return String.Format(STORE_FILE_NAME, key);
-        }
 
         private static Settings m_instance = null;
 
         public static Settings GetInstance()
         {
-            return LoadFromKey(String.Empty);
+            return Load();
         }
 
-        public static Settings LoadFromKey(string key)
+        public static Settings Load()
         {
             if (m_instance != null)
                 return m_instance;
@@ -870,77 +841,26 @@ namespace EVEMon.Common
                     {
                         XmlSerializer xs = new XmlSerializer(typeof(Settings));
                         Settings result = (Settings)xs.Deserialize(fs);
-                        result.SetKey(key);
                         m_instance = result;
                         return result;
                     }
                 }
                 else
                 {
-                    Settings r = LoadFromKeyFromIsoStorage(key);
-                    m_instance = r;
-                    return r;
+                    Settings s = new Settings();
+                    m_instance = s;
+                    return s;
                 }
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
-                Settings rr = LoadFromKeyFromIsoStorage(key);
-                m_instance = rr;
-                return rr;
-            }
-        }
-
-        private static Settings LoadFromKeyFromIsoStorage(string key)
-        {
-            try
-            {
-                using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
-                using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(key), FileMode.Open))
-                {
-                    XmlDocument xdoc = new XmlDocument();
-                    xdoc.Load(s);
-
-                    if (xdoc.DocumentElement.Name == "logindata")
-                    {
-                        Settings result = new Settings();
-                        result.SetKey(key);
-                        result.Username = ((XmlElement)xdoc.SelectSingleNode("/logindata/username")).GetAttribute("value");
-                        result.Password = ((XmlElement)xdoc.SelectSingleNode("/logindata/password")).GetAttribute("value");
-                        XmlNode cn = xdoc.SelectSingleNode("/logindata/character");
-                        if (cn != null)
-                        {
-                            result.Character = (cn as XmlElement).GetAttribute("value");
-                        }
-                        s.Close();
-                        store.Close();
-                        result.Save();
-                        return result;
-                    }
-                    else if (xdoc.DocumentElement.Name == "logindata2")
-                    {
-                        s.Seek(0, SeekOrigin.Begin);
-                        XmlSerializer xs = new XmlSerializer(typeof(Settings));
-                        Settings result = (Settings)xs.Deserialize(s);
-                        result.SetKey(key);
-                        return result;
-                    }
-                    else
-                    {
-                        Settings result = new Settings();
-                        result.SetKey(key);
-                        return result;
-                    }
-                }
-            }
-            catch (FileNotFoundException e)
-            {
-                ExceptionHandler.LogException(e, true);
                 Settings s = new Settings();
-                s.SetKey(key);
+                m_instance = s;
                 return s;
             }
         }
+
 
         private bool m_neverSave = false;
 
@@ -1002,17 +922,10 @@ namespace EVEMon.Common
             xs.Serialize(s, this);
         }
 
-        private string m_key;
 
-        private void SetKey(string key)
-        {
-            m_key = key;
-        }
-
-        public static void ResetKey(string p)
+        public static void Reset()
         {
             Settings s = new Settings();
-            s.SetKey(p);
             s.Save();
         }
         #endregion // Settings File Save / Load

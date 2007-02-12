@@ -48,8 +48,6 @@ namespace EVEMon
                 }
             }
 
-            m_settingKey = String.Empty;
-
             Plan.PlannerWindowFactory = new PlannerWindowFactory();
             EveSession.MainThread = Thread.CurrentThread;
             InstallerDeleter.Schedule();
@@ -58,7 +56,7 @@ namespace EVEMon
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             //Application.Run(new Form1(ca));
-            s_settings = Settings.LoadFromKey(m_settingKey);
+            s_settings = Settings.GetInstance();
             s_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UseLogitechG15DisplayChanged);
             if (s_settings.UseLogitechG15Display) {
                 try
@@ -161,17 +159,12 @@ namespace EVEMon
             Environment.Exit(1);
         }
 
-        public static string SettingKey
-        {
-            get { return m_settingKey; }
-        }
 
         public static Settings Settings
         {
             get { return s_settings; }
         }
 
-        private static string m_settingKey;
         private static Settings s_settings;
         private static bool m_showWindowOnError = true;
 
