@@ -642,7 +642,7 @@ namespace EVEMon.SkillPlanner
             if (e.Button == MouseButtons.Right)
             {
                 ListViewItem lvi = lbPlanList.GetItemAt(e.X, e.Y);
-                if (lvi != null & lvi.Text != "<New Plan>")
+                if (lvi != null && lvi.Text != "<New Plan>")
                 {
                     // If multiple items selected, grey out the context menu
                     if (lbPlanList.SelectedItems.Count > 1)
