@@ -57,25 +57,6 @@ namespace EVEMon
 
             //Application.Run(new Form1(ca));
             s_settings = Settings.GetInstance();
-            s_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UseLogitechG15DisplayChanged);
-            if (s_settings.UseLogitechG15Display) {
-                try
-                {
-                    LCD = EVEMon.LogitechG15.Lcdisplay.Instance();
-                }
-                catch (Exception)
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        Debugger.Break();
-                    }
-                    else
-                    {
-                        LcdErrorsEncountered = true;
-                        LCD = null;
-                    }
-                }
-            }            
 
             Application.Run(new MainWindow(s_settings, startMinimized));
             s_settings.Save();
@@ -85,11 +66,8 @@ namespace EVEMon
             {
                 m_logger.Dispose();
             }
-            if (LCD != null)
-            {
-                LCD.Dispose();
-            }
-            LCD = null;
+
+            G15Handler.Shutdown();
         }
 
         private static MainWindow m_mainWindow;
@@ -117,27 +95,6 @@ namespace EVEMon
             }
             InternalSetRelocatorState(state);
         }
-
-        public static EVEMon.LogitechG15.Lcdisplay LCD;
-        private static bool LcdErrorsEncountered = false;
-        private static void UseLogitechG15DisplayChanged(object sender, EventArgs e)
-        {
-            if (LcdErrorsEncountered)
-                return;
-            if (s_settings.UseLogitechG15Display)
-            {
-                LCD = EVEMon.LogitechG15.Lcdisplay.Instance();
-            }
-            else
-            {
-                if (LCD != null)
-                {
-                    LCD.Dispose();
-                }
-                LCD = null;
-            }
-        }
-
 
         private static void InternalSetRelocatorState(bool state)
         {

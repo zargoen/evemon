@@ -82,6 +82,7 @@
     <Compile Include="EVEFolderWindow.Designer.cs">
       <DependentUpon>EVEFolderWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="G15Handler.cs" />
     <Compile Include="IGBService\IGBServer.cs" />
     <Compile Include="ImpGroups\ImpGroups.cs">
       <SubType>Form</SubType>

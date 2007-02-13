@@ -43,6 +43,8 @@ namespace EVEMon
             niMinimizeIcon.Text = Application.ProductName;
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
 
+            G15Handler.Init();
+
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 AddTab(cli);
@@ -200,7 +202,7 @@ namespace EVEMon
                 return false;
             }
             cfi.CharacterName = sci.Name;
-            CharacterMonitor cm = new CharacterMonitor(m_settings, cfi, sci);
+            CharacterMonitor cm = new CharacterMonitor(cfi, sci);
             AddTab(cfi,"(File) " + sci.Name,cm);
             return true;
         }
@@ -211,7 +213,7 @@ namespace EVEMon
         /// <returns>true if the tab was added ok</returns>
         private bool AddTab(CharLoginInfo cli)
         {
-            CharacterMonitor cm = new CharacterMonitor(m_settings, cli);
+            CharacterMonitor cm = new CharacterMonitor(cli);
             AddTab(cli,cli.CharacterName,cm);
             return true;
         }
@@ -385,11 +387,6 @@ namespace EVEMon
             {
                 if (e.Complete)
                 {
-                    if (m_settings.UseLogitechG15Display && Program.LCD != null)
-                    {
-                        Program.LCD._COMPLETESTR = e.CharacterName + "\nhas finished learning skill\n" + e.SkillName;
-                        Program.LCD.SkillCompleted();
-                    }
                     if (m_settings.PlaySoundOnSkillComplete)
                         MP3Player.Play("SkillTrained.mp3", true);
 
@@ -455,6 +452,7 @@ namespace EVEMon
 
         private void SetRemoveEnable()
         {
+            G15Handler.CharListUpdate();
             if (tcCharacterTabs.TabPages.Count > 0)
                 tsbRemoveChar.Enabled = true;
             else
@@ -686,6 +684,18 @@ namespace EVEMon
                 CharacterInfo gci = cm.GrandCharacterInfo;
                 if (gci != null && gci.Name == charName)
                     return gci;
+            }
+            return null;
+        }
+
+        public CharacterMonitor GetCharacterMonitor(string charName)
+        {
+            foreach (TabPage tp in tcCharacterTabs.TabPages)
+            {
+                CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
+                CharacterInfo gci = cm.GrandCharacterInfo;
+                if (gci != null && gci.Name == charName)
+                    return cm;
             }
             return null;
         }
@@ -1070,3 +1080,4 @@ namespace EVEMon
         }
     }
 }
+

@@ -57,7 +57,7 @@ namespace EVEMon
         {
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-
+            m_settings = Settings.GetInstance();
         }
 
         /// <summary>
@@ -65,10 +65,9 @@ namespace EVEMon
         /// </summary>
         /// <param name="s">The EVEMon settings.</param>
         /// <param name="cli">The character login info.</param>
-        public CharacterMonitor(Settings s, CharLoginInfo cli)
+        public CharacterMonitor(CharLoginInfo cli)
             : this()
         {
-            m_settings = s;
             m_cli = cli;
             m_sci = null;
             m_cfi = null;
@@ -81,10 +80,9 @@ namespace EVEMon
         /// <param name="s">The EVEMon settings.</param>
         /// <param name="cfi">The character file info.</param>
         /// <param name="sci">The serializable character, loaded from the file.</param>
-        public CharacterMonitor(Settings s, CharFileInfo cfi, SerializableCharacterInfo sci)
+        public CharacterMonitor(CharFileInfo cfi, SerializableCharacterInfo sci)
             : this()
         {
-            m_settings = s;
             m_cli = null;
             m_sci = sci;
             m_cfi = cfi;
@@ -198,12 +196,39 @@ namespace EVEMon
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
             m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
 
-            if (m_settings != null)
-            {
-                //set up individual character settings
+            //set up individual character settings
                 tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
-            }
         }
+
+        /// <summary>
+        /// Stop all timers, unhook all events, lie down and die.
+        /// </summary>
+        public void Stop()
+        {
+            if (m_session != null)
+            {
+                m_session = null;
+            }
+            tmrTick.Enabled = false;
+            tmrUpdateCharacter.Enabled = false;
+            if (m_characterFileWatch != null)
+            {
+                m_characterFileWatch.EnableRaisingEvents = false;
+            }
+
+            m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
+            m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
+
+            m_grandCharacterInfo.AttributeChanged -= new EventHandler(AttributeChangedCallback);
+            m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(CharacterSkillChangedCallback);
+            m_grandCharacterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
+
+            m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
+            m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
+            m_settings.ScheduleEntriesChanged -= new EventHandler<EventArgs>(m_settings_ScheduleEntriesChanged);
+            m_settings.NotificationOffsetChanged -= new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
+        }
+
 
         void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
         {
@@ -267,33 +292,7 @@ namespace EVEMon
         }
 
  
-        /// <summary>
-        /// Stop all timers, unhook all events, lie down and die.
-        /// </summary>
-        public void Stop()
-        {
-            if (m_session != null)
-            {
-                m_session = null;
-            }
-            tmrTick.Enabled = false;
-            tmrUpdateCharacter.Enabled = false;
-            if (m_characterFileWatch != null)
-            {
-                m_characterFileWatch.EnableRaisingEvents = false;
-            }
-
-            m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
-            m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
-
-            m_grandCharacterInfo.AttributeChanged -= new EventHandler(AttributeChangedCallback);
-            m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(CharacterSkillChangedCallback);
-            m_grandCharacterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
-
-            m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
-            m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
-        }
-
+ 
         /// <summary>
         /// Gets or sets a value indicating whether the panel is currently visible
         /// </summary>
@@ -482,70 +481,26 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Creates a public callable function to update the characterinfo
+        /// </summary>
+        public void UpdateCharacterInfo()
+        {
+            try
+            {
+                this.tmrUpdate_Tick(null, null);
+                UpdateThrobberLabel();
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
         /// Updates the LCD Display if G15 support is on
         /// </summary>
         private void UpdateLcdisplay()
         {
-            if (m_settings.UseLogitechG15Display && Program.LCD != null)
-            {
-                if (Program.LCD.CharacterName == null || Program.LCD.CharacterName == "")
-                {
-                    Program.LCD.CharacterName = m_charName;
-                    Program.LCD.newchar = m_charName;
-                }
-                if (Program.LCD.newchar == m_charName)
-                {
-                    Skill s = m_grandCharacterInfo.CurrentlyTrainingSkill;
-                    if (s != null)
-                    {
-                       Program.LCD.curperc = s.GetPercentDone();
-                    }
-                    else
-                    {
-                        Program.LCD.curperc = 1;
-                    }
-                    Program.LCD.CharacterName = m_charName; //null ok
-                    Program.LCD.CurrentSkillTrainingText = m_skillTrainingName; //null ok
-                    Program.LCD.TimeToComplete = m_lcdTimeSpan;
-                }
-                long tmp = Program.LCD.leasttime.Ticks - m_lcdTimeSpan.Ticks;
-                if (tmp > 0)
-                {
-                    if (m_skillTrainingName != "" && m_skillTrainingName != null)
-                    {
-                        Program.LCD.leasttime = m_lcdTimeSpan;
-                        Program.LCD.leastchar = m_charName;
-                    }
-                }
-                if (Program.LCD.charlist == null)
-                {
-                    List<CharLoginInfo> mlist = m_settings.CharacterList;
-                    string[] temp = new string[mlist.Count];
-                    int i = 0;
-                    foreach (CharLoginInfo sci in mlist)
-                    {
-                        temp[i] = sci.CharacterName;
-                        i++;
-                    }
-                    Program.LCD.charlist = temp;
-                }
-                if (Program.LCD.refreshchar != null && Program.LCD.refreshchar == m_charName)
-                {
-                    Program.LCD.refreshchar = null;
-                    tmrUpdate_Tick(null, null);
-                    UpdateThrobberLabel();
-                }
-                if (Program.LCD.cycleini == false)
-                {
-                    Program.LCD.cycle = m_settings.G15ACycle;
-                    Program.LCD.cycleint = m_settings.G15ACycleint;
-                    Program.LCD.cycleini = true;
-                }
-                else
-                {
-                    m_settings.G15ACycle = Program.LCD.cycle;
-                }
-            }
+            // all moved into G15Handler
         }
 
         /// <summary>
@@ -553,7 +508,7 @@ namespace EVEMon
         /// </summary>
         private void CalculateLcdData()
         {
-            DateTime now = DateTime.Now;
+          DateTime now = DateTime.Now;
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
                 if (m_estimatedCompletion > now)
@@ -2063,10 +2018,6 @@ namespace EVEMon
             {
                 m_updatingPortrait = true;
                 GetCharacterImage();
-            }
-            if (Program.LCD != null)
-            {
-                Program.LCD.Update();
             }
         }
         #endregion

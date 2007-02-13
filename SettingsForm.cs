@@ -57,12 +57,11 @@ namespace EVEMon
             s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
             s.G15ACycle = cbG15ACycle.Checked;
             s.G15ACycleint = (int)ACycleInterval.Value;
-            if (Program.LCD != null)
+            if (G15Handler.LCD != null)
             {
-                Program.LCD.cycle = cbG15ACycle.Checked;
-                Program.LCD.cycleint = (int)ACycleInterval.Value;
+                G15Handler.LCD.cycle = cbG15ACycle.Checked;
+                G15Handler.LCD.cycleint = (int)ACycleInterval.Value;
             }
-
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
