@@ -61,7 +61,8 @@ namespace EVEMon.Common
             [ColumnDisplay("Plan Type (Planned/Prerequisite)", "Type")] PlanType,
             [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal,
             [ColumnDisplay("SP/Hour", "SP/Hour")] SPPerHour,
-            [ColumnDisplay("Priority", "Priority")] Priority
+            [ColumnDisplay("Priority", "Priority")] Priority,
+            [ColumnDisplay("Owned", "Owned")]Owned
         }
 
         private bool[] m_prefs;
@@ -74,7 +75,6 @@ namespace EVEMon.Common
                 m_prefs[i] = false;
             }
 
-            // TODO - These should be configurable defaults...
             this.SkillName = true;
             this.PlanGroup = true;
             this.TrainingTime = true;
@@ -273,6 +273,14 @@ namespace EVEMon.Common
             get { return this[ColumnType.Priority]; }
             set { this[ColumnType.Priority] = value; }
         }
+
+        [XmlAttribute]
+        public bool Owned
+        {
+            get { return this[ColumnType.Owned]; }
+            set { this[ColumnType.Owned] = value; }
+        }
+	
 
         #region ICloneable Members
        

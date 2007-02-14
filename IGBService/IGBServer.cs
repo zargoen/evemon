@@ -247,6 +247,8 @@ namespace EVEMon.IGBService
                         x.FooterCount = true;
                         x.FooterDate = !shopping; // only if not shopping
                         x.ShoppingList = shopping;
+                        x.EntryCost = true;
+                        x.FooterCost = true;
                         x.Markup = MarkupType.Html;
                         p.SaveAsText(sw, x);
                     }

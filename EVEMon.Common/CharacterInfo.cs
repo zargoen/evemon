@@ -42,6 +42,15 @@ namespace EVEMon.Common
 
         private void BuildSkillTree()
         {
+
+            // This needs optimising - why are we loading static data 
+            // everytime for each character. We need to refactor this
+            // so all the static skill data is only created once.
+            List<string> ownedSkills = new List<string>();
+            foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
+            {
+                ownedSkills.Add(os);
+            }
             string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
             if (!File.Exists(skillfile))
             {
@@ -79,10 +88,10 @@ namespace EVEMon.Common
                         EveAttribute _secAttr =
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
                         int _rank = Convert.ToInt32(sel.GetAttribute("r"));
-
+                        int _cost = Convert.ToInt32(sel.GetAttribute("c"));
+                        bool owned = ownedSkills.Contains(_name);
                         Skill gs = new Skill(
-                            this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank,
-                            prereqs);
+                            this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, owned,prereqs);
                         gs.Changed += new EventHandler(gs_Changed);
                         gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
 
@@ -994,6 +1003,17 @@ namespace EVEMon.Common
                 m_attempted_dl_complete = true;
             }
         }
+
+        public void UpdateOwnedSkills()
+        {
+            List<String> owned = new List<string>();
+            foreach (SkillGroup sg in m_skillGroups.Values)
+            {
+                owned.AddRange(sg.OwnedSkills());
+            }
+            Settings.GetInstance().SetOwnedBooks(m_name, owned);
+        }
+
 
         public void check_training_skills(SerializableSkillInTraining SkillInTraining)
         {

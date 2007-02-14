@@ -22,9 +22,11 @@ namespace EVEMon.Common
         private static IDictionary<string, Skill> sm_allSkills;
         private int m_currentSkillPoints;
         private int m_lastConfirmedLvl;
+        private int m_cost;
+        bool m_owned;
 
         public Skill(CharacterInfo gci, bool pub, string name, int id, string description,
-                          EveAttribute a1, EveAttribute a2, int rank, IEnumerable<Prereq> prereqs)
+                          EveAttribute a1, EveAttribute a2, int rank, int cost, bool owned, IEnumerable<Prereq> prereqs)
         {
             m_owner = gci;
             m_public = pub;
@@ -37,6 +39,8 @@ namespace EVEMon.Common
             m_rank = rank;
             m_prereqs = prereqs;
             m_lastConfirmedLvl = 0;
+            m_cost = cost;
+            m_owned = owned;
         }
 
         /// <summary>
@@ -335,6 +339,29 @@ namespace EVEMon.Common
             return strWrapped;
         }
 
+        public int Cost
+        {
+            get { return m_cost; }
+        }
+
+        public string FormattedCost
+        {
+            get 
+            {
+                if (m_cost > 0)
+                    return String.Format("{0:0,0,0}", m_cost);
+                else
+                    return "0";
+             }
+        }
+
+        public bool Owned
+        {
+            get { return m_owned; }
+            set { m_owned = value; }
+        }
+
+
         /// <summary>
         /// Gets the primary attribute of this skill.
         /// </summary>
@@ -350,6 +377,7 @@ namespace EVEMon.Common
         {
             get { return m_secondaryAttribute; }
         }
+
 
         /// <summary>
         /// Gets the rank of this skill.

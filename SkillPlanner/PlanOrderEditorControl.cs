@@ -318,6 +318,16 @@ namespace EVEMon.SkillPlanner
                                 case ColumnPreference.ColumnType.Priority:
                                     res = pe.Priority.ToString();
                                     break;
+                                case ColumnPreference.ColumnType.Owned:
+                                    if (!pe.Skill.Known)
+                                    {    
+                                        if (pe.Skill.Owned)
+                                            res ="Yes";
+                                        else
+                                            res = "No";
+                                    }
+                                    else res = String.Empty;
+                                    break;
                             }
                         }
                         else
@@ -535,20 +545,26 @@ namespace EVEMon.SkillPlanner
             if (lvSkills.SelectedItems.Count > 1)
             {
                 TimeSpan selectedTrainTime = TimeSpan.Zero;
+                int cost = 0;
                 foreach (ListViewItem current in lvSkills.SelectedItems)
                 {
                     Plan.Entry pe = (Plan.Entry)current.Tag;
                     Skill gs = pe.Skill;
                     selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
+                    if (!gs.Known && !gs.Owned)
+                        cost += gs.Cost;
                 }
 
-                m_plannerWindow.UpdateStatusBarSelected(String.Format("{0} Skills selected, Training time: {1}",
+                String sb = String.Format("{0} Skills selected, Training time: {1}",
                                             lvSkills.SelectedItems.Count,
                                             Skill.TimeSpanToDescriptiveText(selectedTrainTime,
                                                                                      DescriptiveTextOptions.FullText |
                                                                                      DescriptiveTextOptions.
                                                                                          IncludeCommas |
-                                                                                     DescriptiveTextOptions.SpaceText)));
+                                                                                     DescriptiveTextOptions.SpaceText));
+                if (cost > 0)
+                    sb += String.Format(", cost of unknown skills is {0:0,0,0}", cost); 
+                m_plannerWindow.UpdateStatusBarSelected(sb);
             }
             else
             {
@@ -562,7 +578,17 @@ namespace EVEMon.SkillPlanner
             ListViewItem lvi = e.Item;
             if (null != lvi)
             {
-                lvi.ToolTipText = GetPlanEntryForListViewItem(lvi).Skill.Description;
+                Skill s = GetPlanEntryForListViewItem(lvi).Skill;
+                StringBuilder sb = new StringBuilder(s.Description);
+                lvi.ToolTipText = s.Description;
+                if (!s.Known)
+                {
+                    sb.Append("\n\nYou do not know this skill - you ");
+                    if (!s.Owned)
+                        sb.Append("do not ");
+                    sb.Append("own the skillbook");
+                }
+                lvi.ToolTipText = sb.ToString();
             }
         }
 
@@ -702,6 +728,25 @@ namespace EVEMon.SkillPlanner
             if (lvSkills.SelectedItems.Count == 1)
             {
                 miChangeNote.Text = "View/Change Note...";
+                Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+                Skill s = pe.Skill;
+                if (!s.Known)
+                {
+                    if (s.Owned)
+                    {
+                        miMarkOwned.Text = "Mark as unowned";
+                    }
+                    else
+                    {
+                        miMarkOwned.Text = "Mark as owned";
+                    }
+                    miMarkOwned.Enabled = true;
+                }
+                else
+                {
+                    miMarkOwned.Text = "Mark as owned";
+                    miMarkOwned.Enabled = false;
+                }
             }
             else
             {
@@ -934,6 +979,16 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+ 
+        private void miMarkOwned_Click(object sender, EventArgs e)
+        {
+            Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+            pe.Skill.Owned = !pe.Skill.Owned;
+            pe.Plan.GrandCharacterInfo.UpdateOwnedSkills();
+            UpdateListViewItems();
+            m_plannerWindow.UpdateStatusBar();
+        }
+
 
         #endregion Context Menu
 
@@ -1115,6 +1170,5 @@ namespace EVEMon.SkillPlanner
                 miShowInSkillBrowser_Click(sender, e);
             }
          }
-
     }
 }

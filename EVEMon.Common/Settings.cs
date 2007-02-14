@@ -340,6 +340,58 @@ namespace EVEMon.Common
             set { m_titleToTimeLayout = value; }
         }
 
+        #region Owned Skills
+        private List<Pair<string,string>> m_ownedbooks = new List<Pair<string,string>>();
+
+        public List<Pair<string, string>> OwnedBooks
+        {
+            get { return m_ownedbooks; }
+        }
+
+        public IEnumerable<string> GetOwnedBooksForCharacter(string charName)
+        {
+            foreach (Pair<string, string> x in m_ownedbooks)
+            {
+                if (x.A == charName)
+                    yield return x.B; 
+            }
+        }
+
+        public void SetOwnedBooks(string characterName, List<String> ownedBooks)
+        {
+            List<Pair<string, string>> newList = new List<Pair<string, string>>();
+            bool added = false;
+            foreach (Pair<string, string> x in m_ownedbooks)
+            {
+                if (x.A == characterName)
+                {
+                    if (!added)
+                    {
+                        foreach(string book in ownedBooks)
+                        {
+                            newList.Add(new Pair<string,string>(characterName,book));
+                        }
+                        added = true;
+                    }
+                }
+                else
+                {
+                    newList.Add(x);
+                }
+            }
+            if (!added)
+            {
+                foreach (string book in ownedBooks)
+                {
+                    newList.Add(new Pair<string, string>(characterName, book));
+                }
+            }
+            m_ownedbooks = newList;
+        }
+
+        #endregion
+
+
         #region Plan Settings
 
         // needs to be before plans.

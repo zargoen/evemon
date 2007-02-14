@@ -51,6 +51,16 @@ namespace EVEMon.Common
             set { m_entryFinishDate = value; }
         }
 
+        [XmlAttribute]
+        private bool m_entryCost;
+
+        public bool EntryCost
+        {
+            get { return m_entryCost; }
+            set { m_entryCost = value; }
+        }
+	
+
         private bool m_footerCount;
 
         [XmlAttribute]
@@ -76,6 +86,14 @@ namespace EVEMon.Common
         {
             get { return m_footerDate; }
             set { m_footerDate = value; }
+        }
+
+        private bool m_footerCost;
+        [XmlAttribute]
+        public bool FooterCost
+        {
+            get { return m_footerCost; }
+            set { m_footerCost = value; }
         }
 
         private MarkupType m_markupType;

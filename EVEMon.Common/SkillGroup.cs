@@ -78,6 +78,20 @@ namespace EVEMon.Common
             }
         }
 
+        public List<string> OwnedSkills()
+        {
+            List<string> os = new List<string>();
+            foreach (Skill s in m_skills.Values)
+            {
+                if (s.Owned)
+                {
+                    if (s.Known) s.Owned = false;
+                    else os.Add(s.Name);
+                }
+            }
+            return os;
+        }
+
         public bool Contains(string skillName)
         {
             return m_skills.ContainsKey(skillName);

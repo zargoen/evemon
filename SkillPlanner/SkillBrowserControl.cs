@@ -147,6 +147,16 @@ namespace EVEMon.SkillPlanner
                 m_planSelectShowing = thisPss;
                 m_planSelectSelected = plannedTo;
                 cbPlanSelect.SelectedIndexChanged += new EventHandler(cbPlanSelect_SelectedIndexChanged);
+                if (m_selectedSkill.Known)
+                {
+                    cbOwned.Checked = false;
+                    cbOwned.Enabled = false;
+                }
+                else
+                {
+                    cbOwned.Checked = m_selectedSkill.Owned;
+                    cbOwned.Enabled = true;
+                }
             }
         }
 
@@ -181,7 +191,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 lblSkillClass.Text = m_selectedSkill.SkillGroup.Name;
-                lblSkillName.Text = m_selectedSkill.Name + " (" + m_selectedSkill.Rank + ")";
+                lblSkillName.Text = m_selectedSkill.Name + " (" + m_selectedSkill.Rank + ")  " + m_selectedSkill.FormattedCost + " ISK";
                 textboxDescription.Text = m_selectedSkill.Description;
                 lblAttributes.Text = "Primary: " + m_selectedSkill.PrimaryAttribute.ToString() + ", " +
                                      "Secondary: " + m_selectedSkill.SecondaryAttribute.ToString();
@@ -372,6 +382,13 @@ namespace EVEMon.SkillPlanner
         private void PlanTo(int level)
         {
             m_plan.PlanTo(m_selectedSkill, level,true);
+            UpdatePlanControl();
+        }
+
+        private void cbOwned_CheckedChanged(object sender, EventArgs e)
+        {
+            m_selectedSkill.Owned = cbOwned.Checked;
+            m_plan.GrandCharacterInfo.UpdateOwnedSkills();
             UpdatePlanControl();
         }
     }

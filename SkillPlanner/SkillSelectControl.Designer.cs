@@ -63,6 +63,8 @@ namespace EVEMon.SkillPlanner
             "Known",
             "Level I Ready",
             "Not Known",
+            "Not Known - Owned",
+            "Not Known - Unowned",
             "Not Planned",
             "Not Planned - Trainable",
             "Partially Trained",
@@ -153,7 +155,7 @@ namespace EVEMon.SkillPlanner
             this.lblNoMatches.Location = new System.Drawing.Point(4, 23);
             this.lblNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNoMatches.Name = "lblNoMatches";
-            this.lblNoMatches.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lblNoMatches.Padding = new System.Windows.Forms.Padding(4);
             this.lblNoMatches.Size = new System.Drawing.Size(256, 22);
             this.lblNoMatches.TabIndex = 23;
             this.lblNoMatches.Text = "No skills match your search.";

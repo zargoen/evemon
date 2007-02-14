@@ -220,7 +220,13 @@ namespace EVEMon.SkillPlanner
                                                                                      DescriptiveTextOptions.FullText |
                                                                                      DescriptiveTextOptions.
                                                                                          IncludeCommas |
-                                                                                     DescriptiveTextOptions.SpaceText));
+                                                                                     DescriptiveTextOptions.SpaceText),
+                                                 m_plan.TrainingCost);
+            int cost = m_plan.TrainingCost;
+            if (cost > 0)
+            {
+                slblStatusText.Text += String.Format(" Cost To Train: {0:0,0,0} ISK",cost);
+            }
 
             if (m_plan.HasAttributeSuggestion)
             {

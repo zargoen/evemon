@@ -130,6 +130,22 @@ namespace EVEMon.SkillPlanner
                                  return !gs.Known;
                              };
                     break;
+
+                case "Not Known - Unowned":
+                     sf = delegate(Skill gs)
+                        {
+                            return !gs.Known && !gs.Owned;
+                        };
+                    break;
+
+                case "Not Known - Owned":
+                    sf = delegate(Skill gs)
+                       {
+                           return !gs.Known && gs.Owned;
+                       };
+                    break;
+
+
                 case "Planned": // Planned Skills
                     sf = delegate(Skill gs)
                              {
@@ -225,7 +241,9 @@ namespace EVEMon.SkillPlanner
                             }
                             else
                             {
-                                if (gs.PrerequisitesMet) // prereqs met
+                                if (gs.Owned)
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("Book"), tvSkillList.ImageList.Images.IndexOfKey("Book"));
+                                else if (gs.PrerequisitesMet) // prereqs met
                                     stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"));
                                 else
                                     stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"));

@@ -59,7 +59,7 @@ namespace EVEMon.Common
             }
         }
 
-        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+         private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
             CheckForCompletedSkills();
         }
@@ -401,6 +401,27 @@ namespace EVEMon.Common
                     m_uniqueSkillCount++;
                     counted[pe.SkillName] = true;
                 }
+            }
+        }
+        [XmlIgnore]
+        public int TrainingCost
+        {
+            get
+            {
+                int cost = 0;
+                Dictionary<string, bool> counted = new Dictionary<string, bool>();
+                foreach (Plan.Entry pe in m_entries)
+                {
+                    if (!counted.ContainsKey(pe.SkillName))
+                    {
+                        if (!pe.Skill.Known && !pe.Skill.Owned)
+                        {
+                            cost += pe.Skill.Cost;
+                        }
+                        counted[pe.SkillName] = true;
+                    }
+                }
+                return cost;
             }
         }
         #endregion Statistics
@@ -1210,9 +1231,11 @@ namespace EVEMon.Common
             TimeSpan totalTrainingTime = TimeSpan.Zero;
             DateTime curDt = DateTime.Now;
             int num = 0;
+            
             foreach (Plan.Entry pe in this.Entries)
             {
-                if (pto.ShoppingList && (pe.Skill.Known || pe.Level != 1))
+                bool shoppingListCandidate = !(pe.Skill.Known || pe.Level != 1 || pe.Skill.Owned);
+                if (pto.ShoppingList && !shoppingListCandidate)
                 {
                     // for shopping list, if the skill is known or a non-level-1-unknown, skip
                     continue;
@@ -1245,11 +1268,12 @@ namespace EVEMon.Common
                 curDt += trainingTime;
                 DateTime finishDate = curDt;
                 totalTrainingTime += trainingTime;
-
-                if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate)
+                
+                if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate || (pto.EntryCost && shoppingListCandidate))
                 {
                     sw.Write(" (");
                     bool needComma = false;
+
                     if (pto.EntryTrainingTimes)
                     {
                         sw.Write(Skill.TimeSpanToDescriptiveText(trainingTime,
@@ -1278,11 +1302,21 @@ namespace EVEMon.Common
                         sw.Write(finishDate.ToString());
                         needComma = true;
                     }
+                    if (pto.EntryCost && shoppingListCandidate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write(pe.Skill.FormattedCost + " ISK");
+                        needComma = true;
+                    }
+
                     sw.Write(')');
                 }
                 writeLine();
             }
-            if (pto.FooterCount || pto.FooterTotalTime || pto.FooterDate)
+            if (pto.FooterCount || pto.FooterTotalTime || pto.FooterDate || pto.FooterCost)
             {
                 writeLine();
                 bool needComma = false;
@@ -1325,7 +1359,31 @@ namespace EVEMon.Common
                     boldEnd();
                     needComma = true;
                 }
+                if (pto.FooterCost)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Cost: ");
+                    boldStart();
+                    if (TrainingCost > 0)
+                    {
+                        sw.Write(String.Format("{0:0,0,0} ISK",TrainingCost));
+                    }
+                    else
+                    {
+                        sw.Write("0 ISK");
+                    }
+                    boldEnd();
+                    needComma = true;
+                }
                 writeLine();
+                if (pto.FooterCost || pto.EntryCost)
+                {
+                    sw.Write("N.B. Skill costs are based on CCP's database and are indicitave only");
+                    writeLine();
+                }
             }
         }
 

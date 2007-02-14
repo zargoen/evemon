@@ -40,11 +40,13 @@ namespace EVEMon.SkillPlanner
             cbIncludeHeader.Checked = m_planTextOptions.IncludeHeader;
             cbEntryNumber.Checked = m_planTextOptions.EntryNumber;
             cbEntryTrainingTimes.Checked = m_planTextOptions.EntryTrainingTimes;
+            cbEntryCost.Checked = m_planTextOptions.EntryCost;
             cbEntryStartDate.Checked = m_planTextOptions.EntryStartDate;
             cbEntryFinishDate.Checked = m_planTextOptions.EntryFinishDate;
             cbFooterCount.Checked = m_planTextOptions.FooterCount;
             cbFooterTotalTime.Checked = m_planTextOptions.FooterTotalTime;
             cbFooterDate.Checked = m_planTextOptions.FooterDate;
+            cbFooterCost.Checked = m_planTextOptions.FooterCost;
             cbShoppingList.Checked = m_planTextOptions.ShoppingList;
             cmbFormatting.SelectedIndex = m_planTextOptions.Markup == MarkupType.Forum ? 0 :
                     m_planTextOptions.Markup == MarkupType.Html ? 1 : 2;
@@ -89,8 +91,10 @@ namespace EVEMon.SkillPlanner
             m_planTextOptions.EntryTrainingTimes = cbEntryTrainingTimes.Checked;
             m_planTextOptions.EntryStartDate = cbEntryStartDate.Checked;
             m_planTextOptions.EntryFinishDate = cbEntryFinishDate.Checked;
+            m_planTextOptions.EntryCost = cbEntryCost.Checked;
             m_planTextOptions.FooterCount = cbFooterCount.Checked;
             m_planTextOptions.FooterTotalTime = cbFooterTotalTime.Checked;
+            m_planTextOptions.FooterCost = cbFooterCost.Checked;
             m_planTextOptions.FooterDate = cbFooterDate.Checked;
             m_planTextOptions.ShoppingList = cbShoppingList.Checked;
             m_planTextOptions.Markup = cmbFormatting.SelectedIndex == 0 ? MarkupType.Forum :
