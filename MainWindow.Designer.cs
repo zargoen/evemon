@@ -30,7 +30,6 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.tcCharacterTabs = new System.Windows.Forms.TabControl();
             this.niMinimizeIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayIconToolStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,22 +51,11 @@ namespace EVEMon
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbResetCache = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
+            this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tcCharacterTabs
-            // 
-            this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tcCharacterTabs.Location = new System.Drawing.Point(0, 25);
-            this.tcCharacterTabs.Name = "tcCharacterTabs";
-            this.tcCharacterTabs.SelectedIndex = 0;
-            this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
-            this.tcCharacterTabs.TabIndex = 0;
-            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
-            this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
-            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
             // 
             // niMinimizeIcon
             // 
@@ -242,6 +230,20 @@ namespace EVEMon
             this.tsbAbout.Text = "About...";
             this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
             // 
+            // tcCharacterTabs
+            // 
+            this.tcCharacterTabs.AllowDrop = true;
+            this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tcCharacterTabs.Location = new System.Drawing.Point(0, 25);
+            this.tcCharacterTabs.Name = "tcCharacterTabs";
+            this.tcCharacterTabs.SelectedIndex = 0;
+            this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
+            this.tcCharacterTabs.TabIndex = 0;
+            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
+            this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -270,7 +272,6 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.TabControl tcCharacterTabs;
         private System.Windows.Forms.NotifyIcon niMinimizeIcon;
         private System.Windows.Forms.NotifyIcon niAlertIcon;
         private System.Windows.Forms.Timer tmrAlertRefresh;
@@ -292,5 +293,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton tsbResetCache;
         private System.Windows.Forms.ToolStripMenuItem planToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private EVEMon.DraggableTabControl tcCharacterTabs;
     }
 }

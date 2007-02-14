@@ -45,22 +45,37 @@ namespace EVEMon
 
             G15Handler.Init();
 
-            foreach (CharLoginInfo cli in m_settings.CharacterList)
-            {
-                AddTab(cli);
-            }
+            List<Object> tabOrder = m_settings.TabOrder;
+
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
-            foreach (CharFileInfo cfi in m_settings.CharFileList)
+            foreach (Object o in tabOrder)
             {
-                if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
+                // o will be a CharLoginInfo or a CharFileInfo object
+                CharLoginInfo cli = o as CharLoginInfo;
+                if (cli != null)
                 {
-                    invalidFiles.Add(cfi);
+                    AddTab(cli);
+                }
+                else
+                {
+                    CharFileInfo cfi = o as CharFileInfo;
+                    if (cfi != null)
+                    {
+                        if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
+                        {
+                            invalidFiles.Add(cfi);
+                        }
+                    }
                 }
             }
-    
+
             foreach (CharFileInfo cfi in invalidFiles)
             {
                 RemoveCharFileInfo(cfi);
+            }
+            if (invalidFiles.Count >0)
+            {
+                UpdateTabOrder();
             }
 
             if (startMinimized)
@@ -240,6 +255,19 @@ namespace EVEMon
             SetRemoveEnable();
         }
 
+        private void UpdateTabOrder()
+        {
+            List<String> tabOrder = new List<string>();
+            foreach (TabPage tp in tcCharacterTabs.TabPages)
+            {
+                CharFileInfo cfi = tp.Tag as CharFileInfo;
+                CharLoginInfo cli = tp.Tag as CharLoginInfo;
+                if (cfi != null) tabOrder.Add(cfi.CharacterName);
+                if (cli != null) tabOrder.Add(cli.CharacterName);
+            }
+            m_settings.TabOrderName = tabOrder;
+        }
+
         private void cm_ShortInfoChanged(object sender, EventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
@@ -371,7 +399,7 @@ namespace EVEMon
                         gcis.Add(ts, gci);
                     }
 
-                    //if (tcCharacterTabs.SelectedTab.Text.Equals(tp.Text))
+                    //if (tcCharacterTabsNew.SelectedTab.Text.Equals(tp.Text))
                         //selectedCharId = gci.CharacterId;
                 }
             }
@@ -472,15 +500,17 @@ namespace EVEMon
                 m_settings.CharacterList.Remove(cli);
                 m_settings.RemoveAllPlansFor(cli.CharacterName);
                 m_settings.RemoveCharacterCache(cli.CharacterName);
-                m_settings.Save();
+                UpdateTabOrder();
             }
             else if (tp.Tag is CharFileInfo)
             {
                 CharFileInfo cfi = tp.Tag as CharFileInfo;
                 RemoveCharFileInfo(cfi);
+                UpdateTabOrder();
             }
             cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
+
         }
 
         private void RemoveCharFileInfo(CharFileInfo cfi)
@@ -510,6 +540,7 @@ namespace EVEMon
                         if (m_settings.AddCharacter(cli))
                         {
                             AddTab(cli);
+                            UpdateTabOrder();
                         }
                     }
                     else if (f.IsFile)
@@ -520,6 +551,7 @@ namespace EVEMon
                         if (m_settings.AddFileCharacter(cfi))
                         {
                             AddTab(cfi, false);
+                            UpdateTabOrder();
                         }
                     }
                 }
@@ -1078,6 +1110,30 @@ namespace EVEMon
             Plan plan = m_settings.GetPlanByName(planItem.OwnerItem.Text, planItem.Text);
             plan.ShowEditor(m_settings, plan.GrandCharacterInfo);
         }
+
+        private void UpdateTabVisibility(object sender, ControlEventArgs e)
+        {
+            foreach (TabPage p in tcCharacterTabs.TabPages)
+            {
+                CharacterMonitor cm = p.Controls[0] as CharacterMonitor;
+                if (p == tcCharacterTabs.SelectedTab && cm != null)
+                {
+                    cm.CurrentlyVisible = true;
+                }
+                else
+                {
+                    cm.CurrentlyVisible = false;
+                }
+            }
+
+        }
+
+        // we've changed the tab order, so let's reset it
+        private void tcCharacterTabs_DragDrop(object sender, DragEventArgs e)
+        {
+            UpdateTabOrder();
+        }
+
     }
 }
 

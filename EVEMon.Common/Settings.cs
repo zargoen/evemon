@@ -976,8 +976,97 @@ namespace EVEMon.Common
         }
         #endregion
 
+        #region Main Window Tab Order
+        private List<string> m_tabOrderName = new List<string>();
+
+       // List of either CharLoginInfo or CharFileInfo objects in the order
+        // we want them displayed
+        private List<Object> m_tabOrder = new List<object>();
+
+        // this is what we serialize, but access is via the TabOrder property
+        public List<String> TabOrderName
+        {
+            get { return m_tabOrderName; }
+            set {  m_tabOrderName = value; }
+        }
+
+        [XmlIgnore]
+        public List<Object> TabOrder
+        {
+            get
+            {
+                // Build list of charFileInfo  and CharLoginInfo objects in the requried tab order
+                foreach (String name in m_tabOrderName)
+                {
+                    bool found = false;
+                    foreach (CharLoginInfo ci in m_characterList)
+                    {
+                        if (ci.CharacterName == name)
+                        {
+                            m_tabOrder.Add(ci);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) continue;
+
+                    foreach (CharFileInfo cfi in m_charFileList)
+                    {
+                        if (cfi.CharacterName == name)
+                        {
+                            m_tabOrder.Add(cfi);
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Now we know that the tab order contains known characters...
+                // Check if we're missing any
+                foreach (CharLoginInfo cli in m_characterList)
+                {
+                    if (!m_tabOrder.Contains(cli))
+                    {
+                        m_tabOrder.Add(cli);
+                    }
+                }
+                foreach (CharFileInfo cfi in m_charFileList)
+                {
+                    if (!m_tabOrder.Contains(cfi))
+                    {
+                        m_tabOrder.Add(cfi);
+                    }
+                }
+
+                // Now reset the tab order name list from the TabOrder list, which will remove
+                // any unknown characetrs from the list
+                SetTabOrderName();
+                return m_tabOrder;
+            }
+            set 
+            {
+                m_tabOrder = value;
+                SetTabOrderName();
+            }
+        }
+
+        //  helper method sets the serializable list of tab order names
+        //  from the list of charXXInfo tab order
+        private void SetTabOrderName()
+        {
+            m_tabOrderName.Clear();
+            foreach (Object o in m_tabOrder)
+            {
+                CharFileInfo cfi = o as CharFileInfo;
+                CharLoginInfo cli = o as CharLoginInfo;
+                if (cli != null) m_tabOrderName.Add(cli.CharacterName);
+                if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
+            }
+        }
+        #endregion
+
         #region Browser Defaults
-        
+
         private bool m_ShowT1Items = true;
         
         public bool ShowT1Items

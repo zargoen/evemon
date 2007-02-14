@@ -75,6 +75,9 @@
     <Compile Include="CharSelect.Designer.cs">
       <DependentUpon>CharSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="DraggableTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Emailer.cs" />
     <Compile Include="EVEFolderWindow.cs">
       <SubType>Form</SubType>
