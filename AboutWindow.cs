@@ -50,6 +50,7 @@ namespace EVEMon
             slDevelopers.Add("bugusnot", "04");
             slDevelopers.Add("cgrady", "04");
             slDevelopers.Add("cybertech", "04");
+            slDevelopers.Add("exi", "04");
             slDevelopers.Add("FangVV", "04");
             slDevelopers.Add("Femaref", "04");
             slDevelopers.Add("Flash", "04");

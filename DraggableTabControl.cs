@@ -9,7 +9,17 @@ namespace EVEMon
 {
 	
 	/// <summary>
-	/// Summary description for DraggableTabPage.
+	/// DraggableTabPage.
+    /// Courtesy of Paul Auger and The Code Project
+    /// http://www.codeproject.com/cs/miscctrl/draggabletabcontrol.asp
+    /// 
+    /// Terms & Conditions from The Code Project:
+    /// Can I use code snippets and programs in my own work? 
+    /// You can use code snippets and source code downloads in your applications as long as 
+    /// - You keep all copyright notices in the code intact. 
+    /// - You do not sell or republish the code or it's associated article without the author's written agreement 
+    /// - You agree the code is provided as-is without any implied or express warranty. 
+
 	/// </summary>
 	public class DraggableTabControl : System.Windows.Forms.TabControl
 	{
