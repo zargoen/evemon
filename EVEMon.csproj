@@ -569,10 +569,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\icons\Skill_Select\Group0\book.ico" />
-    <None Include="Resources\icons\Skill_Select\Group0\lvl0.ico" />
-    <None Include="Resources\icons\Skill_Select\Group0\PrereqsMet.ico" />
-    <None Include="Resources\icons\Skill_Select\Group0\PrereqsNOTMet.ico" />
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
