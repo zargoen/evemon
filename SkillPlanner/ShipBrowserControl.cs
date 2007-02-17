@@ -107,7 +107,7 @@ namespace EVEMon.SkillPlanner
         }
 
         private static string m_propName;
-        private static bool findShipProperty(ObjectProperty p)
+        private static bool findShipProperty(EntityProperty p)
         {
             return p.Name.Equals(ShipBrowserControl.m_propName);
         }
@@ -174,7 +174,7 @@ namespace EVEMon.SkillPlanner
                 if (! m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (ObjectRequiredSkill srs in s.RequiredSkills)
+                    foreach (EntityRequiredSkill srs in s.RequiredSkills)
                     {
                         Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(srs.Name);
@@ -225,7 +225,7 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             m_propName = att.xmlName;
-                            ObjectProperty sp = s.Properties.Find(findShipProperty);
+                            EntityProperty sp = s.Properties.Find(findShipProperty);
                             if (sp != null)
                             {
                                 if (att.hideIfZero && sp.Value.StartsWith("0"))
@@ -246,7 +246,7 @@ namespace EVEMon.SkillPlanner
                     }                    
                     
                     // Display any properties not shown in the sorted list
-                    foreach (ObjectProperty prop in s.Properties)
+                    foreach (EntityProperty prop in s.Properties)
                     {
                         // make sure we haven't already displayed this property
                         if (!m_DisplayAttributes.Contains(prop.Name))
@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
             else return s;
         }
 
-        private void SetShipSkillLabel(int rnum, Label skillLabel, List<ObjectRequiredSkill> list)
+        private void SetShipSkillLabel(int rnum, Label skillLabel, List<EntityRequiredSkill> list)
         {
             if (list.Count > rnum)
             {
@@ -340,7 +340,7 @@ namespace EVEMon.SkillPlanner
 
             string m_note = s.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (ObjectRequiredSkill srs in s.RequiredSkills)
+            foreach (EntityRequiredSkill srs in s.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }
@@ -385,7 +385,7 @@ namespace EVEMon.SkillPlanner
                         if (att.isHeader) continue;
 
                         m_propName = att.xmlName;
-                        ObjectProperty sp = selectedShip.Properties.Find(findShipProperty);
+                        EntityProperty sp = selectedShip.Properties.Find(findShipProperty);
                         if (sp != null)
                         {
                             // found a property to display. Does it exist already?
@@ -423,7 +423,7 @@ namespace EVEMon.SkillPlanner
                     // we've dealt with the formatted, ordered list, now add the rest
 
                     // Display any properties not shown in the sorted list
-                    foreach (ObjectProperty prop in selectedShip.Properties)
+                    foreach (EntityProperty prop in selectedShip.Properties)
                     {
                         // make sure we haven't already displayed this property
                         if (!m_DisplayAttributes.Contains(prop.Name))

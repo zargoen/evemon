@@ -59,18 +59,18 @@ namespace EVEMon.Common
             set { m_metagroup = StringTable.GetSharedString(value); }
         }
 
-        private List<ObjectProperty> m_properties = new List<ObjectProperty>();
+        private List<EntityProperty> m_properties = new List<EntityProperty>();
 
         [XmlArrayItem("prop")]
-        public List<ObjectProperty> Properties
+        public List<EntityProperty> Properties
         {
             get { return m_properties; }
         }
 
-        private List<ObjectRequiredSkill> m_requiredSkills = new List<ObjectRequiredSkill>();
+        private List<EntityRequiredSkill> m_requiredSkills = new List<EntityRequiredSkill>();
 
         [XmlArrayItem("skill")]
-        public List<ObjectRequiredSkill> RequiredSkills
+        public List<EntityRequiredSkill> RequiredSkills
         {
             get { return m_requiredSkills; }
         }
@@ -87,7 +87,7 @@ namespace EVEMon.Common
             {
                 if (m_slotIndex != -1)
                     return m_slotIndex;
-                foreach (ObjectProperty prop in m_properties)
+                foreach (EntityProperty prop in m_properties)
                 {
                     if (prop.Name != "Slot type")
                         continue;
@@ -118,7 +118,7 @@ namespace EVEMon.Common
     // common classes used by ship and items - we can probably refactor code that
     // uses these classes (e.g. ship and item browsers
 
-    public class ObjectProperty
+    public class EntityProperty
     {
         private string m_name;
 
@@ -163,7 +163,7 @@ namespace EVEMon.Common
 
     }
 
-    public class ObjectRequiredSkill
+    public class EntityRequiredSkill
     {
         private string m_name;
 

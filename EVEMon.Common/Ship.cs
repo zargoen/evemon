@@ -83,18 +83,18 @@ namespace EVEMon.Common
             set { m_type = value; }
         }
 
-        private List<ObjectProperty> m_properties = new List<ObjectProperty>();
+        private List<EntityProperty> m_properties = new List<EntityProperty>();
 
         [XmlArrayItem("prop")]
-        public List<ObjectProperty> Properties
+        public List<EntityProperty> Properties
         {
             get { return m_properties; }
         }
 
-        private List<ObjectRequiredSkill> m_requiredSkills = new List<ObjectRequiredSkill>();
+        private List<EntityRequiredSkill> m_requiredSkills = new List<EntityRequiredSkill>();
 
         [XmlArrayItem("skill")]
-        public List<ObjectRequiredSkill> RequiredSkills
+        public List<EntityRequiredSkill> RequiredSkills
         {
             get { return m_requiredSkills; }
         }
