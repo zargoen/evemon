@@ -557,7 +557,7 @@ namespace EVEMon.ImpGroups
             this.Controls.Add(this.JumpCloneTxt);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ImpGroups";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Tag = "Jump Clone";
             this.Text = "Jump Clones";
             this.Load += new System.EventHandler(this.ImpGroups_Load);

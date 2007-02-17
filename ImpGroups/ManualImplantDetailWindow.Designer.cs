@@ -315,7 +315,7 @@ namespace EVEMon
             this.MinimizeBox = false;
             this.Name = "ManualImplantDetailWindow";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Implant Details";
             this.Load += new System.EventHandler(this.ManualImplantDetailWindow_Load);
             this.groupBox1.ResumeLayout(false);

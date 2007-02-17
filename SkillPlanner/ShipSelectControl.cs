@@ -35,7 +35,8 @@ namespace EVEMon.SkillPlanner
                 //cbSkillFilter.SelectedIndex = 0;
                 cbSkillFilter.SelectedIndex = m_settings.ShipBrowserFilter;
                 m_ships = Ship.GetShips();
-                tbSearchText.Text = m_settings.ShipBrowserSearch;
+                if (m_settings.StoreBrowserFilters)
+                    tbSearchText.Text = m_settings.ShipBrowserSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
                 if (m_ships != null)
                     BuildTreeView();
@@ -177,7 +178,8 @@ namespace EVEMon.SkillPlanner
         {
             bool showListBox = false;
 
-            m_settings.ShipBrowserSearch = tbSearchText.Text;
+            if (m_settings.StoreBrowserFilters)
+                m_settings.ShipBrowserSearch = tbSearchText.Text;
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 string trimmedSearch = tbSearchText.Text.Trim().ToLower();

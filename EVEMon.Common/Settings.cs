@@ -1206,6 +1206,14 @@ namespace EVEMon.Common
             set { m_skillBrowserFilter = value; }
         }
 
+        private bool m_storeBrowserFilters = false;
+
+        public bool StoreBrowserFilters
+        {
+            get { return m_storeBrowserFilters; }
+            set { m_storeBrowserFilters = value; }
+        }
+        
         private int m_skillBrowserSort=0;
 
         public int SkillBrowserSort

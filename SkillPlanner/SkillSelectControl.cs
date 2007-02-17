@@ -281,7 +281,8 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            m_settings.SkillBrowserSearch = tbSearch.Text;
+            if (m_settings.StoreBrowserFilters)
+                m_settings.SkillBrowserSearch = tbSearch.Text;
             SearchTextChanged();
         }
 
@@ -517,7 +518,8 @@ namespace EVEMon.SkillPlanner
                 cbSkillFilter.SelectedIndex = m_settings.SkillBrowserFilter;
                 cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
                 cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
-                tbSearch.Text = m_settings.SkillBrowserSearch;
+                if (m_settings.StoreBrowserFilters)
+                    tbSearch.Text = m_settings.SkillBrowserSearch;
                 lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
             }
             catch (Exception err)

@@ -64,7 +64,6 @@ namespace EVEMon.SkillPlanner
             // 
             // scShipSelect
             // 
-            this.scShipSelect.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.scShipSelect.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scShipSelect.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.scShipSelect.Location = new System.Drawing.Point(0, 0);
@@ -96,7 +95,7 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Name = "shipSelectControl";
             this.shipSelectControl.Plan = null;
             this.shipSelectControl.SelectedShip = null;
-            this.shipSelectControl.Size = new System.Drawing.Size(159, 409);
+            this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedShipChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
             // 
@@ -111,7 +110,7 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.FullRowSelect = true;
             this.lvShipProperties.Location = new System.Drawing.Point(3, 37);
             this.lvShipProperties.Name = "lvShipProperties";
-            this.lvShipProperties.Size = new System.Drawing.Size(212, 369);
+            this.lvShipProperties.Size = new System.Drawing.Size(216, 373);
             this.lvShipProperties.TabIndex = 3;
             this.lvShipProperties.UseCompatibleStateImageBehavior = false;
             this.lvShipProperties.View = System.Windows.Forms.View.Details;
@@ -133,11 +132,11 @@ namespace EVEMon.SkillPlanner
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.panel1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(221, 0);
+            this.panel2.Location = new System.Drawing.Point(225, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3);
-            this.panel2.Size = new System.Drawing.Size(259, 409);
+            this.panel2.Size = new System.Drawing.Size(259, 413);
             this.panel2.TabIndex = 10;
             // 
             // panel5
@@ -147,7 +146,7 @@ namespace EVEMon.SkillPlanner
             this.panel5.Location = new System.Drawing.Point(3, 278);
             this.panel5.Margin = new System.Windows.Forms.Padding(2);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(253, 14);
+            this.panel5.Size = new System.Drawing.Size(253, 18);
             this.panel5.TabIndex = 13;
             // 
             // pnlShipDescription
@@ -158,7 +157,7 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.Location = new System.Drawing.Point(0, 0);
             this.pnlShipDescription.Name = "pnlShipDescription";
             this.pnlShipDescription.Padding = new System.Windows.Forms.Padding(2);
-            this.pnlShipDescription.Size = new System.Drawing.Size(253, 14);
+            this.pnlShipDescription.Size = new System.Drawing.Size(253, 18);
             this.pnlShipDescription.TabIndex = 8;
             this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_Changed);
             // 
@@ -175,7 +174,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel4.Controls.Add(this.groupBox1);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(3, 292);
+            this.panel4.Location = new System.Drawing.Point(3, 296);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(253, 114);
@@ -278,7 +277,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel1.AutoSize = true;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(3, 406);
+            this.panel1.Location = new System.Drawing.Point(3, 410);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(253, 0);

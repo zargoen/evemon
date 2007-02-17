@@ -560,7 +560,6 @@ namespace EVEMon.SkillPlanner
         {
             if (m_implantCalcWindow != null)
             {
-
                 m_implantCalcWindow.Visible = true;
                 m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
             }

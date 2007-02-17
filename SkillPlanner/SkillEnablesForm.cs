@@ -21,10 +21,15 @@ namespace EVEMon.SkillPlanner
     /// The user can chose to view the trees in alphabetic order, or by the categories (alpha is default).
     /// For items, you can chose to show just the base T1/T2 items, or all variants of an item (default is base items)
     /// 
+    /// There's a dropdown listbox that keeps track of what skills you've been exploring in this session.
+    /// 
     /// Each node has a context menu that enables you to view the item in the relevant browser, add missing skills to 
     /// your plan, show list of all prerequisites (including costs if unowned), and for the skill tree, use the selected skill as a new base skill.
     /// 
-    /// Doubleclicking a leaf node will show the selected item in the browser.
+    /// Doubleclicking a ship/item leaf node will show the selected item in the browser.
+    /// Doubleclicking a skill in the tree will set that skill as the base skill we're exploring
+    /// 
+    /// 
     /// 
     /// </summary>
     public partial class SkillEnablesForm : Form
@@ -57,8 +62,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="s">The new skill we want to analyze</param>
         public void SetSkill(Skill s)
         {
+            if (m_skill == s) return;
             m_skill = s;
             UpdateSkillLabel();
+            if (cbHistory.Items.Contains(s.Name))
+            {
+                // already in list,remove it so it gets reinsetred at the top
+                cbHistory.Items.RemoveAt(cbHistory.Items.IndexOf(s.Name));
+            }
+            cbHistory.Items.Insert(0, s.Name);
+
+            cbHistory.Text = cbHistory.Items[0] as string;
             PopulateLists();
         }
         #endregion
@@ -246,7 +260,7 @@ namespace EVEMon.SkillPlanner
         private void PopulateShipList()
         {
             this.SuspendLayout();
-            tvShips.Nodes.Clear();
+            tvEntity.Nodes.Clear();
 
             // Initialize the 5 enabled ships lists
             SortedList<String, Ship>[] enabledShips = new SortedList<string, Ship>[5];
@@ -360,10 +374,10 @@ namespace EVEMon.SkillPlanner
                 }
                 // We're done with this skill level
                 tnSkillLevel.Expand();
-                tvShips.Nodes.Add(tnSkillLevel);
+                tvEntity.Nodes.Add(tnSkillLevel);
             }
-            if (tvShips.Nodes.Count == 0)
-                tvShips.Nodes.Add(new TreeNode("No ships enabled by this skill"));
+            if (tvEntity.Nodes.Count == 0)
+                tvEntity.Nodes.Add(new TreeNode("No ships enabled by this skill"));
 
             this.ResumeLayout();
         }
@@ -391,7 +405,7 @@ namespace EVEMon.SkillPlanner
         private void PopulateItemList()
         {
             this.SuspendLayout();
-            tvShips.Nodes.Clear();
+            tvEntity.Nodes.Clear();
 
             // Initialize the 5 lists of enabled items.
             for (int i=0;i<5;i++)
@@ -442,10 +456,10 @@ namespace EVEMon.SkillPlanner
 
                 // we're done with this skill level
                 tnSkillLevel.Expand();
-                tvShips.Nodes.Add(tnSkillLevel);
+                tvEntity.Nodes.Add(tnSkillLevel);
             }
-            if (tvShips.Nodes.Count == 0)
-                tvShips.Nodes.Add(new TreeNode("No items enabled by this skill"));
+            if (tvEntity.Nodes.Count == 0)
+                tvEntity.Nodes.Add(new TreeNode("No items enabled by this skill"));
 
             this.ResumeLayout();
         }
@@ -634,8 +648,6 @@ namespace EVEMon.SkillPlanner
             }
             else
                 tmrAutoUpdate.Enabled = false;
-
-            // TODO skill hsitory (back/forward? with split button?
         }
 
         /// <summary>
@@ -723,12 +735,12 @@ namespace EVEMon.SkillPlanner
         {
             s = null;
             item = null;
-            TreeNode tn = tvShips.SelectedNode;
+            TreeNode tn = tvEntity.SelectedNode;
             if (tn != null)
             {
                 // it'll be one or t'other
-                s = tvShips.SelectedNode.Tag as Ship;
-                item = tvShips.SelectedNode.Tag as Item;
+                s = tvEntity.SelectedNode.Tag as Ship;
+                item = tvEntity.SelectedNode.Tag as Item;
             }
         }
 
@@ -841,7 +853,10 @@ namespace EVEMon.SkillPlanner
             m_characterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
             UpdateSkillLabel();
             PopulateLists();
+            cbHistory.Items.Insert(0, m_skill.Name);
+            cbHistory.Text = m_skill.Name;
         }
+
 
         /// <summary>
         /// Toggling the radio buttons to swith bettwen sorted list and category views
@@ -885,38 +900,20 @@ namespace EVEMon.SkillPlanner
             this.Close();
         }
 
-        /// <summary>
-        /// Redo the trees (e.g. when user is messing with plans whilst
-        ///  playing with this form...)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            PopulateLists();
-        }
+
+ 
 
         /// <summary>
-        /// Doubleclicks on a leaf node will show the ship/item/skill in the browser
+        /// Doubleclicks on a ship/item leaf node will show the ship/item in the browser
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tvSkills_DoubleClick(object sender, EventArgs e)
+        private void tvEntity_DoubleClick(object sender, EventArgs e)
         {
-            tsShowInBrowser_Click(sender, e);
-        }
-
-        /// <summary>
-        /// Doubleclicks on a leaf node will show the ship/item/skill in the browser
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tvShips_DoubleClick(object sender, EventArgs e)
-        {
-            if (tvShips.SelectedNode != null)
+            if (tvEntity.SelectedNode != null)
             {
-                Ship s = tvShips.SelectedNode.Tag as Ship;
-                Item itm = tvShips.SelectedNode.Tag as Item;
+                Ship s = tvEntity.SelectedNode.Tag as Ship;
+                Item itm = tvEntity.SelectedNode.Tag as Item;
                 NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
                 if (s != null)
                     w.ShowShipInBrowser(s);
@@ -926,15 +923,15 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Doubleclicks on a leaf node will show the ship/item/skill in the browser
+        /// Doubleclicks on a Ships/Item leaf node will show the ship/item in the browser
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tvItems_DoubleClick(object sender, EventArgs e)
         {
-            if (tvShips.SelectedNode != null)
+            if (tvEntity.SelectedNode != null)
             {
-                Item i = tvShips.SelectedNode.Tag as Item;
+                Item i = tvEntity.SelectedNode.Tag as Item;
                 if (i != null)
                 {
                     NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
@@ -942,6 +939,29 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        /// <summary>
+        /// We want to go look at a skill in the history list again
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbHistory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string skill = cbHistory.Items[cbHistory.SelectedIndex] as string;
+            SetSkill(m_characterInfo.GetSkill(skill));
+        }
+
+        /// <summary>
+        /// Show user what this combobox is for
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbHistory_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.SetToolTip(sender as Control, "A history of the skills that you have been looking at");
+            toolTip.Active = true;
+        }
+
 
         /// <summary>
         /// Tick-tock - update skill header if we're training it
@@ -1198,27 +1218,6 @@ namespace EVEMon.SkillPlanner
                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        /// <summary>
-        /// Shared ship/item context menu - show item in browser
-        /// (same function as doubleclicking a leaf node)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsShowEntity_Click(object sender, EventArgs e)
-        {
-            Ship s = null;
-            Item item = null;
-            SelectedNode(sender, out s, out item);
-            if (s != null)
-            {
-                tvShips_DoubleClick(this, null);
-            }
-
-            else if (item != null)
-            {
-                tvItems_DoubleClick(this, null);
-            }
-        }
   
         #endregion // context menu
 

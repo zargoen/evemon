@@ -49,7 +49,8 @@ namespace EVEMon.SkillPlanner
                 m_rootCategory = ItemCategory.GetRootCategory();
 
                 // needs to be after we set the root category.
-                tbSearchText.Text = m_settings.ItemBrowserSearch;
+                if (m_settings.StoreBrowserFilters)
+                    tbSearchText.Text = m_settings.ItemBrowserSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
                 if (m_plan != null)
                     BuildTreeView();
@@ -236,7 +237,8 @@ namespace EVEMon.SkillPlanner
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             if (m_rootCategory == null) return;
-            m_settings.ItemBrowserSearch = tbSearchText.Text;
+            if (m_settings.StoreBrowserFilters)
+                m_settings.ItemBrowserSearch = tbSearchText.Text;
             if (String.IsNullOrEmpty(tbSearchText.Text) ||
                 String.IsNullOrEmpty(tbSearchText.Text.Trim()))
             {
