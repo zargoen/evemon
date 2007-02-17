@@ -62,7 +62,7 @@ namespace EVEMon.Common
             [ColumnDisplay("Estimated Skill Point Total", "Est. SP Total")] SPTotal,
             [ColumnDisplay("SP/Hour", "SP/Hour")] SPPerHour,
             [ColumnDisplay("Priority", "Priority")] Priority,
-            [ColumnDisplay("Owned", "Owned")]Owned
+            [ColumnDisplay("Cost", "Cost")] Cost
         }
 
         private bool[] m_prefs;
@@ -277,8 +277,8 @@ namespace EVEMon.Common
         [XmlAttribute]
         public bool Owned
         {
-            get { return this[ColumnType.Owned]; }
-            set { this[ColumnType.Owned] = value; }
+            get { return this[ColumnType.Cost]; }
+            set { this[ColumnType.Cost] = value; }
         }
 	
 

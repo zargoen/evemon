@@ -318,13 +318,13 @@ namespace EVEMon.SkillPlanner
                                 case ColumnPreference.ColumnType.Priority:
                                     res = pe.Priority.ToString();
                                     break;
-                                case ColumnPreference.ColumnType.Owned:
+                                case ColumnPreference.ColumnType.Cost:
                                     if (!pe.Skill.Known)
                                     {    
                                         if (pe.Skill.Owned)
-                                            res ="Yes";
+                                            res ="Owned";
                                         else
-                                            res = "No";
+                                            res = pe.Skill.FormattedCost;
                                     }
                                     else res = String.Empty;
                                     break;
