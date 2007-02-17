@@ -665,7 +665,12 @@ namespace EVEMon.SkillPlanner
             // Tell the skill explorer we're closing down
             if (m_skillExplorer != null)
             {
-                m_skillExplorer.Shutdown();
+                if (!(e.CloseReason == CloseReason.ApplicationExitCall) && // and Application.Exit() was not called
+                    !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
+                    !(e.CloseReason == CloseReason.WindowsShutDown))       // and Windows is not shutting down
+                {
+                    m_skillExplorer.Shutdown();
+                }
             }
         }
     }

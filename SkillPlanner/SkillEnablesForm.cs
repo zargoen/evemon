@@ -49,6 +49,7 @@ namespace EVEMon.SkillPlanner
         {
             m_skill = s;
             m_skillBrowser = sbc;
+            m_plannerWindow = sbc.Plan.PlannerWindow;
             m_characterInfo = m_skillBrowser.Plan.GrandCharacterInfo;
         }
 
@@ -886,8 +887,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SkillEnablesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_skillBrowser.EnablesForm = null;
-            m_characterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
+            if (!m_plannerWindow.IsAlive)
+            {
+                m_skillBrowser.EnablesForm = null;
+            }
+            if (!(e.CloseReason == CloseReason.ApplicationExitCall) &&  // and Application.Exit() was not called
+                !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
+                !(e.CloseReason == CloseReason.WindowsShutDown))  // and Windows is not shutting down
+            {
+                m_characterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
+            }
         }
 
         /// <summary>
@@ -935,7 +944,8 @@ namespace EVEMon.SkillPlanner
                 if (i != null)
                 {
                     NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
-                    w.ShowItemInBrowser(i);
+                    if (w != null)
+                        w.ShowItemInBrowser(i);
                 }
             }
         }
@@ -1251,6 +1261,10 @@ namespace EVEMon.SkillPlanner
 
         // The parent SkillBrowser form (and the gateway to all other objects we need
         // such as the CharacterInfo, Character's skills, and the  plannerWindow
+
+        private WeakReference<Form> m_plannerWindow;
+
+      
         private SkillBrowser m_skillBrowser;
 
         // The parent Characetr
