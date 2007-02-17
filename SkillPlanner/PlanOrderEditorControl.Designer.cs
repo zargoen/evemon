@@ -34,6 +34,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangePriority = new System.Windows.Forms.ToolStripMenuItem();
             this.miShowInSkillBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.miShowInSkillExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.miMarkOwned = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.miSubPlan = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +65,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeNote,
             this.miChangePriority,
             this.miShowInSkillBrowser,
+            this.miShowInSkillExplorer,
             this.miMarkOwned,
             this.toolStripMenuItem1,
             this.miSubPlan,
@@ -71,7 +73,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(197, 192);
+            this.cmsContextMenu.Size = new System.Drawing.Size(197, 214);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -94,6 +96,13 @@ namespace EVEMon.SkillPlanner
             this.miShowInSkillBrowser.Size = new System.Drawing.Size(196, 22);
             this.miShowInSkillBrowser.Text = "Show in Skill Browser...";
             this.miShowInSkillBrowser.Click += new System.EventHandler(this.miShowInSkillBrowser_Click);
+            // 
+            // miShowInSkillExplorer
+            // 
+            this.miShowInSkillExplorer.Name = "miShowInSkillExplorer";
+            this.miShowInSkillExplorer.Size = new System.Drawing.Size(196, 22);
+            this.miShowInSkillExplorer.Text = "Show in Skill Explorer";
+            this.miShowInSkillExplorer.Click += new System.EventHandler(this.miShowInSkillExplorer_Click);
             // 
             // miMarkOwned
             // 
@@ -306,5 +315,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miSubPlan;
         private System.Windows.Forms.ToolStripMenuItem miChangePriority;
         private System.Windows.Forms.ToolStripMenuItem miMarkOwned;
+        private System.Windows.Forms.ToolStripMenuItem miShowInSkillExplorer;
     }
 }

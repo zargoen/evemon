@@ -64,11 +64,11 @@ namespace EVEMon.SkillPlanner
             this.tsAddObjectToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.tsShowObjectPrereqs = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbHistory = new System.Windows.Forms.ComboBox();
             this.cbShowBaseOnly = new System.Windows.Forms.CheckBox();
             this.rbShowAlpha = new System.Windows.Forms.RadioButton();
             this.rbShowTree = new System.Windows.Forms.RadioButton();
             this.tmrAutoUpdate = new System.Windows.Forms.Timer(this.components);
-            this.cbHistory = new System.Windows.Forms.ComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.grpPlanName.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -352,14 +352,14 @@ namespace EVEMon.SkillPlanner
             this.lblShips.TabIndex = 0;
             this.lblShips.Text = "Enabled Ships";
             // 
-            // tvShips
+            // tvEntity
             // 
             this.tvEntity.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvEntity.ContextMenuStrip = this.cmEntity;
             this.tvEntity.Location = new System.Drawing.Point(-1, 17);
-            this.tvEntity.Name = "tvShips";
+            this.tvEntity.Name = "tvEntity";
             treeNode2.Name = "Node0";
             treeNode2.Text = "Node0";
             this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
@@ -376,7 +376,7 @@ namespace EVEMon.SkillPlanner
             this.tsAddObjectToPlan,
             this.tsShowObjectPrereqs});
             this.cmEntity.Name = "cmShips";
-            this.cmEntity.Size = new System.Drawing.Size(227, 92);
+            this.cmEntity.Size = new System.Drawing.Size(227, 70);
             this.cmEntity.Opening += new System.ComponentModel.CancelEventHandler(this.cmEntity_Opening);
             // 
             // tsShowObjectInBrowser
@@ -414,6 +414,17 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
+            // 
+            // cbHistory
+            // 
+            this.cbHistory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHistory.FormattingEnabled = true;
+            this.cbHistory.Location = new System.Drawing.Point(5, 19);
+            this.cbHistory.Name = "cbHistory";
+            this.cbHistory.Size = new System.Drawing.Size(137, 21);
+            this.cbHistory.TabIndex = 3;
+            this.cbHistory.MouseHover += new System.EventHandler(this.cbHistory_MouseHover);
+            this.cbHistory.SelectedIndexChanged += new System.EventHandler(this.cbHistory_SelectedIndexChanged);
             // 
             // cbShowBaseOnly
             // 
@@ -456,17 +467,6 @@ namespace EVEMon.SkillPlanner
             this.tmrAutoUpdate.Interval = 30000;
             this.tmrAutoUpdate.Tick += new System.EventHandler(this.tmrAutoUpdate_Tick);
             // 
-            // cbHistory
-            // 
-            this.cbHistory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbHistory.FormattingEnabled = true;
-            this.cbHistory.Location = new System.Drawing.Point(5, 19);
-            this.cbHistory.Name = "cbHistory";
-            this.cbHistory.Size = new System.Drawing.Size(137, 21);
-            this.cbHistory.TabIndex = 3;
-            this.cbHistory.MouseHover += new System.EventHandler(this.cbHistory_MouseHover);
-            this.cbHistory.SelectedIndexChanged += new System.EventHandler(this.cbHistory_SelectedIndexChanged);
-            // 
             // SkillEnablesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -480,7 +480,7 @@ namespace EVEMon.SkillPlanner
             this.MinimumSize = new System.Drawing.Size(585, 480);
             this.Name = "SkillEnablesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "What Is This Skill Used For?";
+            this.Text = "Skill Explorer - What Is This Skill Used For?";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SkillEnablesForm_FormClosing);
             this.Load += new System.EventHandler(this.SkillEnablesForm_Load);
             this.grpPlanName.ResumeLayout(false);

@@ -118,6 +118,11 @@ namespace EVEMon.SkillPlanner
             tabControl.SelectedTab = tpSkillBrowser;
         }
 
+        public void ShowSkillInExplorer(Skill gs)
+        {
+            skillBrowser.ShowSkillInExplorer(gs);
+        }
+
         public void ShowShipInBrowser(Ship s)
         {
             shipBrowser.SelectedShip = s;

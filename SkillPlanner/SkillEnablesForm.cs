@@ -11,7 +11,7 @@ using EVEMon.Common;
 namespace EVEMon.SkillPlanner
 {
     /// <summary>
-    /// This class is the "What does this skill do for me" form.
+    /// This class is the Skill Explorer - or "What items/ships other skills does this skill enable for me" form.
     /// For a given skill, we show 2 tree controls (with splitter bars seperating them), one for skills, one for either ships or items, depending on the skill we#re exploring.
     /// (There is no skill that enables both a ship and an item)
     /// Each tree shows a node for each level of the chosen skill with child nodes for all items that this level

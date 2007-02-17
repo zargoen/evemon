@@ -804,6 +804,13 @@ namespace EVEMon.SkillPlanner
             m_plannerWindow.ShowSkillInTree(gs);
         }
 
+        private void miShowInSkillExplorer_Click(object sender, EventArgs e)
+        {
+            ListViewItem lvi = lvSkills.SelectedItems[0];
+            Plan.Entry pe = (Plan.Entry)lvi.Tag;
+            Skill gs = pe.Skill;
+            m_plannerWindow.ShowSkillInExplorer(gs);
+        }
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key

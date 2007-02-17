@@ -398,6 +398,11 @@ namespace EVEMon.SkillPlanner
         #region Skill Enables...
         private void btnEnables_Click(object sender, EventArgs e)
         {
+           ShowSkillInExplorer(m_selectedSkill);
+        }
+
+        public void ShowSkillInExplorer(Skill s)
+        {
             if (m_skillEnablesForm == null)
             {
                 SkillEnablesForm f = new SkillEnablesForm(m_selectedSkill, this);
@@ -407,7 +412,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                m_skillEnablesForm.SetSkill(m_selectedSkill);
+                m_skillEnablesForm.SetSkill(s);
             }
             m_skillEnablesForm.Show();
         }
