@@ -200,6 +200,11 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private void m_plan_Changed(object sender, EventArgs e)
         {
+            // Update the skill explorer as it might impact that window
+            if (m_skillExplorer != null)
+            {
+                m_skillExplorer.PlanChanged();
+            }
             m_settings.Save();
             UpdateStatusBar();
         }
@@ -262,6 +267,14 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        public SkillEnablesForm m_skillExplorer = null;
+
+        public SkillEnablesForm SkillExplorer
+        {
+            get { return m_skillExplorer; }
+            set { m_skillExplorer = value; }
+        }
+
         private void ChangePlan(Plan p)
         {
             p.GrandCharacterInfo = m_plan.GrandCharacterInfo;
@@ -277,6 +290,11 @@ namespace EVEMon.SkillPlanner
             shipBrowser.Plan = m_plan;
 
             itemBrowser.Plan = m_plan;
+
+            // Tell ths skill explorer form we#re switching plans
+            // this has to be done after we've told the skill browser about the plan!
+            if (m_skillExplorer != null)
+                m_skillExplorer.PlanChanged();
 
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
@@ -316,7 +334,11 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-
+            // tell the skill planner that we're deleting the plan
+            if (m_skillExplorer != null)
+            {
+                m_skillExplorer.Shutdown();
+            }
             m_settings.RemovePlanFor(m_planKey, m_plan.Name);
         }
 
@@ -636,6 +658,15 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException (err, true);
                 MessageBox.Show ("There was an error writing out the file:\n\n" + err.Message,
                                 "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void NewPlannerWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Tell the skill explorer we're closing down
+            if (m_skillExplorer != null)
+            {
+                m_skillExplorer.Shutdown();
             }
         }
     }

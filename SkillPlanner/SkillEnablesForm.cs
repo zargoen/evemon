@@ -12,7 +12,8 @@ namespace EVEMon.SkillPlanner
 {
     /// <summary>
     /// This class is the "What does this skill do for me" form.
-    /// For a given skill, we show 3 tree controls (with splitter bars seperating them), one for skills, one for ships and one for items.
+    /// For a given skill, we show 2 tree controls (with splitter bars seperating them), one for skills, one for either ships or items, depending on the skill we#re exploring.
+    /// (There is no skill that enables both a ship and an item)
     /// Each tree shows a node for each level of the chosen skill with child nodes for all items that this level
     /// is a direct prerequisite for. If we can use the item, it is shown in a normal font. If this level of skill would 
     /// enable use of the item, we show it dimmed. If this level is one of a number of missing skills for the item, then
@@ -25,17 +26,9 @@ namespace EVEMon.SkillPlanner
     /// 
     /// Doubleclicking a leaf node will show the selected item in the browser.
     /// 
-    /// <TODO>
-    /// - make it 2 panes, if skillgroup is command ships, or skill is astrogeology or jumpdrive operation,we're looking at ships
-    ///   else we're looking at items
-    /// - timer to update skill header (needs to rebuild list if skill completes?)
-    /// - callbacks for when plan entries are updated?
-    /// - history of explored skills with next/prev skills ? (possibly use split button?)
-    /// </TODO>
     /// </summary>
     public partial class SkillEnablesForm : Form
     {
-
         #region constructors
         public SkillEnablesForm()
         {
@@ -51,7 +44,7 @@ namespace EVEMon.SkillPlanner
         {
             m_skill = s;
             m_skillBrowser = sbc;
-
+            m_characterInfo = m_skillBrowser.Plan.GrandCharacterInfo;
         }
 
         #endregion
@@ -97,8 +90,22 @@ namespace EVEMon.SkillPlanner
         private void PopulateLists()
         {
             PopulateSkillList();
-            PopulateShipList();
-            PopulateItemList();
+            if (IsShipSkill)
+            {
+                lblShips.BackColor = Color.LightCyan;
+                pnlShipHeader.BackColor = Color.LightCyan;
+                lblShips.Text = "Enabled Ships";
+                cbShowBaseOnly.Visible = false;
+                PopulateShipList();
+            }
+            else
+            {
+                lblShips.BackColor = Color.MistyRose;
+                pnlShipHeader.BackColor = Color.MistyRose;
+                lblShips.Text = "Enabled Items";
+                cbShowBaseOnly.Visible = true;
+                PopulateItemList();
+            }
         }
 
         /// <summary>
@@ -155,7 +162,7 @@ namespace EVEMon.SkillPlanner
                else
                // Show in skill groups   
                {
-                   foreach (SkillGroup sg in m_skillBrowser.Plan.GrandCharacterInfo.SkillGroups.Values)
+                   foreach (SkillGroup sg in m_characterInfo.SkillGroups.Values)
                    {
                        TreeNode gtn = new TreeNode(sg.Name);
                        foreach (Skill s in sg)
@@ -195,7 +202,7 @@ namespace EVEMon.SkillPlanner
             // get the skill instance from the current character
             // we need to do this as the prereqs came from the Skill.AllSkills
             // collection and will not reflect this character's position with that skill
-            Skill skill = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(s.Name);
+            Skill skill = m_characterInfo.GetSkill(s.Name);
             tnSkill.Tag = skill;
             tnSkill.ToolTipText = String.Empty;
 
@@ -212,7 +219,7 @@ namespace EVEMon.SkillPlanner
                foreach (Skill.Prereq pr in skill.Prereqs)
                {
                    // again, get the instance of this skill from teh current character
-                   Skill prs = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(pr.Name);
+                   Skill prs = m_characterInfo.GetSkill(pr.Name);
                    if (prs.Id != m_skill.Id && prs.Level < pr.RequiredLevel)
                    {
                        // there's more prereqs to learn!
@@ -384,7 +391,7 @@ namespace EVEMon.SkillPlanner
         private void PopulateItemList()
         {
             this.SuspendLayout();
-            tvItems.Nodes.Clear();
+            tvShips.Nodes.Clear();
 
             // Initialize the 5 lists of enabled items.
             for (int i=0;i<5;i++)
@@ -435,10 +442,10 @@ namespace EVEMon.SkillPlanner
 
                 // we're done with this skill level
                 tnSkillLevel.Expand();
-                tvItems.Nodes.Add(tnSkillLevel);
+                tvShips.Nodes.Add(tnSkillLevel);
             }
-            if (tvItems.Nodes.Count == 0)
-                tvItems.Nodes.Add(new TreeNode("No items enabled by this skill"));
+            if (tvShips.Nodes.Count == 0)
+                tvShips.Nodes.Add(new TreeNode("No items enabled by this skill"));
 
             this.ResumeLayout();
         }
@@ -547,7 +554,7 @@ namespace EVEMon.SkillPlanner
 
             for (int i = 0; i < prereqs.Count; i++)
             {
-                gs = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(prereqs[i].Name);
+                gs = m_characterInfo.GetSkill(prereqs[i].Name);
                 if (gs.Level < prereqs[i].Level)
                 {
                     // we don;t know this prereq at the right level
@@ -590,7 +597,18 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateSkillLabel()
         {
+            if (this.InvokeRequired)
+            {
+                // called from timer thread if skill is currently training
+                this.Invoke(new MethodInvoker(delegate
+                                                  {
+                                                      UpdateSkillLabel();
+                                                  }));
+                return;
+            }
+
             StringBuilder sb = new StringBuilder(m_skill.Name);
+            if (m_skill.InTraining) sb.Append(" - In Training");
             sb.Append(" (");
             if (m_skill.Known)
             {
@@ -609,8 +627,36 @@ namespace EVEMon.SkillPlanner
                 else sb.Append("is not owned, book costs " + m_skill.FormattedCost + " ISK)");
             }
             lblSkill.Text = sb.ToString();
+            if (m_skill.InTraining)
+            {
+                tmrAutoUpdate.Enabled = true;
+                tmrAutoUpdate.Interval = 2;
+            }
+            else
+                tmrAutoUpdate.Enabled = false;
 
+            // TODO skill hsitory (back/forward? with split button?
         }
+
+        /// <summary>
+        /// The user has either updated current plan, or switched plans within the Planner window
+        /// </summary>
+        /// <param name="m_plan"></param>
+        internal void PlanChanged()
+        {
+            SetPlanName();
+            PopulateLists();
+        }
+
+        /// <summary>
+        /// User is closing the planner window or has deleted this plan within the planner window so close down
+        /// </summary>
+        internal void Shutdown()
+        {
+            tmrAutoUpdate.Enabled = false;
+            this.Close();
+        }
+
 
         #region context menu helper methods
 
@@ -650,7 +696,7 @@ namespace EVEMon.SkillPlanner
             for (int i = 0; i < prereqs.Count; i++)
             {
                 // get the skill form the active character so we have the right stats
-                Skill gs = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(prereqs[i].Name);
+                Skill gs = m_characterInfo.GetSkill(prereqs[i].Name);
                 thisNeeded = gs.Level < prereqs[i].Level;
                 if (thisNeeded) skillsNeeded = true;
                 if (thisNeeded && !m_skillBrowser.Plan.IsPlanned(gs, prereqs[i].Level))
@@ -677,22 +723,12 @@ namespace EVEMon.SkillPlanner
         {
             s = null;
             item = null;
-            TreeNode tn = null;
-            ContextMenuStrip cms = sender as ContextMenuStrip;
-            if (cms != null && cms.SourceControl == tvShips)
+            TreeNode tn = tvShips.SelectedNode;
+            if (tn != null)
             {
-                // it's a ship!
-                tn = tvShips.SelectedNode;
-                if (tn != null)
-                {
-                    s = tn.Tag as Ship; // may be null if we're not on a leaf
-                }
-            }
-            else if (cms != null && cms.SourceControl == tvItems)
-            {
-                // No, it's an item!
-                tn = tvItems.SelectedNode;
-                item = tn.Tag as Item; // may be null if we're not on a leaf
+                // it'll be one or t'other
+                s = tvShips.SelectedNode.Tag as Ship;
+                item = tvShips.SelectedNode.Tag as Item;
             }
         }
 
@@ -759,6 +795,37 @@ namespace EVEMon.SkillPlanner
 
         #endregion /// privates
 
+        // Set the character and plan name on the skill header group title
+        private void SetPlanName()
+        {
+            grpPlanName.Text = m_characterInfo.Name + " - " + m_skillBrowser.Plan.Name;
+        }
+        #region Callbacks
+        /// <summary>
+        /// Training skill is switched or completed, could impact
+        /// the enabled skills/ships/items as well as the skill header.
+        /// lets not do anything too clever, it's a rare enough event that we can
+        /// just redraw everything
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void TrainingSkillChangedCallback(object sender, EventArgs args)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                                                  {
+                                                     TrainingSkillChangedCallback(sender, args);
+                                                  }));
+                return;
+            }
+            // stop the timer incase we've completed the base skill
+            tmrAutoUpdate.Enabled = false;
+            UpdateSkillLabel();
+            PopulateLists();
+        }
+        #endregion
+
         #region events
 
         /// <summary>
@@ -770,11 +837,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SkillEnablesForm_Load(object sender, EventArgs e)
         {
-            groupBox1.Text = "Selected Skill Details For " + m_skillBrowser.Plan.GrandCharacterInfo.Name;
+            SetPlanName();
+            m_characterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
             UpdateSkillLabel();
-            rbShowTree.Checked = false;
-            rbShowAlpha.Checked = true;
-            cbShowBaseOnly.Checked = true;
             PopulateLists();
         }
 
@@ -807,7 +872,7 @@ namespace EVEMon.SkillPlanner
         private void SkillEnablesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             m_skillBrowser.EnablesForm = null;
-
+            m_characterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
         }
 
         /// <summary>
@@ -851,11 +916,12 @@ namespace EVEMon.SkillPlanner
             if (tvShips.SelectedNode != null)
             {
                 Ship s = tvShips.SelectedNode.Tag as Ship;
+                Item itm = tvShips.SelectedNode.Tag as Item;
+                NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
                 if (s != null)
-                {
-                    NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
                     w.ShowShipInBrowser(s);
-                }
+                else
+                    w.ShowItemInBrowser(itm);
             }
         }
 
@@ -866,9 +932,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvItems_DoubleClick(object sender, EventArgs e)
         {
-            if (tvItems.SelectedNode != null)
+            if (tvShips.SelectedNode != null)
             {
-                Item i = tvItems.SelectedNode.Tag as Item;
+                Item i = tvShips.SelectedNode.Tag as Item;
                 if (i != null)
                 {
                     NewPlannerWindow w = m_skillBrowser.Plan.PlannerWindow.Target as NewPlannerWindow;
@@ -877,6 +943,16 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Tick-tock - update skill header if we're training it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tmrAutoUpdate_Tick(object sender, EventArgs e)
+        {
+            if (m_skill.InTraining)
+                UpdateSkillLabel();
+        }
 
         #endregion 
 
@@ -1000,7 +1076,7 @@ namespace EVEMon.SkillPlanner
                 foreach (Skill.Prereq pr in s.Prereqs)
                 {
                     // get the skill instance for the current character to ensure the stats are right
-                    Skill prs = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(pr.Name);
+                    Skill prs = m_characterInfo.GetSkill(pr.Name);
                     sb.Append(FormatPrereq(pr.RequiredLevel, prs, ref prNum));
                 }
                 // shouldn't happen!
@@ -1049,7 +1125,7 @@ namespace EVEMon.SkillPlanner
         {
             Ship s = null;
             Item item = null;
-            SelectedNodeTs(sender, out s, out item);
+            SelectedNode(sender, out s, out item);
 
             // init
             string note = String.Empty;
@@ -1090,7 +1166,7 @@ namespace EVEMon.SkillPlanner
         {
             Ship s = null;
             Item item = null;
-            SelectedNodeTs(sender, out s, out item);
+            SelectedNode(sender, out s, out item);
 
             List<EntityRequiredSkill> prereqs = null;
             string name = String.Empty;
@@ -1113,7 +1189,7 @@ namespace EVEMon.SkillPlanner
 
             foreach (EntityRequiredSkill pr in prereqs)
             {
-                Skill prs = m_skillBrowser.Plan.GrandCharacterInfo.GetSkill(pr.Name);
+                Skill prs = m_characterInfo.GetSkill(pr.Name);
                 sb.Append(FormatPrereq(pr.Level, prs, ref prNum));
             }
             // shouldn't happen!
@@ -1132,7 +1208,7 @@ namespace EVEMon.SkillPlanner
         {
             Ship s = null;
             Item item = null;
-            SelectedNodeTs(sender, out s, out item);
+            SelectedNode(sender, out s, out item);
             if (s != null)
             {
                 tvShips_DoubleClick(this, null);
@@ -1146,6 +1222,29 @@ namespace EVEMon.SkillPlanner
   
         #endregion // context menu
 
+        #region static methods
+        /// <summary>
+        /// Determine if this skill is a ship skill
+        /// All ship enabling skills are:
+        ///  - All skills in the Command Ships group
+        ///  - Astrogeology (for barges)
+        ///  - Jump Drive Operation (capital ships)
+        /// 
+        /// None of these skills enable any items.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private bool IsShipSkill
+        {
+            get
+            {
+                return m_skill.SkillGroup.ID == COMMAND_SHIP_GROUP ||
+                       m_skill.Id == ASTROGEOLOGY_SKILL ||
+                       m_skill.Id == JUMPDRVE_OPERATION_SKILL;
+            }
+        }
+        #endregion
+
         #region member fields
 
         // The skill we're exploring
@@ -1155,8 +1254,16 @@ namespace EVEMon.SkillPlanner
         // such as the CharacterInfo, Character's skills, and the  plannerWindow
         private SkillBrowser m_skillBrowser;
 
+        // The parent Characetr
+        private CharacterInfo m_characterInfo;
+
         // Convert numbers to roman numerals
         private static string[] roman = { "I", "II", "III", "IV", "V" };
+
+        private static readonly int COMMAND_SHIP_GROUP = 257;
+        private static readonly int ASTROGEOLOGY_SKILL = 3410;
+        private static readonly int JUMPDRVE_OPERATION_SKILL = 3456;
         #endregion
+
     }
 }

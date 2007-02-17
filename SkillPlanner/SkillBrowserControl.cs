@@ -402,6 +402,8 @@ namespace EVEMon.SkillPlanner
             {
                 SkillEnablesForm f = new SkillEnablesForm(m_selectedSkill, this);
                 m_skillEnablesForm = f;
+                NewPlannerWindow npw = m_plan.PlannerWindow.Target as NewPlannerWindow;
+                npw.SkillExplorer = f;
             }
             else
             {
@@ -413,7 +415,13 @@ namespace EVEMon.SkillPlanner
         private SkillEnablesForm m_skillEnablesForm = null;
         public SkillEnablesForm EnablesForm
         {
-            set { m_skillEnablesForm = value; }
+            set 
+            { 
+                m_skillEnablesForm = value;
+                NewPlannerWindow npw = m_plan.PlannerWindow.Target as NewPlannerWindow;
+                if (npw != null)
+                    npw.SkillExplorer = value;
+            }
         }
             
         #endregion
