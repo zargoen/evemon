@@ -119,15 +119,13 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchList
             // 
-            this.lbSearchList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbSearchList.FormattingEnabled = true;
             this.lbSearchList.IntegralHeight = false;
-            this.lbSearchList.Location = new System.Drawing.Point(2, 197);
+            this.lbSearchList.Location = new System.Drawing.Point(0, 0);
             this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
             this.lbSearchList.Name = "lbSearchList";
-            this.lbSearchList.Size = new System.Drawing.Size(260, 108);
+            this.lbSearchList.Size = new System.Drawing.Size(262, 313);
             this.lbSearchList.TabIndex = 21;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
@@ -214,17 +212,15 @@ namespace EVEMon.SkillPlanner
             // 
             // lvSortedSkillList
             // 
-            this.lvSortedSkillList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lvSortedSkillList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chSortKey});
+            this.lvSortedSkillList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSortedSkillList.FullRowSelect = true;
-            this.lvSortedSkillList.Location = new System.Drawing.Point(2, 62);
+            this.lvSortedSkillList.Location = new System.Drawing.Point(0, 0);
             this.lvSortedSkillList.Margin = new System.Windows.Forms.Padding(2);
             this.lvSortedSkillList.Name = "lvSortedSkillList";
-            this.lvSortedSkillList.Size = new System.Drawing.Size(258, 107);
+            this.lvSortedSkillList.Size = new System.Drawing.Size(262, 313);
             this.lvSortedSkillList.TabIndex = 28;
             this.lvSortedSkillList.TileSize = new System.Drawing.Size(16, 16);
             this.lvSortedSkillList.UseCompatibleStateImageBehavior = false;
@@ -273,10 +269,10 @@ namespace EVEMon.SkillPlanner
             // panel2
             // 
             this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lvSortedSkillList);
             this.panel2.Controls.Add(this.lblNoMatches);
             this.panel2.Controls.Add(this.lbSearchList);
             this.panel2.Controls.Add(this.tvSkillList);
+            this.panel2.Controls.Add(this.lvSortedSkillList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 78);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);

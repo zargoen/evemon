@@ -73,6 +73,11 @@
     <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Implant_Groups.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Skill.cs" />
     <Compile Include="SkillGroup.cs" />
     <Compile Include="ICharacterSettings.cs" />
@@ -96,6 +101,12 @@
       <DependentUpon>SplitButton.cs</DependentUpon>
     </Compile>
     <Compile Include="StringTable.cs" />
+    <Compile Include="WaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitForm.Designer.cs">
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +149,15 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Collapse_large.png" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaitForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

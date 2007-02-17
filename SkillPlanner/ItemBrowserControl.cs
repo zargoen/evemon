@@ -30,6 +30,15 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        public Item SelectedItem
+        {
+            set
+            {
+                itemSelectControl1.SelectedItem  = value;
+                itemSelectControl1_SelectedItemChanged(this, null);
+            }
+        }
+
         private void itemSelectControl1_SelectedItemChanged(object sender, EventArgs e)
         {
             Item i = itemSelectControl1.SelectedItem;
@@ -73,7 +82,7 @@ namespace EVEMon.SkillPlanner
                     listItem.Name = "Class";
                     lvItemProperties.Items.Add(listItem);
 
-                    foreach (ItemProperty prop in i.Properties)
+                    foreach (ObjectProperty prop in i.Properties)
                     {
                         listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
                         listItem.Name = prop.Name;
@@ -95,7 +104,7 @@ namespace EVEMon.SkillPlanner
                 if (!m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (ItemRequiredSkill irs in i.RequiredSkills)
+                    foreach (ObjectRequiredSkill irs in i.RequiredSkills)
                     {
                         Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(irs.Name);
@@ -183,7 +192,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            ItemRequiredSkill rs = i.RequiredSkills[skillNum];
+            ObjectRequiredSkill rs = i.RequiredSkills[skillNum];
             StringBuilder sb = new StringBuilder();
             sb.Append(rs.Name);
             sb.Append(' ');
@@ -248,7 +257,7 @@ namespace EVEMon.SkillPlanner
 
             string m_note = i.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (ItemRequiredSkill irs in i.RequiredSkills)
+            foreach (ObjectRequiredSkill irs in i.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(irs.Name, irs.Level));
             }
@@ -267,7 +276,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // add new column header and values
                     lvItemProperties.Columns.Add(selectedItem.Name);
-                    foreach (ItemProperty prop in selectedItem.Properties)
+                    foreach (ObjectProperty prop in selectedItem.Properties)
                     {
                         ListViewItem[] items = lvItemProperties.Items.Find(prop.Name, false);
                         if (items.Length != 0)

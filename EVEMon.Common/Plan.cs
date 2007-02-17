@@ -1107,9 +1107,11 @@ namespace EVEMon.Common
 
         private WeakReference<Form> m_plannerWindow;
 
+        [XmlIgnore]
         public WeakReference<Form> PlannerWindow 
         {
             set { m_plannerWindow = value; }
+            get { return m_plannerWindow; }
         }
 
         public void ShowEditor(Settings s, CharacterInfo gci)

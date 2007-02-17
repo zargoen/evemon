@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
-    public class Ship
+    public class Ship 
     {
         private static Ship[] sm_ships = null;
 
@@ -83,67 +83,20 @@ namespace EVEMon.Common
             set { m_type = value; }
         }
 
-        private List<ShipProperty> m_properties = new List<ShipProperty>();
+        private List<ObjectProperty> m_properties = new List<ObjectProperty>();
 
         [XmlArrayItem("prop")]
-        public List<ShipProperty> Properties
+        public List<ObjectProperty> Properties
         {
             get { return m_properties; }
         }
 
-        private List<ShipRequiredSkill> m_requiredSkills = new List<ShipRequiredSkill>();
+        private List<ObjectRequiredSkill> m_requiredSkills = new List<ObjectRequiredSkill>();
 
         [XmlArrayItem("skill")]
-        public List<ShipRequiredSkill> RequiredSkills
+        public List<ObjectRequiredSkill> RequiredSkills
         {
             get { return m_requiredSkills; }
         }
     }
-
-    public class ShipProperty
-    {
-        private string m_name;
-
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        private string m_value;
-
-        [XmlAttribute]
-        public string Value
-        {
-            get { return m_value; }
-            set { m_value = value; }
-        }
-
-        public override string ToString()
-        {
-            return m_name + ": " + m_value;
-        }
-    }
-
-    public class ShipRequiredSkill
-    {
-        private string m_name;
-
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = StringTable.GetSharedString(value); }
-        }
-
-        private int m_level;
-
-        [XmlAttribute]
-        public int Level
-        {
-            get { return m_level; }
-            set { m_level = value; }
-        }
-    }
-}
+ }

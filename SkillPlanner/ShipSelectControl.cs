@@ -192,7 +192,7 @@ namespace EVEMon.SkillPlanner
                         SortedList<string, Ship> results = new SortedList<string, Ship>();
                         foreach (Ship s in m_ships)
                         {
-                            if (s.Name.ToLower().IndexOf(trimmedSearch) != -1)
+                            if (s.Name.ToLower().Contains(trimmedSearch) || s.Description.ToLower().Contains(trimmedSearch))
                             {
                                 results[s.Name] = s;
                             }

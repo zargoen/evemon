@@ -42,7 +42,9 @@ namespace EVEMon.SkillPlanner
             this.tmrSkillTick = new System.Windows.Forms.Timer(this.components);
             this.splitContainer2 = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
+            this.btnEnables = new System.Windows.Forms.Button();
             this.pnlPlanControl = new System.Windows.Forms.Panel();
+            this.cbOwned = new System.Windows.Forms.CheckBox();
             this.lblSkillClass = new System.Windows.Forms.Label();
             this.textboxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -55,7 +57,6 @@ namespace EVEMon.SkillPlanner
             this.lblLevel1Time = new System.Windows.Forms.Label();
             this.lblSkillName = new System.Windows.Forms.Label();
             this.skillTreeDisplay = new EVEMon.SkillPlanner.SkillTreeDisplay();
-            this.cbOwned = new System.Windows.Forms.CheckBox();
             this.cmsSkillContext.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -151,6 +152,7 @@ namespace EVEMon.SkillPlanner
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.btnEnables);
             this.splitContainer2.Panel2.Controls.Add(this.pnlPlanControl);
             this.splitContainer2.Panel2.Controls.Add(this.skillTreeDisplay);
             this.splitContainer2.RememberDistanceKey = null;
@@ -173,6 +175,16 @@ namespace EVEMon.SkillPlanner
             this.skillSelectControl.TabIndex = 0;
             this.skillSelectControl.SelectedSkillChanged += new System.EventHandler<System.EventArgs>(this.skillSelectControl_SelectedSkillChanged);
             // 
+            // btnEnables
+            // 
+            this.btnEnables.Location = new System.Drawing.Point(10, 117);
+            this.btnEnables.Name = "btnEnables";
+            this.btnEnables.Size = new System.Drawing.Size(176, 31);
+            this.btnEnables.TabIndex = 5;
+            this.btnEnables.Text = "Show me what this skill enables...";
+            this.btnEnables.UseVisualStyleBackColor = true;
+            this.btnEnables.Click += new System.EventHandler(this.btnEnables_Click);
+            // 
             // pnlPlanControl
             // 
             this.pnlPlanControl.Controls.Add(this.cbOwned);
@@ -193,6 +205,18 @@ namespace EVEMon.SkillPlanner
             this.pnlPlanControl.Size = new System.Drawing.Size(480, 106);
             this.pnlPlanControl.TabIndex = 3;
             this.pnlPlanControl.Visible = false;
+            // 
+            // cbOwned
+            // 
+            this.cbOwned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbOwned.AutoSize = true;
+            this.cbOwned.Location = new System.Drawing.Point(274, 82);
+            this.cbOwned.Name = "cbOwned";
+            this.cbOwned.Size = new System.Drawing.Size(88, 17);
+            this.cbOwned.TabIndex = 19;
+            this.cbOwned.Text = "Book Owned";
+            this.cbOwned.UseVisualStyleBackColor = true;
+            this.cbOwned.CheckedChanged += new System.EventHandler(this.cbOwned_CheckedChanged);
             // 
             // lblSkillClass
             // 
@@ -328,18 +352,6 @@ namespace EVEMon.SkillPlanner
             this.skillTreeDisplay.Visible = false;
             this.skillTreeDisplay.WorksafeMode = false;
             // 
-            // cbOwned
-            // 
-            this.cbOwned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbOwned.AutoSize = true;
-            this.cbOwned.Location = new System.Drawing.Point(274, 82);
-            this.cbOwned.Name = "cbOwned";
-            this.cbOwned.Size = new System.Drawing.Size(88, 17);
-            this.cbOwned.TabIndex = 19;
-            this.cbOwned.Text = "Book Owned";
-            this.cbOwned.UseVisualStyleBackColor = true;
-            this.cbOwned.CheckedChanged += new System.EventHandler(this.cbOwned_CheckedChanged);
-            // 
             // SkillBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -386,6 +398,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblSkillName;
         private SkillTreeDisplay skillTreeDisplay;
         private System.Windows.Forms.CheckBox cbOwned;
+        private System.Windows.Forms.Button btnEnables;
 
     }
 }

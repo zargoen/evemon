@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
             }
             foreach (Item titem in cat.Items)
             {
-                if (titem.Name.ToLower().Contains(searchText))
+                if (titem.Name.ToLower().Contains(searchText) || titem.Description.ToLower().Contains(searchText))
                 {
                     searchedItems.Add(titem.Name, titem);
                 }

@@ -144,6 +144,7 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
+               
                 m_planSelectShowing = thisPss;
                 m_planSelectSelected = plannedTo;
                 cbPlanSelect.SelectedIndexChanged += new EventHandler(cbPlanSelect_SelectedIndexChanged);
@@ -187,6 +188,7 @@ namespace EVEMon.SkillPlanner
             {
                 pnlPlanControl.Visible = false;
                 skillTreeDisplay.Visible = false;
+                btnEnables.Visible = false;
             }
             else
             {
@@ -234,6 +236,7 @@ namespace EVEMon.SkillPlanner
                 //}
                 pnlPlanControl.Visible = true;
                 skillTreeDisplay.Visible = true;
+                btnEnables.Visible = true;
             }
 
             /// TODO fix the update of the entire control
@@ -391,5 +394,28 @@ namespace EVEMon.SkillPlanner
             m_plan.GrandCharacterInfo.UpdateOwnedSkills();
             UpdatePlanControl();
         }
+
+        #region Skill Enables...
+        private void btnEnables_Click(object sender, EventArgs e)
+        {
+            if (m_skillEnablesForm == null)
+            {
+                SkillEnablesForm f = new SkillEnablesForm(m_selectedSkill, this);
+                m_skillEnablesForm = f;
+            }
+            else
+            {
+                m_skillEnablesForm.SetSkill(m_selectedSkill);
+            }
+            m_skillEnablesForm.Show();
+        }
+
+        private SkillEnablesForm m_skillEnablesForm = null;
+        public SkillEnablesForm EnablesForm
+        {
+            set { m_skillEnablesForm = value; }
+        }
+            
+        #endregion
     }
 }

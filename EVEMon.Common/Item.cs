@@ -59,18 +59,18 @@ namespace EVEMon.Common
             set { m_metagroup = StringTable.GetSharedString(value); }
         }
 
-        private List<ItemProperty> m_properties = new List<ItemProperty>();
+        private List<ObjectProperty> m_properties = new List<ObjectProperty>();
 
         [XmlArrayItem("prop")]
-        public List<ItemProperty> Properties
+        public List<ObjectProperty> Properties
         {
             get { return m_properties; }
         }
 
-        private List<ItemRequiredSkill> m_requiredSkills = new List<ItemRequiredSkill>();
+        private List<ObjectRequiredSkill> m_requiredSkills = new List<ObjectRequiredSkill>();
 
         [XmlArrayItem("skill")]
-        public List<ItemRequiredSkill> RequiredSkills
+        public List<ObjectRequiredSkill> RequiredSkills
         {
             get { return m_requiredSkills; }
         }
@@ -87,7 +87,7 @@ namespace EVEMon.Common
             {
                 if (m_slotIndex != -1)
                     return m_slotIndex;
-                foreach (ItemProperty prop in m_properties)
+                foreach (ObjectProperty prop in m_properties)
                 {
                     if (prop.Name != "Slot type")
                         continue;
@@ -114,7 +114,11 @@ namespace EVEMon.Common
         }
     }
 
-    public class ItemProperty
+    #region Optimize the use of these
+    // common classes used by ship and items - we can probably refactor code that
+    // uses these classes (e.g. ship and item browsers
+
+    public class ObjectProperty
     {
         private string m_name;
 
@@ -151,6 +155,7 @@ namespace EVEMon.Common
             }
         }
 
+
         public override string ToString()
         {
             return m_name + ": " + m_value;
@@ -158,7 +163,7 @@ namespace EVEMon.Common
 
     }
 
-    public class ItemRequiredSkill
+    public class ObjectRequiredSkill
     {
         private string m_name;
 
@@ -178,6 +183,7 @@ namespace EVEMon.Common
             set { m_level = value; }
         }
     }
+    #endregion
 
     public class ItemCategory
     {
