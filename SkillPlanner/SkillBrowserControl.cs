@@ -405,7 +405,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_skillEnablesForm == null)
             {
-                SkillEnablesForm f = new SkillEnablesForm(m_selectedSkill, this);
+                SkillEnablesForm f = new SkillEnablesForm(s, this);
                 m_skillEnablesForm = f;
                 NewPlannerWindow npw = m_plan.PlannerWindow.Target as NewPlannerWindow;
                 npw.SkillExplorer = f;

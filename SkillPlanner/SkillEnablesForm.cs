@@ -806,13 +806,13 @@ namespace EVEMon.SkillPlanner
 
         #endregion // context helpers
 
-        #endregion /// privates
-
         // Set the character and plan name on the skill header group title
         private void SetPlanName()
         {
             grpPlanName.Text = m_characterInfo.Name + " - " + m_skillBrowser.Plan.Name;
         }
+        #endregion /// privates
+
         #region Callbacks
         /// <summary>
         /// Training skill is switched or completed, could impact
