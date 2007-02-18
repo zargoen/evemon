@@ -859,6 +859,7 @@ namespace EVEMon.Common
                             if (!pe.AddNoteonly)
                                 pe.Priority = m_lowestPrereqPriority;
                         }
+                        AddList(planEntries);
                     }
                 }
             }

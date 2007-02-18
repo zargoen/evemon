@@ -950,6 +950,7 @@ namespace EVEMon.SkillPlanner
                     string planName = npw.Result;
                     Plan newPlan = new Plan();
                     newPlan.Name = planName;
+                    newPlan.GrandCharacterInfo = m_plan.GrandCharacterInfo;
 
                     foreach (ListViewItem lvi in lvSkills.SelectedItems)
                     {
