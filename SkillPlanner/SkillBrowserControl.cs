@@ -223,6 +223,8 @@ namespace EVEMon.SkillPlanner
                 anyPlan = anyPlan || tPlan;
                 //btnCancelPlan.Enabled = anyPlan;
 
+                cbOwned.Checked = m_selectedSkill.Owned;
+
                 UpdatePlanSelect();
 
                 //if (plannedTo > 0)

@@ -1379,6 +1379,33 @@ namespace EVEMon
             tmrUpdate_Tick(this, new EventArgs());
         }
 
+        private void tsbShowBooks_Click(object sender, EventArgs e)
+        {
+            // A quick MessageBox to show the skillbooks we own
+            StringBuilder sb = new StringBuilder();
+            SortedList<string, bool> sortedSkills = new SortedList<string, bool>();
+            foreach (string skillName in m_settings.GetOwnedBooksForCharacter(GrandCharacterInfo.Name))
+            {
+                Skill skill = GrandCharacterInfo.GetSkill(skillName);
+                if (skill.Known) continue;
+                sortedSkills.Add(skillName, skill.PrerequisitesMet);
+            }
+            bool firstSkill = true;
+            foreach (string skillName in sortedSkills.Keys)
+            {
+                if (!firstSkill) sb.Append("\n");
+                firstSkill = false;
+                sb.Append(skillName);
+                if (sortedSkills[skillName])
+                    sb.Append(" (prereqs met)");
+                else
+                    sb.Append(" (prereqs not met)");
+            }
+            if (firstSkill) sb.Append("You don't have any skills marked as Owned");
+            MessageBox.Show(sb.ToString(), String.Format("Skills owned by {0}", GrandCharacterInfo.Name), MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
         /// <summary>
         /// Handles the Click event of the miChangeInfo control.  Displays a new login window and gets username/password from the user.
         /// </summary>

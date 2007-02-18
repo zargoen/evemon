@@ -78,6 +78,7 @@ namespace EVEMon
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.tsbShowBooks = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -519,9 +520,10 @@ namespace EVEMon
             // 
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.manualImplantGroupsToolStripMenuItem,
-            this.tsbIneveSync});
+            this.tsbIneveSync,
+            this.tsbShowBooks});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 48);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 92);
             // 
             // manualImplantGroupsToolStripMenuItem
             // 
@@ -676,6 +678,13 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
+            // tsbShowBooks
+            // 
+            this.tsbShowBooks.Name = "tsbShowBooks";
+            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
+            this.tsbShowBooks.Text = "Show Owned Skillboks...";
+            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -768,5 +777,6 @@ namespace EVEMon
         private EVEMon.Common.SplitButton btnPlan;
         private System.Windows.Forms.Label lblScheduleWarning;
         private System.Windows.Forms.ToolStripMenuItem manualImplantGroupsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsbShowBooks;
     }
 }
