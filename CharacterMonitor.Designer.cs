@@ -65,6 +65,7 @@ namespace EVEMon
             this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.manualImplantGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbShowBooks = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnPlan = new EVEMon.Common.SplitButton();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
@@ -78,7 +79,6 @@ namespace EVEMon
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
-            this.tsbShowBooks = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -357,11 +357,13 @@ namespace EVEMon
             this.pnlCharData.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCharData.Location = new System.Drawing.Point(0, 0);
             this.pnlCharData.Name = "pnlCharData";
-            this.pnlCharData.Size = new System.Drawing.Size(392, 173);
+            this.pnlCharData.Size = new System.Drawing.Size(392, 176);
             this.pnlCharData.TabIndex = 14;
             // 
             // tlpInfo
             // 
+            this.tlpInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tlpInfo.AutoSize = true;
             this.tlpInfo.ColumnCount = 3;
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -373,7 +375,6 @@ namespace EVEMon
             this.tlpInfo.Controls.Add(this.flpCharacterInfo, 1, 0);
             this.tlpInfo.Controls.Add(this.pbCharImage, 0, 0);
             this.tlpInfo.Controls.Add(this.lblSkillHeader, 0, 3);
-            this.tlpInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpInfo.Location = new System.Drawing.Point(0, 0);
             this.tlpInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.tlpInfo.Name = "tlpInfo";
@@ -523,7 +524,7 @@ namespace EVEMon
             this.tsbIneveSync,
             this.tsbShowBooks});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 92);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
             // 
             // manualImplantGroupsToolStripMenuItem
             // 
@@ -540,6 +541,13 @@ namespace EVEMon
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
+            // 
+            // tsbShowBooks
+            // 
+            this.tsbShowBooks.Name = "tsbShowBooks";
+            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
+            this.tsbShowBooks.Text = "Show Owned Skillboks...";
+            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
             // btnSave
             // 
@@ -667,9 +675,9 @@ namespace EVEMon
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
             this.lbSkills.ItemHeight = 15;
-            this.lbSkills.Location = new System.Drawing.Point(0, 173);
+            this.lbSkills.Location = new System.Drawing.Point(0, 176);
             this.lbSkills.Name = "lbSkills";
-            this.lbSkills.Size = new System.Drawing.Size(392, 284);
+            this.lbSkills.Size = new System.Drawing.Size(392, 281);
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
@@ -677,13 +685,6 @@ namespace EVEMon
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
-            // 
-            // tsbShowBooks
-            // 
-            this.tsbShowBooks.Name = "tsbShowBooks";
-            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
-            this.tsbShowBooks.Text = "Show Owned Skillboks...";
-            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
             // CharacterMonitor
             // 
