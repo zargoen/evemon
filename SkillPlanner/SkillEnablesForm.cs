@@ -887,7 +887,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SkillEnablesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!m_plannerWindow.IsAlive)
+            if (m_plannerWindow.IsAlive)
             {
                 m_skillBrowser.EnablesForm = null;
             }
