@@ -595,6 +595,12 @@ namespace EVEMon.SkillPlanner
             {
                 m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
             }
+            if (tabControl.SelectedIndex == 0)
+            {
+                // Force update of column widths in case we've just created a new plan
+                // from within the planner window.
+                planEditor.UpdateListColumns();
+            }
         }
 
  
