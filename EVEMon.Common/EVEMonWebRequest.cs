@@ -106,13 +106,19 @@ namespace EVEMon.Common
                     wrs.Referer = url;
                     url = newUri.ToString();
                     resp.Close();
+
+                    continue; // Continue the loop to try and load the redirected content
                 }
+
+                AutoShrink.Dirty();
                 return resp.GetResponseStream();
             }
             //did not get an answer before running out of redirects.
             wrs.RedirectsRemain = 0;
             wrs.RequestError = RequestError.MaxRedirectsExceeded;
             resp = null;
+
+            AutoShrink.Dirty();
             return null;
         }
 

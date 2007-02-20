@@ -55,6 +55,7 @@
     <Compile Include="AddPlanConfirmWindow.Designer.cs">
       <DependentUpon>AddPlanConfirmWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="AutoShrink.cs" />
     <Compile Include="BusyDialog.cs">
       <SubType>Form</SubType>
     </Compile>

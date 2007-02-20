@@ -106,6 +106,9 @@ namespace EVEMon.Common
             }
 
             Skill.PrepareAllPrerequisites();
+
+            // cleanup on aisle 3!
+            AutoShrink.Dirty();
         }
         
         private int m_suppressed;

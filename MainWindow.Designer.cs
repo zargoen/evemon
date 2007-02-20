@@ -254,6 +254,7 @@ namespace EVEMon
             this.Controls.Add(this.statusStrip1);
             this.MinimumSize = new System.Drawing.Size(425, 350);
             this.Name = "MainWindow";
+            this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.SizeChanged += new System.EventHandler(this.MainWindow_SizeChanged);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);

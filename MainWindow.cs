@@ -1134,6 +1134,13 @@ namespace EVEMon
             UpdateTabOrder();
         }
 
+        private void MainWindow_Deactivate(object sender, EventArgs e)
+        {
+            // Only cleanup if we're deactivating to the minimized state (e.g. systray)
+            if (this.WindowState == FormWindowState.Minimized)
+                AutoShrink.Dirty(new TimeSpan(0, 0, 0, 0, 500)); // Clean up after 500 ms
+        }
     }
 }
+
 
