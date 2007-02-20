@@ -84,8 +84,7 @@ namespace EVEMon.Common
         {
             get
             {
-                //string encodedName = Base64Encode(charName);
-                string encodedName = charName;
+                string encodedName = charName + ".xml";
                 return new FileInfo(_cacheDirectory + encodedName);
             }
         }
@@ -93,8 +92,7 @@ namespace EVEMon.Common
         public XmlDocument GetCharacterXml(string charName)
         {
             XmlDocument doc = new XmlDocument();
-            //doc.Load(_cacheDirectory + Base64Encode(charName));
-            doc.Load(_cacheDirectory + charName);
+            doc.Load(_cacheDirectory + charName + ".xml");
             return doc;
         }
 
@@ -117,34 +115,13 @@ namespace EVEMon.Common
         {
             XmlNode characterNode = xdoc.SelectSingleNode("//character[race]");
             string name = characterNode.Attributes["name"].Value;
-            //string encodedName = Base64Encode(name);
-            string encodedName = name;
+            string encodedName = name+".xml";
 
             using (XmlTextWriter writer = new XmlTextWriter(new FileStream(_cacheDirectory + encodedName, FileMode.OpenOrCreate), Encoding.GetEncoding("iso-8859-1")))
             {
                 xdoc.WriteTo(writer);
                 writer.Close();
             }
-        }
-
-        /// <summary>
-        /// Encode a character name to make it filename-safe
-        /// </summary>
-        /// <param name="data">The character name</param>
-        /// <returns></returns>
-        public static string Base64Encode(string data)
-        {
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(data));
-        }
-
-        /// <summary>
-        /// Decode a filename into a character name
-        /// </summary>
-        /// <param name="data">The filename</param>
-        /// <returns></returns>
-        public static string Base64Decode(string data)
-        {
-            return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(data));
         }
     }
 }
