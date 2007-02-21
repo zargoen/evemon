@@ -138,6 +138,8 @@ namespace EVEMon
                 LCD.curperc = s.GetPercentDone();
                 LCD.CharacterName = m_activeCharacter;
                 LCD.CurrentSkillTrainingText = s.Name + " " + Skill.GetRomanForInt(s.TrainingToLevel);
+
+                // we might want to refactor this so it's not using the settings quite so often then add an event to update the local value when the setting changes.
                 LCD.TimeToComplete = s.EstimatedCompletion.AddSeconds(-Settings.GetInstance().NotificationOffset) - DateTime.Now;
             }
             else
