@@ -138,7 +138,7 @@ namespace EVEMon
                 LCD.curperc = s.GetPercentDone();
                 LCD.CharacterName = m_activeCharacter;
                 LCD.CurrentSkillTrainingText = s.Name + " " + Skill.GetRomanForInt(s.TrainingToLevel);
-                LCD.TimeToComplete = s.EstimatedCompletion - DateTime.Now;
+                LCD.TimeToComplete = s.EstimatedCompletion.AddSeconds(-Settings.GetInstance().NotificationOffset) - DateTime.Now;
             }
             else
             {
