@@ -441,6 +441,12 @@
     <None Include="Resources\icons\Skill_Select\Group5\Pentagrams.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\icons\Skill_Select\Group6\Black_Dice.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\icons\Skill_Select\Group7\Red_Dice.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Schedule\CalendarControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CalendarControl.cs</DependentUpon>
@@ -575,6 +581,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\default_char_pic.png" />
+    <None Include="app.config" />
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>

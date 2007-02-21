@@ -91,5 +91,29 @@ namespace EVEMon.Resources.icons.Skill_Select {
                 this["Group5"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black_Dice")]
+        public string Group6 {
+            get {
+                return ((string)(this["Group6"]));
+            }
+            set {
+                this["Group6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red_Dice")]
+        public string Group7 {
+            get {
+                return ((string)(this["Group7"]));
+            }
+            set {
+                this["Group7"] = value;
+            }
+        }
     }
 }

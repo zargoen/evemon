@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EVEMon.SkillPlanner.icons.Skill_Select" GeneratedClassName="Settings1">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EVEMon.Resources.icons.Skill_Select" GeneratedClassName="IconSettings">
   <Profiles />
   <Settings>
     <Setting Name="Group0" Type="System.String" Scope="Application">
@@ -19,6 +19,12 @@
     </Setting>
     <Setting Name="Group5" Type="System.String" Scope="User">
       <Value Profile="(Default)">Pentagrams</Value>
+    </Setting>
+    <Setting Name="Group6" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Black_Dice</Value>
+    </Setting>
+    <Setting Name="Group7" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Red_Dice</Value>
     </Setting>
   </Settings>
 </SettingsFile>
