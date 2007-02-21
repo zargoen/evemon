@@ -59,6 +59,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetPath)" $(ProjectDir)</PostBuildEvent>
+    <PostBuildEvent>if exist C:/Program Files/NSIS/makensis.exe 
+"$(TargetPath)" $(ProjectDir)</PostBuildEvent>
   </PropertyGroup>
 </Project>
