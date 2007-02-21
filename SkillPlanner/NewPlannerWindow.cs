@@ -22,6 +22,7 @@ namespace EVEMon.SkillPlanner
         {
             m_settings = s;
             m_plan = p;
+            m_plan.PlannerWindow = new WeakReference<Form>(this);
             m_planKey = p.GrandCharacterInfo.Name;
 
             // see if this character is file based (for select plan button)
@@ -283,6 +284,7 @@ namespace EVEMon.SkillPlanner
         private void ChangePlan(Plan p)
         {
             p.GrandCharacterInfo = m_plan.GrandCharacterInfo;
+            p.PlannerWindow = new WeakReference<Form>(this);
             m_plan = p;
 
             skillBrowser.Plan = m_plan;
@@ -290,6 +292,7 @@ namespace EVEMon.SkillPlanner
             skillBrowser.GrandCharacterInfo = m_plan.GrandCharacterInfo;
 
             planEditor.Plan = m_plan;
+
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
@@ -683,7 +686,15 @@ namespace EVEMon.SkillPlanner
                     m_skillExplorer.Shutdown();
                 }
             }
+
+            // Tell the implant window we're closing
+            if (m_implantCalcWindow != null)
+            {
+                m_implantCalcWindow.Close();
+                m_implantCalcWindow = null;
+            }
         }
+
     }
 
     public class PlannerWindowFactory : IPlannerWindowFactory
