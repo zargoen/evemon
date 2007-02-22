@@ -117,7 +117,7 @@ namespace EVEMon.Common
             string name = characterNode.Attributes["name"].Value;
             string encodedName = name+".xml";
 
-            using (XmlTextWriter writer = new XmlTextWriter(new FileStream(_cacheDirectory + encodedName, FileMode.OpenOrCreate), Encoding.GetEncoding("iso-8859-1")))
+            using (XmlTextWriter writer = new XmlTextWriter(new FileStream(_cacheDirectory + encodedName, FileMode.Create), Encoding.GetEncoding("iso-8859-1")))
             {
                 xdoc.WriteTo(writer);
                 writer.Close();
