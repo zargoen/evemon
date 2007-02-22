@@ -58,6 +58,7 @@ namespace EVEMon
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             m_settings = Settings.GetInstance();
+            throbber.Click += new EventHandler(throbber_Click);
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace EVEMon
                 }
             }
         }
-  
+
         /// <summary>
         /// Starts the monitor.  Sets up the GrandCharacterInfo, attempts to get the image, starts all the timers and, if needed,
         /// the FileSystemWatcher
@@ -140,9 +141,9 @@ namespace EVEMon
             m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
             m_grandCharacterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
             m_settings.ScheduleEntriesChanged += new EventHandler<EventArgs>(m_settings_ScheduleEntriesChanged);
-            
+
             m_settings_ScheduleEntriesChanged(null, null);
-            
+
             if (m_cli != null)
             {
                 SerializableCharacterInfo sci = m_settings.GetCharacterInfo(m_cli.CharacterName);
@@ -158,13 +159,13 @@ namespace EVEMon
                 else
                 {
                     tmrUpdateCharacter.Enabled = false;
-                    pbThrobber.Visible = false;
+                    throbber.Visible = false;
                 }
             }
             else
             {
                 tmrUpdateCharacter.Enabled = false;
-                pbThrobber.Visible = false;
+                throbber.Visible = false;
                 m_grandCharacterInfo.AssignFromSerializableCharacterInfo(m_sci);
                 m_sci = null;
             }
@@ -197,7 +198,7 @@ namespace EVEMon
             m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
 
             //set up individual character settings
-                tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
+            tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
         }
 
         /// <summary>
@@ -233,7 +234,7 @@ namespace EVEMon
         void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
         {
             // Here is where we check and change the alert on schedule collision
-            if(m_grandCharacterInfo.CurrentlyTrainingSkill != null && m_grandCharacterInfo.CurrentlyTrainingSkill.InTraining)
+            if (m_grandCharacterInfo.CurrentlyTrainingSkill != null && m_grandCharacterInfo.CurrentlyTrainingSkill.InTraining)
             {
                 Skill gs = m_grandCharacterInfo.CurrentlyTrainingSkill;
 
@@ -291,8 +292,8 @@ namespace EVEMon
             }
         }
 
- 
- 
+
+
         /// <summary>
         /// Gets or sets a value indicating whether the panel is currently visible
         /// </summary>
@@ -441,7 +442,7 @@ namespace EVEMon
             GetCharacterImage();
 
             //actually perform the update.  This is then happening asynchronously, is this a problem?
-            UpdateGrandCharacterInfo();            
+            UpdateGrandCharacterInfo();
 
             //loads the details from the settings file as to what was actually training the last time you had EVEMon running
             foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
@@ -468,16 +469,16 @@ namespace EVEMon
         private void GrandCharacterUpdatedCallback(EveSession s, int timeLeftInCache)
         {
             this.Invoke(new MethodInvoker(delegate
-                                                                                              {
-                                                                                                  //m_lastUpdate = DateTime.Now;
-                                                                                                  m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
-                                                                                                  ttToolTip.SetToolTip(pbThrobber, "Click to update now.");
-                                                                                                  ttToolTip.IsBalloon = true;
-                                                                                                  //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
-                                                                                                  tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
-                                                                                                  tmrUpdateCharacter.Enabled = true;
-                                                                                                  StopThrobber();
-                                                                                              }));
+            {
+                //m_lastUpdate = DateTime.Now;
+                m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
+                ttToolTip.SetToolTip(throbber, "Click to update now.");
+                ttToolTip.IsBalloon = true;
+                //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
+                tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
+                tmrUpdateCharacter.Enabled = true;
+                StopThrobber();
+            }));
         }
 
         /// <summary>
@@ -508,7 +509,7 @@ namespace EVEMon
         /// </summary>
         private void CalculateLcdData()
         {
-          DateTime now = DateTime.Now;
+            DateTime now = DateTime.Now;
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
                 if (m_estimatedCompletion > now)
@@ -697,7 +698,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateThrobberLabel()
         {
-            if (m_throbberRunning)
+            if (throbber.State == Throbber.ThrobberState.Rotating)
             {
                 lblUpdateTimer.Visible = false;
                 return;
@@ -992,8 +993,8 @@ namespace EVEMon
                                                   }));
                 return;
             }
-             */ 
-            
+             */
+
             if (m_session != null && m_settings.GetCharacterSettings(m_charName).IneveSync)
                 m_session.UpdateIneveAsync(m_grandCharacterInfo);
 
@@ -1001,7 +1002,7 @@ namespace EVEMon
 
         void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
         {
-            if(m_realCompletion != DateTime.MinValue)
+            if (m_realCompletion != DateTime.MinValue)
                 m_estimatedCompletion = m_realCompletion.AddSeconds(-m_settings.NotificationOffset);
         }
 
@@ -1108,7 +1109,7 @@ namespace EVEMon
                                                (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
                         lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
                         m_estimatedCompletion = gs.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
-                        
+
                         m_settings_ScheduleEntriesChanged(null, null);
 
                         CalculateLcdData();
@@ -1292,7 +1293,7 @@ namespace EVEMon
         /// </summary>
         private void CharacterDownloadFailedCallback()
         {
-            ttToolTip.SetToolTip(pbThrobber, "Could not get character data!\nClick to try again.");
+            ttToolTip.SetToolTip(throbber, "Could not get character data!\nClick to try again.");
             ttToolTip.IsBalloon = true;
             tmrUpdateCharacter.Interval = 1000 * 60 * 30;
             tmrUpdateCharacter.Enabled = true;
@@ -1304,50 +1305,13 @@ namespace EVEMon
         #region Control/Component Event Handlers
 
         /// <summary>
-        /// Handles animation for the throbber control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tmrThrobber_Tick(object sender, EventArgs e)
-        {
-            if (m_currentlyVisible)
-            {
-                tmrThrobber.Enabled = false;
-                if (m_throbberRunning)
-                {
-                    m_throbberFrame = ((m_throbberFrame + 1) % 8);
-                    pbThrobber.Image = ThrobberImages[m_throbberFrame + 1];
-                    tmrThrobber.Enabled = true;
-                }
-                else if (m_throbberError)
-                {
-                    bool blinkState = (DateTime.Now.Millisecond > 500);
-                    if (!blinkState)
-                    {
-                        pbThrobber.Image = null;
-                    }
-                    else
-                    {
-                        pbThrobber.Image = ThrobberImages[0];
-                    }
-                    tmrThrobber.Enabled = true;
-                }
-                else
-                {
-                    pbThrobber.Image = ThrobberImages[0];
-                    m_throbberFrame = 0;
-                }
-            }
-        }
-
-        /// <summary>
         /// Handles the Click event of the pbThrobber control.  If we're in an OK state, hit eve-o, otherwise, show the throbber menu.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void pbThrobber_Click(object sender, EventArgs e)
+        private void throbber_Click(object sender, EventArgs e)
         {
-            if (!m_throbberError)
+            if (throbber.State != Throbber.ThrobberState.Strobing)
             {
                 tmrUpdate_Tick(null, null);
                 UpdateThrobberLabel();
@@ -1485,10 +1449,10 @@ namespace EVEMon
             // Update the drawing based upon the mouse wheel scrolling.
             int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
             int Lines = numberOfItemLinesToMove;
-            
+
             // Prevent a divide by zero exception here, we've had one report of this but can't figure out why.
-            if (Lines == 0) return; 
-            
+            if (Lines == 0) return;
+
             int direction = Lines / Math.Abs(Lines);
             int[] numberOfPixelsToMove = new int[Lines * direction];
             for (int i = 1; i <= Math.Abs(Lines); i++)
@@ -1943,11 +1907,11 @@ namespace EVEMon
         {
 
             StringBuilder sb = new StringBuilder();
-            for (int i = 1;i<6;i++)
+            for (int i = 1; i < 6; i++)
             {
                 if (i > 1) sb.Append("\n");
-                int count=m_grandCharacterInfo.SkillCountAtLevel(i);
-                sb.Append(String.Format("{0} Skills at Level {1}",count,i));
+                int count = m_grandCharacterInfo.SkillCountAtLevel(i);
+                sb.Append(String.Format("{0} Skills at Level {1}", count, i));
             }
 
             ttToolTip.SetToolTip(sender as Label, sb.ToString());
@@ -1980,7 +1944,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
-            if (m_throbberRunning)
+            if (throbber.State == Throbber.ThrobberState.Rotating)
             {
                 return;
             }
@@ -2248,22 +2212,17 @@ namespace EVEMon
         #endregion
 
         #region Throbber Management
-        private bool m_throbberRunning = false;
-        private bool m_throbberError = true;
-        private int m_throbberFrame = 0;
 
         private void StartThrobber()
         {
-            m_throbberRunning = true;
-            tmrThrobber.Enabled = true;
-            ttToolTip.SetToolTip(pbThrobber, "Retrieving data from EVE Online...");
+            throbber.State = Throbber.ThrobberState.Rotating;
+            ttToolTip.SetToolTip(throbber, "Retrieving data from EVE Online...");
             ttToolTip.IsBalloon = true;
         }
 
         private void StopThrobber()
         {
-            m_throbberRunning = false;
-            m_throbberError = false;
+            throbber.State = Throbber.ThrobberState.Stopped;
         }
 
         private void SetErrorThrobber()
@@ -2273,49 +2232,7 @@ namespace EVEMon
                 this.Invoke(new MethodInvoker(SetErrorThrobber));
                 return;
             }
-            m_throbberRunning = false;
-            m_throbberError = true;
-        }
-
-        private static Image[] m_throbberImages = null;
-
-        public static Image[] ThrobberImages
-        {
-            get
-            {
-                if (m_throbberImages == null)
-                {
-                    InitializeThrobberImages();
-                }
-                return m_throbberImages;
-            }
-        }
-
-        private const int THROBBERIMG_WIDTH = 24;
-        private const int THROBBERIMG_HEIGHT = 24;
-
-        /// <summary>
-        /// Extract the throbber images from the assembly and load them into m_throbberImages
-        /// </summary>
-        private static void InitializeThrobberImages()
-        {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            using (Stream s = asm.GetManifestResourceStream("EVEMon.throbber.png"))
-            using (Image b = Image.FromStream(s, true, true))
-            {
-                m_throbberImages = new Image[9];
-                for (int i = 0; i < 9; i++)
-                {
-                    Bitmap ib = new Bitmap(THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT);
-                    using (Graphics g = Graphics.FromImage(ib))
-                    {
-                        g.DrawImage(b, new Rectangle(0, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
-                                    new Rectangle(i * THROBBERIMG_WIDTH, 0, THROBBERIMG_WIDTH, THROBBERIMG_HEIGHT),
-                                    GraphicsUnit.Pixel);
-                    }
-                    m_throbberImages[i] = ib;
-                }
-            }
+            throbber.State = Throbber.ThrobberState.Strobing;
         }
         #endregion
 
@@ -2392,6 +2309,11 @@ namespace EVEMon
                     }
                 }
             }
+        }
+
+        private void throbber1_Click(object sender, EventArgs e)
+        {
+
         }
 
         #region Garbage?

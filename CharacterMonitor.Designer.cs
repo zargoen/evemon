@@ -53,7 +53,6 @@ namespace EVEMon
             this.pnlCharData = new System.Windows.Forms.Panel();
             this.tlpInfo = new System.Windows.Forms.TableLayoutPanel();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
-            this.pbThrobber = new System.Windows.Forms.PictureBox();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,12 +72,12 @@ namespace EVEMon
             this.tmrTick = new System.Windows.Forms.Timer(this.components);
             this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.tmrThrobber = new System.Windows.Forms.Timer(this.components);
             this.cmsPictureOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.updatePicture = new System.Windows.Forms.ToolStripMenuItem();
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.throbber = new EVEMon.Throbber();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -87,7 +86,6 @@ namespace EVEMon
             this.pnlCharData.SuspendLayout();
             this.tlpInfo.SuspendLayout();
             this.flpThrobber.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbThrobber)).BeginInit();
             this.cmsThrobberMenu.SuspendLayout();
             this.flpAttributes.SuspendLayout();
             this.flpButtons.SuspendLayout();
@@ -392,7 +390,7 @@ namespace EVEMon
             this.flpThrobber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flpThrobber.AutoSize = true;
             this.flpThrobber.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flpThrobber.Controls.Add(this.pbThrobber);
+            this.flpThrobber.Controls.Add(this.throbber);
             this.flpThrobber.Controls.Add(this.lblUpdateTimer);
             this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flpThrobber.Location = new System.Drawing.Point(333, 0);
@@ -401,20 +399,6 @@ namespace EVEMon
             this.flpThrobber.Size = new System.Drawing.Size(59, 24);
             this.flpThrobber.TabIndex = 15;
             this.flpThrobber.WrapContents = false;
-            // 
-            // pbThrobber
-            // 
-            this.pbThrobber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbThrobber.ContextMenuStrip = this.cmsThrobberMenu;
-            this.pbThrobber.Location = new System.Drawing.Point(35, 0);
-            this.pbThrobber.Margin = new System.Windows.Forms.Padding(0);
-            this.pbThrobber.Name = "pbThrobber";
-            this.pbThrobber.Size = new System.Drawing.Size(24, 24);
-            this.pbThrobber.TabIndex = 16;
-            this.pbThrobber.TabStop = false;
-            this.ttToolTip.SetToolTip(this.pbThrobber, "Click to update now.");
-            this.pbThrobber.Click += new System.EventHandler(this.pbThrobber_Click);
-            this.pbThrobber.MouseEnter += new System.EventHandler(this.pbThrobber_MouseEnter);
             // 
             // cmsThrobberMenu
             // 
@@ -634,10 +618,6 @@ namespace EVEMon
             this.ttToolTip.IsBalloon = true;
             this.ttToolTip.ReshowDelay = 100;
             // 
-            // tmrThrobber
-            // 
-            this.tmrThrobber.Tick += new System.EventHandler(this.tmrThrobber_Tick);
-            // 
             // cmsPictureOptions
             // 
             this.cmsPictureOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -686,6 +666,23 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
+            // throbber
+            // 
+            this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.throbber.BackColor = System.Drawing.Color.White;
+            this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
+            this.throbber.Location = new System.Drawing.Point(35, 0);
+            this.throbber.Margin = new System.Windows.Forms.Padding(0);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Throbber.ThrobberState.Stopped;
+            this.throbber.TabIndex = 18;
+            this.throbber.Text = "throbber1";
+            this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
+            this.throbber.Click += new System.EventHandler(this.throbber1_Click);
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -712,7 +709,6 @@ namespace EVEMon
             this.tlpInfo.PerformLayout();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbThrobber)).EndInit();
             this.cmsThrobberMenu.ResumeLayout(false);
             this.flpAttributes.ResumeLayout(false);
             this.flpAttributes.PerformLayout();
@@ -752,8 +748,6 @@ namespace EVEMon
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblSkillHeader;
         private System.Windows.Forms.ToolTip ttToolTip;
-        private System.Windows.Forms.PictureBox pbThrobber;
-        private System.Windows.Forms.Timer tmrThrobber;
         private System.Windows.Forms.LinkLabel llToggleAll;
         private System.Windows.Forms.FlowLayoutPanel flpCharacterInfo;
         private System.Windows.Forms.TableLayoutPanel tlpInfo;
@@ -779,5 +773,6 @@ namespace EVEMon
         private System.Windows.Forms.Label lblScheduleWarning;
         private System.Windows.Forms.ToolStripMenuItem manualImplantGroupsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsbShowBooks;
+        private Throbber throbber;
     }
 }
