@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Sales;
+using EVEMon.Common.Schedule;
 using System.Runtime.InteropServices;
 
 namespace EVEMon
@@ -413,7 +414,32 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                if (e.Complete)
+                bool ShouldbeSilent = false;
+                for (int i = 0; i < m_settings.Schedule.Count; i++)
+                {
+                    ScheduleEntry temp = m_settings.Schedule[i];
+                    if (temp.GetType() == typeof(SimpleScheduleEntry))
+                    {
+                        SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
+                        if (x.Silent(DateTime.Now))
+                        {
+                            ShouldbeSilent = true;
+                            break;
+                        }
+                    }
+                    else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                    {
+                        RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
+                        if (x.Silent(DateTime.Now))
+                        {
+                            ShouldbeSilent = true;
+                            break;
+                        }
+                    }
+                }
+
+                // if the scheduler says be quiet, how much should be suppressed?
+                if (e.Complete && !ShouldbeSilent)
                 {
                     if (m_settings.PlaySoundOnSkillComplete)
                         MP3Player.Play("SkillTrained.mp3", true);

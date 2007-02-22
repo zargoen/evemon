@@ -254,7 +254,7 @@ namespace EVEMon
                         if (temp.GetType() == typeof(SimpleScheduleEntry))
                         {
                             SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                            if (x.Clash(m_estimatedCompletion))
+                            if (x.Blocking(m_estimatedCompletion))
                             {
                                 lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
                                 isBlocked = true;
@@ -264,7 +264,7 @@ namespace EVEMon
                         else if (temp.GetType() == typeof(RecurringScheduleEntry))
                         {
                             RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                            if (x.Clash(m_estimatedCompletion))
+                            if (x.Blocking(m_estimatedCompletion))
                             {
                                 lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
                                 isBlocked = true;

@@ -371,7 +371,7 @@ namespace EVEMon.SkillPlanner
                                     if (temp.GetType() == typeof(SimpleScheduleEntry))
                                     {
                                         SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
-                                        if (y.Clash(thisEnd))
+                                        if (y.Blocking(thisEnd))
                                         {
                                             isBlocked = true;
                                             BlockingEntry = y.Title;
@@ -381,7 +381,7 @@ namespace EVEMon.SkillPlanner
                                     else if (temp.GetType() == typeof(RecurringScheduleEntry))
                                     {
                                         RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
-                                        if (y.Clash(thisEnd))
+                                        if (y.Blocking(thisEnd))
                                         {
                                             isBlocked = true;
                                             BlockingEntry = y.Title;

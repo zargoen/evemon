@@ -42,7 +42,8 @@ namespace EVEMon.Common.Schedule
         public abstract IEnumerable<ScheduleDateTimeRange> GetRangesInPeriod(DateTime fromDt, DateTime toDt);
         public abstract ScheduleEntryOptions ScheduleEntryOptions { set; get; }
         public abstract string Title { set; get; }
-        public abstract bool Clash(DateTime timeToTest);
+        public abstract bool Silent(DateTime timeToTest);
+        public abstract bool Blocking(DateTime timeToTest);
     }
 
     public class SimpleScheduleEntry : ScheduleEntry
@@ -99,19 +100,34 @@ namespace EVEMon.Common.Schedule
             set { m_title = value; }
         }
 
-        public override bool Clash(DateTime timeToTest)
+        private bool Clash(DateTime timeToTest)
+        {
+            DateTime testtime;
+            if ((m_seo & ScheduleEntryOptions.EVETime) != 0)
+                testtime = timeToTest.ToUniversalTime();
+            else
+                testtime = timeToTest;
+            if (m_start <= testtime && testtime <= m_end)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool Silent(DateTime timeToTest)
+        {
+            if ((m_seo & ScheduleEntryOptions.Quiet) != 0)
+            {
+                return Clash(timeToTest);
+            }
+            return false;
+        }
+
+        public override bool Blocking(DateTime timeToTest)
         {
             if ((m_seo & ScheduleEntryOptions.Blocking) != 0)
             {
-                DateTime testtime;
-                if ((m_seo & ScheduleEntryOptions.EVETime) != 0)
-                    testtime = timeToTest.ToUniversalTime();
-                else
-                    testtime = timeToTest;
-                if (m_start <= testtime && testtime <= m_end)
-                {
-                    return true;
-                }
+                return Clash(timeToTest);
             }
             return false;
         }
@@ -376,77 +392,92 @@ namespace EVEMon.Common.Schedule
             set { m_title = value; }
         }
 
-        public override bool Clash(DateTime timeToTest)
+        private bool Clash(DateTime timeToTest)
+        {
+            DateTime testtime;
+            if ((m_seo & ScheduleEntryOptions.EVETime) != 0)
+                testtime = timeToTest.ToUniversalTime();
+            else
+                testtime = timeToTest;
+            if (m_recurStart <= testtime && testtime <= m_recurEnd)
+            {
+                switch (m_freq)
+                {
+                    default:
+                    case RecurFrequency.Daily:
+                        if ((testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                            (testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond))))
+                        {
+                            return true;
+                        }
+                        break;
+                    case RecurFrequency.Weekdays:
+                        if (((testtime.DayOfWeek != DayOfWeek.Saturday && testtime.DayOfWeek != DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                            (((testtime.DayOfWeek == DayOfWeek.Saturday) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
+                        {
+                            return true;
+                        }
+                        break;
+                    case RecurFrequency.Weekends:
+                        if (((testtime.DayOfWeek == DayOfWeek.Saturday || testtime.DayOfWeek == DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                            ((testtime.DayOfWeek == DayOfWeek.Monday && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
+                        {
+                            return true;
+                        }
+                        break;
+                    case RecurFrequency.Weekly:
+                        DateTime FirstInstance = m_recurStart.AddDays((m_recurDayOfWeek - m_recurStart.DayOfWeek + 7) % 7);
+                        if ((testtime.DayOfWeek == m_recurDayOfWeek && (testtime.Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                            ((testtime.AddDays(-1).DayOfWeek == m_recurDayOfWeek && (testtime.AddDays(-1).Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
+                        {
+                            return true;
+                        }
+                        break;
+                    case RecurFrequency.Monthly:
+                        int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
+                        switch (m_overflowResolution)
+                        {
+                            case MonthlyOverflowResolution.ClipBack:
+                                if (m_recurDayOfMonth > DateTime.DaysInMonth(testtime.Year, testtime.Month))
+                                {
+                                    dayofmonthdif = DateTime.DaysInMonth(testtime.Year, testtime.Month);
+                                }
+                                break;
+                            case MonthlyOverflowResolution.Drop:
+                                dayofmonthdif = 0;
+                                break;
+                            case MonthlyOverflowResolution.OverlapForward:
+                                if (m_recurDayOfMonth > DateTime.DaysInMonth(testtime.AddMonths(-1).Year, testtime.AddMonths(-1).Month))
+                                {
+                                    dayofmonthdif = m_recurDayOfMonth - DateTime.DaysInMonth(testtime.AddMonths(-1).Year, testtime.AddMonths(-1).Month);
+                                }
+                                break;
+                        }
+                        if (((testtime.Day == m_recurDayOfMonth || testtime.Day == dayofmonthdif) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
+                            (((testtime.AddDays(-1).Day == m_recurDayOfMonth || testtime.AddDays(-1).Day == dayofmonthdif) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
+                        {
+                            return true;
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public override bool Silent(DateTime timeToTest)
+        {
+            if ((m_seo & ScheduleEntryOptions.Quiet) != 0)
+            {
+                return Clash(timeToTest);
+            }
+            return false;
+        }
+
+        public override bool Blocking(DateTime timeToTest)
         {
             if ((m_seo & ScheduleEntryOptions.Blocking) != 0)
             {
-                DateTime testtime;
-                if ((m_seo & ScheduleEntryOptions.EVETime) != 0)
-                    testtime = timeToTest.ToUniversalTime();
-                else
-                    testtime = timeToTest;
-                if (m_recurStart <= testtime && testtime <= m_recurEnd)
-                {
-                    switch (m_freq)
-                    {
-                        default:
-                        case RecurFrequency.Daily:
-                            if ((testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
-                                (testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond))))
-                            {
-                                return true;
-                            }
-                            break;
-                        case RecurFrequency.Weekdays:
-                            if (((testtime.DayOfWeek != DayOfWeek.Saturday && testtime.DayOfWeek != DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
-                                (((testtime.DayOfWeek == DayOfWeek.Saturday) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
-                            {
-                                return true;
-                            }
-                            break;
-                        case RecurFrequency.Weekends:
-                            if (((testtime.DayOfWeek == DayOfWeek.Saturday || testtime.DayOfWeek == DayOfWeek.Sunday) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
-                                ((testtime.DayOfWeek == DayOfWeek.Monday && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
-                            {
-                                return true;
-                            }
-                            break;
-                        case RecurFrequency.Weekly:
-                            DateTime FirstInstance = m_recurStart.AddDays((m_recurDayOfWeek - m_recurStart.DayOfWeek + 7) % 7);
-                            if ((testtime.DayOfWeek == m_recurDayOfWeek && (testtime.Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
-                                ((testtime.AddDays(-1).DayOfWeek == m_recurDayOfWeek && (testtime.AddDays(-1).Subtract(FirstInstance).Days % (7 * m_recurWeeklyRepeat) == 0) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
-                            {
-                                return true;
-                            }
-                            break;
-                        case RecurFrequency.Monthly:
-                            int dayofmonthdif = 0; // initialised to 0 so it doesn't trigger unexpectedly
-                            switch (m_overflowResolution)
-                            {
-                                case MonthlyOverflowResolution.ClipBack:
-                                    if (m_recurDayOfMonth > DateTime.DaysInMonth(testtime.Year, testtime.Month))
-                                    {
-                                        dayofmonthdif = DateTime.DaysInMonth(testtime.Year, testtime.Month);
-                                    }
-                                    break;
-                                case MonthlyOverflowResolution.Drop:
-                                    dayofmonthdif = 0;
-                                    break;
-                                case MonthlyOverflowResolution.OverlapForward:
-                                    if (m_recurDayOfMonth > DateTime.DaysInMonth(testtime.AddMonths(-1).Year, testtime.AddMonths(-1).Month))
-                                    {
-                                        dayofmonthdif = m_recurDayOfMonth - DateTime.DaysInMonth(testtime.AddMonths(-1).Year, testtime.AddMonths(-1).Month);
-                                    }
-                                    break;
-                            }
-                            if (((testtime.Day == m_recurDayOfMonth || testtime.Day == dayofmonthdif) && testtime.Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.Date.Add(TimeSpan.FromSeconds(m_endSecond))) ||
-                                (((testtime.AddDays(-1).Day == m_recurDayOfMonth || testtime.AddDays(-1).Day == dayofmonthdif) && testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_startSecond)) <= testtime && testtime <= testtime.AddDays(-1).Date.Add(TimeSpan.FromSeconds(m_endSecond)))))
-                            {
-                                return true;
-                            }
-                            break;
-                    }
-                }
+                return Clash(timeToTest);
             }
             return false;
         }
