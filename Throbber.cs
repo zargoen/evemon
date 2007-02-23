@@ -48,7 +48,8 @@ namespace EVEMon
                     }
 
                     //Trigger a redraw
-                    this.Invoke(new AnimatorDelegate(this.Refresh));
+                    if(this.IsHandleCreated)
+                        this.Invoke(new AnimatorDelegate(this.Refresh));
                 }
                 else if (_animatorThread == null)
                 {
@@ -91,7 +92,7 @@ namespace EVEMon
         {
             int counter = 0;
 
-            while (true)
+            while (!this.IsDisposed)
             {
                 if (_state == ThrobberState.Strobing)
                 {
@@ -102,7 +103,8 @@ namespace EVEMon
                         _currentFrame = null;
 
                     //Redraw and sleep
-                    this.Invoke(new AnimatorDelegate(this.Refresh));
+                    if(this.IsHandleCreated)
+                        this.Invoke(new AnimatorDelegate(this.Refresh));
                     Thread.Sleep(500);
                 }
                 else if (_state == ThrobberState.Rotating)
@@ -112,7 +114,8 @@ namespace EVEMon
                     _currentFrame = _movingFrames[counter];
 
                     //Redraw and sleep
-                    this.Invoke(new AnimatorDelegate(this.Refresh));
+                    if(this.IsHandleCreated)
+                        this.Invoke(new AnimatorDelegate(this.Refresh));
                     Thread.Sleep(100);
                 }
             }
