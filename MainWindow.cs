@@ -36,9 +36,6 @@ namespace EVEMon
         private void MainWindow_Load(object sender, EventArgs e)
         {
             this.Visible = false;
-#if DEBUG
-            this.tsbSchedule.Visible = true;
-#endif
             this.RememberPositionKey = "MainWindow";
             Program.MainWindow = this;
             niMinimizeIcon.Text = Application.ProductName;

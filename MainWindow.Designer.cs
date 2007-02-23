@@ -193,7 +193,6 @@ namespace EVEMon
             this.tsbSchedule.Name = "tsbSchedule";
             this.tsbSchedule.Size = new System.Drawing.Size(23, 22);
             this.tsbSchedule.Text = "Schedule";
-            this.tsbSchedule.Visible = false;
             this.tsbSchedule.Click += new System.EventHandler(this.tsbSchedule_Click);
             // 
             // toolStripSeparator2
