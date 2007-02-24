@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
-    public class Ship 
+    public class Ship : EveObject
     {
         private static Ship[] sm_ships = null;
 
@@ -38,32 +38,6 @@ namespace EVEMon.Common
             return sm_ships;
         }
 
-        private int m_id = -1;
-
-        [XmlAttribute]
-        public int Id
-        {
-            get { return m_id; }
-            set { m_id = value; }
-        }
-
-        private string m_name = String.Empty;
-
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        private string m_description = String.Empty;
-
-        [XmlAttribute]
-        public string Description
-        {
-            get { return m_description; }
-            set { m_description = value; }
-        }
 
         private string m_race = String.Empty;
 
@@ -81,22 +55,6 @@ namespace EVEMon.Common
         {
             get { return m_type; }
             set { m_type = value; }
-        }
-
-        private List<EntityProperty> m_properties = new List<EntityProperty>();
-
-        [XmlArrayItem("prop")]
-        public List<EntityProperty> Properties
-        {
-            get { return m_properties; }
-        }
-
-        private List<EntityRequiredSkill> m_requiredSkills = new List<EntityRequiredSkill>();
-
-        [XmlArrayItem("skill")]
-        public List<EntityRequiredSkill> RequiredSkills
-        {
-            get { return m_requiredSkills; }
         }
     }
  }

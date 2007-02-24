@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace EVEMon.Common
 {
-    public class Item
+    public class Item : EveObject
     {
         private ItemCategory m_category;
 
@@ -19,65 +19,14 @@ namespace EVEMon.Common
             set { m_category = value; }
         }
 
-        private int m_id = -1;
-
-        public int Id
-        {
-            get { return m_id; }
-            set { m_id = value; }
-        }
-
-        private string m_icon = String.Empty;
-
-        public string Icon
-        {
-            get { return m_icon; }
-            set { m_icon = StringTable.GetSharedString(value); }
-        }
-
-        private string m_name = String.Empty;
-
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        private string m_description = String.Empty;
-
-        public string Description
-        {
-            get { return m_description; }
-            set { m_description = StringTable.GetSharedString(value); }
-        }
 
         private string m_metagroup = String.Empty;
 
+        [XmlAttribute]
         public string Metagroup
         {
             get { return m_metagroup; }
             set { m_metagroup = StringTable.GetSharedString(value); }
-        }
-
-        private List<EntityProperty> m_properties = new List<EntityProperty>();
-
-        [XmlArrayItem("prop")]
-        public List<EntityProperty> Properties
-        {
-            get { return m_properties; }
-        }
-
-        private List<EntityRequiredSkill> m_requiredSkills = new List<EntityRequiredSkill>();
-
-        [XmlArrayItem("skill")]
-        public List<EntityRequiredSkill> RequiredSkills
-        {
-            get { return m_requiredSkills; }
-        }
-
-        public override string ToString()
-        {
-            return m_name;
         }
 
         private int m_slotIndex = -1;
@@ -87,7 +36,7 @@ namespace EVEMon.Common
             {
                 if (m_slotIndex != -1)
                     return m_slotIndex;
-                foreach (EntityProperty prop in m_properties)
+                foreach (EntityProperty prop in _properties)
                 {
                     if (prop.Name != "Slot type")
                         continue;
@@ -113,77 +62,6 @@ namespace EVEMon.Common
             }
         }
     }
-
-    #region Optimize the use of these
-    // common classes used by ship and items - we can probably refactor code that
-    // uses these classes (e.g. ship and item browsers
-
-    public class EntityProperty
-    {
-        private string m_name;
-
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = StringTable.GetSharedString(value); }
-        }
-
-        private string m_value;
-        private Regex m_3dp = new Regex(@"\.dd0");
-
-        [XmlAttribute]
-        public string Value
-        {
-            get
-            {
-                // The item database sometimes shows bonus amd muliplier figures with a negative number
-                // (e.g shield hardners) so fix it...
-                if (m_value.StartsWith("-") && (Name.Contains("bonus") || Name.Contains("multiplier")) && m_value.Contains("%"))
-                {
-                    return m_value.Substring(1).Trim();
-                }
-                else
-                {
-                    return m_value.Trim();
-                }
-
-            }
-            set 
-            {
-              m_value = StringTable.GetSharedString(value); 
-            }
-        }
-
-
-        public override string ToString()
-        {
-            return m_name + ": " + m_value;
-        }
-
-    }
-
-    public class EntityRequiredSkill
-    {
-        private string m_name;
-
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = StringTable.GetSharedString(value); }
-        }
-
-        private int m_level;
-
-        [XmlAttribute]
-        public int Level
-        {
-            get { return m_level; }
-            set { m_level = value; }
-        }
-    }
-    #endregion
 
     public class ItemCategory
     {
