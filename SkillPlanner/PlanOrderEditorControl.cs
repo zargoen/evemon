@@ -363,6 +363,8 @@ namespace EVEMon.SkillPlanner
                             bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
                             if (isBlocked)
                                 BlockingEntry = "DOWNTIME";
+                            if (m_settings == null)
+                                m_settings = Settings.GetInstance();
                             if (!isBlocked && m_settings != null)
                             {
                                 for (int j = 0; j < m_settings.Schedule.Count; j++)
@@ -1168,7 +1170,8 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            m_settings = Settings.GetInstance();
+            if (m_settings == null)
+                m_settings = Settings.GetInstance();
         }
 
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
