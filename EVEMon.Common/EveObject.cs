@@ -94,24 +94,8 @@ namespace EVEMon.Common
         [XmlAttribute]
         public string Value
         {
-            get
-            {
-                // The item database sometimes shows bonus amd muliplier figures with a negative number
-                // (e.g shield hardners) so fix it...
-                if (m_value.StartsWith("-") && (Name.Contains("bonus") || Name.Contains("multiplier")) && m_value.Contains("%"))
-                {
-                    return m_value.Substring(1).Trim();
-                }
-                else
-                {
-                    return m_value.Trim();
-                }
-
-            }
-            set
-            {
-                m_value = StringTable.GetSharedString(value);
-            }
+            get { return m_value.Trim(); }
+            set { m_value = StringTable.GetSharedString(value); }
         }
 
 
