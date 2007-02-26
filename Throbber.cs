@@ -8,11 +8,10 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms.VisualStyles;
 
 namespace EVEMon
 {
-    public partial class Throbber : Control
+    public partial class Throbber : PictureBox
     {
         public enum ThrobberState
         {
@@ -62,67 +61,24 @@ namespace EVEMon
             }
         }
 
-        //TODO fix the ugliness of having to know we're being rendered on a tab control
-        // (Make control have transparent background)
-        private VisualStyleRenderer renderer = null;
-        private readonly VisualStyleElement element =
-            VisualStyleElement.Tab.Body.Normal;
-
         public Throbber()
         {
             InitializeComponent();
+
             if (_strobeFrame == null)
                 InitImages();
 
-            
             this.MinimumSize = new Size(24, 24);
             this.MaximumSize = new Size(24, 24);
-
-            if (Application.RenderWithVisualStyles &&
-            VisualStyleRenderer.IsElementDefined(element))
-            {
-                renderer = new VisualStyleRenderer(element);
-            }
-            else 
-            {
-                BackColor = SystemColors.ControlLight;
-            }
-           
-            Microsoft.Win32.SystemEvents.UserPreferenceChanged
-      += new Microsoft.Win32.UserPreferenceChangedEventHandler(
-      this.UserPreferenceChanged);
         }
-
-        public void UserPreferenceChanged(object sender,
-Microsoft.Win32.UserPreferenceChangedEventArgs e)
-        {
-            if (Application.RenderWithVisualStyles &&
-VisualStyleRenderer.IsElementDefined(element))
-            {
-                renderer = new VisualStyleRenderer(element);
-            }
-            else 
-            {
-                BackColor = SystemColors.ControlLight;
-                renderer = null;
-            }
-        }
-
-
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            if (renderer != null)
-            {
-                renderer.DrawBackground(pe.Graphics, this.ClientRectangle);
-            }
-
             if (_state != ThrobberState.Stopped)
             {
                 if (_currentFrame != null) //Draw whatever the animator thread chooses
-                    pe.Graphics.DrawImage(_currentFrame, 0, 0);
-                else if (renderer == null)
-                    pe.Graphics.Clear(this.BackColor); //Blank part of the strobe sequence
+                    pe.Graphics.DrawImage(_currentFrame, 0, 0); 
+                //If _currentFrame is null, we're in the blank part of the strobe. Draw nothing, appear transparent
             }
             else
                 pe.Graphics.DrawImage(_strobeFrame, 0, 0);
