@@ -2,6 +2,9 @@
 #  This is an NSIS Installer build script
 #  for NSIS 2.16
 #
+
+SetCompressor /solid lzma
+
 !include "Library.nsh"
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
