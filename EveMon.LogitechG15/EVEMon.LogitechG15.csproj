@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="lgLCDNETWrapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\x86\Release\lgLCDNETWrapper.dll</HintPath>
+      <HintPath>..\lgLcdClassLibrary\bin\release\lgLCDNETWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
