@@ -67,6 +67,7 @@ if errorlevel 1 goto BuildEventFailed
 :BuildEventFailed
 echo AssemblyInfo Template for $(ProjectName) not updated
 exit 0</PreBuildEvent>
-    <PostBuildEvent>copy "$(SolutionDir)EVEMon.WinHook\bin\$(ConfigurationName)\EVEMon.WinHook.dll" "$(SolutionDir)bin\$(PlatformName)\$(ConfigurationName)\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
