@@ -174,7 +174,7 @@ namespace EVEMon.SkillPlanner
                 if (! m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (EntityRequiredSkill srs in s.RequiredSkills)
+                    foreach (PrerequisiteSkill srs in s.RequiredSkills)
                     {
                         Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(srs.Name);
@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
             else return s;
         }
 
-        private void SetShipSkillLabel(int rnum, Label skillLabel, List<EntityRequiredSkill> list)
+        private void SetShipSkillLabel(int rnum, Label skillLabel, List<PrerequisiteSkill> list)
         {
             if (list.Count > rnum)
             {
@@ -340,7 +340,7 @@ namespace EVEMon.SkillPlanner
 
             string m_note = s.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (EntityRequiredSkill srs in s.RequiredSkills)
+            foreach (PrerequisiteSkill srs in s.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }

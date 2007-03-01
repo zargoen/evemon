@@ -46,6 +46,8 @@ namespace EVEMon.Common
             // This needs optimising - why are we loading static data 
             // everytime for each character. We need to refactor this
             // so all the static skill data is only created once.
+
+            SkillData.LoadSkills();
             List<string> ownedSkills = new List<string>();
             foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
             {
@@ -115,6 +117,7 @@ namespace EVEMon.Common
         private Queue<InternalEvent> m_events = new Queue<InternalEvent>();
         private Dictionary<string, bool> m_coalescedEventTable = new Dictionary<string, bool>();
 
+        #region custom event handling - to allow events to be suppressed and queued
         private delegate void InternalEvent();
 
         private void FireEvent(InternalEvent evt, string coalesceKey)
@@ -123,15 +126,20 @@ namespace EVEMon.Common
             {
                 if (m_suppressed == 0)
                 {
+                    // we're not suppressing events so kick it off.
                     evt();
                 }
                 else
                 {
+                    // We're supressing events
+                    // have we already got a queued event of this key?
                     if (String.IsNullOrEmpty(coalesceKey) || !m_coalescedEventTable.ContainsKey(coalesceKey))
                     {
+                        // no, add it to the pending queue
                         m_events.Enqueue(evt);
                         if (!String.IsNullOrEmpty(coalesceKey))
                         {
+                            // If we have a key, flag that we've queued an event for this key.
                             m_coalescedEventTable[coalesceKey] = true;
                         }
                     }
@@ -139,6 +147,10 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Switch off event firing - cvan be callled cumulativly.
+        /// A supression counter is incremented every time this is invoked.
+        /// </summary>
         public void SuppressEvents()
         {
             lock (m_events)
@@ -147,6 +159,9 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Resume events. Will fire any queued events when the supression counter is 0
+        /// </summary>
         public void ResumeEvents()
         {
             lock (m_events)
@@ -155,15 +170,25 @@ namespace EVEMon.Common
                 if (m_suppressed <= 0)
                 {
                     m_suppressed = 0;
+                    // fire any queued events
                     while (m_events.Count > 0)
                     {
+                        // dequeue and fire.
                         m_events.Dequeue()();
                     }
+                    // and empty the cache of event type keys
                     m_coalescedEventTable.Clear();
                 }
             }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Called when skill changes sp, changes known status or starts/stops training
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gs_Changed(object sender, EventArgs e)
         {
             Skill gs = (Skill)sender;
@@ -550,6 +575,10 @@ namespace EVEMon.Common
 
         private List<Skill> m_skillsChanged = new List<Skill>();
 
+        /// <summary>
+        /// Fired when skill changes sp, changes Known status or starts/stops training
+        /// </summary>
+        /// <param name="gs"></param>
         private void OnSkillChanged(Skill gs)
         {
             m_cachedSkillPointTotal = -1;

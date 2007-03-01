@@ -104,7 +104,7 @@ namespace EVEMon.SkillPlanner
                 if (!m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (EntityRequiredSkill irs in i.RequiredSkills)
+                    foreach (PrerequisiteSkill irs in i.RequiredSkills)
                     {
                         Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(irs.Name);
@@ -192,7 +192,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            EntityRequiredSkill rs = i.RequiredSkills[skillNum];
+            PrerequisiteSkill rs = i.RequiredSkills[skillNum];
             StringBuilder sb = new StringBuilder();
             sb.Append(rs.Name);
             sb.Append(' ');
@@ -257,7 +257,7 @@ namespace EVEMon.SkillPlanner
 
             string m_note = i.Name;
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (EntityRequiredSkill irs in i.RequiredSkills)
+            foreach (PrerequisiteSkill irs in i.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(irs.Name, irs.Level));
             }

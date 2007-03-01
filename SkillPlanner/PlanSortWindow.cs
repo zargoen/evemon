@@ -334,7 +334,9 @@ namespace EVEMon.SkillPlanner
                         // but do we have the prereqs already added to the sorted plan?
                         foreach (Skill.Prereq pp in thisSkill.Prereqs)
                         {
-                            if (pp.Skill.Level < pp.RequiredLevel)
+                            // We need the skill instance for this character
+                            Skill s = m_plan.GrandCharacterInfo.GetSkill(pp.Name);
+                            if (s.Level < pp.RequiredLevel)
                             {
                                 if (!m_trainedLevels.ContainsKey(pp.Name) ||
                                     m_trainedLevels[pp.Name] < pp.RequiredLevel)

@@ -143,8 +143,9 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (Skill.Prereq pr in s.Prereqs)
                 {
-                    if (pr.Skill.Id == m_skill.Id)
-                    {
+                    // TODO use static skill data
+                    if (m_characterInfo.GetSkill(pr.Name).Id == m_skill.Id)
+                    {   
                         enabledSkills[pr.RequiredLevel - 1].Add(s.Name,s);
                     }
                 }
@@ -273,7 +274,7 @@ namespace EVEMon.SkillPlanner
             // build lists of ships enabled by this skill
             foreach (Ship s in Ship.GetShips())
             {
-                foreach (EntityRequiredSkill sr in s.RequiredSkills)
+                foreach (PrerequisiteSkill sr in s.RequiredSkills)
                 {
                     if (sr.Name == m_skill.Name)
                     {
@@ -478,7 +479,7 @@ namespace EVEMon.SkillPlanner
                 if (!cbShowBaseOnly.Checked || item.Metagroup == "Tech I" || item.Metagroup == "Tech II")
                 {
                     // yep, now see if this skill level enables the item
-                    foreach (EntityRequiredSkill sr in item.RequiredSkills)
+                    foreach (PrerequisiteSkill sr in item.RequiredSkills)
                     {
                         if (sr.Name == m_skill.Name)
                         {
@@ -560,7 +561,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="tn">The node to be colored</param>
         /// <param name="prereqs">The list of prerequisites for this
         /// ship or item</param>
-        private void ColorNode(TreeNode tn, List<EntityRequiredSkill> prereqs)
+        private void ColorNode(TreeNode tn, List<PrerequisiteSkill> prereqs)
         {
             bool skillsNeeded = false;
             bool otherSkillsNeeded = false;
@@ -696,7 +697,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="prereqs">list of prereqs for the selected node</param>
         /// <param name="entity">is it a Ship or an Item?</param>
-        private void PrepareCm(List<EntityRequiredSkill> prereqs, string entity)
+        private void PrepareCm(List<PrerequisiteSkill> prereqs, string entity)
         {
             tsShowObjectInBrowser.Text = "Show " + entity + " In Browser";
             tsAddObjectToPlan.Enabled = false;
@@ -837,6 +838,21 @@ namespace EVEMon.SkillPlanner
             UpdateSkillLabel();
             PopulateLists();
         }
+
+        private void m_characterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate { m_characterInfo_SkillChanged(sender,e);  }));
+                return;
+            }
+
+            // Brute force, just refresh it all.
+            tmrAutoUpdate.Enabled = false;
+            UpdateSkillLabel();
+            PopulateLists();
+        }
+
         #endregion
 
         #region events
@@ -852,11 +868,13 @@ namespace EVEMon.SkillPlanner
         {
             SetPlanName();
             m_characterInfo.TrainingSkillChanged += new EventHandler(TrainingSkillChangedCallback);
+            m_characterInfo.SkillChanged += new SkillChangedHandler(m_characterInfo_SkillChanged);
             UpdateSkillLabel();
             PopulateLists();
             cbHistory.Items.Insert(0, m_skill.Name);
             cbHistory.Text = m_skill.Name;
         }
+
 
 
         /// <summary>
@@ -896,6 +914,7 @@ namespace EVEMon.SkillPlanner
                 !(e.CloseReason == CloseReason.WindowsShutDown))  // and Windows is not shutting down
             {
                 m_characterInfo.TrainingSkillChanged -= new EventHandler(TrainingSkillChangedCallback);
+                m_characterInfo.SkillChanged -= new SkillChangedHandler(m_characterInfo_SkillChanged);
             }
         }
 
@@ -1159,7 +1178,7 @@ namespace EVEMon.SkillPlanner
 
             // init
             string note = String.Empty;
-            List<EntityRequiredSkill> prereqs = new List<EntityRequiredSkill>();
+            List<PrerequisiteSkill> prereqs = new List<PrerequisiteSkill>();
 
             // Get the name and prereqs for the ship or item
             if (s != null)
@@ -1176,7 +1195,7 @@ namespace EVEMon.SkillPlanner
             // Build list of prereqs to add (the add method works out if we know 
             // the skills or not)
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (EntityRequiredSkill srs in prereqs)
+            foreach (PrerequisiteSkill srs in prereqs)
             {
                 skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
             }
@@ -1198,7 +1217,7 @@ namespace EVEMon.SkillPlanner
             Item item = null;
             SelectedNode(sender, out s, out item);
 
-            List<EntityRequiredSkill> prereqs = null;
+            List<PrerequisiteSkill> prereqs = null;
             string name = String.Empty;
 
             if (s != null)
@@ -1217,7 +1236,7 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
             int prNum = 0;
 
-            foreach (EntityRequiredSkill pr in prereqs)
+            foreach (PrerequisiteSkill pr in prereqs)
             {
                 Skill prs = m_characterInfo.GetSkill(pr.Name);
                 sb.Append(FormatPrereq(pr.Level, prs, ref prNum));

@@ -13,8 +13,13 @@ namespace EVEMon.Common
     {
         private string m_name;
         private int m_ID;
+
+        // TODO remove this and replace with the SkillData list
         private Dictionary<string, Skill> m_skills = new Dictionary<string, Skill>();
 
+        private Dictionary<int, SkillData> m_skillsList = new Dictionary<int, SkillData>();
+
+        // TODO remove this constructor
         public SkillGroup(string name, int id, IEnumerable<Skill> skills)
         {
             m_name = name;
@@ -26,6 +31,20 @@ namespace EVEMon.Common
                 gs.SetSkillGroup(this);
             }
         }
+
+        public SkillGroup(string name, int id, IEnumerable<SkillData> skills)
+        {
+            m_name = name;
+            m_ID = id;
+            foreach (SkillData  sd in skills)
+            {
+                m_skillsList[sd.SkillId] = sd;
+//                gs.Changed += new EventHandler(gs_Changed);
+                // TODO we need static skillgroups? - might be too complex?
+//                sd.SetSkillGroup(this);
+            }
+        }
+
 
         private int m_cachedKnownCount = -1;
 
