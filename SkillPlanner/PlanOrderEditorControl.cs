@@ -121,6 +121,7 @@ namespace EVEMon.SkillPlanner
         #region Skill List View
         private void UpdateSkillList()
         {            
+            if (m_plan == null) return;
             lvSkills.BeginUpdate();
             try
             {

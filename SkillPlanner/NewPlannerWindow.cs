@@ -695,7 +695,44 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-    }
+    
+
+        #region Print Plan
+        WebBrowser printBrowser;
+        private void tsbPrintPlan_Click(object sender, EventArgs e)
+        {
+            printBrowser = new WebBrowser();
+            printBrowser.Width = 800;
+            printBrowser.Height = 600;
+            printBrowser.ScrollBarsEnabled = false;
+
+            PlanTextOptions pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
+            pto.Markup = MarkupType.Html;
+            using (MemoryStream ms = new MemoryStream())
+            using (StreamWriter sw = new StreamWriter(ms))
+            {
+                m_plan.SaveAsText(sw, pto);
+                sw.Flush();
+                string s = Encoding.Default.GetString(ms.ToArray());
+                printBrowser.DocumentText = s;
+            }
+            printBrowser.Update();
+            printDocument1.DocumentName = this.Text;
+            printPreviewDialog1.Document = printDocument1;
+            printPreviewDialog1.ShowDialog(this);
+            printBrowser.Dispose();
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            Bitmap bmp = new Bitmap(printBrowser.ClientRectangle.Width, printBrowser.ClientRectangle.Height);
+            printBrowser.DrawToBitmap(bmp, printBrowser.ClientRectangle);
+            e.Graphics.DrawImage(bmp, 0, 0);
+
+        }
+
+     }
+    #endregion
 
     public class PlannerWindowFactory : IPlannerWindowFactory
     {
