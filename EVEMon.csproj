@@ -554,8 +554,8 @@
       <DependentUpon>ShipSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\SkillEnablesForm.resx">
-      <DependentUpon>SkillEnablesForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+      <DependentUpon>SkillEnablesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\SkillSelectControl.resx">
       <SubType>Designer</SubType>

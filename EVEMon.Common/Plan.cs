@@ -446,8 +446,7 @@ namespace EVEMon.Common
 
                     foreach (Skill.Prereq pp in gs.Prereqs)
                     {
-                        // check prereqs of this prereqs - need to use owener's skill instance
-                        Skill pgs = m_grandCharacterInfo.GetSkill(pp.Name);
+                        Skill pgs = pp.Skill;
                         int prIndex = GetIndexOf(pgs.Name, pp.RequiredLevel);
                         if (prIndex == -1 && pgs.Level < pp.RequiredLevel)
                         {
@@ -679,17 +678,11 @@ namespace EVEMon.Common
             return false;
         }
 
-        /// <summary>
-        /// Adds missing prereqs
-        /// </summary>
-        /// <param name="gs">Must be the skill instance for the plan owner</param>
-        /// <param name="planEntries"></param>
-        /// <param name="Note"></param>
         private void AddPrerequisiteEntries(Skill gs, List<Plan.Entry> planEntries, string Note)
         {
             foreach (Skill.Prereq pp in gs.Prereqs)
             {
-                Skill pgs = m_grandCharacterInfo.GetSkill(pp.Name);
+                Skill pgs = pp.Skill;
                 AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.RequiredLevel; i++)
                 {
@@ -999,7 +992,7 @@ namespace EVEMon.Common
                 // Remove prerequisites
                 foreach (Skill.Prereq pp in gs.Prereqs)
                 {
-                    RemoveEntry(m_grandCharacterInfo.GetSkill(pp.Name), true, true);
+                    RemoveEntry(pp.Skill, true, true);
                 }
                 return true;
             }
@@ -1517,7 +1510,7 @@ namespace EVEMon.Common
             }
 
             /// <summary>
-            /// Gets the skill of this plan entry (specific to the plan owner).
+            /// Gets the skill of this plan entry.
             /// </summary>
             public Skill Skill
             {
@@ -1558,7 +1551,6 @@ namespace EVEMon.Common
                 }
             }
 
-            // gs must be the skill instance for the plan owner
             private void BuildPrereqs(Skill gs, int level, List<Prerequisite> result,
                                       Dictionary<string, bool> contains)
             {
@@ -1574,14 +1566,14 @@ namespace EVEMon.Common
                 }
                 foreach (Skill.Prereq pp in gs.Prereqs)
                 {
-                    string tSkill = pp.Name + " " + Skill.GetRomanForInt(pp.RequiredLevel);
+                    string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.RequiredLevel);
                     if (!contains.ContainsKey(tSkill))
                     {
-                        Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Name,
+                        Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Skill.Name,
                                                                                                pp.RequiredLevel));
                         contains[tSkill] = true;
                         result.Insert(0, pep);
-                        BuildPrereqs(m_owner.GrandCharacterInfo.GetSkill(pp.Name), pp.RequiredLevel, result, contains);
+                        BuildPrereqs(pp.Skill, pp.RequiredLevel, result, contains);
                     }
                 }
             }

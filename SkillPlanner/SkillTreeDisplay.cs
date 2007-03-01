@@ -287,8 +287,7 @@ namespace EVEMon.SkillPlanner
                 }
                 List<SkillInfo> thisLevel = m_layoutData[level];
 
-                // TODO - use static skill class for this?
-                SkillInfo si = new SkillInfo(m_plan.GrandCharacterInfo.GetSkill(pp.Name), parentSi);
+                SkillInfo si = new SkillInfo(pp.Skill, parentSi);
                 si.RequiredLevel = pp.RequiredLevel;
                 if (thisLevel.Count == 0)
                 {

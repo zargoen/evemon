@@ -47,7 +47,6 @@ namespace EVEMon.Common
             // everytime for each character. We need to refactor this
             // so all the static skill data is only created once.
 
-            SkillData.LoadSkills();
             List<string> ownedSkills = new List<string>();
             foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
             {

@@ -4,10 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
-using System.Xml.Serialization;
-using System.IO;
-using System.IO.Compression;
-using System.Xml;
 
 namespace EVEMon.Common
 {
@@ -18,6 +14,7 @@ namespace EVEMon.Common
         private string m_name;
         private int m_id;
         private string m_description;
+        private string m_descriptionNl;
         private EveAttribute m_primaryAttribute;
         private EveAttribute m_secondaryAttribute;
         private int m_rank;
@@ -36,6 +33,7 @@ namespace EVEMon.Common
             m_name = name;
             m_id = id;
             m_description = description;
+            m_descriptionNl = description;
             m_primaryAttribute = a1;
             m_secondaryAttribute = a2;
             m_rank = rank;
@@ -265,7 +263,7 @@ namespace EVEMon.Common
         public string DescriptionNl
         {
             //get { return m_descriptionNl.Replace(@".", ".\n"); }
-            get { return WordWrap(m_description, 100); }
+            get { return WordWrap(m_descriptionNl, 100); }
         }
 
         public string WordWrap(string text, int maxLength)
@@ -461,26 +459,8 @@ namespace EVEMon.Common
             }
         }
 
-        /// <summary>
-        /// Fired on # of sp change, Known flag changes, or skill starts/stops training
-        /// N.B  SP change does not occur  for the incrementing the training skill's sp every second! That change
-        /// is calculated on the fly (see CurrentSkillPoints method.
-        /// </summary>
         private void OnChanged()
         {
-            // Brad's Documentation of what happens when this is fired - as of build [653]
-            // calls: Character info gs_changed
-            //      swicthes the training skill in character info and fires character info's OnChanged
-            //              CharacterInfo's on changed
-            //                 - used by CharacterMonitor to update skill sheet display and lcd data
-            //                 - Used by Plan to remove completed skills
-            //                 - Used by G15 to update lcd
-            //                 - Used by PlanOrderEditor to update displayed plan entries
-            // TODO                - TODO use by skill explorer?
-            // calls: SkillGroup.gs_changed
-            //      this just setes cached known skill count to -1
-            // calls:SkillTreeDisplay.OnEventChanged
-            //      - resets the pretty tree diagram
             if (Changed != null)
             {
                 Changed(this, new EventArgs());
@@ -663,7 +643,7 @@ namespace EVEMon.Common
             TimeSpan result = TimeSpan.Zero;
             foreach (Prereq pp in this.Prereqs)
             {
-                Skill gs = m_owner.GetSkill(pp.Name);
+                Skill gs = pp.Skill;
                 if (gs.InTraining)
                 {
                     timeIsCurrentlyTraining = true;
@@ -693,7 +673,7 @@ namespace EVEMon.Common
             {
                 foreach (Prereq pp in this.Prereqs)
                 {
-                    if (m_owner.GetSkill(pp.Name).Level < pp.RequiredLevel)
+                    if (pp.Skill.Level < pp.RequiredLevel)
                     {
                         return false;
                     }
@@ -737,13 +717,12 @@ namespace EVEMon.Common
         {
             foreach (Prereq pp in this.Prereqs)
             {
-                Skill ps = m_owner.GetSkill(pp.Name);
-                if (ps == gs)
+                if (pp.Skill == gs)
                 {
                     neededLevel = pp.RequiredLevel;
                     return true;
                 }
-                if (recurse && ps.HasAsPrerequisite(gs, out neededLevel, true))
+                if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel, true))
                 {
                     return true;
                 }
@@ -1005,338 +984,6 @@ namespace EVEMon.Common
         #endregion
     }
 
-    /// <summary>
-    /// Contains all the static skill data for a specific skill
-    /// </summary>
-    public class SkillData
-    {
-        public SkillData(bool pub, string name, int id, string description,
-                          EveAttribute a1, EveAttribute a2, int rank, int cost, 
-                          IEnumerable<PrerequisiteSkill> prereqs)
-        {
-            // have we loaded this skill?
-            if (sm_allSkillsID == null || !sm_allSkillsID.ContainsKey(id))
-            {
-                m_public = pub;
-                m_id = id;
-                m_name = name;
-                m_description = description;
-                m_primaryAttribute = a1;
-                m_secondaryAttribute = a2;
-                m_rank = rank;
-                m_cost = cost;
-                m_prereqs = prereqs;
-
-                // and  cache this skill...
-                sm_allSkillsID.Add(id, this);
-
-                // Name cache is needed so we can locate prereqs
-                sm_allSkillsName.Add(name, this);
-
-                // See if this skill is a prereq for any cached prereqs
-                List<PrerequisiteSkill> newList = new List<PrerequisiteSkill>();
-
-                if (PrerequisiteSkill.missingSkills.Count == 0)
-                {
-                    m_cost = 1;
-                }
-
-                foreach (PrerequisiteSkill pr in PrerequisiteSkill.missingSkills)
-                {
-                    if (pr.Name == m_name)
-                    {
-                        // yes, we've found one!
-                        pr.SkillId = id;
-                        pr.SkillData = this;
-                    }
-                    else
-                        // no luck this time.
-                        newList.Add(pr);
-                }
-                PrerequisiteSkill.missingSkills = newList;
-            }
-        }
-
-        public int SkillId 
-        {
-            get { return m_id; }
-        }
-
-        public string Name
-        {
-            get { return m_name; }
-        }
-
-        public string Description
-        {
-            get { return m_description; }
-        }
-
-        public EveAttribute PrimaryAttribute
-        {
-            get { return m_primaryAttribute; }
-        }
-
-        public EveAttribute SecondaryAttribute
-        {
-            get { return m_secondaryAttribute; }
-        }
-
-        public int Rank
-        {
-            get { return m_rank; }
-        }
-
-        public int Cost
-        {
-            get { return m_cost; }
-        }
-
-        public bool Public
-        {
-            get { return m_public; }
-        }
-
-        public IEnumerable<PrerequisiteSkill> Prereqs
-        {
-            get
-            {
-                return m_prereqs;
-            }
-        }
-
-        public static void Check()
-        {
-            // missing skills should be empty
-            if (PrerequisiteSkill.missingSkills.Count != 0)
-            {
-                // Ooops
-                StringBuilder sb = new StringBuilder("Unidentified prereqs\n");
-                foreach (PrerequisiteSkill p in PrerequisiteSkill.missingSkills)
-                {
-                    sb.Append(String.Format("{0} at level {1}\n",p.Name,p.Level));
-                }
-                MessageBox.Show(sb.ToString(),"Ooooops!",MessageBoxButtons.OK,MessageBoxIcon.Information);
-            }
-        }
-
-        /// <summary>
-        /// Loads all the static skill data
-        /// </summary>
-        public  static void LoadSkills()
-        {
-            if (sm_allSkillsID.Count != 0) return;
-
-            string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
-            if (!File.Exists(skillfile))
-            {
-                throw new ApplicationException(skillfile + " not found!");
-            }
-            using (FileStream s = new FileStream(skillfile, FileMode.Open, FileAccess.Read))
-            using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
-            {
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.Load(zs);
-
-                foreach (XmlElement sgel in xdoc.SelectNodes("/skills/c"))
-                {
-                    List<SkillData> skills = new List<SkillData>();
-                    foreach (XmlElement sel in sgel.SelectNodes("s"))
-                    {
-                        List<PrerequisiteSkill> prereqs = new List<PrerequisiteSkill>();
-                        foreach (XmlElement pel in sel.SelectNodes("p"))
-                        {
-                            // get cached prereq if we've got one, or create new one
-                            PrerequisiteSkill p = PrerequisiteSkill.GetPreqSkill(pel.GetAttribute("n"),
-                                                                      Convert.ToInt32(pel.GetAttribute("l")));
-                            prereqs.Add(p);
-                        }
-
-                        bool _pub = (sel.GetAttribute("p") != "false");
-                        string _name = sel.GetAttribute("n");
-                        int _id = Convert.ToInt32(sel.GetAttribute("i"));
-                        string _desc = sel.GetAttribute("d");
-                        EveAttribute _primAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
-                        EveAttribute _secAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
-                        int _rank = Convert.ToInt32(sel.GetAttribute("r"));
-                        int _cost = Convert.ToInt32(sel.GetAttribute("c"));
-                        SkillData sd = new SkillData(
-                             _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, prereqs);
-                        skills.Add(sd);
-                    }
-
-                    // TODO think about static skillgroups
-   //                 SkillGroup gsg = new SkillGroup(sgel.GetAttribute("n"), Convert.ToInt32(sgel.GetAttribute("g")),
-      //                                                        skills);
-     //               this.m_skillGroups[gsg.Name] = gsg;
-                }
-                SkillData.Check();
-
-            }
-        }
-
-        #region member variables
-        private string m_name;
-        private int m_id;
-        private string m_description;
-        private EveAttribute m_primaryAttribute;
-        private EveAttribute m_secondaryAttribute;
-        private int m_rank;
-        private IEnumerable<PrerequisiteSkill> m_prereqs;
-        private int m_cost;
-        private bool m_public;
-
-        internal static Dictionary<string, SkillData> sm_allSkillsName = new Dictionary<string,SkillData>();
-        internal static Dictionary<int, SkillData> sm_allSkillsID = new Dictionary<int,SkillData>();
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Primary prerequisite skills for a skill ,ship or item.
-    /// Also used by plan entries
-    /// For ships and items, the object is constructed by deserialisation.
-    /// For skills, we use a constructor.
-    /// </summary>
-    public class PrerequisiteSkill
-    {
-        // default constructor must be explicitly defined for the item/ship deserialisation to work
-        public PrerequisiteSkill()
-        {
-            m_name = null;
-            m_level = 0;
-            m_skillID = 0;
-            m_skill = null;
-
-        }
-
-        /// <summary>
-        /// This constructor is ONLY to be used when building skill prereqs
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="requiredLevel"></param>
-        /// <param name="useCache"></param>
-        internal PrerequisiteSkill(string name, int requiredLevel,bool useCache)
-        {
-            m_name = name;
-            m_level = requiredLevel;
-            m_skill = null;
-            m_skillID = 0;
-
-            if (useCache)
-            {
-                string key=String.Format("{0}::{1}",name,requiredLevel);
-                if (m_prerequisiteSkillCache.ContainsKey(key))
-                {
-                    PrerequisiteSkill ps = m_prerequisiteSkillCache[key];
-                    m_skill = ps.m_skill;
-                    m_skillID = ps.m_skillID;
-                }
-                else
-                {
-                    m_prerequisiteSkillCache.Add(key,this);
-                }
-            }
-
-            // populate the skill & skill id if possible
-            if (!FindSkill() && useCache)
-            {
-                // we're loading skills and the static skill data for this skill
-                // isn't loaded yet, so add this t
-                missingSkills.Add(this);
-            }
-        }
-
-        internal PrerequisiteSkill(string name, int requiredLevel)
-        {
-            m_name = name;
-            m_level = requiredLevel;
-            m_skill = null;
-        }
-
-        private string m_name;
-        [XmlAttribute]
-        public string Name
-        {
-            get { return m_name; }
-            set 
-            { 
-                m_name = StringTable.GetSharedString(value);
-                // if we know name & level, try and find populate skill id
-            }
-        }
-
-        private int m_level;
-        [XmlAttribute]
-        public int Level
-        {
-            get { return m_level; }
-            set 
-            {
-                m_level = value;
-            }
-        }
-
-        private SkillData m_skill;
-
-        [XmlIgnore]
-        public SkillData SkillData
-        {
-            get { return m_skill; }
-            set { m_skill = value; }
-        }
-
-        private int m_skillID;
-
-        [XmlIgnore]
-        public int SkillId
-        {
-            get { return m_skillID; }
-            set { m_skillID = value; }
-        }
-
-        private bool FindSkill()
-        {
-            // search the static skill cache & locate the skill
-            if (SkillData.sm_allSkillsName.ContainsKey(m_name))
-            {
-                SkillData sd = SkillData.sm_allSkillsName[m_name];
-                m_skillID = sd.SkillId;
-                m_skill = sd;
-                return true;
-            }
-            else return false;
-        }
-
-        [XmlIgnore]
-        private static Dictionary<string, PrerequisiteSkill> m_prerequisiteSkillCache = new Dictionary<string, PrerequisiteSkill>();
-
-        [XmlIgnore]
-        internal static List<PrerequisiteSkill> missingSkills = new List<PrerequisiteSkill>();
-
-        public static PrerequisiteSkill GetPreqSkill(string name, int requiredLevel)
-        {
-            string key = String.Format("{0}::{1}", name, requiredLevel);
-            PrerequisiteSkill ps = null;
-            if (m_prerequisiteSkillCache.ContainsKey(key))
-            {
-                ps = m_prerequisiteSkillCache[key];
-            }
-            else
-            {
-                ps = new PrerequisiteSkill(name, requiredLevel, true);
-            }
-            return ps;
-        }
-
-    }
-
-
-    /// <summary>
-    /// Flags to specify how skill data is displayed
-    /// </summary>
     [Flags]
     public enum DescriptiveTextOptions
     {
@@ -1347,11 +994,7 @@ namespace EVEMon.Common
         IncludeCommas = 8,
         IncludeZeroes = 16
     }
-    #region Scratchpad class
-    /// <summary>
-    /// Used when calculating skill training rates or attribute values, to include effects of
-    /// implants and learning skills
-    /// </summary>
+
     public class EveAttributeScratchpad
     {
         private int m_learningLevelBonus;
@@ -1390,5 +1033,4 @@ namespace EVEMon.Common
             }
         }
     }
-    #endregion
 }
