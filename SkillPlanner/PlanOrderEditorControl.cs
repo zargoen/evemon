@@ -320,14 +320,16 @@ namespace EVEMon.SkillPlanner
                                     res = pe.Priority.ToString();
                                     break;
                                 case ColumnPreference.ColumnType.Cost:
-                                    if (!pe.Skill.Known)
-                                    {    
-                                        if (pe.Skill.Owned)
-                                            res ="Owned";
-                                        else
-                                            res = pe.Skill.FormattedCost;
+                                    if (pe.Level == 1)
+                                    {
+                                        if (!pe.Skill.Known)
+                                        {
+                                            if (pe.Skill.Owned)
+                                                res = "Owned";
+                                            else
+                                                res = pe.Skill.FormattedCost;
+                                        }
                                     }
-                                    else res = String.Empty;
                                     break;
                             }
                         }
