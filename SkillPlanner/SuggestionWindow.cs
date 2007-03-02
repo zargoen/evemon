@@ -41,18 +41,34 @@ namespace EVEMon.SkillPlanner
             TimeSpan postTime = TimeSpan.Zero;
 
             lbSkills.Items.Clear();
+
+            // calculate the most optimal time for the learning
+            // suggestion by copying the plan and sorting it with learning skills
+            // first - This method gives an accurate savings time.
+            Plan optimalPlan = new Plan();
+            optimalPlan.GrandCharacterInfo = gci;
+            foreach (Plan.Entry pe in m_plan.Entries)
+            {
+                optimalPlan.Entries.Add(pe.Clone() as Plan.Entry);
+            }
+
+
             foreach (Plan.Entry pe in entries)
             {
+                optimalPlan.Entries.Add(pe);
                 lbSkills.Items.Add(pe.SkillName + " " +
                                    Skill.GetRomanForInt(pe.Level));
-
-                Skill gs = gci.GetSkill(pe.SkillName);
-                postTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
-                scratchpad.ApplyALevelOf(gs);
             }
-            postTime += m_plan.GetTotalTime(scratchpad);
-            TimeSpan preTime = m_plan.GetTotalTime(null);
 
+            // Sort the plan in optimal order
+            PlanSorter.SortPlan(optimalPlan, PlanSortType.NoChange, true, false);
+            // And get the time for the plan with learning skills.
+            postTime = optimalPlan.TotalTrainingTime;
+
+            // and throw away the test plan
+            optimalPlan = null;
+            
+            TimeSpan preTime = m_plan.GetTotalTime(null);
             TimeSpan diff = preTime - postTime;
 
             lblBeforeTime.Text = Skill.TimeSpanToDescriptiveText(preTime, DTO_OPTS);

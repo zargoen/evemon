@@ -240,7 +240,7 @@ namespace EVEMon.SkillPlanner
                                                 m_plan.UniqueSkillCount,
                                                 m_plan.UniqueSkillCount == 1 ? "" : "s",
                                                 Skill.TimeSpanToDescriptiveText(res,
-                                                                                     DescriptiveTextOptions.FullText |
+                                                                                     DescriptiveTextOptions.Default |
                                                                                      DescriptiveTextOptions.
                                                                                          IncludeCommas |
                                                                                      DescriptiveTextOptions.SpaceText),
@@ -248,7 +248,7 @@ namespace EVEMon.SkillPlanner
             int cost = m_plan.TrainingCost;
             if (cost > 0)
             {
-                slblStatusText.Text += String.Format(" Cost To Train: {0:0,0,0} ISK",cost);
+                slblStatusText.Text += String.Format(" Cost: {0:0,0,0} ISK",cost);
             }
 
             if (m_plan.HasAttributeSuggestion)
@@ -384,6 +384,8 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 m_plan.ResumeEvents();
+                m_plan.ResetSuggestions();
+                UpdateStatusBar();
             }
         }
 

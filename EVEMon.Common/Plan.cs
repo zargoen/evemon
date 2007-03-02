@@ -199,6 +199,11 @@ namespace EVEMon.Common
             }
         }
 
+        public void ResetSuggestions()
+        {
+            CheckForAttributeSuggestion();
+        }
+
         public IEnumerable<Plan.Entry> GetSuggestions()
         {
             List<Plan.Entry> result = new List<Plan.Entry>();
@@ -209,7 +214,7 @@ namespace EVEMon.Common
             CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime, result);
             CheckForTimeBenefit("Iron Will", "Focus", baseTime, result);
             CheckForTimeBenefit("Empathy", "Presence", baseTime, result);
-
+            CheckForLearningBenefit(baseTime, result);
             return result;
         }
 
@@ -224,26 +229,22 @@ namespace EVEMon.Common
             TimeSpan baseTime = GetTotalTime(null);
 
             m_attributeSuggestion = CheckForTimeBenefit("Analytical Mind", "Logic", baseTime);
-            if (m_attributeSuggestion == true)
-            {
-                return;
-            }
+            if (m_attributeSuggestion == true) return;
+
             m_attributeSuggestion = CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime);
-            if (m_attributeSuggestion == true)
-            {
-                return;
-            }
+            if (m_attributeSuggestion == true) return;
+
             m_attributeSuggestion = CheckForTimeBenefit("Iron Will", "Focus", baseTime);
-            if (m_attributeSuggestion == true)
-            {
-                return;
-            }
+            if (m_attributeSuggestion == true) return;
+
             m_attributeSuggestion = CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime);
-            if (m_attributeSuggestion == true)
-            {
-                return;
-            }
+            if (m_attributeSuggestion == true) return;
+
             m_attributeSuggestion = CheckForTimeBenefit("Empathy", "Presence", baseTime);
+            if (m_attributeSuggestion == true) return;
+
+            m_attributeSuggestion = CheckForLearningBenefit(baseTime,null);
+            if (m_attributeSuggestion == true) return;
         }
 
         private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime)
@@ -346,6 +347,53 @@ namespace EVEMon.Common
             }
 
             return (bestGs != null);
+        }
+        private bool CheckForLearningBenefit(TimeSpan baseTime, List<Plan.Entry> entries)
+        {
+            Skill learning = GrandCharacterInfo.SkillGroups["Learning"]["Learning"];
+            
+            TimeSpan bestTime = baseTime;
+            TimeSpan addedTrainingTime = TimeSpan.Zero;
+            int bestLevel = -1;
+            int added = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                int level = i+1;
+                if (learning.Level < level && !this.IsPlanned(learning, level))
+                {
+                    EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                    scratchpad.AdjustLearningLevelBonus(++added);
+                    addedTrainingTime += learning.GetTrainingTimeOfLevelOnly(level, true, scratchpad);
+                    TimeSpan thisTime = GetTotalTime(scratchpad) + addedTrainingTime;
+                    if (thisTime < bestTime)
+                    {
+                        bestTime = thisTime;
+                        bestLevel = level;
+                    }
+                }
+            }
+
+            if (entries != null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    int level = i+1;
+                    if (learning.Level < level && !this.IsPlanned(learning, level))
+                    {
+                        if (level <= bestLevel)
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = learning.Name;
+                            pe.Level = level;
+                            new Plan.Entry();
+                            pe.EntryType = Plan.Entry.Type.Planned;
+                            entries.Add(pe);
+                        }
+                    }
+                }
+            }
+
+            return (bestLevel != -1);
         }
         #endregion Suggestions
 
