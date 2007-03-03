@@ -322,8 +322,10 @@ namespace EVEMon
         private void EnableButtons()
         {
             btnSave.Enabled = true;
-            if (m_grandCharacterInfo.SkillPointTotal > 0)
+            if (m_grandCharacterInfo.SkillPointTotal > 0 )
             {
+                String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
+                btnPlan.ShowSplit = (m_settings.GetPlanCountForCharacter(planKey) > 0);
                 btnPlan.Enabled = true;
             }
             else
@@ -1536,6 +1538,8 @@ namespace EVEMon
                 DialogResult dr = psw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                 {
+                    // We might have deleted all our plans - check the split button 
+                    EnableButtons();
                     return;
                 }
                 p = psw.ResultPlan;
@@ -1569,6 +1573,8 @@ namespace EVEMon
                                 m_settings.AddPlanFor(m_cfi.Filename, p, planName);
                             }
                             doAgain = false;
+                            // this might be our first plan - enable the split button 
+                            EnableButtons();
                         }
                         catch (ApplicationException err)
                         {

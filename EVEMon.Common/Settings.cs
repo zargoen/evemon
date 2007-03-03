@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using EVEMon.Common.Schedule;
+using System.Windows.Forms;
 
 namespace EVEMon.Common
 {
@@ -411,6 +412,17 @@ namespace EVEMon.Common
         }
 
         private const string PLAN_DEFAULT = "Default Plan";
+
+        public int GetPlanCountForCharacter(string charName)
+        {
+            int count = 0;
+            foreach (Pair<string, Plan> x in m_plans)
+            {
+                if (x.A.StartsWith(charName + "::"))
+                    count++;
+            }
+            return count;
+        }
 
         public IEnumerable<string> GetPlansForCharacter(string charName)
         {
@@ -885,11 +897,44 @@ namespace EVEMon.Common
             if (m_instance != null)
                 return m_instance;
 
+            // THis tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
+            // copy and ask if that is to be used.
+            // If the settings file is ok, then back it up.
+
             try
             {
                 if (File.Exists(SettingsFileName))
                 {
-                    using (FileStream fs = new FileStream(SettingsFileName, FileMode.Open, FileAccess.Read))
+                    String fileName = SettingsFileName;
+                    FileInfo fa = new FileInfo(SettingsFileName);
+                    if (fa.Length == 0)
+                    {
+                        bool backupExists = File.Exists(SettingsFileName + ".bak");
+                        if (backupExists)
+                        {
+                            DialogResult dr = MessageBox.Show("Your settings file is corrupt. There is a backup available, do you want to use the backup file?", "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                            if (dr ==  DialogResult.No)
+                            {
+                                Settings s = new Settings();
+                                m_instance = s;
+                                return s;
+                            }
+                            fileName += ".bak";
+                        }
+                        else
+                        {
+                            MessageBox.Show("Your settings file is corrupt. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            Settings s = new Settings();
+                            m_instance = s;
+                            return s;
+                        }
+                    }
+                    else
+                    {
+                        // We have a non-zero length settings file - so make a copy.
+                        File.Copy(SettingsFileName,SettingsFileName + ".bak",true);
+                    }
+                    using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                     {
                         XmlSerializer xs = new XmlSerializer(typeof(Settings));
                         Settings result = (Settings)xs.Deserialize(fs);
