@@ -542,7 +542,7 @@ namespace EVEMon
                 lblTrainingRemain.Text = TimeSpanDescriptive(m_estimatedCompletion);
                 if (m_estimatedCompletion > now)
                 {
-                    lblTrainingEst.Text = (m_estimatedCompletion).ToString();
+                    lblTrainingEst.Text = m_estimatedCompletion.ToString("ddd ") + m_estimatedCompletion.ToString();
                 }
                 else
                 {

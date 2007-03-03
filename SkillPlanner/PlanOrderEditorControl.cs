@@ -268,10 +268,10 @@ namespace EVEMon.SkillPlanner
                                     res = Skill.TimeSpanToDescriptiveText(trainTimeNatural, DescriptiveTextOptions.IncludeCommas);
                                     break;
                                 case ColumnPreference.ColumnType.EarliestStart:
-                                    res = thisStart.ToString();
+                                    res = thisStart.ToString("ddd ") + thisStart.ToString();
                                     break;
                                 case ColumnPreference.ColumnType.EarliestEnd:
-                                    res = thisEnd.ToString();
+                                    res = thisEnd.ToString("ddd ") + thisEnd.ToString();
                                     break;
                                 case ColumnPreference.ColumnType.PercentComplete:
                                     res = pctComplete.ToString("0%");
