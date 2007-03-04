@@ -892,6 +892,11 @@ namespace EVEMon.Common
             return Load();
         }
 
+        public static Settings Restore(string filename)
+        {
+            return LoadFromFile(filename);
+        }
+
         public static Settings Load()
         {
             if (m_instance != null)
@@ -900,7 +905,7 @@ namespace EVEMon.Common
             // THis tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
             // copy and ask if that is to be used.
             // If the settings file is ok, then back it up.
-
+            
             try
             {
                 if (File.Exists(SettingsFileName))
@@ -934,13 +939,8 @@ namespace EVEMon.Common
                         // We have a non-zero length settings file - so make a copy.
                         File.Copy(SettingsFileName,SettingsFileName + ".bak",true);
                     }
-                    using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof(Settings));
-                        Settings result = (Settings)xs.Deserialize(fs);
-                        m_instance = result;
-                        return result;
-                    }
+                    Settings result = LoadFromFile(fileName);
+                    return result;
                 }
                 else
                 {
@@ -958,6 +958,17 @@ namespace EVEMon.Common
             }
         }
 
+        private static Settings LoadFromFile(string fileName)
+        {
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(Settings));
+                Settings result = (Settings)xs.Deserialize(fs);
+                m_instance = result;
+                return result;
+            }
+
+        }
 
         private bool m_neverSave = false;
 

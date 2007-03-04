@@ -9,6 +9,8 @@ using EVEMon.Common;
 using EVEMon.Sales;
 using EVEMon.Common.Schedule;
 using System.Runtime.InteropServices;
+using System.IO;
+
 
 namespace EVEMon
 {
@@ -42,7 +44,19 @@ namespace EVEMon
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
 
             G15Handler.Init();
+            
+            AddCharacters();
 
+            if (startMinimized)
+            {
+                this.ShowInTaskbar = false;
+                this.WindowState = FormWindowState.Minimized;
+                this.Visible = true;
+            }
+        }
+
+        private void AddCharacters()
+        {
             List<Object> tabOrder = m_settings.TabOrder;
 
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
@@ -71,17 +85,11 @@ namespace EVEMon
             {
                 RemoveCharFileInfo(cfi);
             }
-            if (invalidFiles.Count >0)
+            if (invalidFiles.Count > 0)
             {
                 UpdateTabOrder();
             }
 
-            if (startMinimized)
-            {
-                this.ShowInTaskbar = false;
-                this.WindowState = FormWindowState.Minimized;
-                this.Visible = true;
-            }
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)
@@ -783,7 +791,6 @@ namespace EVEMon
                             m_tooltipText = Application.ProductName;
                             m_tooltipWindow = null;
                             ttw.Dispose();
-                            m_tooltipShowing = false;
                         };
 
                         //Mostly format the tooltip text, using the current contents of m_tooltipText as the first line.
@@ -800,7 +807,6 @@ namespace EVEMon
                         
                         ttw.Text = tooltipText;
                         ttw.Show();
-                        m_tooltipShowing = true;
                     }
                     else
                     {
@@ -815,7 +821,6 @@ namespace EVEMon
         }
 
         private string m_tooltipText = Application.ProductName;
-        private bool m_tooltipShowing = false;
 
         private void SetMinimizedIconTooltipText(string txt)
         {
@@ -1160,6 +1165,33 @@ namespace EVEMon
             // Only cleanup if we're deactivating to the minimized state (e.g. systray)
             if (this.WindowState == FormWindowState.Minimized)
                 AutoShrink.Dirty(new TimeSpan(0, 0, 0, 0, 500)); // Clean up after 500 ms
+        }
+
+        private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
+            saveFileDialog.ShowDialog();
+        }
+
+        private void saveFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            File.Copy(Settings.SettingsFileName, saveFileDialog.FileName, true);
+        }
+
+        private void openFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            m_settings = Settings.Restore(openFileDialog.FileName);
+            while (tcCharacterTabs.TabPages.Count > 0)
+            {
+                RemoveTab(tcCharacterTabs.TabPages[0]);
+            }
+            AddCharacters();
+        }
+
+        private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
+            openFileDialog.ShowDialog();
         }
     }
 }
