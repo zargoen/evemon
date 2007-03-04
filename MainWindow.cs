@@ -281,13 +281,6 @@ namespace EVEMon
                 {
                     CharacterInfo gci = gcis[ts];
 
-                    if (m_tooltipShowing)
-                    {
-                        //Splice in the estimated time till completion, using the TimeSpan that is the key in the gcis List.
-                        tooltipText = Regex.Replace(tooltipText, '%' + gci.CharacterId.ToString() + 'r',
-                            Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
-                    }
-
                     string gciTimeSpanText = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default) + " " + gci.Name;
                     if (m_settings.TitleToTime)
                     {
@@ -314,7 +307,6 @@ namespace EVEMon
                         }
                     }
                 }
-                SetMinimizedIconTooltipText(tooltipText);
 
                 tsb.Append(tsb.Length > 0 ? " - " : String.Empty).Append(Application.ProductName);
                 this.Text = tsb.ToString();
@@ -1171,5 +1163,6 @@ namespace EVEMon
         }
     }
 }
+
 
 
