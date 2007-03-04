@@ -55,11 +55,8 @@ namespace EVEMon
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            //Application.Run(new Form1(ca));
-            s_settings = Settings.GetInstance();
-
-            Application.Run(new MainWindow(s_settings, startMinimized));
-            s_settings.Save();
+            Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
+            Settings.GetInstance().Save();
 
             SetRelocatorState(false);
             if (m_logger != null)
@@ -119,10 +116,9 @@ namespace EVEMon
 
         public static Settings Settings
         {
-            get { return s_settings; }
+            get { return Settings.GetInstance(); }
         }
 
-        private static Settings s_settings;
         private static bool m_showWindowOnError = true;
 
         private static void ShowError(Exception e)

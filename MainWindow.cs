@@ -1186,6 +1186,7 @@ namespace EVEMon
                 RemoveTab(tcCharacterTabs.TabPages[0]);
             }
             AddCharacters();
+            m_settings.Save();
         }
 
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
