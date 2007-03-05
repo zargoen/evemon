@@ -174,7 +174,7 @@ namespace EVEMon.SkillPlanner
                 case "Not Planned": // Not Planned Skills
                     sf = delegate(Skill gs)
                              {
-                                 return !m_plan.IsPlanned(gs);
+                                 return !(m_plan.IsPlanned(gs) || gs.Level == 5);
                              };
                     break;
                 case "Not Planned - Trainable": // Not Planned & Trainable Skills
@@ -264,51 +264,47 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void lblSearchTip_Click(object sender, EventArgs e)
+        #region search
+
+        private void lblSearchTextHint_Click(object sender, EventArgs e)
         {
-            tbSearch.Focus();
+            tbSearchText.Focus();
         }
 
         private void tbSearch_Enter(object sender, EventArgs e)
         {
-            lblSearchTip.Visible = false;
+            lblSearchTextHint.Visible = false;
         }
 
         private void tbSearch_Leave(object sender, EventArgs e)
         {
-            lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
+            lblSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (m_settings.StoreBrowserFilters)
-                m_settings.SkillBrowserSearch = tbSearch.Text;
+                m_settings.SkillBrowserSearch = tbSearchText.Text;
             SearchTextChanged();
         }
 
         private void SearchTextChanged()
         {
-            string searchText = tbSearch.Text.ToLower().Trim();
+            string searchText = tbSearchText.Text.ToLower().Trim();
 
             if (String.IsNullOrEmpty(searchText))
             {
                 if (cbSorting.SelectedIndex == 0)
                 {
-                    lbSearchList.Visible = false;
                     tvSkillList.Visible = true;
+                    lbSearchList.Visible = false;
                     lblNoMatches.Visible = false;
                     lvSortedSkillList.Visible = false;
                     return;
                 }
-                //else
-                //{
-                //    lbSearchList.Visible = false;
-                //    lblNoMatches.Visible = false;
-                //    tvSkillList.Visible = false;
-                //    lvSortedSkillList.Visible = true;
-                //}
             }
 
+            // first pass - find everything that matches the search string
             SortedList<string, Skill> filteredItems = new SortedList<string, Skill>();
             foreach (TreeNode gtn in tvSkillList.Nodes)
             {
@@ -493,6 +489,8 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #endregion
+
         private void tvSkillList_AfterSelect(object sender, TreeViewEventArgs e)
         {
             TreeNode tn = tvSkillList.SelectedNode;
@@ -519,8 +517,8 @@ namespace EVEMon.SkillPlanner
                 cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
                 cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
                 if (m_settings.StoreBrowserFilters)
-                    tbSearch.Text = m_settings.SkillBrowserSearch;
-                lblSearchTip.Visible = String.IsNullOrEmpty(tbSearch.Text);
+                    tbSearchText.Text = m_settings.SkillBrowserSearch;
+                lblSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
             catch (Exception err)
             {
@@ -567,7 +565,7 @@ namespace EVEMon.SkillPlanner
         {
             if (e.KeyChar == 0x01)
             {
-                tbSearch.SelectAll();
+                tbSearchText.SelectAll();
                 e.Handled = true;
             }
         }

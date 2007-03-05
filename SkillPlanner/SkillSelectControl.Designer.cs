@@ -31,11 +31,11 @@ namespace EVEMon.SkillPlanner
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillSelectControl));
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
-            this.tbSearch = new System.Windows.Forms.TextBox();
+            this.tbSearchText = new System.Windows.Forms.TextBox();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.tvSkillList = new System.Windows.Forms.TreeView();
             this.lbSearchList = new System.Windows.Forms.ListBox();
-            this.lblSearchTip = new System.Windows.Forms.Label();
+            this.lblSearchTextHint = new System.Windows.Forms.Label();
             this.lblNoMatches = new System.Windows.Forms.Label();
             this.cbShowNonPublic = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -79,19 +79,19 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.TabIndex = 0;
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
-            // tbSearch
+            // tbSearchText
             // 
-            this.tbSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearch.Location = new System.Drawing.Point(31, 54);
-            this.tbSearch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(231, 21);
-            this.tbSearch.TabIndex = 1;
-            this.tbSearch.Enter += new System.EventHandler(this.tbSearch_Enter);
-            this.tbSearch.Leave += new System.EventHandler(this.tbSearch_Leave);
-            this.tbSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
-            this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
+            this.tbSearchText.Location = new System.Drawing.Point(31, 54);
+            this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.tbSearchText.Name = "tbSearchText";
+            this.tbSearchText.Size = new System.Drawing.Size(231, 21);
+            this.tbSearchText.TabIndex = 1;
+            this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
+            this.tbSearchText.Leave += new System.EventHandler(this.tbSearch_Leave);
+            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
+            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
             // 
             // pbSearchImage
             // 
@@ -130,19 +130,19 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
-            // lblSearchTip
+            // lblSearchTextHint
             // 
-            this.lblSearchTip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lblSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblSearchTip.BackColor = System.Drawing.SystemColors.Window;
-            this.lblSearchTip.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblSearchTip.Location = new System.Drawing.Point(32, 56);
-            this.lblSearchTip.Name = "lblSearchTip";
-            this.lblSearchTip.Size = new System.Drawing.Size(68, 14);
-            this.lblSearchTip.TabIndex = 22;
-            this.lblSearchTip.Text = "Search Text";
-            this.lblSearchTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblSearchTip.Click += new System.EventHandler(this.lblSearchTip_Click);
+            this.lblSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
+            this.lblSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblSearchTextHint.Location = new System.Drawing.Point(32, 56);
+            this.lblSearchTextHint.Name = "lblSearchTextHint";
+            this.lblSearchTextHint.Size = new System.Drawing.Size(68, 14);
+            this.lblSearchTextHint.TabIndex = 22;
+            this.lblSearchTextHint.Text = "Search Text";
+            this.lblSearchTextHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblSearchTextHint.Click += new System.EventHandler(this.lblSearchTextHint_Click);
             // 
             // lblNoMatches
             // 
@@ -256,9 +256,9 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.cbSkillFilter);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.pbSearchImage);
-            this.panel1.Controls.Add(this.lblSearchTip);
+            this.panel1.Controls.Add(this.lblSearchTextHint);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.tbSearch);
+            this.panel1.Controls.Add(this.tbSearchText);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
@@ -304,10 +304,10 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.TextBox tbSearch;
+        private System.Windows.Forms.TextBox tbSearchText;
         private System.Windows.Forms.PictureBox pbSearchImage;
         private System.Windows.Forms.ListBox lbSearchList;
-        private System.Windows.Forms.Label lblSearchTip;
+        private System.Windows.Forms.Label lblSearchTextHint;
         private System.Windows.Forms.Label lblNoMatches;
         private System.Windows.Forms.CheckBox cbShowNonPublic;
         private System.Windows.Forms.Label label1;

@@ -51,13 +51,18 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        // Filtering code
+        #region Filters
         private delegate bool ShipFilter(Ship s);
         private ShipFilter sf = delegate { return true; };
 
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_settings.ShipBrowserFilter = cbSkillFilter.SelectedIndex;
+            UpdateDisplay();
+        }
+
+        private void UpdateSkillFilter()
+        {
             switch (cbSkillFilter.SelectedIndex)
             {
                 default:
@@ -108,11 +113,18 @@ namespace EVEMon.SkillPlanner
                              };
                     break;
             }
+        }
+        #endregion
+
+        #region Display
+        private void UpdateDisplay()
+        {
+            UpdateSkillFilter();
             if (m_ships != null)
                 BuildTreeView();
+            SearchTextChanged();
         }
 
-        
         private void BuildTreeView()
         {
             tvShips.Nodes.Clear();
@@ -186,7 +198,9 @@ namespace EVEMon.SkillPlanner
                 tvShips.EndUpdate();
             }
         }
+        #endregion
 
+        #region Search
         private void lbSearchTextHint_Click(object sender, EventArgs e)
         {
             tbSearchText.Focus();
@@ -204,76 +218,87 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
-            bool showListBox = false;
-
             if (m_settings.StoreBrowserFilters)
                 m_settings.ShipBrowserSearch = tbSearchText.Text;
-            if (!String.IsNullOrEmpty(tbSearchText.Text))
-            {
-                string trimmedSearch = tbSearchText.Text.Trim().ToLower();
-                if (!String.IsNullOrEmpty(tbSearchText.Text))
-                {
-                    showListBox = true;
+            SearchTextChanged();
+        }
 
-                    lbShipResults.BeginUpdate();
-                    try
-                    {
-                        lbShipResults.Items.Clear();
-                        SortedList<string, Ship> results = new SortedList<string, Ship>();
-                        foreach (Ship s in m_ships)
-                        {
-                            if (s.Name.ToLower().Contains(trimmedSearch) || s.Description.ToLower().Contains(trimmedSearch))
-                            {
-                                results[s.Name] = s;
-                            }
-                        }
-                        foreach (string shipName in results.Keys)
-                        {
-                            lbShipResults.Items.Add(shipName);
-                        }
-                    }
-                    finally
-                    {
-                        lbShipResults.EndUpdate();
+        private void SearchTextChanged()
+        {
+            string searchText = tbSearchText.Text.Trim().ToLower();
+           
+            if (String.IsNullOrEmpty(searchText))
+            {
+                tvShips.Visible = true;
+                lbSearchList.Visible = false;
+                lbNoMatches.Visible = false;
+                return;
+            }
+            // find everything in the current tree that matches the search string
+            SortedList<string, Ship> filteredItems = new SortedList<string, Ship>();
+            foreach (TreeNode n in tvShips.Nodes)
+            {
+                SearchNode(n,searchText,filteredItems);
+            }
+
+            lbSearchList.BeginUpdate();
+            try
+            {
+                lbSearchList.Items.Clear();
+                if (filteredItems.Count > 0)
+                {
+                    foreach (Ship s in filteredItems.Values)
+                    {   
+                        lbSearchList.Items.Add(s);
                     }
                 }
             }
-
-            tvShips.Visible = !showListBox;
-            lbShipResults.Visible = showListBox;
-            lbNoMatches.Visible = showListBox && (lbShipResults.Items.Count == 0);
-            if (lbNoMatches.Visible)
+            finally
             {
-                lbNoMatches.BringToFront();
+                lbSearchList.EndUpdate();
             }
+            lbSearchList.Visible = true;
+            tvShips.Visible = false;
+            lbNoMatches.Visible = (filteredItems.Count == 0);
         }
 
+        private void SearchNode(TreeNode tn, string searchText, SortedList<string, Ship> filteredItems)
+        {
+            Ship itm = tn.Tag as Ship;
+            if (itm == null)
+            {
+                foreach (TreeNode subNode in tn.Nodes)
+                {
+                    SearchNode(subNode, searchText, filteredItems);
+                }
+                return;
+            }
+            if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
+            {
+                filteredItems.Add(itm.Name, itm);
+            }
+        }
+        
+        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 0x01)
+            {
+                tbSearchText.SelectAll();
+                e.Handled = true;
+            }
+        }
+        #endregion 
+
+        #region Events
         private void tvShips_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode tn = e.Node;
-            if (tn != null)
+            if (tvShips.SelectedNode != null)
             {
-                if (tn.Tag is Ship)
-                {
-                    OnSelectedShipChanged((Ship) tn.Tag);
-                }
+                SetSelectedShip(tvShips.SelectedNode.Tag as Ship);
             }
-        }
-
-        private void lbShipResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idx = lbShipResults.SelectedIndex;
-            if (idx >= 0)
+            else
             {
-                string shipName = (string) lbShipResults.Items[idx];
-                foreach (Ship s in m_ships)
-                {
-                    if (s.Name == shipName)
-                    {
-                        OnSelectedShipChanged(s);
-                        return;
-                    }
-                }
+                SetSelectedShip(null);
             }
         }
 
@@ -285,7 +310,9 @@ namespace EVEMon.SkillPlanner
             set { m_selectedShip = value; }
         }
 
-        private void OnSelectedShipChanged(Ship s)
+        public event EventHandler<EventArgs> SelectedShipChanged;
+
+        private void SetSelectedShip(Ship s)
         {
             m_selectedShip = s;
             if (SelectedShipChanged != null)
@@ -293,16 +320,11 @@ namespace EVEMon.SkillPlanner
                 SelectedShipChanged(this, new EventArgs());
             }
         }
-
-        public event EventHandler<EventArgs> SelectedShipChanged;
-
-        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
+        
+        private void lbShipResults_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
+            SetSelectedShip(lbSearchList.SelectedItem as Ship);
         }
+        #endregion
     }
 }

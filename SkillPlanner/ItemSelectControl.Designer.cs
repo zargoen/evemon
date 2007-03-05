@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ItemSelectControl));
             this.lbNoMatches = new System.Windows.Forms.Label();
-            this.lbItemResults = new System.Windows.Forms.ListBox();
+            this.lbSearchList = new System.Windows.Forms.ListBox();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.tvItems = new System.Windows.Forms.TreeView();
             this.tbSearchText = new System.Windows.Forms.TextBox();
@@ -66,17 +66,17 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lbNoMatches.Visible = false;
             // 
-            // lbItemResults
+            // lbSearchList
             // 
-            this.lbItemResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbItemResults.FormattingEnabled = true;
-            this.lbItemResults.IntegralHeight = false;
-            this.lbItemResults.Location = new System.Drawing.Point(0, 0);
-            this.lbItemResults.Name = "lbItemResults";
-            this.lbItemResults.Size = new System.Drawing.Size(185, 254);
-            this.lbItemResults.TabIndex = 31;
-            this.lbItemResults.Visible = false;
-            this.lbItemResults.SelectedIndexChanged += new System.EventHandler(this.lbItemResults_SelectedIndexChanged);
+            this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbSearchList.FormattingEnabled = true;
+            this.lbSearchList.IntegralHeight = false;
+            this.lbSearchList.Location = new System.Drawing.Point(0, 0);
+            this.lbSearchList.Name = "lbSearchList";
+            this.lbSearchList.Size = new System.Drawing.Size(185, 254);
+            this.lbSearchList.TabIndex = 31;
+            this.lbSearchList.Visible = false;
+            this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbItemResults_SelectedIndexChanged);
             // 
             // lbSearchTextHint
             // 
@@ -275,9 +275,9 @@ namespace EVEMon.SkillPlanner
             // panel2
             // 
             this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lbItemResults);
             this.panel2.Controls.Add(this.lbNoMatches);
             this.panel2.Controls.Add(this.tvItems);
+            this.panel2.Controls.Add(this.lbSearchList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 156);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
@@ -308,7 +308,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private System.Windows.Forms.Label lbNoMatches;
-        private System.Windows.Forms.ListBox lbItemResults;
+        private System.Windows.Forms.ListBox lbSearchList;
         private System.Windows.Forms.Label lbSearchTextHint;
         private System.Windows.Forms.TreeView tvItems;
         private System.Windows.Forms.TextBox tbSearchText;

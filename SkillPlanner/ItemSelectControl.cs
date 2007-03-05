@@ -7,13 +7,12 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ItemSelectControl : UserControl
     {
-        private Settings m_settings;
-
         public ItemSelectControl()
         {
             InitializeComponent();
         }
 
+        private Settings m_settings;
         private Plan m_plan;
         public Plan Plan
         {
@@ -30,8 +29,6 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
- //           cbSkillFilter.SelectedIndex = 0;
- //           cbSlotFilter.SelectedIndex = 0;
 
             try
             {
@@ -65,7 +62,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        // Filtering code
+        #region Filters
         private delegate bool ItemFilter(Item i);
         private static ItemFilter showAll = delegate { return true; };
 
@@ -76,6 +73,11 @@ namespace EVEMon.SkillPlanner
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_settings.ItemSkillFilter=cbSkillFilter.SelectedIndex;
+            UpdateDisplay();
+        }
+
+        private void UpdateSkillFilter()
+        {
             switch (cbSkillFilter.SelectedIndex)
             {
                 default:
@@ -123,8 +125,6 @@ namespace EVEMon.SkillPlanner
                              };
                     break;
             }
-            if (m_rootCategory != null)
-                BuildTreeView();
         }
 
         private bool ClassFilter(Item i)
@@ -152,6 +152,11 @@ namespace EVEMon.SkillPlanner
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_settings.ItemSlotFilter=cbSlotFilter.SelectedIndex;
+            UpdateDisplay();
+        }
+
+        private void UpdateSlotFilter()
+        {
             switch (cbSlotFilter.SelectedIndex)
             {
                 default:
@@ -167,8 +172,6 @@ namespace EVEMon.SkillPlanner
                     slotFilter = delegate(Item i) { return i.SlotIndex == 0; };
                     break;
             }
-            if (m_rootCategory != null)
-                BuildTreeView();
         }
 
         private void cbClass_SelectedChanged(object sender, EventArgs e)
@@ -179,9 +182,20 @@ namespace EVEMon.SkillPlanner
             if (sender == cbOfficer) m_settings.ShowOfficerItems = cbOfficer.Checked;
             if (sender == cbFaction) m_settings.ShowFactionItems = cbFaction.Checked;
             if (sender == cbDeadspace) m_settings.ShowDeadspaceItems = cbDeadspace.Checked;
+            UpdateDisplay();
+        }
+        
+        #endregion
 
+        #region Display
+
+        private void UpdateDisplay()
+        {
+            UpdateSkillFilter();
+            UpdateSlotFilter();
             if (m_rootCategory != null)
                 BuildTreeView();
+            SearchTextChanged();
         }
 
         private void BuildTreeView()
@@ -237,7 +251,9 @@ namespace EVEMon.SkillPlanner
                 nodeCollection.Add(tn);
             }
         }
+        #endregion
 
+        #region Search
         private void lbSearchTextHint_Click(object sender, EventArgs e)
         {
             tbSearchText.Focus();
@@ -255,62 +271,84 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
-            if (m_rootCategory == null) return;
+
             if (m_settings.StoreBrowserFilters)
                 m_settings.ItemBrowserSearch = tbSearchText.Text;
-            if (String.IsNullOrEmpty(tbSearchText.Text) ||
-                String.IsNullOrEmpty(tbSearchText.Text.Trim()))
+            SearchTextChanged();
+        }
+
+        private void SearchTextChanged()
+        {
+            if (m_rootCategory == null) return;
+
+            string searchText = tbSearchText.Text.Trim().ToLower();
+
+            if (String.IsNullOrEmpty(searchText))
             {
                 tvItems.Visible = true;
-                lbItemResults.Visible = false;
+                lbSearchList.Visible = false;
                 lbNoMatches.Visible = false;
                 return;
             }
 
-            string searchText = tbSearchText.Text.Trim().ToLower();
-            SortedList<string, Item> searchedItems = new SortedList<string, Item>();
-            SearchCategory(m_rootCategory, searchText, searchedItems);
-
-            lbItemResults.BeginUpdate();
+            // first pass - find everything in the current tree matches the search string
+            SortedList<string, Item> filteredItems = new SortedList<string, Item>();
+            foreach (TreeNode n in tvItems.Nodes)
+            {
+                SearchNode(n,searchText,filteredItems);
+            }
+            lbSearchList.BeginUpdate();
             try
             {
-                lbItemResults.Items.Clear();
-                if (searchedItems.Count > 0)
+                lbSearchList.Items.Clear();
+                if (filteredItems.Count > 0)
                 {
-                    foreach (Item i in searchedItems.Values)
+                    foreach (Item i in filteredItems.Values)
                     {
-                        lbItemResults.Items.Add(i);
+                        lbSearchList.Items.Add(i);
                     }
-                }
-                else
-                {
-                    lbNoMatches.Visible = true;
                 }
             }
             finally
             {
-                lbItemResults.EndUpdate();
+                lbSearchList.EndUpdate();
             }
 
-            lbItemResults.Visible = true;
+            lbSearchList.Visible = true;
             tvItems.Visible = false;
+            lbNoMatches.Visible = (filteredItems.Count == 0);
         }
 
-        private void SearchCategory(ItemCategory cat, string searchText, SortedList<string, Item> searchedItems)
+        private void SearchNode(TreeNode tn, string searchText, SortedList<string, Item> filteredItems)
         {
-            foreach (ItemCategory tcat in cat.Subcategories)
+            Item itm = tn.Tag as Item;
+            if (itm == null)
             {
-                SearchCategory(tcat, searchText, searchedItems);
-            }
-            foreach (Item titem in cat.Items)
-            {
-                if (titem.Name.ToLower().Contains(searchText) || titem.Description.ToLower().Contains(searchText))
+                foreach (TreeNode subNode in tn.Nodes)
                 {
-                    searchedItems.Add(titem.Name, titem);
+                    SearchNode(subNode, searchText, filteredItems);
                 }
+                return;
+            }
+            if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
+            {
+                filteredItems.Add(itm.Name, itm);
             }
         }
 
+        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 0x01)
+            {
+                tbSearchText.SelectAll();
+                e.Handled = true;
+            }
+
+        }
+
+        #endregion 
+
+        #region Events
         private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (tvItems.SelectedNode != null)
@@ -344,17 +382,8 @@ namespace EVEMon.SkillPlanner
 
         private void lbItemResults_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetSelectedItem(lbItemResults.SelectedItem as Item);
+            SetSelectedItem(lbSearchList.SelectedItem as Item);
         }
-
-        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
-
-        }
+        #endregion
     }
 }

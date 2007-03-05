@@ -34,7 +34,7 @@ namespace EVEMon.SkillPlanner
             this.tvShips = new System.Windows.Forms.TreeView();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
-            this.lbShipResults = new System.Windows.Forms.ListBox();
+            this.lbSearchList = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -111,16 +111,16 @@ namespace EVEMon.SkillPlanner
             // 
             // lbShipResults
             // 
-            this.lbShipResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbShipResults.FormattingEnabled = true;
-            this.lbShipResults.IntegralHeight = false;
-            this.lbShipResults.Location = new System.Drawing.Point(0, 0);
-            this.lbShipResults.Margin = new System.Windows.Forms.Padding(2);
-            this.lbShipResults.Name = "lbShipResults";
-            this.lbShipResults.Size = new System.Drawing.Size(185, 344);
-            this.lbShipResults.TabIndex = 25;
-            this.lbShipResults.Visible = false;
-            this.lbShipResults.SelectedIndexChanged += new System.EventHandler(this.lbShipResults_SelectedIndexChanged);
+            this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbSearchList.FormattingEnabled = true;
+            this.lbSearchList.IntegralHeight = false;
+            this.lbSearchList.Location = new System.Drawing.Point(0, 0);
+            this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
+            this.lbSearchList.Name = "lbShipResults";
+            this.lbSearchList.Size = new System.Drawing.Size(185, 344);
+            this.lbSearchList.TabIndex = 25;
+            this.lbSearchList.Visible = false;
+            this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbShipResults_SelectedIndexChanged);
             // 
             // panel1
             // 
@@ -165,7 +165,7 @@ namespace EVEMon.SkillPlanner
             // panel2
             // 
             this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lbShipResults);
+            this.panel2.Controls.Add(this.lbSearchList);
             this.panel2.Controls.Add(this.lbNoMatches);
             this.panel2.Controls.Add(this.tvShips);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -203,7 +203,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TreeView tvShips;
         private System.Windows.Forms.Label lbSearchTextHint;
         private System.Windows.Forms.Label lbNoMatches;
-        private System.Windows.Forms.ListBox lbShipResults;
+        private System.Windows.Forms.ListBox lbSearchList;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ComboBox cbSkillFilter;
