@@ -98,10 +98,29 @@ namespace EVEMon.SkillPlanner
                                          // unknown or no skill - assume we can use it
                                          return true;
                                      }
-
-             }
-             return true;
-         };
+                                 }
+                                 return true;
+                             };
+                    break;
+                case 2: // Items I Can NOT Use
+                    skillFilter = delegate(Item i)
+                             {
+                                 Skill gs = null;
+                                 for (int x = 0; x < i.RequiredSkills.Count; x++)
+                                 {
+                                     try
+                                     {
+                                         gs = m_plan.GrandCharacterInfo.GetSkill(i.RequiredSkills[x].Name);
+                                         if (gs.Level < i.RequiredSkills[x].Level) return true;
+                                     }
+                                     catch
+                                     {
+                                         // unknown or no skill - assume we can use it
+                                         return false;
+                                     }
+                                 }
+                                 return false;
+                             };
                     break;
             }
             if (m_rootCategory != null)

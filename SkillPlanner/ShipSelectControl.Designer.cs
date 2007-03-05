@@ -144,7 +144,8 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.FormattingEnabled = true;
             this.cbSkillFilter.Items.AddRange(new object[] {
             "All Ships",
-            "Ships I Can Fly"});
+            "Ships I Can Fly",
+            "Ships I Can NOT Fly"});
             this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSkillFilter.Name = "cbSkillFilter";

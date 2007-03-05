@@ -255,7 +255,8 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.FormattingEnabled = true;
             this.cbSkillFilter.Items.AddRange(new object[] {
             "All Items",
-            "Items I Can Use"});
+            "Items I Can Use",
+            "Items I Can NOT Use"});
             this.cbSkillFilter.Location = new System.Drawing.Point(38, 3);
             this.cbSkillFilter.Name = "cbSkillFilter";
             this.cbSkillFilter.Size = new System.Drawing.Size(147, 21);

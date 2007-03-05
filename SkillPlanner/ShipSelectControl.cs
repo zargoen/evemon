@@ -67,16 +67,44 @@ namespace EVEMon.SkillPlanner
                                  return true;
                              };
                     break;
-                case 1: // Ships I can fly
+                case 1: // Ships I Can fly
                     sf = delegate(Ship s)
                              {
-                                 Skill gs=null;
-                                 for (int i = 0; i < s.RequiredSkills.Count;i++)
+                                 Skill gs = null;
+                                 for (int i = 0; i < s.RequiredSkills.Count; i++)
                                  {
-                                    gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
-                                    if (gs.Level < s.RequiredSkills[i].Level) return false;
+                                     try
+                                     {
+                                         gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
+                                         if (gs.Level < s.RequiredSkills[i].Level) return false;
+                                     }
+                                     catch
+                                     {
+                                         // unknown or no skill - assume we can use it
+                                         return true;
+                                     }
                                  }
                                  return true;
+                             };
+                    break;
+                case 2: // Ships I Can NOT fly
+                    sf = delegate(Ship s)
+                             {
+                                 Skill gs = null;
+                                 for (int i = 0; i < s.RequiredSkills.Count; i++)
+                                 {
+                                     try
+                                     {
+                                         gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
+                                         if (gs.Level < s.RequiredSkills[i].Level) return true;
+                                     }
+                                     catch
+                                     {
+                                         // unknown or no skill - assume we can use it
+                                         return false;
+                                     }
+                                 }
+                                 return false;
                              };
                     break;
             }
