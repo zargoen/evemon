@@ -288,16 +288,16 @@ namespace EVEMon
             // saveFileDialog
             // 
             this.saveFileDialog.DefaultExt = "xml";
-            this.saveFileDialog.FileName = "settings.xml";
-            this.saveFileDialog.Filter = "Settings Files (*.xml) | *.xml";
+            this.saveFileDialog.FileName = "settings.xml.bak";
+            this.saveFileDialog.Filter = "Settings Backup Files (*.bak) | *.bak";
             this.saveFileDialog.Title = "Backup Your Settings File";
             this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
             // openFileDialog
             // 
             this.openFileDialog.DefaultExt = "xml";
-            this.openFileDialog.FileName = "settings.xml";
-            this.openFileDialog.Filter = "settings (*.xml) | *.xml";
+            this.openFileDialog.FileName = "settings.xml.bak";
+            this.openFileDialog.Filter = "Settings Backup Files (*.bak) | *.bak";
             this.openFileDialog.ShowHelp = true;
             this.openFileDialog.Title = "Restore your settings file";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);

@@ -1167,8 +1167,10 @@ namespace EVEMon
                 AutoShrink.Dirty(new TimeSpan(0, 0, 0, 0, 500)); // Clean up after 500 ms
         }
 
+        private string m_currntDirectory = String.Empty;
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            m_currntDirectory = Directory.GetCurrentDirectory();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
             saveFileDialog.ShowDialog();
         }
@@ -1176,21 +1178,25 @@ namespace EVEMon
         private void saveFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             File.Copy(Settings.SettingsFileName, saveFileDialog.FileName, true);
+            // restore the working directory to orginal startup directory
+            Directory.SetCurrentDirectory(m_currntDirectory);
         }
 
         private void openFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            m_settings = Settings.Restore(openFileDialog.FileName);
             while (tcCharacterTabs.TabPages.Count > 0)
             {
                 RemoveTab(tcCharacterTabs.TabPages[0]);
             }
-            AddCharacters();
+            Directory.SetCurrentDirectory(m_currntDirectory);
+            m_settings = Settings.Restore(openFileDialog.FileName);
             m_settings.Save();
+            AddCharacters();
         }
 
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            m_currntDirectory = Directory.GetCurrentDirectory();
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
             openFileDialog.ShowDialog();
         }
