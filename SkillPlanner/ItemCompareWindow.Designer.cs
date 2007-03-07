@@ -69,15 +69,13 @@ namespace EVEMon.SkillPlanner
             // 
             // itemSelectControl1
             // 
-            this.itemSelectControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.itemSelectControl1.Location = new System.Drawing.Point(11, 24);
+            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(2);
             this.itemSelectControl1.Name = "itemSelectControl1";
             this.itemSelectControl1.Plan = null;
-            this.itemSelectControl1.SelectedItem = null;
+            this.itemSelectControl1.SelectedObject = null;
             this.itemSelectControl1.Size = new System.Drawing.Size(196, 425);
             this.itemSelectControl1.TabIndex = 3;
             // 
@@ -91,7 +89,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCompare);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ItemCompareWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Compare With...";

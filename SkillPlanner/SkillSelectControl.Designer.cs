@@ -33,10 +33,10 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.tbSearchText = new System.Windows.Forms.TextBox();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
-            this.tvSkillList = new System.Windows.Forms.TreeView();
+            this.tvItems = new System.Windows.Forms.TreeView();
             this.lbSearchList = new System.Windows.Forms.ListBox();
-            this.lblSearchTextHint = new System.Windows.Forms.Label();
-            this.lblNoMatches = new System.Windows.Forms.Label();
+            this.lbSearchTextHint = new System.Windows.Forms.Label();
+            this.lbNoMatches = new System.Windows.Forms.Label();
             this.cbShowNonPublic = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbSorting = new System.Windows.Forms.ComboBox();
@@ -105,17 +105,17 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage.TabIndex = 19;
             this.pbSearchImage.TabStop = false;
             // 
-            // tvSkillList
+            // tvItems
             // 
-            this.tvSkillList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.tvItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvSkillList.Location = new System.Drawing.Point(0, 0);
-            this.tvSkillList.Margin = new System.Windows.Forms.Padding(2);
-            this.tvSkillList.Name = "tvSkillList";
-            this.tvSkillList.Size = new System.Drawing.Size(262, 313);
-            this.tvSkillList.TabIndex = 20;
-            this.tvSkillList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
+            this.tvItems.Location = new System.Drawing.Point(0, 0);
+            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
+            this.tvItems.Name = "tvItems";
+            this.tvItems.Size = new System.Drawing.Size(262, 313);
+            this.tvItems.TabIndex = 20;
+            this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
             // 
             // lbSearchList
             // 
@@ -130,35 +130,35 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
-            // lblSearchTextHint
+            // lbSearchTextHint
             // 
-            this.lblSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
-            this.lblSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblSearchTextHint.Location = new System.Drawing.Point(32, 56);
-            this.lblSearchTextHint.Name = "lblSearchTextHint";
-            this.lblSearchTextHint.Size = new System.Drawing.Size(68, 14);
-            this.lblSearchTextHint.TabIndex = 22;
-            this.lblSearchTextHint.Text = "Search Text";
-            this.lblSearchTextHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblSearchTextHint.Click += new System.EventHandler(this.lblSearchTextHint_Click);
+            this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
+            this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lbSearchTextHint.Location = new System.Drawing.Point(32, 56);
+            this.lbSearchTextHint.Name = "lbSearchTextHint";
+            this.lbSearchTextHint.Size = new System.Drawing.Size(68, 14);
+            this.lbSearchTextHint.TabIndex = 22;
+            this.lbSearchTextHint.Text = "Search Text";
+            this.lbSearchTextHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbSearchTextHint.Click += new System.EventHandler(this.lblSearchTextHint_Click);
             // 
-            // lblNoMatches
+            // lbNoMatches
             // 
-            this.lblNoMatches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lbNoMatches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblNoMatches.BackColor = System.Drawing.SystemColors.Window;
-            this.lblNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoMatches.Location = new System.Drawing.Point(4, 23);
-            this.lblNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblNoMatches.Name = "lblNoMatches";
-            this.lblNoMatches.Padding = new System.Windows.Forms.Padding(4);
-            this.lblNoMatches.Size = new System.Drawing.Size(256, 22);
-            this.lblNoMatches.TabIndex = 23;
-            this.lblNoMatches.Text = "No skills match your search.";
-            this.lblNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblNoMatches.Visible = false;
+            this.lbNoMatches.BackColor = System.Drawing.SystemColors.Window;
+            this.lbNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lbNoMatches.Location = new System.Drawing.Point(4, 23);
+            this.lbNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbNoMatches.Name = "lbNoMatches";
+            this.lbNoMatches.Padding = new System.Windows.Forms.Padding(4);
+            this.lbNoMatches.Size = new System.Drawing.Size(256, 22);
+            this.lbNoMatches.TabIndex = 23;
+            this.lbNoMatches.Text = "No skills match your search.";
+            this.lbNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lbNoMatches.Visible = false;
             // 
             // cbShowNonPublic
             // 
@@ -256,7 +256,7 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.cbSkillFilter);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.pbSearchImage);
-            this.panel1.Controls.Add(this.lblSearchTextHint);
+            this.panel1.Controls.Add(this.lbSearchTextHint);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.tbSearchText);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -269,9 +269,9 @@ namespace EVEMon.SkillPlanner
             // panel2
             // 
             this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lblNoMatches);
+            this.panel2.Controls.Add(this.lbNoMatches);
             this.panel2.Controls.Add(this.lbSearchList);
-            this.panel2.Controls.Add(this.tvSkillList);
+            this.panel2.Controls.Add(this.tvItems);
             this.panel2.Controls.Add(this.lvSortedSkillList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 78);
@@ -307,8 +307,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TextBox tbSearchText;
         private System.Windows.Forms.PictureBox pbSearchImage;
         private System.Windows.Forms.ListBox lbSearchList;
-        private System.Windows.Forms.Label lblSearchTextHint;
-        private System.Windows.Forms.Label lblNoMatches;
+        private System.Windows.Forms.Label lbSearchTextHint;
+        private System.Windows.Forms.Label lbNoMatches;
         private System.Windows.Forms.CheckBox cbShowNonPublic;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbSorting;
@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chSortKey;
         private System.Windows.Forms.ImageList ilSkillIcons1;
-        public System.Windows.Forms.TreeView tvSkillList;
+        public System.Windows.Forms.TreeView tvItems;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ComboBox cbSkillFilter;

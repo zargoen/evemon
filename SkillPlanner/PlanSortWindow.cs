@@ -334,10 +334,10 @@ namespace EVEMon.SkillPlanner
                         // but do we have the prereqs already added to the sorted plan?
                         foreach (Skill.Prereq pp in thisSkill.Prereqs)
                         {
-                            if (pp.Skill.Level < pp.RequiredLevel)
+                            if (pp.Skill.Level < pp.Level)
                             {
                                 if (!m_trainedLevels.ContainsKey(pp.Name) ||
-                                    m_trainedLevels[pp.Name] < pp.RequiredLevel)
+                                    m_trainedLevels[pp.Name] < pp.Level)
                                 {
                                     // prereq not yet added to sorted plan so this isn't a candidate
                                     canInsert = false;

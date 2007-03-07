@@ -5,43 +5,37 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ItemSelectControl : UserControl
+    public partial class ItemSelectControl : EveObjectSelectControl 
     {
         public ItemSelectControl()
         {
             InitializeComponent();
         }
 
-        private Settings m_settings;
-        private Plan m_plan;
-        public Plan Plan
-        {
-            get { return m_plan; }
-            set { m_plan = value; }
-        }
-
-
         private ItemCategory m_rootCategory;
 
-        private void ItemSelectControl_Load(object sender, EventArgs e)
+        protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             if (this.DesignMode)
             {
                 return;
             }
+            base.EveObjectSelectControl_Load(sender, e);
 
             try
             {
-                m_settings = Settings.GetInstance();
                 cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
                 cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
-
                 cbTech1.Checked = m_settings.ShowT1Items;
                 cbNamed.Checked = m_settings.ShowNamedItems;
                 cbTech2.Checked = m_settings.ShowT2Items;
                 cbOfficer.Checked = m_settings.ShowOfficerItems;
                 cbFaction.Checked = m_settings.ShowFactionItems;
                 cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
+
+                this.cbSkillFilter.Items[0] = "All Items";
+                this.cbSkillFilter.Items[1] = "Items I can use";
+                this.cbSkillFilter.Items[2] = "Items I cannot use";
 
                 m_rootCategory = ItemCategory.GetRootCategory();
 
@@ -64,11 +58,7 @@ namespace EVEMon.SkillPlanner
 
         #region Filters
         private delegate bool ItemFilter(Item i);
-        private static ItemFilter showAll = delegate { return true; };
-
-        private ItemFilter skillFilter = showAll;
-        
-        private ItemFilter slotFilter = showAll;
+        private  ItemFilter slotFilter = delegate { return true; };
 
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -81,48 +71,13 @@ namespace EVEMon.SkillPlanner
             switch (cbSkillFilter.SelectedIndex)
             {
                 default:
-                case 0: // All Items
-                    skillFilter = showAll;
+                case 0: m_filterDelegate = SelectAll;
                     break;
-                case 1: // Items I can use
-                    skillFilter = delegate(Item i)
-                             {
-                                 Skill gs = null;
-                                 for (int x = 0; x < i.RequiredSkills.Count; x++)
-                                 {
-                                     try
-                                     {
-                                         gs = m_plan.GrandCharacterInfo.GetSkill(i.RequiredSkills[x].Name);
-                                         if (gs.Level < i.RequiredSkills[x].Level) return false;
-                                     }
-                                     catch
-                                     {
-                                         // unknown or no skill - assume we can use it
-                                         return true;
-                                     }
-                                 }
-                                 return true;
-                             };
+                case 1: // Items I Can fly
+                    m_filterDelegate = CanUse;
                     break;
-                case 2: // Items I Can NOT Use
-                    skillFilter = delegate(Item i)
-                             {
-                                 Skill gs = null;
-                                 for (int x = 0; x < i.RequiredSkills.Count; x++)
-                                 {
-                                     try
-                                     {
-                                         gs = m_plan.GrandCharacterInfo.GetSkill(i.RequiredSkills[x].Name);
-                                         if (gs.Level < i.RequiredSkills[x].Level) return true;
-                                     }
-                                     catch
-                                     {
-                                         // unknown or no skill - assume we can use it
-                                         return false;
-                                     }
-                                 }
-                                 return false;
-                             };
+                case 2: // Items I Can NOT fly
+                    m_filterDelegate = CannotUse;
                     break;
             }
         }
@@ -161,7 +116,7 @@ namespace EVEMon.SkillPlanner
             {
                 default:
                 case 0: // All items
-                    slotFilter = showAll;
+                    slotFilter = delegate { return true; };
                     break;
                 case 1: // High slot
                 case 2: // Mid slot
@@ -240,7 +195,7 @@ namespace EVEMon.SkillPlanner
             SortedDictionary<string, Item> sortedItems = new SortedDictionary<string, Item>();
             foreach (Item titem in cat.Items)
             {
-                if (skillFilter(titem) && slotFilter(titem) && ClassFilter(titem))
+                if (m_filterDelegate(titem) && slotFilter(titem) && ClassFilter(titem))
                     sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)
@@ -254,136 +209,19 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         #region Search
-        private void lbSearchTextHint_Click(object sender, EventArgs e)
-        {
-            tbSearchText.Focus();
-        }
-
-        private void tbSearchText_Enter(object sender, EventArgs e)
-        {
-            lbSearchTextHint.Visible = false;
-        }
-
-        private void tbSearchText_Leave(object sender, EventArgs e)
-        {
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-        }
-
-        private void tbSearchText_TextChanged(object sender, EventArgs e)
+  
+        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
         {
 
             if (m_settings.StoreBrowserFilters)
                 m_settings.ItemBrowserSearch = tbSearchText.Text;
-            SearchTextChanged();
+            base.tbSearchText_TextChanged(sender, e);
         }
 
-        private void SearchTextChanged()
-        {
-            if (m_rootCategory == null) return;
-
-            string searchText = tbSearchText.Text.Trim().ToLower();
-
-            if (String.IsNullOrEmpty(searchText))
-            {
-                tvItems.Visible = true;
-                lbSearchList.Visible = false;
-                lbNoMatches.Visible = false;
-                return;
-            }
-
-            // first pass - find everything in the current tree matches the search string
-            SortedList<string, Item> filteredItems = new SortedList<string, Item>();
-            foreach (TreeNode n in tvItems.Nodes)
-            {
-                SearchNode(n,searchText,filteredItems);
-            }
-            lbSearchList.BeginUpdate();
-            try
-            {
-                lbSearchList.Items.Clear();
-                if (filteredItems.Count > 0)
-                {
-                    foreach (Item i in filteredItems.Values)
-                    {
-                        lbSearchList.Items.Add(i);
-                    }
-                }
-            }
-            finally
-            {
-                lbSearchList.EndUpdate();
-            }
-
-            lbSearchList.Visible = true;
-            tvItems.Visible = false;
-            lbNoMatches.Visible = (filteredItems.Count == 0);
-        }
-
-        private void SearchNode(TreeNode tn, string searchText, SortedList<string, Item> filteredItems)
-        {
-            Item itm = tn.Tag as Item;
-            if (itm == null)
-            {
-                foreach (TreeNode subNode in tn.Nodes)
-                {
-                    SearchNode(subNode, searchText, filteredItems);
-                }
-                return;
-            }
-            if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
-            {
-                filteredItems.Add(itm.Name, itm);
-            }
-        }
-
-        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
-
-        }
 
         #endregion 
 
         #region Events
-        private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (tvItems.SelectedNode != null)
-            {
-                SetSelectedItem(tvItems.SelectedNode.Tag as Item);
-            }
-            else
-            {
-                SetSelectedItem(null);
-            }
-        }
-
-        private Item m_selectedItem = null;
-
-        public Item SelectedItem
-        {
-            get { return m_selectedItem; }
-            set { SetSelectedItem(value); }
-        }
-
-        public event EventHandler<EventArgs> SelectedItemChanged;
-
-        private void SetSelectedItem(Item i)
-        {
-            m_selectedItem = i;
-            if (SelectedItemChanged != null)
-            {
-                SelectedItemChanged(this, new EventArgs());
-            }
-        }
-
-        private void lbItemResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetSelectedItem(lbSearchList.SelectedItem as Item);
-        }
         #endregion
     }
 }

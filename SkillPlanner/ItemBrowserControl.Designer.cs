@@ -29,7 +29,6 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.splitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
-            this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.lvItemProperties = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -44,6 +43,7 @@ namespace EVEMon.SkillPlanner
             this.lblItemName = new System.Windows.Forms.Label();
             this.lblItemCategory = new System.Windows.Forms.Label();
             this.pbItemIcon = new System.Windows.Forms.PictureBox();
+            this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -75,20 +75,6 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.SplitterDistance = 163;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // itemSelectControl1
-            // 
-            this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
-            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(4);
-            this.itemSelectControl1.Name = "itemSelectControl1";
-            this.itemSelectControl1.Plan = null;
-            this.itemSelectControl1.SelectedItem = null;
-            this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
-            this.itemSelectControl1.TabIndex = 1;
-            this.itemSelectControl1.SelectedItemChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
             // 
             // lvItemProperties
             // 
@@ -228,6 +214,20 @@ namespace EVEMon.SkillPlanner
             this.pbItemIcon.TabIndex = 5;
             this.pbItemIcon.TabStop = false;
             // 
+            // itemSelectControl11
+            // 
+            this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
+            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.itemSelectControl1.Name = "itemSelectControl11";
+            this.itemSelectControl1.Plan = null;
+            this.itemSelectControl1.SelectedObject = null;
+            this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
+            this.itemSelectControl1.TabIndex = 0;
+            this.itemSelectControl1.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
+            // 
             // ItemBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -250,7 +250,6 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private EVEMon.SkillPlanner.PersistentSplitContainer splitContainer1;
-        private EVEMon.SkillPlanner.ItemSelectControl itemSelectControl1;
         private System.Windows.Forms.Label lblItemDescription;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblItemName;
@@ -265,5 +264,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnCompareWith;
+        private ItemSelectControl itemSelectControl1;
     }
 }

@@ -5,39 +5,24 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ShipSelectControl : UserControl
+    public partial class ShipSelectControl : EveObjectSelectControl
     {
         public ShipSelectControl()
         {
             InitializeComponent();
         }
 
-        private Settings m_settings;
-        private Plan m_plan;
-        public Plan Plan
-        {
-            get { return m_plan; }
-            set { m_plan = value; }
-        }
-
         private Ship[] m_ships;
 
-        private void ShipSelectControl_Load(object sender, EventArgs e)
+        protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode)
-            {
-                return;
-            }
-
+            base.EveObjectSelectControl_Load(sender,e);
             try
             {
-                m_settings = Settings.GetInstance();
-                //cbSkillFilter.SelectedIndex = 0;
                 cbSkillFilter.SelectedIndex = m_settings.ShipBrowserFilter;
                 m_ships = Ship.GetShips();
                 if (m_settings.StoreBrowserFilters)
                     tbSearchText.Text = m_settings.ShipBrowserSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
                 if (m_ships != null)
                     BuildTreeView();
             }
@@ -49,75 +34,38 @@ namespace EVEMon.SkillPlanner
                 ExceptionHandler.LogException(err, true);
                 return;
             }
+            this.cbSkillFilter.Items[0] = "All Ships";
+            this.cbSkillFilter.Items[1] = "Ships I can fly";
+            this.cbSkillFilter.Items[2] = "Ships I cannot fly";
         }
 
         #region Filters
-        private delegate bool ShipFilter(Ship s);
-        private ShipFilter sf = delegate { return true; };
-
-        private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
+        
+        protected void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_settings.ShipBrowserFilter = cbSkillFilter.SelectedIndex;
             UpdateDisplay();
         }
 
-        private void UpdateSkillFilter()
+        protected void UpdateSkillFilter()
         {
             switch (cbSkillFilter.SelectedIndex)
             {
                 default:
-                case 0: // All Ships
-                    sf = delegate
-                             {
-                                 return true;
-                             };
+                case 0: m_filterDelegate = SelectAll;
                     break;
                 case 1: // Ships I Can fly
-                    sf = delegate(Ship s)
-                             {
-                                 Skill gs = null;
-                                 for (int i = 0; i < s.RequiredSkills.Count; i++)
-                                 {
-                                     try
-                                     {
-                                         gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
-                                         if (gs.Level < s.RequiredSkills[i].Level) return false;
-                                     }
-                                     catch
-                                     {
-                                         // unknown or no skill - assume we can use it
-                                         return true;
-                                     }
-                                 }
-                                 return true;
-                             };
+                    m_filterDelegate = CanUse;
                     break;
                 case 2: // Ships I Can NOT fly
-                    sf = delegate(Ship s)
-                             {
-                                 Skill gs = null;
-                                 for (int i = 0; i < s.RequiredSkills.Count; i++)
-                                 {
-                                     try
-                                     {
-                                         gs = m_plan.GrandCharacterInfo.GetSkill(s.RequiredSkills[i].Name);
-                                         if (gs.Level < s.RequiredSkills[i].Level) return true;
-                                     }
-                                     catch
-                                     {
-                                         // unknown or no skill - assume we can use it
-                                         return false;
-                                     }
-                                 }
-                                 return false;
-                             };
+                    m_filterDelegate = CannotUse;
                     break;
             }
         }
         #endregion
 
         #region Display
-        private void UpdateDisplay()
+        protected void UpdateDisplay()
         {
             UpdateSkillFilter();
             if (m_ships != null)
@@ -125,16 +73,16 @@ namespace EVEMon.SkillPlanner
             SearchTextChanged();
         }
 
-        private void BuildTreeView()
+        protected void BuildTreeView()
         {
-            tvShips.Nodes.Clear();
-            tvShips.BeginUpdate();
+            tvItems.Nodes.Clear();
+            tvItems.BeginUpdate();
             try
             {
                 SortedList<string, List<Ship>> types = new SortedList<string, List<Ship>>();
                 foreach (Ship s in m_ships)
                 {
-                    if (sf(s))
+                    if (m_filterDelegate(s))
                     {
                         // check with filter if this ship is to be ad
                         if (!types.ContainsKey(s.Type))
@@ -190,141 +138,67 @@ namespace EVEMon.SkillPlanner
                         tvn.Nodes.Add(racenode);
                     }
 
-                    tvShips.Nodes.Add(tvn);
+                    tvItems.Nodes.Add(tvn);
                 }
             }
             finally
             {
-                tvShips.EndUpdate();
+                tvItems.EndUpdate();
             }
         }
         #endregion
 
         #region Search
-        private void lbSearchTextHint_Click(object sender, EventArgs e)
-        {
-            tbSearchText.Focus();
-        }
-
-        private void tbSearchText_Enter(object sender, EventArgs e)
-        {
-            lbSearchTextHint.Visible = false;
-        }
-
-        private void tbSearchText_Leave(object sender, EventArgs e)
-        {
-            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-        }
-
-        private void tbSearchText_TextChanged(object sender, EventArgs e)
+        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             if (m_settings.StoreBrowserFilters)
                 m_settings.ShipBrowserSearch = tbSearchText.Text;
-            SearchTextChanged();
+            base.tbSearchText_TextChanged(sender,e);
         }
 
-        private void SearchTextChanged()
-        {
-            string searchText = tbSearchText.Text.Trim().ToLower();
-           
-            if (String.IsNullOrEmpty(searchText))
-            {
-                tvShips.Visible = true;
-                lbSearchList.Visible = false;
-                lbNoMatches.Visible = false;
-                return;
-            }
-            // find everything in the current tree that matches the search string
-            SortedList<string, Ship> filteredItems = new SortedList<string, Ship>();
-            foreach (TreeNode n in tvShips.Nodes)
-            {
-                SearchNode(n,searchText,filteredItems);
-            }
-
-            lbSearchList.BeginUpdate();
-            try
-            {
-                lbSearchList.Items.Clear();
-                if (filteredItems.Count > 0)
-                {
-                    foreach (Ship s in filteredItems.Values)
-                    {   
-                        lbSearchList.Items.Add(s);
-                    }
-                }
-            }
-            finally
-            {
-                lbSearchList.EndUpdate();
-            }
-            lbSearchList.Visible = true;
-            tvShips.Visible = false;
-            lbNoMatches.Visible = (filteredItems.Count == 0);
-        }
-
-        private void SearchNode(TreeNode tn, string searchText, SortedList<string, Ship> filteredItems)
-        {
-            Ship itm = tn.Tag as Ship;
-            if (itm == null)
-            {
-                foreach (TreeNode subNode in tn.Nodes)
-                {
-                    SearchNode(subNode, searchText, filteredItems);
-                }
-                return;
-            }
-            if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
-            {
-                filteredItems.Add(itm.Name, itm);
-            }
-        }
-        
-        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 0x01)
-            {
-                tbSearchText.SelectAll();
-                e.Handled = true;
-            }
-        }
         #endregion 
 
+        protected void InitializeComponent()
+        {
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // cbSkillFilter
+            // 
+            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
+            // 
+            // tvItems
+            // 
+            this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvItems.LineColor = System.Drawing.Color.Black;
+            this.tvItems.Location = new System.Drawing.Point(0, 0);
+            this.tvItems.Size = new System.Drawing.Size(185, 344);
+            // 
+            // lbNoMatches
+            // 
+            this.lbNoMatches.Location = new System.Drawing.Point(4, 2);
+            // 
+            // lbSearchList
+            // 
+            this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbSearchList.Location = new System.Drawing.Point(0, 0);
+            this.lbSearchList.Size = new System.Drawing.Size(185, 344);
+            // 
+            // ShipSelectControl1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.Name = "ShipSelectControl1";
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
         #region Events
-        private void tvShips_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (tvShips.SelectedNode != null)
-            {
-                SetSelectedShip(tvShips.SelectedNode.Tag as Ship);
-            }
-            else
-            {
-                SetSelectedShip(null);
-            }
-        }
-
-        private Ship m_selectedShip = null;
-
-        public Ship SelectedShip
-        {
-            get { return m_selectedShip; }
-            set { m_selectedShip = value; }
-        }
-
-        public event EventHandler<EventArgs> SelectedShipChanged;
-
-        private void SetSelectedShip(Ship s)
-        {
-            m_selectedShip = s;
-            if (SelectedShipChanged != null)
-            {
-                SelectedShipChanged(this, new EventArgs());
-            }
-        }
         
-        private void lbShipResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetSelectedShip(lbSearchList.SelectedItem as Ship);
-        }
         #endregion
     }
 }

@@ -14,8 +14,8 @@ namespace EVEMon.SkillPlanner
 
         public Ship SelectedShip
         {
-            get { return shipSelectControl.SelectedShip; }
-            set { shipSelectControl.SelectedShip = value; }
+            get { return shipSelectControl.SelectedObject as Ship ; }
+            set { shipSelectControl.SelectedObject = value; }
         }
         
         private void btnCancel_Click(object sender, EventArgs e)

@@ -78,9 +78,9 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.shipSelectControl.Name = "shipSelectControl";
             this.shipSelectControl.Plan = null;
-            this.shipSelectControl.SelectedShip = null;
+            this.shipSelectControl.SelectedObject = null;
             this.shipSelectControl.Size = new System.Drawing.Size(199, 428);
-            this.shipSelectControl.TabIndex = 4;
+            this.shipSelectControl.TabIndex = 3;
             // 
             // ShipCompareWindow
             // 
@@ -92,7 +92,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCompare);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ShipCompareWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Compare With...";

@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
                 {
                     if (pr.Skill.Id == m_skill.Id)
                     {
-                        enabledSkills[pr.RequiredLevel - 1].Add(s.Name,s);
+                        enabledSkills[pr.Level - 1].Add(s.Name,s);
                     }
                 }
             }
@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
                {
                    // again, get the instance of this skill from teh current character
                    Skill prs = m_characterInfo.GetSkill(pr.Name);
-                   if (prs.Id != m_skill.Id && prs.Level < pr.RequiredLevel)
+                   if (prs.Id != m_skill.Id && prs.Level < pr.Level)
                    {
                        // there's more prereqs to learn!
                        if (!colorRed) 
@@ -243,7 +243,7 @@ namespace EVEMon.SkillPlanner
                            colorRed = true;
                            sb.Append("Also Need To Train:");
                        }
-                       sb.Append(String.Format("\n{0} {1}", pr.Name, roman[pr.RequiredLevel - 1]));
+                       sb.Append(String.Format("\n{0} {1}", pr.Name, roman[pr.Level - 1]));
                        colorRed = true;
                    }
                 }
@@ -1107,7 +1107,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // get the skill instance for the current character to ensure the stats are right
                     Skill prs = m_characterInfo.GetSkill(pr.Name);
-                    sb.Append(FormatPrereq(pr.RequiredLevel, prs, ref prNum));
+                    sb.Append(FormatPrereq(pr.Level, prs, ref prNum));
                 }
                 // shouldn't happen!
                 if (sb.Length == 0) sb.Append("This skill has no untrained prerequisites\n");

@@ -116,7 +116,7 @@ namespace EVEMon.SkillPlanner
         {
             set
             {
-                shipSelectControl.SelectedShip = value;
+                shipSelectControl.SelectedObject = value;
                 shipSelectControl_SelectedShipChanged(this, null);
             }
         }
@@ -130,9 +130,9 @@ namespace EVEMon.SkillPlanner
             }
             pbShipImage.Image = b;
 
-            if (shipSelectControl.SelectedShip != null)
+            if (shipSelectControl.SelectedObject != null)
             {
-                Ship s = shipSelectControl.SelectedShip;
+                Ship s = shipSelectControl.SelectedObject as Ship;
                 int shipId = s.Id;
 
                 if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources"))
@@ -318,11 +318,11 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            if (shipSelectControl.SelectedShip == null)
+            if (shipSelectControl.SelectedObject == null)
             {
                 return;
             }
-            if (shipId != shipSelectControl.SelectedShip.Id)
+            if (shipId != shipSelectControl.SelectedObject.Id)
             {
                 return;
             }
@@ -332,7 +332,7 @@ namespace EVEMon.SkillPlanner
         
         private void btnShipSkillsAdd_Click(object sender, EventArgs e)
         {
-            Ship s = shipSelectControl.SelectedShip;
+            Ship s = shipSelectControl.SelectedObject as Ship;
             if (s == null)
             {
                 return;
@@ -365,7 +365,7 @@ namespace EVEMon.SkillPlanner
         private void btnCompareWith_Click(object sender, EventArgs e)
         {
             // ask user to select a ship for comparison
-            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedShip,m_plan);
+            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedObject as Ship, m_plan);
             if (selectedShip != null)
             {
                 lvShipProperties.BeginUpdate();

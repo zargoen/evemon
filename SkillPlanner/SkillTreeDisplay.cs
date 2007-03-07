@@ -288,7 +288,7 @@ namespace EVEMon.SkillPlanner
                 List<SkillInfo> thisLevel = m_layoutData[level];
 
                 SkillInfo si = new SkillInfo(pp.Skill, parentSi);
-                si.RequiredLevel = pp.RequiredLevel;
+                si.RequiredLevel = pp.Level;
                 if (thisLevel.Count == 0)
                 {
                     si.Left = -10;

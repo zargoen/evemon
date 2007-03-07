@@ -7,13 +7,10 @@ using System.Collections;
 
 namespace EVEMon.Common
 {
-    public class Skill
+    public class Skill : EveObject
     {
         private CharacterInfo m_owner;
         private bool m_public;
-        private string m_name;
-        private int m_id;
-        private string m_description;
         private string m_descriptionNl;
         private EveAttribute m_primaryAttribute;
         private EveAttribute m_secondaryAttribute;
@@ -30,9 +27,9 @@ namespace EVEMon.Common
         {
             m_owner = gci;
             m_public = pub;
-            m_name = name;
-            m_id = id;
-            m_description = description;
+            _name = name;
+            _id = id;
+            _description = description;
             m_descriptionNl = description;
             m_primaryAttribute = a1;
             m_secondaryAttribute = a2;
@@ -119,23 +116,23 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_name == "Analytical Mind" || m_name == "Logic")
+                if (_name == "Analytical Mind" || _name == "Logic")
                 {
                     return EveAttribute.Intelligence;
                 }
-                else if (m_name == "Empathy" || m_name == "Presence")
+                else if (_name == "Empathy" || _name == "Presence")
                 {
                     return EveAttribute.Charisma;
                 }
-                else if (m_name == "Instant Recall" || m_name == "Eidetic Memory")
+                else if (_name == "Instant Recall" || _name == "Eidetic Memory")
                 {
                     return EveAttribute.Memory;
                 }
-                else if (m_name == "Iron Will" || m_name == "Focus")
+                else if (_name == "Iron Will" || _name == "Focus")
                 {
                     return EveAttribute.Willpower;
                 }
-                else if (m_name == "Spatial Awareness" || m_name == "Clarity")
+                else if (_name == "Spatial Awareness" || _name == "Clarity")
                 {
                     return EveAttribute.Perception;
                 }
@@ -243,21 +240,6 @@ namespace EVEMon.Common
         public bool Public
         {
             get { return m_public; }
-        }
-
-        public string Name
-        {
-            get { return m_name; }
-        }
-
-        public int Id
-        {
-            get { return m_id; }
-        }
-
-        public string Description
-        {
-            get { return m_description; }
         }
 
         public string DescriptionNl
@@ -478,16 +460,9 @@ namespace EVEMon.Common
         public event EventHandler Changed;
         public event EventHandler TrainingStatusChanged;
 
-        public class Prereq
+        public class Prereq : EntityRequiredSkill 
         {
-            private string m_name;
             private Skill m_pointedSkill;
-            private int m_requiredLevel;
-
-            public string Name
-            {
-                get { return m_name; }
-            }
 
             public Skill Skill
             {
@@ -503,16 +478,11 @@ namespace EVEMon.Common
                 m_pointedSkill = gs;
             }
 
-            public int RequiredLevel
-            {
-                get { return m_requiredLevel; }
-            }
-
             internal Prereq(string name, int requiredLevel)
             {
-                m_name = name;
+                _name = name;
                 m_pointedSkill = null;
-                m_requiredLevel = requiredLevel;
+                _level = requiredLevel;
             }
         }
 
@@ -650,7 +620,7 @@ namespace EVEMon.Common
                 }
 
                 int fromPoints = gs.CurrentSkillPoints;
-                int toPoints = gs.GetPointsRequiredForLevel(pp.RequiredLevel);
+                int toPoints = gs.GetPointsRequiredForLevel(pp.Level);
                 if (alreadyCountedList.ContainsKey(gs))
                 {
                     fromPoints = alreadyCountedList[gs];
@@ -673,7 +643,7 @@ namespace EVEMon.Common
             {
                 foreach (Prereq pp in this.Prereqs)
                 {
-                    if (pp.Skill.Level < pp.RequiredLevel)
+                    if (pp.Skill.Level < pp.Level)
                     {
                         return false;
                     }
@@ -719,7 +689,7 @@ namespace EVEMon.Common
             {
                 if (pp.Skill == gs)
                 {
-                    neededLevel = pp.RequiredLevel;
+                    neededLevel = pp.Level;
                     return true;
                 }
                 if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel, true))

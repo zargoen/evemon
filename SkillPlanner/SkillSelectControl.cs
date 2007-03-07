@@ -88,7 +88,7 @@ namespace EVEMon.SkillPlanner
 
         public void UseIconSet(int index)
         {
-            tvSkillList.ImageList = GetIconSet(index);
+            tvItems.ImageList = GetIconSet(index);
             UpdateSkillDisplay();
         }
 
@@ -219,12 +219,12 @@ namespace EVEMon.SkillPlanner
             {
                 def = this.ilSkillIcons1;
             }
-            tvSkillList.Nodes.Clear();
-            tvSkillList.ImageList = def;
-            tvSkillList.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            tvItems.Nodes.Clear();
+            tvItems.ImageList = def;
+            tvItems.ImageList.ColorDepth = ColorDepth.Depth32Bit;
             foreach (SkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
-                TreeNode gtn = new TreeNode(gsg.Name, tvSkillList.ImageList.Images.IndexOfKey("book"), tvSkillList.ImageList.Images.IndexOfKey("book"));
+                TreeNode gtn = new TreeNode(gsg.Name, tvItems.ImageList.Images.IndexOfKey("book"), tvItems.ImageList.Images.IndexOfKey("book"));
                 foreach (Skill gs in gsg)
                 {
                     if (sf(gs) && (gs.Public || cbShowNonPublic.Checked))
@@ -237,21 +237,21 @@ namespace EVEMon.SkillPlanner
                         {
                             if (gs.PartiallyTrained)
                             {
-                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl0"), tvSkillList.ImageList.Images.IndexOfKey("lvl0"));
+                                stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("lvl0"), tvItems.ImageList.Images.IndexOfKey("lvl0"));
                             }
                             else
                             {
                                 if (gs.Owned)
-                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("Book"), tvSkillList.ImageList.Images.IndexOfKey("Book"));
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("Book"), tvItems.ImageList.Images.IndexOfKey("Book"));
                                 else if (gs.PrerequisitesMet) // prereqs met
-                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsMet"));
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("PrereqsMet"), tvItems.ImageList.Images.IndexOfKey("PrereqsMet"));
                                 else
-                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvSkillList.ImageList.Images.IndexOfKey("PrereqsNOTMet"));
+                                    stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet"));
                             }
                         }
                         else
                         {
-                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvSkillList.ImageList.Images.IndexOfKey("lvl" + gs.Level), tvSkillList.ImageList.Images.IndexOfKey("lvl" + gs.Level));
+                            stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level), tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level));
                         }
                         stn.Tag = gs;
                         gtn.Nodes.Add(stn);
@@ -259,7 +259,7 @@ namespace EVEMon.SkillPlanner
                 }
                 if (gtn.Nodes.Count > 0)
                 {
-                    tvSkillList.Nodes.Add(gtn);
+                    tvItems.Nodes.Add(gtn);
                 }
             }
         }
@@ -273,12 +273,12 @@ namespace EVEMon.SkillPlanner
 
         private void tbSearch_Enter(object sender, EventArgs e)
         {
-            lblSearchTextHint.Visible = false;
+            lbSearchTextHint.Visible = false;
         }
 
         private void tbSearch_Leave(object sender, EventArgs e)
         {
-            lblSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+            lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
@@ -296,9 +296,9 @@ namespace EVEMon.SkillPlanner
             {
                 if (cbSorting.SelectedIndex == 0)
                 {
-                    tvSkillList.Visible = true;
+                    tvItems.Visible = true;
                     lbSearchList.Visible = false;
-                    lblNoMatches.Visible = false;
+                    lbNoMatches.Visible = false;
                     lvSortedSkillList.Visible = false;
                     return;
                 }
@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
 
             // first pass - find everything that matches the search string
             SortedList<string, Skill> filteredItems = new SortedList<string, Skill>();
-            foreach (TreeNode gtn in tvSkillList.Nodes)
+            foreach (TreeNode gtn in tvItems.Nodes)
             {
                 foreach (TreeNode tn in gtn.Nodes)
                 {
@@ -335,12 +335,12 @@ namespace EVEMon.SkillPlanner
                             lbSearchList.Items.Add(gs);
                         }
 
-                        lbSearchList.Location = tvSkillList.Location;
-                        lbSearchList.Size = tvSkillList.Size;
+                        lbSearchList.Location = tvItems.Location;
+                        lbSearchList.Size = tvItems.Size;
                         lbSearchList.Visible = true;
-                        tvSkillList.Visible = false;
+                        tvItems.Visible = false;
                         lvSortedSkillList.Visible = false;
-                        lblNoMatches.Visible = (filteredItems.Count == 0);
+                        lbNoMatches.Visible = (filteredItems.Count == 0);
                     }
                     finally
                     {
@@ -458,12 +458,12 @@ namespace EVEMon.SkillPlanner
                 chName.Width = -2;
                 chSortKey.Width = -2;
 
-                lvSortedSkillList.Location = tvSkillList.Location;
-                lvSortedSkillList.Size = tvSkillList.Size;
+                lvSortedSkillList.Location = tvItems.Location;
+                lvSortedSkillList.Size = tvItems.Size;
                 lvSortedSkillList.Visible = true;
-                tvSkillList.Visible = false;
+                tvItems.Visible = false;
                 lbSearchList.Visible = false;
-                lblNoMatches.Visible = (sortedItems.Count == 0);
+                lbNoMatches.Visible = (sortedItems.Count == 0);
             }
             finally
             {
@@ -493,7 +493,7 @@ namespace EVEMon.SkillPlanner
 
         private void tvSkillList_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode tn = tvSkillList.SelectedNode;
+            TreeNode tn = tvItems.SelectedNode;
             Skill gs = tn.Tag as Skill;
             if (gs != null)
             {
@@ -518,7 +518,7 @@ namespace EVEMon.SkillPlanner
                 cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
                 if (m_settings.StoreBrowserFilters)
                     tbSearchText.Text = m_settings.SkillBrowserSearch;
-                lblSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
             catch (Exception err)
             {

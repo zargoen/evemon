@@ -94,10 +94,10 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.shipSelectControl.Name = "shipSelectControl";
             this.shipSelectControl.Plan = null;
-            this.shipSelectControl.SelectedShip = null;
+            this.shipSelectControl.SelectedObject = null;
             this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
-            this.shipSelectControl.SelectedShipChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
+            this.shipSelectControl.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
             // 
             // lvShipProperties
             // 
@@ -330,7 +330,6 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private EVEMon.SkillPlanner.PersistentSplitContainer scShipSelect;
-        private EVEMon.SkillPlanner.ShipSelectControl shipSelectControl;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnShipSkillsAdd;
         private System.Windows.Forms.Label lblShipTimeRequired;
@@ -351,6 +350,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnCompareWith;
+        private ShipSelectControl shipSelectControl;
 
 
     }

@@ -34,14 +34,14 @@ namespace EVEMon.SkillPlanner
         {
             set
             {
-                itemSelectControl1.SelectedItem  = value;
+                itemSelectControl1.SelectedObject  = value;
                 itemSelectControl1_SelectedItemChanged(this, null);
             }
         }
 
         private void itemSelectControl1_SelectedItemChanged(object sender, EventArgs e)
         {
-            Item i = itemSelectControl1.SelectedItem;
+            Item i = itemSelectControl1.SelectedObject  as Item;
             foreach (Control c in splitContainer1.Panel2.Controls)
             {
                 c.Visible = (i != null);
@@ -173,8 +173,7 @@ namespace EVEMon.SkillPlanner
                                                  delegate(EveSession sess, Image img)
                                                  {
                                                      if (
-                                                         itemSelectControl1.
-                                                             SelectedItem == i)
+                                                         itemSelectControl1.SelectedObject == i)
                                                      {
                                                          GotItemImage(i.Id, img);
                                                      }
@@ -231,11 +230,11 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
-            if (itemSelectControl1.SelectedItem == null)
+            if (itemSelectControl1.SelectedObject == null)
             {
                 return;
             }
-            if (itemId != itemSelectControl1.SelectedItem.Id)
+            if (itemId != itemSelectControl1.SelectedObject.Id)
             {
                 return;
             }
@@ -249,7 +248,7 @@ namespace EVEMon.SkillPlanner
 
         private void btnItemSkillsAdd_Click(object sender, EventArgs e)
         {
-            Item i = itemSelectControl1.SelectedItem;
+            Item i = itemSelectControl1.SelectedObject as Item;
             if (i == null)
             {
                 return;
@@ -268,7 +267,7 @@ namespace EVEMon.SkillPlanner
         private void btnCompareWith_Click(object sender, EventArgs e)
         {
             // ask user to select an item for comparison
-            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedItem,m_plan);
+            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedObject as Item,m_plan);
             if (selectedItem != null)
             {
                 lvItemProperties.BeginUpdate();

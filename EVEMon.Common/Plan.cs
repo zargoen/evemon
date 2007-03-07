@@ -495,13 +495,13 @@ namespace EVEMon.Common
                     foreach (Skill.Prereq pp in gs.Prereqs)
                     {
                         Skill pgs = pp.Skill;
-                        int prIndex = GetIndexOf(pgs.Name, pp.RequiredLevel);
-                        if (prIndex == -1 && pgs.Level < pp.RequiredLevel)
+                        int prIndex = GetIndexOf(pgs.Name, pp.Level);
+                        if (prIndex == -1 && pgs.Level < pp.Level)
                         {
                             // Not in the plan, and needs to be trained...
                             Plan.Entry npe = new Plan.Entry();
                             npe.SkillName = pgs.Name;
-                            npe.Level = pp.RequiredLevel;
+                            npe.Level = pp.Level;
                             npe.Priority = pe.Priority;
                             npe.EntryType = Plan.Entry.Type.Prerequisite;
                             m_entries.Insert(i, npe);
@@ -732,7 +732,7 @@ namespace EVEMon.Common
             {
                 Skill pgs = pp.Skill;
                 AddPrerequisiteEntries(pgs, planEntries, Note);
-                for (int i = 1; i <= pp.RequiredLevel; i++)
+                for (int i = 1; i <= pp.Level; i++)
                 {
                     // do we already have this planned?
                     if (IsPlanned(pgs, i))
@@ -1614,14 +1614,14 @@ namespace EVEMon.Common
                 }
                 foreach (Skill.Prereq pp in gs.Prereqs)
                 {
-                    string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.RequiredLevel);
+                    string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.Level);
                     if (!contains.ContainsKey(tSkill))
                     {
                         Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Skill.Name,
-                                                                                               pp.RequiredLevel));
+                                                                                               pp.Level));
                         contains[tSkill] = true;
                         result.Insert(0, pep);
-                        BuildPrereqs(pp.Skill, pp.RequiredLevel, result, contains);
+                        BuildPrereqs(pp.Skill, pp.Level, result, contains);
                     }
                 }
             }

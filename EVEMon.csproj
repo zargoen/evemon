@@ -213,11 +213,26 @@
     <Compile Include="SkillPlanner\ChangePriorityForm.Designer.cs">
       <DependentUpon>ChangePriorityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\ItemSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ItemSelectControl.designer.cs">
+      <DependentUpon>ItemSelectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\ShipSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="SkillPlanner\CrossPlanSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SkillPlanner\CrossPlanSelect.Designer.cs">
       <DependentUpon>CrossPlanSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\EveObjectSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\EveObjectSelectControl.designer.cs">
+      <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ItemCompareWindow.cs">
       <SubType>Form</SubType>
@@ -279,12 +294,6 @@
     <Compile Include="SkillPlanner\ItemBrowserControl.Designer.cs">
       <DependentUpon>ItemBrowserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\ItemSelectControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\ItemSelectControl.Designer.cs">
-      <DependentUpon>ItemSelectControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillPlanner\LineDrawControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -332,12 +341,6 @@
     </Compile>
     <Compile Include="SkillPlanner\ShipBrowserControl.Designer.cs">
       <DependentUpon>ShipBrowserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\ShipSelectControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\ShipSelectControl.Designer.cs">
-      <DependentUpon>ShipSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\SkillEnablesForm.cs">
       <SubType>Form</SubType>
@@ -481,13 +484,25 @@
       <SubType>Designer</SubType>
       <DependentUpon>CrossPlanSelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\EveObjectSelectControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ItemCompareWindow.resx">
       <DependentUpon>ItemCompareWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ItemSelectControl.resx">
+      <DependentUpon>ItemSelectControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipCompareWindow.resx">
       <DependentUpon>ShipCompareWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ShipSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\SkillBrowserControl.resx">
       <SubType>Designer</SubType>
@@ -512,10 +527,6 @@
     <EmbeddedResource Include="SkillPlanner\ItemBrowserControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ItemBrowserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\ItemSelectControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ItemSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\LineDrawControl.resx">
       <SubType>Designer</SubType>
@@ -548,10 +559,6 @@
     <EmbeddedResource Include="SkillPlanner\ShipBrowserControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ShipBrowserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ShipSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\SkillEnablesForm.resx">
       <SubType>Designer</SubType>

@@ -14,8 +14,8 @@ namespace EVEMon.SkillPlanner
 
         public Item SelectedItem
         {
-            get { return itemSelectControl1.SelectedItem; }
-            set { itemSelectControl1.SelectedItem = value; }
+            get { return itemSelectControl1.SelectedObject as Item; }
+            set { itemSelectControl1.SelectedObject = value; }
         }
         
         private void btnCancel_Click(object sender, EventArgs e)
