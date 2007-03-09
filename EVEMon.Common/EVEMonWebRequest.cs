@@ -77,8 +77,40 @@ namespace EVEMon.Common
             return GetUrlStream(url, wrs, out junk);
         }
 
+        // Helper variables for the proxy misconfiguartion detetction
+        private static bool _blockingRequests = false;
+        private static Settings _settings;
+        private static ProxySetting _lastProxySettings = null;
+        private static Object _blockLock = new Object();
+        
+        /// <summary>
+        /// The fundamental method for recieving HTTP data. ALL HTTP web requests that EVEMon makes
+        /// must come through this method
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="wrs"></param>
+        /// <param name="resp"></param>
+        /// <returns></returns>
         public static Stream GetUrlStream(string url, WebRequestState wrs, out HttpWebResponse resp)
         {
+            // have we detected a potential proxy misconfiguration?
+            lock (_blockLock)
+            {
+                if (_blockingRequests) 
+                {
+                    // yes, user has requested a block - see if they've changed proxy credentials
+                    if (_settings.HttpProxy.Username == _lastProxySettings.Username && _settings.HttpProxy.Password == _lastProxySettings.Password)
+                    {
+                        resp = null;
+                        return null;
+                    }
+                    
+                    // credentials have changed, let's try again
+                     _lastProxySettings = _settings.HttpProxy;
+                     _blockingRequests = false;
+                }
+            }
+
             while (--wrs.RedirectsRemain > 0)
             {
 #if DEBUG
@@ -91,10 +123,51 @@ namespace EVEMon.Common
                 }
                 catch (WebException ex)
                 {
+                    // The request failed. If this has failed because of a custom proxy misconfiguration,
+                    // then let's give the user the opportunity to block requests so they don;t potentially lock
+                    // their whole internet account! (see trac ticket 503)
                     ExceptionHandler.LogException(ex, true);
                     wrs.RequestError = RequestError.WebException;
                     wrs.WebException = ex;
                     resp = null;
+
+                    lock (_blockLock)
+                    {
+                        // check the flag again in case another thread has set the flag
+                        if (!_blockingRequests)
+                        {
+                            // check if we are using proxy authentication - user might have changed his proxy password
+                            // and not updated EVEMon
+                            if (_settings == null) _settings = Settings.GetInstance();
+                            if (_settings.UseCustomProxySettings && _settings.HttpProxy.Username != String.Empty)
+                            {
+                                // User ha sa custom authenticating proxy  - check the response status to see if it
+                                // could be a result of an incorrect proxy setting
+                                if (ex.Status == WebExceptionStatus.ProtocolError ||
+                                    ex.Status == WebExceptionStatus.RequestProhibitedByProxy ||
+                                    ex.Status == WebExceptionStatus.UnknownError)
+                                {
+                                    // Houston, we have a problem! Strip off parameters so we don; reveal passwords etc.
+                                    string host = url;
+                                    int paramPos = url.IndexOf("?");
+                                    if (paramPos > 0)
+                                        host = url.Substring(0, paramPos);
+
+                                    System.Windows.Forms.DialogResult answer = System.Windows.Forms.MessageBox.Show("EVEMon made a request to " + host + " which failed with the message:\n\n" +
+                                                                        ex.Message + ".\n\nThis may indicate that your proxy settings are incorrect.\n\n" +
+                                                                        "It is recommended that you block further requests until you have checked your proxy authentication setings in EVEMon.\n" +
+                                                                        "If you do not do this, you could lock your internet account!\n\n" +
+                                                                        "Do you wish to temporarily block further traffic until you restart EVEMon or change your authentication settings?",
+                                                                        "Possible proxy misconfiguration", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning);
+                                    if (answer == System.Windows.Forms.DialogResult.Yes)
+                                    {
+                                        _blockingRequests = true;
+                                        _lastProxySettings = _settings.HttpProxy;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     return null;
                 }
                 if (resp.StatusCode == HttpStatusCode.Redirect && wrs.AllowRedirects)
@@ -180,6 +253,7 @@ namespace EVEMon.Common
             return GetUrlString(url, wrs, out junk);
         }
 
+ 
         public static string GetUrlString(string url, WebRequestState wrs, out HttpWebResponse resp)
         {
             Stream s = GetUrlStream(url, wrs, out resp);
@@ -191,7 +265,9 @@ namespace EVEMon.Common
                 }
                 using (StreamReader sr = new StreamReader(s))
                 {
-                    return sr.ReadToEnd();
+                    string response;
+                    response = sr.ReadToEnd();
+                    return response;
                 }
             }
             catch (WebException ex)
