@@ -77,6 +77,9 @@ namespace EVEMon.Common
             return GetUrlStream(url, wrs, out junk);
         }
 
+        // network logging
+        public static event EventHandler<NetworkLogEventArgs> NetworkLogEvent;
+
         // Helper variables for the proxy misconfiguartion detetction
         private static bool _blockingRequests = false;
         private static Settings _settings;
@@ -111,8 +114,23 @@ namespace EVEMon.Common
                 }
             }
 
+            NetworkLogEventArgs args = new NetworkLogEventArgs();
+             
+            if (NetworkLogEvent != null)
+            {
+                args.NetworkLogEventType = NetworkLogEventType.BeginGetUrl;
+                args.Url = url;
+                args.Referer = wrs.Referer;
+            }
+
+
             while (--wrs.RedirectsRemain > 0)
             {
+                if (NetworkLogEvent != null)
+                {
+                    NetworkLogEvent(null, args);
+                }
+
 #if DEBUG
                 Console.WriteLine("Debug:  Redirects Remaining: {0}", wrs.RedirectsRemain);
 #endif
@@ -124,12 +142,21 @@ namespace EVEMon.Common
                 catch (WebException ex)
                 {
                     // The request failed. If this has failed because of a custom proxy misconfiguration,
-                    // then let's give the user the opportunity to block requests so they don;t potentially lock
+                    // then let's give the user the opportunity to block requests so they don't potentially lock
                     // their whole internet account! (see trac ticket 503)
                     ExceptionHandler.LogException(ex, true);
                     wrs.RequestError = RequestError.WebException;
                     wrs.WebException = ex;
                     resp = null;
+
+                    if (NetworkLogEvent != null)
+                    {
+                        args.NetworkLogEventType = NetworkLogEventType.GotUrlFailure;
+                        args.StatusCode = resp.StatusCode;
+                        args.RedirectTo = null;
+                        args.Exception= ex;
+                        NetworkLogEvent(null, args);
+                    }
 
                     lock (_blockLock)
                     {
@@ -141,13 +168,13 @@ namespace EVEMon.Common
                             if (_settings == null) _settings = Settings.GetInstance();
                             if (_settings.UseCustomProxySettings && _settings.HttpProxy.Username != String.Empty)
                             {
-                                // User ha sa custom authenticating proxy  - check the response status to see if it
+                                // User has a custom authenticating proxy  - check the response status to see if it
                                 // could be a result of an incorrect proxy setting
                                 if (ex.Status == WebExceptionStatus.ProtocolError ||
                                     ex.Status == WebExceptionStatus.RequestProhibitedByProxy ||
                                     ex.Status == WebExceptionStatus.UnknownError)
                                 {
-                                    // Houston, we have a problem! Strip off parameters so we don; reveal passwords etc.
+                                    // Houston, we have a problem! Strip off parameters so we don't reveal passwords etc.
                                     string host = url;
                                     int paramPos = url.IndexOf("?");
                                     if (paramPos > 0)
@@ -172,6 +199,7 @@ namespace EVEMon.Common
                 }
                 if (resp.StatusCode == HttpStatusCode.Redirect && wrs.AllowRedirects)
                 {
+
                     string loc = resp.GetResponseHeader("Location");
                     Uri x = new Uri(url);
                     Uri newUri = new Uri(x, loc);
@@ -179,12 +207,29 @@ namespace EVEMon.Common
                     wrs.Referer = url;
                     url = newUri.ToString();
                     resp.Close();
+                    if (NetworkLogEvent != null)
+                    {
+                        args.NetworkLogEventType = NetworkLogEventType.ParsedRedirect;
+                        args.StatusCode = resp.StatusCode;
+                        args.RedirectTo = url;
+                        NetworkLogEvent(null, args);
+                        args.NetworkLogEventType = NetworkLogEventType.Redirected;
+                    }
 
                     continue; // Continue the loop to try and load the redirected content
                 }
 
+                if (NetworkLogEvent != null)
+                {
+                    args.NetworkLogEventType = NetworkLogEventType.GotUrlSuccess;
+                    args.StatusCode = resp.StatusCode;
+                    args.RedirectTo = null;
+                    NetworkLogEvent(null, args);
+                }
+
                 AutoShrink.Dirty();
                 return resp.GetResponseStream();
+
             }
             //did not get an answer before running out of redirects.
             wrs.RedirectsRemain = 0;
@@ -265,9 +310,7 @@ namespace EVEMon.Common
                 }
                 using (StreamReader sr = new StreamReader(s))
                 {
-                    string response;
-                    response = sr.ReadToEnd();
-                    return response;
+                    return sr.ReadToEnd();
                 }
             }
             catch (WebException ex)

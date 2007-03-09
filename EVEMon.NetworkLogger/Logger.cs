@@ -39,7 +39,7 @@ namespace EVEMon.NetworkLogger
 
             m_loggingLevel = logLevel;
 
-            EveSession.NetworkLogEvent += new EventHandler<NetworkLogEventArgs>(EveSession_NetworkLogEvent);
+            EVEMonWebRequest.NetworkLogEvent += new EventHandler<NetworkLogEventArgs>(EveSession_NetworkLogEvent);
         }
 
         private void EveSession_NetworkLogEvent(object sender, NetworkLogEventArgs e)

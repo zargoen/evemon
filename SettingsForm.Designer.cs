@@ -1523,7 +1523,7 @@ namespace EVEMon
             this.groupBox13.Size = new System.Drawing.Size(365, 53);
             this.groupBox13.TabIndex = 2;
             this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Notification Offset";
+            this.groupBox13.Text = "Alert Notification Offset";
             // 
             // lblNotificationOffset
             // 

@@ -274,7 +274,6 @@ namespace EVEMon.Common
                 WebRequestState wrs = new WebRequestState();
                 wrs.CookieContainer = m_cookies;
                 wrs.AllowRedirects = false;
-                wrs.LogDelegate = NetworkLogEvent;
                 try
                 {
                     string txt = EVEMonWebRequest.GetUrlString(myurl, wrs, out resp);
@@ -518,8 +517,6 @@ namespace EVEMon.Common
             set { m_mainThread = value; }
         }
 
-        public static event EventHandler<NetworkLogEventArgs> NetworkLogEvent;
-
         private string m_requestSid = null;
         private CookieContainer m_cookies = null;
 
@@ -531,7 +528,6 @@ namespace EVEMon.Common
             }
             WebRequestState wrs = new WebRequestState();
             wrs.CookieContainer = m_cookies;
-            wrs.LogDelegate = NetworkLogEvent;
             wrs.AllowRedirects = false;
             HttpWebResponse resp = null;
             string s = EVEMonWebRequest.GetUrlString(
