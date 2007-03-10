@@ -170,6 +170,17 @@
         STJn/jvVBmsnwXX00JoRWsPurFbYdFIYbmnxsAH9twB9AUODhJHt3HGjAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="copyTotalDropDownButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAQRJREFUOE+tk81K
+        w0AUhfsGWWSTRUgIIRACIYtssgnkrfqSSovVWmtVWu0ftdY/6PIzN1JqYIpXcODAzDD3cO43M53OPw1q
+        H5PU9uz3NPr4hN0rbLbg+76YqkZT3O0etVjDbA5VValMeHuH7Q7WG5ivYPoEk+kfDJ5f2gkkjW3bOI6D
+        67oEQUAURSRJYkzEso78uID7GYwfYHhLU2xik+d528SyrKbfnwxk7nneSTZlWR5NhLb0O7qDyzH0h3A2
+        gDAMdWyyLON6AoMb6F19F4viOMbERs62bkcWJqVpamRzMVLejsAysTmv06neR1EURjbSnspASJvYqA1O
+        sTnsqz7Jb4e+AA3OihfNPazmAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>268, 17</value>
   </metadata>

@@ -170,5 +170,34 @@ namespace EVEMon.Sales
                 mt.Quantity=0;
             }
         }
+
+        String formattedText;
+        String unformattedText;
+
+        private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
+        {
+            Decimal total = 0;
+            foreach (MineralTile mt in Tiles)
+            {
+                total += mt.Subtotal;
+            }
+
+            formattedText = total.ToString("N") + " ISK";
+            unformattedText = total.ToString();
+            copyFormattedTotalToolStripMenuItem.Text = "Formatted (" + formattedText + ")";
+            copyUnformattedTotalToolStripMenuItem.Text = "Unformatted (" + unformattedText + ")";
+        }
+
+        private void copyFormattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.Clear();
+            Clipboard.SetText(formattedText);
+        }
+
+        private void copyUnformattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.Clear();
+            Clipboard.SetText(unformattedText);
+        }
     }
 }

@@ -34,6 +34,9 @@ namespace EVEMon.Sales
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsddFetch = new System.Windows.Forms.ToolStripDropDownButton();
             this.btnReset = new System.Windows.Forms.ToolStripButton();
+            this.copyTotalDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.copyFormattedTotalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyUnformattedTotalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.mt_tritanium = new EVEMon.Sales.MineralTile();
             this.mt_nocxium = new EVEMon.Sales.MineralTile();
@@ -61,7 +64,8 @@ namespace EVEMon.Sales
             this.btnLockPrices,
             this.toolStripSeparator1,
             this.tsddFetch,
-            this.btnReset});
+            this.btnReset,
+            this.copyTotalDropDownButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(654, 25);
@@ -98,6 +102,32 @@ namespace EVEMon.Sales
             this.btnReset.Size = new System.Drawing.Size(107, 22);
             this.btnReset.Text = "Reset Quantities";
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // copyTotalDropDownButton
+            // 
+            this.copyTotalDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyFormattedTotalToolStripMenuItem,
+            this.copyUnformattedTotalToolStripMenuItem});
+            this.copyTotalDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("copyTotalDropDownButton.Image")));
+            this.copyTotalDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.copyTotalDropDownButton.Name = "copyTotalDropDownButton";
+            this.copyTotalDropDownButton.Size = new System.Drawing.Size(88, 22);
+            this.copyTotalDropDownButton.Text = "Copy Total";
+            this.copyTotalDropDownButton.DropDownOpening += new System.EventHandler(this.copyTotalDropDownButton_DropDownOpening);
+            // 
+            // copyFormattedTotalToolStripMenuItem
+            // 
+            this.copyFormattedTotalToolStripMenuItem.Name = "copyFormattedTotalToolStripMenuItem";
+            this.copyFormattedTotalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyFormattedTotalToolStripMenuItem.Text = "Formatted";
+            this.copyFormattedTotalToolStripMenuItem.Click += new System.EventHandler(this.copyFormattedTotalToolStripMenuItem_Click);
+            // 
+            // copyUnformattedTotalToolStripMenuItem
+            // 
+            this.copyUnformattedTotalToolStripMenuItem.Name = "copyUnformattedTotalToolStripMenuItem";
+            this.copyUnformattedTotalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyUnformattedTotalToolStripMenuItem.Text = "Unformatted";
+            this.copyUnformattedTotalToolStripMenuItem.Click += new System.EventHandler(this.copyUnformattedTotalToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -424,9 +454,13 @@ namespace EVEMon.Sales
         private System.Windows.Forms.ToolStripStatusLabel tslTotal;
         private System.Windows.Forms.ToolStripStatusLabel tslCourtesy;
         private System.Windows.Forms.ToolStripButton btnReset;
+        private System.Windows.Forms.ToolStripDropDownButton copyTotalDropDownButton;
+        private System.Windows.Forms.ToolStripMenuItem copyFormattedTotalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyUnformattedTotalToolStripMenuItem;
 
     }
 }
+
 
 
 
