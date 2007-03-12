@@ -217,6 +217,12 @@ namespace EVEMon.Common
 
         private List<Pair<string, int>> m_storedCharacterList = null;
 
+        public List<Pair<string, int>> GetCharacterListUncached()
+        {
+            m_storedCharacterList = null;
+            return GetCharacterList();
+        }
+
         public List<Pair<string, int>> GetCharacterList()
         {
             if (m_storedCharacterList != null)

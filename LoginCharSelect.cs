@@ -168,7 +168,7 @@ namespace EVEMon
                 return;
             }
 
-            List<Pair<string, int>> chars = s.GetCharacterList();
+            List<Pair<string, int>> chars = s.GetCharacterListUncached();
             if (chars.Count == 0)
             {
                 SetNoCharacter();
