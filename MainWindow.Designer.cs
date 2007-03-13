@@ -55,9 +55,10 @@ namespace EVEMon
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbResetCache = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
-            this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -121,7 +122,8 @@ namespace EVEMon
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus});
+            this.lblStatus,
+            this.lblServerStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 414);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(417, 22);
@@ -271,20 +273,6 @@ namespace EVEMon
             this.tsbAbout.Text = "About...";
             this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
             // 
-            // tcCharacterTabs
-            // 
-            this.tcCharacterTabs.AllowDrop = true;
-            this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tcCharacterTabs.Location = new System.Drawing.Point(0, 25);
-            this.tcCharacterTabs.Name = "tcCharacterTabs";
-            this.tcCharacterTabs.SelectedIndex = 0;
-            this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
-            this.tcCharacterTabs.TabIndex = 0;
-            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
-            this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
-            this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
-            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
-            // 
             // saveFileDialog
             // 
             this.saveFileDialog.DefaultExt = "xml";
@@ -301,6 +289,26 @@ namespace EVEMon
             this.openFileDialog.ShowHelp = true;
             this.openFileDialog.Title = "Restore your settings file";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
+            // 
+            // lblServerStatus
+            // 
+            this.lblServerStatus.Name = "lblServerStatus";
+            this.lblServerStatus.Size = new System.Drawing.Size(131, 17);
+            this.lblServerStatus.Text = "// Server Status Unknown";
+            // 
+            // tcCharacterTabs
+            // 
+            this.tcCharacterTabs.AllowDrop = true;
+            this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tcCharacterTabs.Location = new System.Drawing.Point(0, 25);
+            this.tcCharacterTabs.Name = "tcCharacterTabs";
+            this.tcCharacterTabs.SelectedIndex = 0;
+            this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
+            this.tcCharacterTabs.TabIndex = 0;
+            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
+            this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
             // 
             // MainWindow
             // 
@@ -359,5 +367,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ToolStripStatusLabel lblServerStatus;
     }
 }

@@ -44,9 +44,16 @@ namespace EVEMon
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
 
             G15Handler.Init();
+
             
             AddCharacters();
-
+            if (m_settings.CheckTranquilityStatus)
+            {
+                EveServer server = EveServer.GetInstance();
+                server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
+                if (m_settings.EnableBalloonTips)
+                    server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+            }
             if (startMinimized)
             {
                 this.ShowInTaskbar = false;
@@ -691,7 +698,7 @@ namespace EVEMon
                     f.Show();
                     f.Activate();
                 }
-
+                //EveServer.PendingAlerts = false;
                 m_completedSkills.Clear();
             }
         }
@@ -881,8 +888,25 @@ namespace EVEMon
             ws.Show();
         }
 
-        private int m_serverUsers = 0;
-        private bool m_serverOnline = true;
+
+        private void UpdateServerStatusLabel(object sender, EveServerEventArgs e)
+        {
+            lblServerStatus.Text = e.info;
+        }
+
+        private void ShowServerStatusBalloon(object sender, EveServerEventArgs e)
+        {
+            EveServer.GetInstance().PendingAlerts = true;
+            niAlertIcon.Text = "EVEMon - Server Status Information";
+            niAlertIcon.BalloonTipTitle = "Server Status Information";
+            niAlertIcon.BalloonTipText = e.info;
+            niAlertIcon.BalloonTipIcon = e.icon;
+            niAlertIcon.Visible = true;
+            niAlertIcon.ShowBalloonTip(30000);
+            tmrAlertRefresh.Enabled = false;
+            tmrAlertRefresh.Interval = 60000;
+            tmrAlertRefresh.Enabled = true;
+        }
 
 
         private void UpdateStatusLabel()
@@ -890,42 +914,12 @@ namespace EVEMon
             DateTime now = DateTime.Now.ToUniversalTime();
             DateTimeFormatInfo fi = CultureInfo.CurrentCulture.DateTimeFormat;
             lblStatus.Text = "Current EVE Time: " + now.ToString(fi.ShortDatePattern + " HH:mm");
-            if (m_settings.CheckTranquilityStatus)
-            {
-                if (m_serverOnline && (m_serverUsers != 0))
-                {
-                    lblStatus.Text = lblStatus.Text + " // Tranquility Server Online (" + m_serverUsers + " Pilots)";
-                }
-                else if (!m_serverOnline)
-                {
-                    lblStatus.Text = lblStatus.Text + " // Tranquility Server Offline";
-                }
-            }
         }
 
-        // initialize to negative to make sure the server test is performed first time through
-        int m_minutesSinceLastServerCheck = -1;
         private void tmrClock_Tick(object sender, EventArgs e)
         {
             tmrTranquilityClock.Enabled = false;
             UpdateStatusLabel();
-
-            if (m_settings.CheckTranquilityStatus)
-            {
-                // maybe we should check tranquility
-                if (m_minutesSinceLastServerCheck >= m_settings.StatusUpdateInterval ||
-                    m_minutesSinceLastServerCheck < 0)
-                {
-                    // enough minutes have passed - check the server
-                    checkServerStatus();
-                    m_minutesSinceLastServerCheck = 0;
-                }
-                else
-                {
-                    m_minutesSinceLastServerCheck++;
-                }
-
-            }
             tmrTranquilityClock.Interval = 60000;//1 minute
             tmrTranquilityClock.Enabled = true;
         }
@@ -944,81 +938,6 @@ namespace EVEMon
         //        tmrLCDClock.Interval = 1000;
         //    }
         //}
-
-        // Semaphore to flag whether we are in the middle of an async server test
-        bool m_checkingServer = false;
-        void ConnectCallback(IAsyncResult ar)
-        {
-            TcpClient conn = (TcpClient)ar.AsyncState;
-            if (ar.IsCompleted && conn.Connected)
-            {
-                m_serverOnline = true;
-                NetworkStream stream = conn.GetStream();
-                byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
-                        0x00, 0x14, 0x06, 0x04, 0xE8, 0x99, 0x02, 0x00,
-                        0x05, 0x8B, 0x00, 0x08, 0x0A, 0xCD, 0xCC, 0xCC,
-                        0xCC, 0xCC, 0xCC, 0x00, 0x40, 0x05, 0x49, 0x0F,
-                        0x10, 0x05, 0x42, 0x6C, 0x6F, 0x6F, 0x64};
-                stream.Write(data, 0, data.Length);
-                byte[] response = new byte[256];
-                int bytes = stream.Read(response, 0, 256);
-                if (bytes > 21)
-                {
-                    m_serverUsers = response[21] * 256 + response[20];
-                }
-                else
-                {
-                    m_serverUsers = 0;
-                }
-                conn.EndConnect(ar);
-            }
-            else
-            {
-                m_serverOnline = false;
-                m_serverUsers = 0;
-            }
-
-            // Close the connection
-            conn.Close();
-
-            UpdateStatusLabel();
-
-            // switch off the semaphore
-            m_checkingServer = false;
-        }
-
-        private void checkServerStatus()
-        {
-            // Check the semaphore to see if we're mid check
-            if (m_checkingServer == true)
-                return;
-
-            // switch on the semaphore
-            m_checkingServer = true;
-
-            if (m_settings.CheckTranquilityStatus)
-            {
-                TcpClient conn = new TcpClient();
-                try
-                {
-                    conn.BeginConnect("87.237.38.200", 26000, this.ConnectCallback, conn);
-                }
-                catch (Exception)
-                {
-                    conn.Close();
-                    m_serverOnline = false;
-                    m_serverUsers = 0;
-                    // switch off the semaphore - the check failed
-                    m_checkingServer = false;
-                }
-            }
-            else
-            {
-                m_serverOnline = false;
-                m_serverUsers = 0;
-            }
-
-        }
 
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1202,6 +1121,8 @@ namespace EVEMon
         }
     }
 }
+
+
 
 
 

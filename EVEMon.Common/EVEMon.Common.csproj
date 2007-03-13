@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="EveObject.cs" />
+    <Compile Include="EveServer.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Implant_Groups.cs" />
     <Compile Include="Skill.cs" />
