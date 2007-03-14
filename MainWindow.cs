@@ -1091,6 +1091,7 @@ namespace EVEMon
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             SkillsPieChart pie = new SkillsPieChart();
             pie.active_character = activeTab.Text;
+            pie.Text = "Skillgroup chart for " + activeTab.Text;
             pie.Show();
         }
 
