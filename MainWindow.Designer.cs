@@ -50,6 +50,7 @@ namespace EVEMon
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbMineralSheet = new System.Windows.Forms.ToolStripButton();
+            this.skillGroupPieChartButton = new System.Windows.Forms.ToolStripButton();
             this.tsbSchedule = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
@@ -150,6 +151,7 @@ namespace EVEMon
             this.toolStripDropDownButton1,
             this.toolStripSeparator4,
             this.tsbMineralSheet,
+            this.skillGroupPieChartButton,
             this.tsbSchedule,
             this.toolStripSeparator2,
             this.tsbOptions,
@@ -228,6 +230,16 @@ namespace EVEMon
             this.tsbMineralSheet.Size = new System.Drawing.Size(23, 22);
             this.tsbMineralSheet.Text = "Mineral Worksheet";
             this.tsbMineralSheet.Click += new System.EventHandler(this.tsbMineralSheet_Click);
+            // 
+            // skillGroupPieChartButton
+            // 
+            this.skillGroupPieChartButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.skillGroupPieChartButton.Image = ((System.Drawing.Image)(resources.GetObject("skillGroupPieChartButton.Image")));
+            this.skillGroupPieChartButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillGroupPieChartButton.Name = "skillGroupPieChartButton";
+            this.skillGroupPieChartButton.Size = new System.Drawing.Size(23, 22);
+            this.skillGroupPieChartButton.Text = "Skill Group Pie Chart";
+            this.skillGroupPieChartButton.Click += new System.EventHandler(this.skillGroupPieChartButton_Click);
             // 
             // tsbSchedule
             // 
@@ -361,6 +373,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem planToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private EVEMon.DraggableTabControl tcCharacterTabs;
+        private System.Windows.Forms.ToolStripButton skillGroupPieChartButton;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem saveSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadSettingsToolStripMenuItem;

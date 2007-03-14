@@ -64,8 +64,8 @@ namespace EVEMon
             this.btnMoreOptions = new System.Windows.Forms.Button();
             this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.manualImplantGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbShowBooks = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnPlan = new EVEMon.Common.SplitButton();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
@@ -425,19 +425,19 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -524,33 +524,33 @@ namespace EVEMon
             // 
             this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.manualImplantGroupsToolStripMenuItem,
-            this.tsbIneveSync,
-            this.tsbShowBooks});
+            this.tsbShowBooks,
+            this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(210, 92);
             // 
             // manualImplantGroupsToolStripMenuItem
             // 
             this.manualImplantGroupsToolStripMenuItem.Name = "manualImplantGroupsToolStripMenuItem";
-            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.manualImplantGroupsToolStripMenuItem.Text = "Manual Implant Groups...";
             this.manualImplantGroupsToolStripMenuItem.Click += new System.EventHandler(this.manualImplantGroupsToolStripMenuItem_Click);
+            // 
+            // tsbShowBooks
+            // 
+            this.tsbShowBooks.Name = "tsbShowBooks";
+            this.tsbShowBooks.Size = new System.Drawing.Size(209, 22);
+            this.tsbShowBooks.Text = "Show Owned Skillboks...";
+            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
             // tsbIneveSync
             // 
             this.tsbIneveSync.CheckOnClick = true;
             this.tsbIneveSync.Name = "tsbIneveSync";
-            this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
+            this.tsbIneveSync.Size = new System.Drawing.Size(209, 22);
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
-            // 
-            // tsbShowBooks
-            // 
-            this.tsbShowBooks.Name = "tsbShowBooks";
-            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
-            this.tsbShowBooks.Text = "Show Owned Skillboks...";
-            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
             // btnSave
             // 
@@ -644,26 +644,26 @@ namespace EVEMon
             this.updatePictureFromEVECache,
             this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(238, 70);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(227, 70);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(237, 22);
+            this.updatePicture.Size = new System.Drawing.Size(226, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.miUpdatePicture_Click);
             // 
             // updatePictureFromEVECache
             // 
             this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
-            this.updatePictureFromEVECache.Size = new System.Drawing.Size(237, 22);
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(226, 22);
             this.updatePictureFromEVECache.Text = "Update Picture From EVE Cache";
             this.updatePictureFromEVECache.Click += new System.EventHandler(this.miUpdatePictureFromEVECache_Click);
             // 
             // setEVEFolder
             // 
             this.setEVEFolder.Name = "setEVEFolder";
-            this.setEVEFolder.Size = new System.Drawing.Size(237, 22);
+            this.setEVEFolder.Size = new System.Drawing.Size(226, 22);
             this.setEVEFolder.Text = "Set EVE Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.miSetEVEFolder_Click);
             // 

@@ -2,22 +2,33 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon.csproj", "{A2E5EFE0-614A-4567-95E5-92A4D94169AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Common", "EVEMon.Common\EVEMon.Common.csproj", "{C0665275-3E0B-4117-81B0-751206ED03CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.NetworkLogger", "EVEMon.NetworkLogger\EVEMon.NetworkLogger.csproj", "{45877BAD-6688-42DF-A110-DBE9839F99D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.WindowRelocator", "EVEMon.WindowRelocator\EVEMon.WindowRelocator.csproj", "{F0627E15-E8DF-404F-BF82-C48D890F9C5C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F9553086-E8BE-463B-9A68-1F7794EB060D} = {F9553086-E8BE-463B-9A68-1F7794EB060D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Sales", "EVEMon.Sales\EVEMon.Sales.csproj", "{097C8821-39BB-446D-87E1-5D24E9115CFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMonInstallBuilder", "EVEMonInstallBuilder\EVEMonInstallBuilder.csproj", "{5CE8E302-3577-41BC-A35F-C88AC625F7A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.LogitechG15", "EveMon.LogitechG15\EVEMon.LogitechG15.csproj", "{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4DC1603E-1EB1-40BE-AF82-637820765659} = {4DC1603E-1EB1-40BE-AF82-637820765659}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lgLcdClassLibrary", "lgLcdClassLibrary\lgLcdClassLibrary.vcproj", "{4DC1603E-1EB1-40BE-AF82-637820765659}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EVEMon.WinHook", "EVEMon.WinHook\EVEMon.WinHook.vcproj", "{F9553086-E8BE-463B-9A68-1F7794EB060D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PieChart", "PieChart\PieChart.csproj", "{696E929A-6A4A-4C6D-A8B2-C4F25F781940}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +134,7 @@ Global
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|Win32.Build.0 = Debug|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|x86.ActiveCfg = Debug|Win32
+		{4DC1603E-1EB1-40BE-AF82-637820765659}.Debug|x86.Build.0 = Debug|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Any CPU.ActiveCfg = Release|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{4DC1603E-1EB1-40BE-AF82-637820765659}.Release|Mixed Platforms.Build.0 = Release|Win32
@@ -141,6 +153,18 @@ Global
 		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Win32.ActiveCfg = Release|Win32
 		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|Win32.Build.0 = Release|Win32
 		{F9553086-E8BE-463B-9A68-1F7794EB060D}.Release|x86.ActiveCfg = Release|Win32
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|Any CPU.Build.0 = Release|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|Win32.ActiveCfg = Release|Any CPU
+		{696E929A-6A4A-4C6D-A8B2-C4F25F781940}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

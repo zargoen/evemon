@@ -76,6 +76,7 @@
     <Compile Include="EveServer.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Implant_Groups.cs" />
+    <Compile Include="SerializableColor.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="SkillGroup.cs" />
     <Compile Include="ICharacterSettings.cs" />

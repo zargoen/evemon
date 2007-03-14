@@ -333,6 +333,14 @@
         AABJRU5ErkJggg==
 </value>
   </data>
+  <data name="skillGroupPieChartButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAG1JREFUOE9jYBjM
+        4D/QcciYaLeCNR2AQhD7/4EDRBsE14huAMgQJINwuoYiAzA0g1wB8wLMBfhcQX0D0GKBYKyguAAcE5Bw
+        w8BQg7EGJNgQcjWDTMSrGeQafLbDnITVEKTwIC1FkqORaBuoohAADcUUXhOaEfYAAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="tsbSchedule.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8

@@ -3,7 +3,6 @@ using System.Timers;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace EVEMon.Common
@@ -51,7 +50,7 @@ namespace EVEMon.Common
         public static bool Online { get { return (m_status == Status.Online); } }
         public static bool Offline { get { return (m_status == Status.Offline); } }
         public static bool Starting { get { return (m_status == Status.Starting); } }
-         */ 
+         */
 
         public string Motd { get { return m_motd; } }
 
@@ -81,12 +80,12 @@ namespace EVEMon.Common
             m_tmrCountdown.Elapsed += new ElapsedEventHandler(tmrCountdown);
             m_tmrCountdown.Enabled = false;
             checkServerStatus(m_instance, new EventArgs());
-//            fetchMotd();
+            //            fetchMotd();
         }
 
         private void fetchMotd()
         {
-            try 
+            try
             {
                 m_motd = EVEMonWebRequest.GetUrlString("http://www.eve-online.com/motd.asp?server=87.237.38.200");
             }
@@ -99,7 +98,7 @@ namespace EVEMon.Common
         private void tmrCountdown(object sender, EventArgs e)
         {
             m_tmrCountdown.Enabled = false;
-            
+
             if (m_status == Status.Starting)
             {
                 if (m_countdown == -1)
@@ -145,7 +144,7 @@ namespace EVEMon.Common
                 }
 
                 string str = new System.Text.ASCIIEncoding().GetString(response);
-                
+
                 Match m = m_re.Match(str);
                 if (m.Success)
                 {
@@ -231,9 +230,6 @@ namespace EVEMon.Common
                 m_balloonText = "The Tranquility Server is offline!";
                 m_balloonIcon = System.Windows.Forms.ToolTipIcon.Error;
             }
-
         }
-
     }
-
 }

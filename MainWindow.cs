@@ -1086,6 +1086,14 @@ namespace EVEMon
                 AutoShrink.Dirty(new TimeSpan(0, 0, 0, 0, 500)); // Clean up after 500 ms
         }
 
+        private void skillGroupPieChartButton_Click(object sender, EventArgs e)
+        {
+            TabPage activeTab = tcCharacterTabs.SelectedTab;
+            SkillsPieChart pie = new SkillsPieChart();
+            pie.active_character = activeTab.Text;
+            pie.Show();
+        }
+
         private string m_currntDirectory = String.Empty;
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1121,7 +1129,6 @@ namespace EVEMon
         }
     }
 }
-
 
 
 

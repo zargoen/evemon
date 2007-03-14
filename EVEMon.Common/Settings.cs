@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using EVEMon.Common;
 using EVEMon.Common.Schedule;
 using System.Windows.Forms;
 
@@ -341,6 +342,30 @@ namespace EVEMon.Common
             set { m_titleToTimeLayout = value; }
         }
 
+        private List<SerializableColor> m_skillPieChartColors = new List<SerializableColor>();
+
+        public List<SerializableColor> SkillPieChartColors
+        {
+            get { return m_skillPieChartColors; }
+            set { m_skillPieChartColors = value; }
+        }
+
+        private float m_skillPieChartInitialAngle = -30F;
+
+        public float SkillPieChartInitialAngle
+        {
+            get { return m_skillPieChartInitialAngle; }
+            set { m_skillPieChartInitialAngle = value; }
+        }
+
+        private float m_skillPieChartSliceRelativeHeight = 0.15F;
+
+        public float SkillPieChartSliceRelativeHeight
+        {
+            get { return m_skillPieChartSliceRelativeHeight; }
+            set { m_skillPieChartSliceRelativeHeight = value; }
+        }
+
         #region Owned Skills
         private List<Pair<string,string>> m_ownedbooks = new List<Pair<string,string>>();
 
@@ -391,7 +416,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
 
         #region Plan Settings
 

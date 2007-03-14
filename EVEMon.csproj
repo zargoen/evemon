@@ -372,6 +372,12 @@
     <Compile Include="Throbber.Designer.cs">
       <DependentUpon>Throbber.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillsPieChart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillsPieChart.Designer.cs">
+      <DependentUpon>SkillsPieChart.cs</DependentUpon>
+    </Compile>
     <Compile Include="TipWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -576,6 +582,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>SuggestionWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillsPieChart.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SkillsPieChart.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TipWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
@@ -618,6 +628,10 @@
     <ProjectReference Include="EVEMon.NetworkLogger\EVEMon.NetworkLogger.csproj">
       <Project>{45877BAD-6688-42DF-A110-DBE9839F99D0}</Project>
       <Name>EVEMon.NetworkLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="EVEMon.PieChart\EVEMon.PieChart.csproj">
+      <Project>{696E929A-6A4A-4C6D-A8B2-C4F25F781940}</Project>
+      <Name>EVEMon.PieChart</Name>
     </ProjectReference>
     <ProjectReference Include="EVEMon.Sales\EVEMon.Sales.csproj">
       <Project>{097C8821-39BB-446D-87E1-5D24E9115CFB}</Project>
