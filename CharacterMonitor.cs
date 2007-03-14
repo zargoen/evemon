@@ -136,6 +136,7 @@ namespace EVEMon
                 }
             }
             m_grandCharacterInfo.BioInfoChanged += new EventHandler(BioInfoChangedCallback);
+            m_settings.ShowLoginNameChanged += new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BalanceChanged += new EventHandler(BalanceChangedCallback);
             m_grandCharacterInfo.AttributeChanged += new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
@@ -217,6 +218,7 @@ namespace EVEMon
                 m_characterFileWatch.EnableRaisingEvents = false;
             }
 
+            m_settings.ShowLoginNameChanged -= new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
 
@@ -1207,6 +1209,14 @@ namespace EVEMon
             {
                 lblCharacterName.Text = m_grandCharacterInfo.Name;
             }
+            if (m_settings.ShowLoginName)
+            {
+                if (m_cli != null)
+                {
+                    lblCharacterName.Text += " - Login: " + m_cli.Username;
+                }
+            }
+
             lblBioInfo.Text = m_grandCharacterInfo.Gender + " " +
                               m_grandCharacterInfo.Race + " " +
                               m_grandCharacterInfo.Bloodline;

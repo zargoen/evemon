@@ -108,6 +108,7 @@ namespace EVEMon
             this.flowLayoutPanel22 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbTitleToTime = new System.Windows.Forms.CheckBox();
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
+            this.cbShowLoginName = new System.Windows.Forms.CheckBox();
             this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
             this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
             this.tbTooltipString = new System.Windows.Forms.TextBox();
@@ -689,7 +690,7 @@ namespace EVEMon
             this.cbCloseToTray.Location = new System.Drawing.Point(12, 28);
             this.cbCloseToTray.Name = "cbCloseToTray";
             this.cbCloseToTray.Size = new System.Drawing.Size(90, 17);
-            this.cbCloseToTray.TabIndex = 3;
+            this.cbCloseToTray.TabIndex = 4;
             this.cbCloseToTray.Text = "Close to Tray";
             this.cbCloseToTray.UseVisualStyleBackColor = true;
             // 
@@ -699,7 +700,7 @@ namespace EVEMon
             this.cbRunAtStartup.Location = new System.Drawing.Point(12, 51);
             this.cbRunAtStartup.Name = "cbRunAtStartup";
             this.cbRunAtStartup.Size = new System.Drawing.Size(138, 17);
-            this.cbRunAtStartup.TabIndex = 4;
+            this.cbRunAtStartup.TabIndex = 5;
             this.cbRunAtStartup.Text = "Run EVEMon at Startup";
             this.cbRunAtStartup.UseVisualStyleBackColor = true;
             this.cbRunAtStartup.CheckedChanged += new System.EventHandler(this.cbRunAtStartup_CheckedChanged);
@@ -919,7 +920,7 @@ namespace EVEMon
             this.groupBox11.Controls.Add(this.flowLayoutPanel15);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(414, 70);
+            this.groupBox11.Size = new System.Drawing.Size(414, 93);
             this.groupBox11.TabIndex = 10;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "General";
@@ -931,12 +932,13 @@ namespace EVEMon
             this.flowLayoutPanel15.Controls.Add(this.cbWorksafeMode);
             this.flowLayoutPanel15.Controls.Add(this.flowLayoutPanel21);
             this.flowLayoutPanel15.Controls.Add(this.flowLayoutPanel22);
+            this.flowLayoutPanel15.Controls.Add(this.cbShowLoginName);
             this.flowLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel15.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel15.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel15.Name = "flowLayoutPanel15";
             this.flowLayoutPanel15.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel15.Size = new System.Drawing.Size(408, 50);
+            this.flowLayoutPanel15.Size = new System.Drawing.Size(408, 73);
             this.flowLayoutPanel15.TabIndex = 3;
             // 
             // cbWorksafeMode
@@ -999,12 +1001,22 @@ namespace EVEMon
             this.cbWindowsTitleList.Size = new System.Drawing.Size(224, 21);
             this.cbWindowsTitleList.TabIndex = 1;
             // 
+            // cbShowLoginName
+            // 
+            this.cbShowLoginName.AutoSize = true;
+            this.cbShowLoginName.Location = new System.Drawing.Point(12, 53);
+            this.cbShowLoginName.Name = "cbShowLoginName";
+            this.cbShowLoginName.Size = new System.Drawing.Size(205, 17);
+            this.cbShowLoginName.TabIndex = 9;
+            this.cbShowLoginName.Text = "Show Login name on Character sheet";
+            this.cbShowLoginName.UseVisualStyleBackColor = true;
+            // 
             // gboxTooltipOptions
             // 
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 79);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 102);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
             this.gboxTooltipOptions.Size = new System.Drawing.Size(413, 101);
             this.gboxTooltipOptions.TabIndex = 7;
@@ -1050,7 +1062,7 @@ namespace EVEMon
             this.gbSkillPlannerHighlighting.AutoSize = true;
             this.gbSkillPlannerHighlighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
-            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 186);
+            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 209);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
             this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(414, 66);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
@@ -1112,7 +1124,7 @@ namespace EVEMon
             this.groupBox10.AutoSize = true;
             this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 258);
+            this.groupBox10.Location = new System.Drawing.Point(3, 281);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(414, 143);
             this.groupBox10.TabIndex = 13;
@@ -1533,7 +1545,6 @@ namespace EVEMon
             this.lblNotificationOffset.Size = new System.Drawing.Size(32, 13);
             this.lblNotificationOffset.TabIndex = 1;
             this.lblNotificationOffset.Text = "0 sec";
-            this.lblNotificationOffset.Click += new System.EventHandler(this.lblNotificationOffset_Click);
             // 
             // tbNotificationOffset
             // 
@@ -2186,5 +2197,6 @@ namespace EVEMon
         private System.Windows.Forms.GroupBox groupBox13;
         private System.Windows.Forms.TrackBar tbNotificationOffset;
         private System.Windows.Forms.Label lblNotificationOffset;
+        private System.Windows.Forms.CheckBox cbShowLoginName;
     }
 }

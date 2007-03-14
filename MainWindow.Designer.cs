@@ -40,6 +40,7 @@ namespace EVEMon
             this.tmrAlertRefresh = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tmrTranquilityClock = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAddChar = new System.Windows.Forms.ToolStripButton();
@@ -58,7 +59,6 @@ namespace EVEMon
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -135,6 +135,12 @@ namespace EVEMon
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(94, 17);
             this.lblStatus.Text = "Current EVE Time:";
+            // 
+            // lblServerStatus
+            // 
+            this.lblServerStatus.Name = "lblServerStatus";
+            this.lblServerStatus.Size = new System.Drawing.Size(131, 17);
+            this.lblServerStatus.Text = "// Server Status Unknown";
             // 
             // tmrTranquilityClock
             // 
@@ -302,12 +308,6 @@ namespace EVEMon
             this.openFileDialog.Title = "Restore your settings file";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
-            // lblServerStatus
-            // 
-            this.lblServerStatus.Name = "lblServerStatus";
-            this.lblServerStatus.Size = new System.Drawing.Size(131, 17);
-            this.lblServerStatus.Text = "// Server Status Unknown";
-            // 
             // tcCharacterTabs
             // 
             this.tcCharacterTabs.AllowDrop = true;
@@ -315,6 +315,7 @@ namespace EVEMon
             this.tcCharacterTabs.Location = new System.Drawing.Point(0, 25);
             this.tcCharacterTabs.Name = "tcCharacterTabs";
             this.tcCharacterTabs.SelectedIndex = 0;
+            this.tcCharacterTabs.ShowToolTips = true;
             this.tcCharacterTabs.Size = new System.Drawing.Size(417, 389);
             this.tcCharacterTabs.TabIndex = 0;
             this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);

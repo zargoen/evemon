@@ -231,7 +231,7 @@ namespace EVEMon
             }
             cfi.CharacterName = sci.Name;
             CharacterMonitor cm = new CharacterMonitor(cfi, sci);
-            AddTab(cfi,"(File) " + sci.Name,cm);
+            AddTab(cfi,"(File) " + sci.Name,cm,"File based character");
             return true;
         }
         /// <summary>
@@ -242,7 +242,7 @@ namespace EVEMon
         private bool AddTab(CharLoginInfo cli)
         {
             CharacterMonitor cm = new CharacterMonitor(cli);
-            AddTab(cli,cli.CharacterName,cm);
+            AddTab(cli,cli.CharacterName,cm,"Username: " + cli.Username);
             return true;
         }
 
@@ -253,9 +253,10 @@ namespace EVEMon
         /// <param name="charInfo">either a file based on online based info object</param>
         /// <param name="title">Titke for the tab  - "character name" or "(file) character name"</param>
         /// <param name="cm">The Character Monitor object to attach to this tab</param>
-        private void AddTab(object charInfo,string title,CharacterMonitor cm)
+        private void AddTab(object charInfo,string title,CharacterMonitor cm,string tooltip)
         {
             TabPage tp = new TabPage(title);
+            tp.ToolTipText = tooltip;
             tp.UseVisualStyleBackColor = true;
             tp.Tag = charInfo;
             tp.Padding = new Padding(5);
@@ -1128,6 +1129,7 @@ namespace EVEMon
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
             openFileDialog.ShowDialog();
         }
+
     }
 }
 

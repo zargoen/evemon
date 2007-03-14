@@ -342,6 +342,27 @@ namespace EVEMon.Common
             set { m_titleToTimeLayout = value; }
         }
 
+        private bool m_showLoginName;
+
+        public bool ShowLoginName
+        {
+            get { return m_showLoginName; }
+            set 
+            { 
+                m_showLoginName = value;
+                OnShowLoginNameChanged();
+            }
+        }
+
+        public event EventHandler ShowLoginNameChanged;
+
+        private void OnShowLoginNameChanged()
+        {
+            if (ShowLoginNameChanged != null)
+                ShowLoginNameChanged(this, new EventArgs());
+        }
+
+
         private List<SerializableColor> m_skillPieChartColors = new List<SerializableColor>();
 
         public List<SerializableColor> SkillPieChartColors
