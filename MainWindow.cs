@@ -1091,8 +1091,19 @@ namespace EVEMon
         {
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             SkillsPieChart pie = new SkillsPieChart();
-            pie.active_character = activeTab.Text;
-            pie.Text = "Skillgroup chart for " + activeTab.Text;
+
+            if (activeTab.Tag is CharLoginInfo)
+            {
+                CharLoginInfo cli = activeTab.Tag as CharLoginInfo;
+                pie.active_character = cli.CharacterName;
+            }
+            else if (activeTab.Tag is CharFileInfo)
+            {
+                CharFileInfo cfi = activeTab.Tag as CharFileInfo;
+                pie.active_character = cfi.CharacterName;
+            }
+
+            pie.Text = "Skillgroup chart for " + pie.active_character;
             pie.Show();
         }
 
