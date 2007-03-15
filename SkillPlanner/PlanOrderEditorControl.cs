@@ -752,9 +752,11 @@ namespace EVEMon.SkillPlanner
                     miMarkOwned.Text = "Mark as owned";
                     miMarkOwned.Enabled = false;
                 }
+                miChangeLevel.Enabled = SetChangeLevelMenu();
             }
             else
             {
+                miChangeLevel.Enabled = false;
                 miChangeNote.Text = "Change Note...";
             }
 
@@ -1002,6 +1004,66 @@ namespace EVEMon.SkillPlanner
             m_plannerWindow.UpdateStatusBar();
         }
 
+        private void miChangeToN_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
+            string level = tsmi.Tag as string;
+            Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+            m_plan.PlanTo(pe.Skill, Int32.Parse(level));
+        }
+
+
+        private bool SetChangeLevelMenu()
+        {
+            bool result = false;
+
+            Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+            // determine what valid levels we can change to
+            int minPlan = pe.Skill.Level + 1;
+
+            int plannedTo = 0;
+            for (int i = 1; i < 6; i++)
+            {
+                if (m_plan.IsPlanned(pe.Skill, i))
+                {
+                    plannedTo = i;
+                }
+            }
+
+            for (int i = 1; i < 6; i++)
+            {
+                if (i < minPlan || i == plannedTo)
+                {
+                    miChangeLevel.DropDownItems[i].Enabled = false;
+                }
+                else
+                {
+                    miChangeLevel.DropDownItems[i].Enabled = true;
+
+                    // see if there are any skills dependant on this skill
+                    foreach (ListViewItem current in lvSkills.Items)
+                    {
+                        Plan.Entry currentSkill = (Plan.Entry)current.Tag;
+                        int neededLevel;
+                        if (currentSkill.Skill.HasAsPrerequisite(pe.Skill, out neededLevel, false))
+                        {
+                            if (currentSkill.Level == 1 && neededLevel > i)
+                            {
+                                miChangeLevel.DropDownItems[i].Enabled = false;
+                                // we have a post-dependancy - disable the remove option
+                                miChangeLevel.DropDownItems[0].Enabled = false;
+                            }
+                        }
+                    }
+                }
+                if (miChangeLevel.DropDownItems[i].Enabled)
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
+
 
         #endregion Context Menu
 
@@ -1184,5 +1246,7 @@ namespace EVEMon.SkillPlanner
                 miShowInSkillBrowser_Click(sender, e);
             }
          }
-    }
+
+     }
+
 }
