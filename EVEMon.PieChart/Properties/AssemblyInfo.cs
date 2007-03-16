@@ -1,16 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EVEMon.PieChart.Properties")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("EVEMon.PieChart")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 713 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.PieChart")] 
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EVEMon.PieChart.Properties")]
-[assembly: AssemblyCopyright("Copyright ©  2007")]
+[assembly: AssemblyCompany("EVEMon Development Team")]
+[assembly: AssemblyProduct("EVEMon")]
+[assembly: AssemblyCopyright("Copyright © 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.1.9.659")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.9.713")]
