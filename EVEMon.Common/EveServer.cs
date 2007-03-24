@@ -26,7 +26,7 @@ namespace EVEMon.Common
 
     public class EveServer
     {
-        private static EveServer m_instance = new EveServer();
+        private static EveServer m_instance = null;
 
         private enum Status { Offline, Starting, Online }
 
@@ -66,7 +66,11 @@ namespace EVEMon.Common
 
         public static EveServer GetInstance()
         {
-            m_instance.Init();
+            if (m_instance == null)
+            {
+                m_instance = new EveServer();
+                m_instance.Init();
+            }
             return m_instance;
         }
 

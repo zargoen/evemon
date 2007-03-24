@@ -50,11 +50,11 @@ namespace EVEMon
             slDevelopers.Add("bugusnot", "04");
             slDevelopers.Add("Collin Grady", "04");
             slDevelopers.Add("cybertech", "04");
-            slDevelopers.Add("Dominik Sander", "04");
             slDevelopers.Add("exi", "04");
             slDevelopers.Add("FangVV", "04");
             slDevelopers.Add("Femaref", "04");
             slDevelopers.Add("Flash", "04");
+            slDevelopers.Add("Galideeth", "04");
             slDevelopers.Add("gavinl", "04");
             slDevelopers.Add("Grauw", "04");
             slDevelopers.Add("happyslinky", "04");

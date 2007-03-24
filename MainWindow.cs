@@ -688,18 +688,18 @@ namespace EVEMon
                 return;
             }
 
-            if (m_completedSkills.Count > 0)
+            if (m_completedSkills.Count > 0 || EveServer.GetInstance().PendingAlerts)
             {
                 niAlertIcon.Visible = false;
                 tmrAlertRefresh.Enabled = false;
-                if (m_settings.EnableSkillCompleteDialog)
+                if (m_settings.EnableSkillCompleteDialog && !EveServer.GetInstance().PendingAlerts)
                 {
                     SkillCompleteDialog f = new SkillCompleteDialog(m_completedSkills);
                     f.FormClosed += delegate { f.Dispose(); };
                     f.Show();
                     f.Activate();
                 }
-                //EveServer.PendingAlerts = false;
+                EveServer.GetInstance().PendingAlerts = false;
                 m_completedSkills.Clear();
             }
         }
@@ -897,6 +897,14 @@ namespace EVEMon
 
         private void ShowServerStatusBalloon(object sender, EveServerEventArgs e)
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    ShowServerStatusBalloon(sender, e);
+                }));
+                return;
+            }
             EveServer.GetInstance().PendingAlerts = true;
             niAlertIcon.Text = "EVEMon - Server Status Information";
             niAlertIcon.BalloonTipTitle = "Server Status Information";
@@ -908,7 +916,6 @@ namespace EVEMon
             tmrAlertRefresh.Interval = 60000;
             tmrAlertRefresh.Enabled = true;
         }
-
 
         private void UpdateStatusLabel()
         {
@@ -1143,6 +1150,8 @@ namespace EVEMon
 
     }
 }
+
+
 
 
 
