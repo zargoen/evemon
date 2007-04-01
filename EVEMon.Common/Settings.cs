@@ -1267,6 +1267,54 @@ namespace EVEMon.Common
             set { m_ShowDeadspaceItems = value; }
         }
 
+        private bool m_ShowAmarrShips = true;
+
+        public bool ShowAmarrShips
+        {
+            get { return m_ShowAmarrShips; }
+            set { m_ShowAmarrShips = value; }
+        }
+
+        private bool m_ShowCaldariShips = true;
+
+        public bool ShowCaldariShips
+        {
+            get { return m_ShowCaldariShips; }
+            set { m_ShowCaldariShips = value; }
+        }
+
+        private bool m_ShowGalenteShips = true;
+
+        public bool ShowGallenteShips
+        {
+            get { return m_ShowGalenteShips; }
+            set { m_ShowGalenteShips = value; }
+        }
+        private bool m_ShowMinmatarShips = true;
+
+        public bool ShowMinmatarShips
+        {
+            get { return m_ShowMinmatarShips; }
+            set { m_ShowMinmatarShips = value; }
+        }
+        private bool m_ShowFactionShips = true;
+
+        public bool ShowFactionShips 
+        {
+            get { return m_ShowFactionShips; }
+            set { m_ShowFactionShips = value; }
+        }
+
+        private bool m_ShowOreShips = true;
+
+        public bool ShowOreShips
+        {
+            get { return m_ShowOreShips; }
+            set { m_ShowOreShips = value; }
+        }
+	
+        
+	
         private int m_itemSkillFilter = 0;
 
         public int ItemSkillFilter
