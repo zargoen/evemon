@@ -347,10 +347,27 @@ namespace EVEMon.Common
                     return null;
                 }
 
+                SerializableCharacterInfo sci = null;
                 using (XmlNodeReader nxr = new XmlNodeReader(charRootEl))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
-                    return (SerializableCharacterInfo) xs.Deserialize(nxr);
+
+                    sci = (SerializableCharacterInfo) xs.Deserialize(nxr);
+                
+                    // recover implant sets from the character cache if present
+                    List<SerializableCharacterInfo> cciList = Settings.GetInstance().CachedCharacterInfo;
+                    if (cciList != null && cciList.Count > 0)
+                    {
+                        foreach (SerializableCharacterInfo csci in  cciList)
+                        {
+                            if (csci.CharacterId == sci.CharacterId)
+                            {
+                                sci.ImplantSets = csci.ImplantSets;
+                                break;
+                            }
+                        }
+                    }
+                    return sci;
                 }
             }
             catch (Exception e)
