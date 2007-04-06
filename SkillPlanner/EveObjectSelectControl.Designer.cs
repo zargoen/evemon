@@ -29,6 +29,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.tbSearchText = new System.Windows.Forms.TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EveObjectSelectControl));
             this.tvItems = new System.Windows.Forms.TreeView();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
@@ -36,11 +37,11 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
@@ -113,9 +114,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel1.Controls.Add(this.cbSkillFilter);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.pbSearchImage);
             this.panel1.Controls.Add(this.lbSearchTextHint);
             this.panel1.Controls.Add(this.tbSearchText);
+            this.panel1.Controls.Add(this.pbSearchImage);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
@@ -148,6 +149,18 @@ namespace EVEMon.SkillPlanner
             this.label1.TabIndex = 24;
             this.label1.Text = "Filter:";
             // 
+            // pbSearchImage
+            // 
+            this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
+            this.pbSearchImage.InitialImage = null;
+            this.pbSearchImage.Location = new System.Drawing.Point(7, 29);
+            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
+            this.pbSearchImage.Name = "pbSearchImage";
+            this.pbSearchImage.Size = new System.Drawing.Size(20, 20);
+            this.pbSearchImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbSearchImage.TabIndex = 20;
+            this.pbSearchImage.TabStop = false;
+            // 
             // panel2
             // 
             this.panel2.AutoSize = true;
@@ -160,17 +173,6 @@ namespace EVEMon.SkillPlanner
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(185, 344);
             this.panel2.TabIndex = 27;
-            // 
-            // pbSearchImage
-            // 
-            this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(7, 29);
-            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
-            this.pbSearchImage.Name = "pbSearchImage";
-            this.pbSearchImage.Size = new System.Drawing.Size(20, 20);
-            this.pbSearchImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pbSearchImage.TabIndex = 20;
-            this.pbSearchImage.TabStop = false;
             // 
             // EveObjectSelectControl
             // 
@@ -186,8 +188,8 @@ namespace EVEMon.SkillPlanner
             this.Load += new System.EventHandler(this.EveObjectSelectControl_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
