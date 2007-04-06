@@ -540,7 +540,7 @@ namespace EVEMon
             // 
             this.tsbShowBooks.Name = "tsbShowBooks";
             this.tsbShowBooks.Size = new System.Drawing.Size(209, 22);
-            this.tsbShowBooks.Text = "Show Owned Skillboks...";
+            this.tsbShowBooks.Text = "Show Owned Skillbooks...";
             this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
             // tsbIneveSync
