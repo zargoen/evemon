@@ -221,17 +221,17 @@ namespace EVEMon.SkillPlanner
             // 
             // cbSkillFilter
             // 
-            this.cbSkillFilter.Size = new System.Drawing.Size(152, 21);
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // tbSearchText
             // 
+            this.tbSearchText.Location = new System.Drawing.Point(33, 99);
             this.tbSearchText.Size = new System.Drawing.Size(152, 21);
             // 
             // tvItems
             // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Size = new System.Drawing.Size(185, 270);
+            this.tvItems.Size = new System.Drawing.Size(185, 285);
             // 
             // lbNoMatches
             // 
@@ -240,46 +240,50 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchList
             // 
-            this.lbSearchList.Size = new System.Drawing.Size(185, 270);
+            this.lbSearchList.Size = new System.Drawing.Size(185, 285);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.cbFaction);
-            this.panel1.Controls.Add(this.cbAmarr);
             this.panel1.Controls.Add(this.cbORE);
-            this.panel1.Controls.Add(this.cbGallente);
+            this.panel1.Controls.Add(this.cbAmarr);
             this.panel1.Controls.Add(this.cbMinmatar);
+            this.panel1.Controls.Add(this.cbGallente);
             this.panel1.Controls.Add(this.cbCaldari);
-            this.panel1.Size = new System.Drawing.Size(185, 140);
-            this.panel1.Controls.SetChildIndex(this.cbCaldari, 0);
-            this.panel1.Controls.SetChildIndex(this.cbMinmatar, 0);
-            this.panel1.Controls.SetChildIndex(this.cbGallente, 0);
-            this.panel1.Controls.SetChildIndex(this.cbORE, 0);
-            this.panel1.Controls.SetChildIndex(this.cbAmarr, 0);
-            this.panel1.Controls.SetChildIndex(this.cbFaction, 0);
+            this.panel1.Size = new System.Drawing.Size(185, 125);
             this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
-            this.panel1.Controls.SetChildIndex(this.lbSearchTextHint, 0);
             this.panel1.Controls.SetChildIndex(this.pbSearchImage, 0);
+            this.panel1.Controls.SetChildIndex(this.lbSearchTextHint, 0);
+            this.panel1.Controls.SetChildIndex(this.cbCaldari, 0);
+            this.panel1.Controls.SetChildIndex(this.cbGallente, 0);
+            this.panel1.Controls.SetChildIndex(this.cbMinmatar, 0);
+            this.panel1.Controls.SetChildIndex(this.cbAmarr, 0);
+            this.panel1.Controls.SetChildIndex(this.cbORE, 0);
+            this.panel1.Controls.SetChildIndex(this.cbFaction, 0);
             this.panel1.Controls.SetChildIndex(this.label1, 0);
             this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 140);
-            this.panel2.Size = new System.Drawing.Size(185, 270);
+            this.panel2.Location = new System.Drawing.Point(0, 125);
+            this.panel2.Size = new System.Drawing.Size(185, 285);
             // 
             // lbSearchTextHint
             // 
             this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbSearchTextHint.Location = new System.Drawing.Point(32, 30);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(34, 100);
             this.lbSearchTextHint.Size = new System.Drawing.Size(68, 18);
+            // 
+            // pbSearchImage
+            // 
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 99);
             // 
             // cbCaldari
             // 
             this.cbCaldari.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.cbCaldari.AutoSize = true;
             this.cbCaldari.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbCaldari.Location = new System.Drawing.Point(6, 89);
+            this.cbCaldari.Location = new System.Drawing.Point(9, 53);
             this.cbCaldari.Name = "cbCaldari";
             this.cbCaldari.Size = new System.Drawing.Size(59, 17);
             this.cbCaldari.TabIndex = 27;
@@ -290,7 +294,7 @@ namespace EVEMon.SkillPlanner
             // cbFaction
             // 
             this.cbFaction.AutoSize = true;
-            this.cbFaction.Location = new System.Drawing.Point(90, 89);
+            this.cbFaction.Location = new System.Drawing.Point(90, 53);
             this.cbFaction.Name = "cbFaction";
             this.cbFaction.Size = new System.Drawing.Size(61, 17);
             this.cbFaction.TabIndex = 30;
@@ -301,7 +305,7 @@ namespace EVEMon.SkillPlanner
             // cbGallente
             // 
             this.cbGallente.AutoSize = true;
-            this.cbGallente.Location = new System.Drawing.Point(6, 113);
+            this.cbGallente.Location = new System.Drawing.Point(9, 76);
             this.cbGallente.Name = "cbGallente";
             this.cbGallente.Size = new System.Drawing.Size(65, 17);
             this.cbGallente.TabIndex = 28;
@@ -312,7 +316,7 @@ namespace EVEMon.SkillPlanner
             // cbMinmatar
             // 
             this.cbMinmatar.AutoSize = true;
-            this.cbMinmatar.Location = new System.Drawing.Point(90, 63);
+            this.cbMinmatar.Location = new System.Drawing.Point(90, 30);
             this.cbMinmatar.Name = "cbMinmatar";
             this.cbMinmatar.Size = new System.Drawing.Size(70, 17);
             this.cbMinmatar.TabIndex = 29;
@@ -323,7 +327,7 @@ namespace EVEMon.SkillPlanner
             // cbORE
             // 
             this.cbORE.AutoSize = true;
-            this.cbORE.Location = new System.Drawing.Point(90, 113);
+            this.cbORE.Location = new System.Drawing.Point(90, 76);
             this.cbORE.Name = "cbORE";
             this.cbORE.Size = new System.Drawing.Size(47, 17);
             this.cbORE.TabIndex = 31;
@@ -334,7 +338,7 @@ namespace EVEMon.SkillPlanner
             // cbAmarr
             // 
             this.cbAmarr.AutoSize = true;
-            this.cbAmarr.Location = new System.Drawing.Point(6, 61);
+            this.cbAmarr.Location = new System.Drawing.Point(9, 30);
             this.cbAmarr.Name = "cbAmarr";
             this.cbAmarr.Size = new System.Drawing.Size(55, 17);
             this.cbAmarr.TabIndex = 26;

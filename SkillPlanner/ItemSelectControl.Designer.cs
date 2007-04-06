@@ -43,28 +43,32 @@ namespace EVEMon.SkillPlanner
             // 
             // cbSkillFilter
             // 
-            this.cbSkillFilter.Location = new System.Drawing.Point(38, 3);
-            this.cbSkillFilter.Size = new System.Drawing.Size(147, 21);
+            this.cbSkillFilter.Location = new System.Drawing.Point(48, 4);
+            this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
+            this.cbSkillFilter.Size = new System.Drawing.Size(182, 25);
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Location = new System.Drawing.Point(29, 132);
-            this.tbSearchText.Size = new System.Drawing.Size(156, 21);
+            this.tbSearchText.Location = new System.Drawing.Point(41, 156);
+            this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 6, 2, 6);
+            this.tbSearchText.Size = new System.Drawing.Size(189, 24);
             // 
             // tvItems
             // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Size = new System.Drawing.Size(185, 254);
+            this.tvItems.Size = new System.Drawing.Size(231, 323);
             // 
             // lbNoMatches
             // 
             this.lbNoMatches.Location = new System.Drawing.Point(2, 2);
+            this.lbNoMatches.Size = new System.Drawing.Size(198, 50);
             this.lbNoMatches.Text = "No items match your search.";
             // 
             // lbSearchList
             // 
-            this.lbSearchList.Size = new System.Drawing.Size(185, 254);
+            this.lbSearchList.ItemHeight = 17;
+            this.lbSearchList.Size = new System.Drawing.Size(231, 323);
             // 
             // panel1
             // 
@@ -76,7 +80,7 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.cbTech1);
             this.panel1.Controls.Add(this.cbFaction);
             this.panel1.Controls.Add(this.cbNamed);
-            this.panel1.Size = new System.Drawing.Size(185, 156);
+            this.panel1.Size = new System.Drawing.Size(231, 189);
             this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
             this.panel1.Controls.SetChildIndex(this.label1, 0);
             this.panel1.Controls.SetChildIndex(this.cbNamed, 0);
@@ -93,30 +97,33 @@ namespace EVEMon.SkillPlanner
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 156);
-            this.panel2.Size = new System.Drawing.Size(185, 254);
+            this.panel2.Location = new System.Drawing.Point(0, 189);
+            this.panel2.Size = new System.Drawing.Size(231, 323);
             // 
             // lbSearchTextHint
             // 
             this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbSearchTextHint.Location = new System.Drawing.Point(30, 133);
-            this.lbSearchTextHint.Size = new System.Drawing.Size(68, 19);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(42, 157);
+            this.lbSearchTextHint.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbSearchTextHint.Size = new System.Drawing.Size(85, 22);
             // 
             // pbSearchImage
             // 
-            this.pbSearchImage.Location = new System.Drawing.Point(5, 132);
+            this.pbSearchImage.Location = new System.Drawing.Point(11, 156);
             // 
             // label1
             // 
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Size = new System.Drawing.Size(54, 17);
             this.label1.Text = "By Skill:";
             // 
             // cbDeadspace
             // 
             this.cbDeadspace.AutoSize = true;
-            this.cbDeadspace.Location = new System.Drawing.Point(90, 107);
+            this.cbDeadspace.Location = new System.Drawing.Point(112, 128);
+            this.cbDeadspace.Margin = new System.Windows.Forms.Padding(4);
             this.cbDeadspace.Name = "cbDeadspace";
-            this.cbDeadspace.Size = new System.Drawing.Size(79, 17);
+            this.cbDeadspace.Size = new System.Drawing.Size(97, 21);
             this.cbDeadspace.TabIndex = 45;
             this.cbDeadspace.Text = "Deadspace";
             this.cbDeadspace.UseVisualStyleBackColor = true;
@@ -125,9 +132,10 @@ namespace EVEMon.SkillPlanner
             // cbOfficer
             // 
             this.cbOfficer.AutoSize = true;
-            this.cbOfficer.Location = new System.Drawing.Point(6, 107);
+            this.cbOfficer.Location = new System.Drawing.Point(11, 128);
+            this.cbOfficer.Margin = new System.Windows.Forms.Padding(4);
             this.cbOfficer.Name = "cbOfficer";
-            this.cbOfficer.Size = new System.Drawing.Size(59, 17);
+            this.cbOfficer.Size = new System.Drawing.Size(69, 21);
             this.cbOfficer.TabIndex = 44;
             this.cbOfficer.Text = "Officer";
             this.cbOfficer.UseVisualStyleBackColor = true;
@@ -136,9 +144,10 @@ namespace EVEMon.SkillPlanner
             // cbFaction
             // 
             this.cbFaction.AutoSize = true;
-            this.cbFaction.Location = new System.Drawing.Point(90, 83);
+            this.cbFaction.Location = new System.Drawing.Point(112, 99);
+            this.cbFaction.Margin = new System.Windows.Forms.Padding(4);
             this.cbFaction.Name = "cbFaction";
-            this.cbFaction.Size = new System.Drawing.Size(61, 17);
+            this.cbFaction.Size = new System.Drawing.Size(74, 21);
             this.cbFaction.TabIndex = 43;
             this.cbFaction.Text = "Faction";
             this.cbFaction.UseVisualStyleBackColor = true;
@@ -149,9 +158,10 @@ namespace EVEMon.SkillPlanner
             this.cbTech2.AutoSize = true;
             this.cbTech2.Checked = true;
             this.cbTech2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTech2.Location = new System.Drawing.Point(6, 83);
+            this.cbTech2.Location = new System.Drawing.Point(11, 99);
+            this.cbTech2.Margin = new System.Windows.Forms.Padding(4);
             this.cbTech2.Name = "cbTech2";
-            this.cbTech2.Size = new System.Drawing.Size(58, 17);
+            this.cbTech2.Size = new System.Drawing.Size(72, 21);
             this.cbTech2.TabIndex = 42;
             this.cbTech2.Text = "Tech 2";
             this.cbTech2.UseVisualStyleBackColor = true;
@@ -162,9 +172,10 @@ namespace EVEMon.SkillPlanner
             this.cbNamed.AutoSize = true;
             this.cbNamed.Checked = true;
             this.cbNamed.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbNamed.Location = new System.Drawing.Point(90, 59);
+            this.cbNamed.Location = new System.Drawing.Point(112, 70);
+            this.cbNamed.Margin = new System.Windows.Forms.Padding(4);
             this.cbNamed.Name = "cbNamed";
-            this.cbNamed.Size = new System.Drawing.Size(59, 17);
+            this.cbNamed.Size = new System.Drawing.Size(73, 21);
             this.cbNamed.TabIndex = 41;
             this.cbNamed.Text = "Named";
             this.cbNamed.UseVisualStyleBackColor = true;
@@ -175,9 +186,10 @@ namespace EVEMon.SkillPlanner
             this.cbTech1.AutoSize = true;
             this.cbTech1.Checked = true;
             this.cbTech1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTech1.Location = new System.Drawing.Point(6, 59);
+            this.cbTech1.Location = new System.Drawing.Point(11, 70);
+            this.cbTech1.Margin = new System.Windows.Forms.Padding(4);
             this.cbTech1.Name = "cbTech1";
-            this.cbTech1.Size = new System.Drawing.Size(56, 17);
+            this.cbTech1.Size = new System.Drawing.Size(68, 21);
             this.cbTech1.TabIndex = 40;
             this.cbTech1.Text = "Tech I";
             this.cbTech1.UseVisualStyleBackColor = true;
@@ -195,26 +207,28 @@ namespace EVEMon.SkillPlanner
             "Medium Slot",
             "Low Slot",
             "No Slot"});
-            this.cbSlotFilter.Location = new System.Drawing.Point(38, 29);
+            this.cbSlotFilter.Location = new System.Drawing.Point(48, 36);
+            this.cbSlotFilter.Margin = new System.Windows.Forms.Padding(4);
             this.cbSlotFilter.Name = "cbSlotFilter";
-            this.cbSlotFilter.Size = new System.Drawing.Size(147, 21);
+            this.cbSlotFilter.Size = new System.Drawing.Size(182, 25);
             this.cbSlotFilter.TabIndex = 39;
             this.cbSlotFilter.SelectedIndexChanged += new System.EventHandler(this.cbSlotFilter_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 32);
+            this.label2.Location = new System.Drawing.Point(-1, 40);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(54, 17);
             this.label2.TabIndex = 38;
             this.label2.Text = "By slot:";
             // 
-            // ItemSelectControl1
+            // ItemSelectControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.Name = "ItemSelectControl1";
-            this.Size = new System.Drawing.Size(185, 410);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.Name = "ItemSelectControl";
+            this.Size = new System.Drawing.Size(231, 512);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
