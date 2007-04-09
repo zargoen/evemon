@@ -671,6 +671,16 @@ namespace EVEMon.Common
             return false;
         }
 
+        public int PlannedLevel(Skill gs)
+        {
+            for (int i=5;i>0;i--)
+            {
+                if (IsPlanned(gs,i))
+                    return i;
+            }
+            return 0;
+        }
+
         public bool IsPlanned(Skill gs, int level)
         {
             return Priority(gs,level) != Int32.MinValue;
