@@ -654,16 +654,17 @@ namespace EVEMon.SkillPlanner
                         Color prTextColor = !m_worksafeMode ? Color.Yellow : SystemColors.ControlText;
                         Brush fillBrush = null;
 
+                        int plannedLevel = m_plan.PlannedLevel(si.Skill);
+                        if (plannedLevel > 0)
+                        {
+                            currentLevelText += " (Planned To: " + Skill.GetRomanForInt(plannedLevel) + ")";
+                        }
+
                         if (si.RequiredLevel > 0)
                         {
                             requiredLevel = "Required Level: " + Skill.GetRomanForInt(si.RequiredLevel);
                             if (si.RequiredLevel > si.Skill.Level)
                             {
-                                int plannedLevel = m_plan.PlannedLevel(si.Skill);
-                                if (plannedLevel > 0)
-                                {
-                                    requiredLevel += " (Planned To: " + Skill.GetRomanForInt(plannedLevel) + ")";
-                                }
                                 TimeSpan ts = si.Skill.GetTrainingTimeToLevel(si.RequiredLevel);
                                 thisRequiredTime = "This Time: " + Skill.TimeSpanToDescriptiveText(ts, DTO_TIME);
                                 reqTextColor = !m_worksafeMode ? Color.Yellow : SystemColors.GrayText;
