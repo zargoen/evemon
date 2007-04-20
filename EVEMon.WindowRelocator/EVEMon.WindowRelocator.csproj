@@ -52,12 +52,6 @@
       <DependentUpon>IdentifyScreenForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\EVEMon.WinHook\bin\debug\EVEMon.WinHook.dll">
-      <Link>EVEMon.WinHook.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -67,7 +61,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>IF NOT "$(ConfigurationName)" == "Release" exit 0
+    <PreBuildEvent>
+IF NOT "$(ConfigurationName)" == "Release" exit 0
 if errorlevel 1 goto BuildEventFailed
 "%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
 :BuildEventFailed

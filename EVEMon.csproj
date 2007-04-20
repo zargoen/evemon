@@ -637,10 +637,6 @@
       <Project>{F0627E15-E8DF-404F-BF82-C48D890F9C5C}</Project>
       <Name>EVEMon.WindowRelocator</Name>
     </ProjectReference>
-    <ProjectReference Include="EVEMon.WinHook\EVEMon.WinHook.vcproj">
-      <Project>{F9553086-E8BE-463B-9A68-1F7794EB060D}</Project>
-      <Name>EVEMon.WinHook</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
