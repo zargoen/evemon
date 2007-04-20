@@ -42,10 +42,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EVEMon.WinHook, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>EVEMon.WinHook\bin\release\EVEMon.WinHook.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -640,6 +636,10 @@
     <ProjectReference Include="EVEMon.WindowRelocator\EVEMon.WindowRelocator.csproj">
       <Project>{F0627E15-E8DF-404F-BF82-C48D890F9C5C}</Project>
       <Name>EVEMon.WindowRelocator</Name>
+    </ProjectReference>
+    <ProjectReference Include="EVEMon.WinHook\EVEMon.WinHook.vcproj">
+      <Project>{F9553086-E8BE-463B-9A68-1F7794EB060D}</Project>
+      <Name>EVEMon.WinHook</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
