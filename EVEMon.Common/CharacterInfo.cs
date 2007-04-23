@@ -28,6 +28,9 @@ namespace EVEMon.Common
         private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
         private Dictionary<string, ImplantSet> m_implantSets = new Dictionary<string, ImplantSet>();
 
+        // This is to keep track of the number of times you've tried to dl this character and been unsuccessful.
+        private int m_downloadfailed = 0;
+
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
 
         public CharacterInfo(int characterId, string name)
@@ -1045,7 +1048,6 @@ namespace EVEMon.Common
             Settings.GetInstance().SetOwnedBooks(m_name, owned);
         }
 
-
         public void check_training_skills(SerializableSkillInTraining SkillInTraining)
         {
             // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
@@ -1369,6 +1371,18 @@ namespace EVEMon.Common
             }
 
             return result;
+        }
+
+        public int DownloadFailed
+        {
+            get
+            {
+                return m_downloadfailed;
+            }
+            set
+            {
+                m_downloadfailed = value;
+            }
         }
     }
 

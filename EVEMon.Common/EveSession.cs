@@ -612,7 +612,6 @@ namespace EVEMon.Common
         // to be more polite to the server.
         private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
         private Random autoRand;
-        private double exponent = 1.0;
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
@@ -622,13 +621,13 @@ namespace EVEMon.Common
             {
                 autoRand = new Random();
                 // 1 hour multiplied by something between 0.0 and 1.0
-                double offset = (DEFAULT_RETRY_INTERVAL * exponent) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
-                exponent += 1.0;
+                grandCharacterInfo.DownloadFailed += 1;
+                double offset = (DEFAULT_RETRY_INTERVAL * grandCharacterInfo.DownloadFailed) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
                 return (int)offset;
             }
             else
             {
-                exponent = 1.0;
+                grandCharacterInfo.DownloadFailed = 0;
             }
 
             invokeControl.Invoke(new MethodInvoker(delegate

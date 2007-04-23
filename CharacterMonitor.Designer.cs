@@ -53,11 +53,11 @@ namespace EVEMon
             this.pnlCharData = new System.Windows.Forms.Panel();
             this.tlpInfo = new System.Windows.Forms.TableLayoutPanel();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblUpdateTimer = new System.Windows.Forms.Label();
             this.throbber = new EVEMon.Throbber();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblUpdateTimer = new System.Windows.Forms.Label();
             this.flpAttributes = new System.Windows.Forms.FlowLayoutPanel();
             this.flpButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.llToggleAll = new System.Windows.Forms.LinkLabel();
@@ -370,7 +370,7 @@ namespace EVEMon
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpInfo.Controls.Add(this.flpThrobber, 2, 0);
             this.tlpInfo.Controls.Add(this.flpAttributes, 1, 2);
-            this.tlpInfo.Controls.Add(this.flpButtons, 2, 1);
+            this.tlpInfo.Controls.Add(this.flpButtons, 2, 2);
             this.tlpInfo.Controls.Add(this.flpCharacterInfo, 1, 0);
             this.tlpInfo.Controls.Add(this.pbCharImage, 0, 0);
             this.tlpInfo.Controls.Add(this.lblSkillHeader, 0, 3);
@@ -383,6 +383,7 @@ namespace EVEMon
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpInfo.Size = new System.Drawing.Size(392, 173);
             this.tlpInfo.TabIndex = 19;
             // 
@@ -393,20 +394,34 @@ namespace EVEMon
             this.flpThrobber.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpThrobber.Controls.Add(this.throbber);
             this.flpThrobber.Controls.Add(this.lblUpdateTimer);
-            this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flpThrobber.Location = new System.Drawing.Point(333, 0);
+            this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpThrobber.Location = new System.Drawing.Point(357, 0);
             this.flpThrobber.Margin = new System.Windows.Forms.Padding(0);
             this.flpThrobber.Name = "flpThrobber";
-            this.flpThrobber.Size = new System.Drawing.Size(59, 24);
+            this.tlpInfo.SetRowSpan(this.flpThrobber, 2);
+            this.flpThrobber.Size = new System.Drawing.Size(35, 37);
             this.flpThrobber.TabIndex = 15;
             this.flpThrobber.WrapContents = false;
+            // 
+            // lblUpdateTimer
+            // 
+            this.lblUpdateTimer.AutoSize = true;
+            this.lblUpdateTimer.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblUpdateTimer.Location = new System.Drawing.Point(0, 24);
+            this.lblUpdateTimer.Margin = new System.Windows.Forms.Padding(0);
+            this.lblUpdateTimer.Name = "lblUpdateTimer";
+            this.lblUpdateTimer.Size = new System.Drawing.Size(35, 13);
+            this.lblUpdateTimer.TabIndex = 17;
+            this.lblUpdateTimer.Text = "label2";
+            this.lblUpdateTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblUpdateTimer.Visible = false;
             // 
             // throbber
             // 
             this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.throbber.BackColor = System.Drawing.Color.Transparent;
             this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
-            this.throbber.Location = new System.Drawing.Point(35, 0);
+            this.throbber.Location = new System.Drawing.Point(11, 0);
             this.throbber.Margin = new System.Windows.Forms.Padding(0);
             this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
@@ -417,7 +432,6 @@ namespace EVEMon
             this.throbber.TabStop = false;
             this.throbber.Text = "throbber1";
             this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
-            this.throbber.Click += new System.EventHandler(this.throbber1_Click);
             // 
             // cmsThrobberMenu
             // 
@@ -425,34 +439,21 @@ namespace EVEMon
             this.miHitEveO,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(206, 48);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 48);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(205, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(205, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
             this.miChangeInfo.Text = "Change login information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
-            // 
-            // lblUpdateTimer
-            // 
-            this.lblUpdateTimer.AutoSize = true;
-            this.lblUpdateTimer.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblUpdateTimer.Location = new System.Drawing.Point(0, 0);
-            this.lblUpdateTimer.Margin = new System.Windows.Forms.Padding(0);
-            this.lblUpdateTimer.Name = "lblUpdateTimer";
-            this.lblUpdateTimer.Size = new System.Drawing.Size(35, 13);
-            this.lblUpdateTimer.TabIndex = 17;
-            this.lblUpdateTimer.Text = "label2";
-            this.lblUpdateTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.lblUpdateTimer.Visible = false;
             // 
             // flpAttributes
             // 
@@ -485,7 +486,7 @@ namespace EVEMon
             this.flpButtons.Location = new System.Drawing.Point(326, 69);
             this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flpButtons.Name = "flpButtons";
-            this.tlpInfo.SetRowSpan(this.flpButtons, 3);
+            this.tlpInfo.SetRowSpan(this.flpButtons, 2);
             this.flpButtons.Size = new System.Drawing.Size(66, 101);
             this.flpButtons.TabIndex = 20;
             // 
@@ -527,19 +528,19 @@ namespace EVEMon
             this.tsbShowBooks,
             this.tsbIneveSync});
             this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(210, 92);
+            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
             // 
             // manualImplantGroupsToolStripMenuItem
             // 
             this.manualImplantGroupsToolStripMenuItem.Name = "manualImplantGroupsToolStripMenuItem";
-            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
             this.manualImplantGroupsToolStripMenuItem.Text = "Manual Implant Groups...";
             this.manualImplantGroupsToolStripMenuItem.Click += new System.EventHandler(this.manualImplantGroupsToolStripMenuItem_Click);
             // 
             // tsbShowBooks
             // 
             this.tsbShowBooks.Name = "tsbShowBooks";
-            this.tsbShowBooks.Size = new System.Drawing.Size(209, 22);
+            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
             this.tsbShowBooks.Text = "Show Owned Skillbooks...";
             this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
             // 
@@ -547,7 +548,7 @@ namespace EVEMon
             // 
             this.tsbIneveSync.CheckOnClick = true;
             this.tsbIneveSync.Name = "tsbIneveSync";
-            this.tsbIneveSync.Size = new System.Drawing.Size(209, 22);
+            this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
             this.tsbIneveSync.Text = "Synchronize with inEve.net?";
             this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
             this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
@@ -644,26 +645,26 @@ namespace EVEMon
             this.updatePictureFromEVECache,
             this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(227, 70);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(238, 70);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(226, 22);
+            this.updatePicture.Size = new System.Drawing.Size(237, 22);
             this.updatePicture.Text = "Update Picture";
             this.updatePicture.Click += new System.EventHandler(this.miUpdatePicture_Click);
             // 
             // updatePictureFromEVECache
             // 
             this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
-            this.updatePictureFromEVECache.Size = new System.Drawing.Size(226, 22);
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(237, 22);
             this.updatePictureFromEVECache.Text = "Update Picture From EVE Cache";
             this.updatePictureFromEVECache.Click += new System.EventHandler(this.miUpdatePictureFromEVECache_Click);
             // 
             // setEVEFolder
             // 
             this.setEVEFolder.Name = "setEVEFolder";
-            this.setEVEFolder.Size = new System.Drawing.Size(226, 22);
+            this.setEVEFolder.Size = new System.Drawing.Size(237, 22);
             this.setEVEFolder.Text = "Set EVE Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.miSetEVEFolder_Click);
             // 

@@ -709,13 +709,13 @@ namespace EVEMon
             }
 
             TimeSpan ts = m_nextScheduledUpdateAt - DateTime.Now;
-            if (ts < TimeSpan.Zero || ts > TimeSpan.FromMinutes(60))
+            if (ts < TimeSpan.Zero || ts > TimeSpan.FromHours(12))
             {
                 lblUpdateTimer.Visible = false;
             }
             else
             {
-                lblUpdateTimer.Text = String.Format("{0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
+                lblUpdateTimer.Text = String.Format("{0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
                 lblUpdateTimer.Visible = true;
             }
         }
@@ -2325,11 +2325,6 @@ namespace EVEMon
                     }
                 }
             }
-        }
-
-        private void throbber1_Click(object sender, EventArgs e)
-        {
-
         }
 
         #region Garbage?
