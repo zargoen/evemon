@@ -611,6 +611,8 @@ namespace EVEMon.Common
         // Now default is set to 30 minutes instead of 5 minutes for the retry interval
         // to be more polite to the server.
         private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
+        private Random autoRand;
+        private double exponent = 1.0;
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
@@ -618,7 +620,15 @@ namespace EVEMon.Common
 
             if (sci == null)
             {
-                return DEFAULT_RETRY_INTERVAL;
+                autoRand = new Random();
+                // 1 hour multiplied by something between 0.0 and 1.0
+                double offset = (DEFAULT_RETRY_INTERVAL * exponent) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
+                exponent += 1.0;
+                return (int)offset;
+            }
+            else
+            {
+                exponent = 1.0;
             }
 
             invokeControl.Invoke(new MethodInvoker(delegate
