@@ -308,6 +308,7 @@ namespace EVEMon.Common
             return -1;
         }
 
+        /* This is never actually used, so it's getting commented out for now.
         public void GetCharacterInfoAsync(int charId, GetCharacterInfoCallback callback)
         {
             ThreadPool.QueueUserWorkItem(delegate
@@ -315,7 +316,7 @@ namespace EVEMon.Common
                                                  SerializableCharacterInfo sci = GetCharacterInfo(charId);
                                                  callback(null, sci);
                                              });
-        }
+        }*/
 
 
         /// <summary>
@@ -607,7 +608,9 @@ namespace EVEMon.Common
             args.UpdateGrandCharacterInfoCallback(null, timeLeftInCache);
         }
 
-        private const int DEFAULT_RETRY_INTERVAL = 60*5*1000;
+        // Now default is set to 30 minutes instead of 5 minutes for the retry interval
+        // to be more polite to the server.
+        private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
@@ -660,7 +663,8 @@ namespace EVEMon.Common
 
     public delegate void GetImageCallback(EveSession sender, Image i);
 
-    public delegate void GetCharacterInfoCallback(EveSession sender, SerializableCharacterInfo ci);
+    // this is never actually used, so I'm commenting it out for now.
+    //public delegate void GetCharacterInfoCallback(EveSession sender, SerializableCharacterInfo ci);
 
     [XmlRoot("attributes")]
     public class EveAttributes
