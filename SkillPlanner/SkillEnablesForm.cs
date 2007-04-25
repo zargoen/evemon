@@ -139,13 +139,16 @@ namespace EVEMon.SkillPlanner
             }
 
             // build the lists of skills enabled by the base skill
-            foreach (Skill s in Skill.AllSkills.Values)
+            foreach (SkillGroup sg in m_characterInfo.SkillGroups.Values)
             {
-                foreach (Skill.Prereq pr in s.Prereqs)
+                foreach (Skill s in sg)
                 {
-                    if (pr.Skill.Id == m_skill.Id)
+                    foreach (Skill.Prereq pr in s.Prereqs)
                     {
-                        enabledSkills[pr.Level - 1].Add(s.Name,s);
+                        if (pr.Skill.Id == m_skill.Id)
+                        {
+                            enabledSkills[pr.Level - 1].Add(s.Name, s);
+                        }
                     }
                 }
             }

@@ -50,11 +50,14 @@ namespace EVEMon.Common
             // everytime for each character. We need to refactor this
             // so all the static skill data is only created once.
 
-            List<string> ownedSkills = new List<string>();
-            foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
+            bool buildskills = false;
+            if (Skill.AllSkills == null || Skill.AllSkills.Count == 0)
             {
-                ownedSkills.Add(os);
+                Skill.AllSkills = new Dictionary<string, Skill>();
+                buildskills = true;
             }
+            Dictionary<string, Skill> TempAllSkills = new Dictionary<string, Skill>();
+            
             string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
             if (!File.Exists(skillfile))
             {
@@ -63,53 +66,78 @@ namespace EVEMon.Common
             using (FileStream s = new FileStream(skillfile, FileMode.Open, FileAccess.Read))
             using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
             {
-                // Init the static list of all skills
-                Skill.AllSkills = new Dictionary<string, Skill>();
-
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.Load(zs);
 
                 foreach (XmlElement sgel in xdoc.SelectNodes("/skills/c"))
                 {
                     List<Skill> skills = new List<Skill>();
+                    List<Skill> tempskills = new List<Skill>();
                     foreach (XmlElement sel in sgel.SelectNodes("s"))
                     {
-                        List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
-                        foreach (XmlElement pel in sel.SelectNodes("p"))
-                        {
-                            Skill.Prereq p = new Skill.Prereq(
-                                pel.GetAttribute("n"),
-                                Convert.ToInt32(pel.GetAttribute("l")));
-                            prereqs.Add(p);
-                        }
-
-                        bool _pub = (sel.GetAttribute("p") != "false");
                         string _name = sel.GetAttribute("n");
-                        int _id = Convert.ToInt32(sel.GetAttribute("i"));
-                        string _desc = sel.GetAttribute("d");
-                        EveAttribute _primAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
-                        EveAttribute _secAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
-                        int _rank = Convert.ToInt32(sel.GetAttribute("r"));
-                        int _cost = Convert.ToInt32(sel.GetAttribute("c"));
-                        bool owned = ownedSkills.Contains(_name);
-                        Skill gs = new Skill(
-                            this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, owned,prereqs);
-                        gs.Changed += new EventHandler(gs_Changed);
-                        gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
 
-                        skills.Add(gs);
-                        Skill.AllSkills[gs.Name] = gs;
+                        if (buildskills)
+                        {
+                            List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
+                            foreach (XmlElement pel in sel.SelectNodes("p"))
+                            {
+                                Skill.Prereq p = new Skill.Prereq(
+                                    pel.GetAttribute("n"),
+                                    Convert.ToInt32(pel.GetAttribute("l")));
+                                prereqs.Add(p);
+                            }
+
+                            bool _pub = (sel.GetAttribute("p") != "false");
+                            int _id = Convert.ToInt32(sel.GetAttribute("i"));
+                            string _desc = sel.GetAttribute("d");
+                            EveAttribute _primAttr =
+                                (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
+                            EveAttribute _secAttr =
+                                (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
+                            int _rank = Convert.ToInt32(sel.GetAttribute("r"));
+                            int _cost = Convert.ToInt32(sel.GetAttribute("c"));
+                            Skill gs = new Skill(
+                                null, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
+                            gs.Changed += new EventHandler(gs_Changed);
+                            gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
+                            Skill.AllSkills[gs.Name] = gs;
+                            tempskills.Add(Skill.AllSkills[_name]);
+                        }
+                        Skill temp = Skill.AllSkills[_name].NewCopy();
+                        temp.SetOwner(this);
+                        temp.Changed += new EventHandler(gs_Changed);
+                        temp.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
+                        skills.Add(temp);
+                        TempAllSkills[_name] = temp;
                     }
-
-                    SkillGroup gsg = new SkillGroup(sgel.GetAttribute("n"), Convert.ToInt32(sgel.GetAttribute("g")),
-                                                              skills);
+                    string _group = sgel.GetAttribute("n");
+                    int _number = Convert.ToInt32(sgel.GetAttribute("g"));
+                    if (buildskills)
+                    {
+                        SkillGroup tempgsg = new SkillGroup(_group, _number, tempskills);
+                    }
+                    SkillGroup gsg = new SkillGroup(_group, _number, skills);
                     this.m_skillGroups[gsg.Name] = gsg;
+
+                    foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
+                    {
+                        if (this.m_skillGroups[gsg.Name].Contains(os))
+                            this.m_skillGroups[gsg.Name][os].Owned = true;
+                    }
                 }
             }
 
-            Skill.PrepareAllPrerequisites();
+            if (buildskills)
+                Skill.PrepareAllPrerequisites();
+            foreach (Skill s in TempAllSkills.Values)
+            {
+                foreach (Skill.Prereq pr in s.Prereqs)
+                {
+                    Skill gs = TempAllSkills[pr.Name];
+                    pr.SetSkill(gs);
+                }
+            }
 
             // cleanup on aisle 3!
             AutoShrink.Dirty();

@@ -40,6 +40,23 @@ namespace EVEMon.Common
             m_owned = owned;
         }
 
+        public Skill NewCopy()
+        {
+            List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
+            foreach (Skill.Prereq pre in m_prereqs)
+            {
+                Skill.Prereq p = new Skill.Prereq(pre.Name, pre.Level);
+                prereqs.Add(p);
+            }
+            return new Skill(m_owner, m_public, _name, _id, _description, m_primaryAttribute, m_secondaryAttribute,
+                m_rank, m_cost, m_owned, prereqs);
+        }
+
+        public void SetOwner(CharacterInfo gci)
+        {
+            m_owner = gci;
+        }
+
         /// <summary>
         /// Gets or sets the most recent skill level that was confirmed from the CCP server or an XML file.
         /// </summary>
