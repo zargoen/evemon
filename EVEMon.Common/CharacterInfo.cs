@@ -32,6 +32,7 @@ namespace EVEMon.Common
         private int m_downloadfailed = 0;
 
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
+        private Dictionary<int, Skill> m_AllSkillsByID = new Dictionary<int, Skill>();
 
         public CharacterInfo(int characterId, string name)
         {
@@ -45,19 +46,17 @@ namespace EVEMon.Common
 
         private void BuildSkillTree()
         {
-
-            // This needs optimising - why are we loading static data 
+            // This needs optimising - why are we loading static data
             // everytime for each character. We need to refactor this
             // so all the static skill data is only created once.
 
-            bool buildskills = false;
-            if (Skill.AllSkills == null || Skill.AllSkills.Count == 0)
-            {
-                Skill.AllSkills = new Dictionary<string, Skill>();
-                buildskills = true;
-            }
-            Dictionary<string, Skill> TempAllSkills = new Dictionary<string, Skill>();
-            
+            ///
+            /// Note from Eewec - I've done my best to optimise this code.
+            /// Before, every character had a copy of the data, AND the skill class had a reference to
+            /// the skill data that had been loaded for the last loaded character.
+            /// Now, it only gets loaded for each character.
+            /// 
+
             string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
             if (!File.Exists(skillfile))
             {
@@ -72,51 +71,38 @@ namespace EVEMon.Common
                 foreach (XmlElement sgel in xdoc.SelectNodes("/skills/c"))
                 {
                     List<Skill> skills = new List<Skill>();
-                    List<Skill> tempskills = new List<Skill>();
                     foreach (XmlElement sel in sgel.SelectNodes("s"))
                     {
                         string _name = sel.GetAttribute("n");
 
-                        if (buildskills)
+                        List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
+                        foreach (XmlElement pel in sel.SelectNodes("p"))
                         {
-                            List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
-                            foreach (XmlElement pel in sel.SelectNodes("p"))
-                            {
-                                Skill.Prereq p = new Skill.Prereq(
-                                    pel.GetAttribute("n"),
-                                    Convert.ToInt32(pel.GetAttribute("l")));
-                                prereqs.Add(p);
-                            }
-
-                            bool _pub = (sel.GetAttribute("p") != "false");
-                            int _id = Convert.ToInt32(sel.GetAttribute("i"));
-                            string _desc = sel.GetAttribute("d");
-                            EveAttribute _primAttr =
-                                (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
-                            EveAttribute _secAttr =
-                                (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
-                            int _rank = Convert.ToInt32(sel.GetAttribute("r"));
-                            int _cost = Convert.ToInt32(sel.GetAttribute("c"));
-                            Skill gs = new Skill(
-                                null, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
-                            gs.Changed += new EventHandler(gs_Changed);
-                            gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
-                            Skill.AllSkills[gs.Name] = gs;
-                            tempskills.Add(Skill.AllSkills[_name]);
+                            Skill.Prereq p = new Skill.Prereq(
+                                pel.GetAttribute("n"),
+                                Convert.ToInt32(pel.GetAttribute("l")));
+                            prereqs.Add(p);
                         }
-                        Skill temp = Skill.AllSkills[_name].NewCopy();
-                        temp.SetOwner(this);
-                        temp.Changed += new EventHandler(gs_Changed);
-                        temp.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
-                        skills.Add(temp);
-                        TempAllSkills[_name] = temp;
+
+                        bool _pub = (sel.GetAttribute("p") != "false");
+                        int _id = Convert.ToInt32(sel.GetAttribute("i"));
+                        string _desc = sel.GetAttribute("d");
+                        EveAttribute _primAttr =
+                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
+                        EveAttribute _secAttr =
+                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
+                        int _rank = Convert.ToInt32(sel.GetAttribute("r"));
+                        int _cost = Convert.ToInt32(sel.GetAttribute("c"));
+                        Skill gs = new Skill(
+                            this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
+                        gs.Changed += new EventHandler(gs_Changed);
+                        gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
+                        m_AllSkillsByID[_id] = gs;
+                        skills.Add(gs);
                     }
+
                     string _group = sgel.GetAttribute("n");
                     int _number = Convert.ToInt32(sgel.GetAttribute("g"));
-                    if (buildskills)
-                    {
-                        SkillGroup tempgsg = new SkillGroup(_group, _number, tempskills);
-                    }
                     SkillGroup gsg = new SkillGroup(_group, _number, skills);
                     this.m_skillGroups[gsg.Name] = gsg;
 
@@ -128,13 +114,11 @@ namespace EVEMon.Common
                 }
             }
 
-            if (buildskills)
-                Skill.PrepareAllPrerequisites();
-            foreach (Skill s in TempAllSkills.Values)
+            foreach (Skill s in m_AllSkillsByID.Values)
             {
                 foreach (Skill.Prereq pr in s.Prereqs)
                 {
-                    Skill gs = TempAllSkills[pr.Name];
+                    Skill gs = m_AllSkillsByID[pr.Skill.Id];
                     pr.SetSkill(gs);
                 }
             }
@@ -597,6 +581,11 @@ namespace EVEMon.Common
         public Dictionary<string, SkillGroup> SkillGroups
         {
             get { return m_skillGroups; }
+        }
+
+        public Dictionary<int, Skill> AllSkillsByTypeID
+        {
+            get { return m_AllSkillsByID;
         }
 
         private int m_cachedSkillPointTotal = -1;

@@ -961,8 +961,8 @@ namespace EVEMon.SkillPlanner
 
                     foreach (ListViewItem lvi in lvSkills.SelectedItems)
                     {
-                        Plan.Entry newPe = ((Plan.Entry)lvi.Tag).Clone() as Plan.Entry;
-                        newPlan.PlanTo(Skill.AllSkills[newPe.SkillName], newPe.Level,"Exported from " + m_plan.Name);
+                        Plan.Entry oldplanitem = (Plan.Entry)lvi.Tag;
+                        newPlan.PlanTo(oldplanitem.Skill, oldplanitem.Level, "Exported from " + m_plan.Name);
                     }
                     // Enforces proper ordering too!
                     newPlan.CheckForMissingPrerequisites();

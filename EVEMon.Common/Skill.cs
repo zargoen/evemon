@@ -16,7 +16,6 @@ namespace EVEMon.Common
         private EveAttribute m_secondaryAttribute;
         private int m_rank;
         private IEnumerable<Prereq> m_prereqs;
-        private static IDictionary<string, Skill> sm_allSkills;
         private int m_currentSkillPoints;
         private int m_lastConfirmedLvl;
         private int m_cost;
@@ -430,31 +429,6 @@ namespace EVEMon.Common
             get
             {
                 return m_prereqs;
-            }
-        }
-
-        public static IDictionary<string, Skill> AllSkills
-        {
-            get
-            {
-                return sm_allSkills;
-            }
-            set
-            {
-                sm_allSkills = value;
-            }
-        }
-
-        public static void PrepareAllPrerequisites()
-        {
-            // We have loaded all skills so we can now bake in all the pre-req skills
-            foreach (Skill s in Skill.AllSkills.Values)
-            {
-                foreach (Prereq pr in s.Prereqs)
-                {
-                    Skill gs = AllSkills[pr.Name];
-                    pr.SetSkill(gs);
-                }
             }
         }
 
