@@ -585,7 +585,7 @@ namespace EVEMon.Common
 
         public Dictionary<int, Skill> AllSkillsByTypeID
         {
-            get { return m_AllSkillsByID;
+            get { return m_AllSkillsByID; }
         }
 
         private int m_cachedSkillPointTotal = -1;
