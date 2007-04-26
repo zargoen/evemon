@@ -56,6 +56,13 @@ namespace EVEMon.Common
             /// the skill data that had been loaded for the last loaded character.
             /// Now, it only gets loaded for each character.
             /// 
+            bool buildSkills = false;
+            if (Skill.SkillNamesByID == null || Skill.SkillNamesByID.Count == 0)
+            {
+                Skill.SkillNamesByID = new Dictionary<int, string>();
+                buildSkills = true;
+            }
+            Dictionary<string, Skill> SkillsByName = new Dictionary<string, Skill>();
 
             string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
             if (!File.Exists(skillfile))
@@ -99,6 +106,9 @@ namespace EVEMon.Common
                         gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
                         m_AllSkillsByID[_id] = gs;
                         skills.Add(gs);
+                        if (buildSkills)
+                            Skill.SkillNamesByID[_id] = _name;
+                        SkillsByName[_name] = gs;
                     }
 
                     string _group = sgel.GetAttribute("n");
@@ -118,7 +128,7 @@ namespace EVEMon.Common
             {
                 foreach (Skill.Prereq pr in s.Prereqs)
                 {
-                    Skill gs = m_AllSkillsByID[pr.Skill.Id];
+                    Skill gs = SkillsByName[pr.Name];
                     pr.SetSkill(gs);
                 }
             }

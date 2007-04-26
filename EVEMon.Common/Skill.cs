@@ -21,6 +21,8 @@ namespace EVEMon.Common
         private int m_cost;
         bool m_owned;
 
+        private static Dictionary<int, string> m_SkillNamesByID;
+
         public Skill(CharacterInfo gci, bool pub, string name, int id, string description,
                           EveAttribute a1, EveAttribute a2, int rank, int cost, bool owned, IEnumerable<Prereq> prereqs)
         {
@@ -430,6 +432,12 @@ namespace EVEMon.Common
             {
                 return m_prereqs;
             }
+        }
+
+        public static Dictionary<int, string> SkillNamesByID
+        {
+            get { return m_SkillNamesByID; }
+            set { m_SkillNamesByID = value; }
         }
 
         private void OnChanged()

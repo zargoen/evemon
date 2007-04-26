@@ -132,7 +132,7 @@ namespace EVEMon.Common
                 }
 
 #if DEBUG
-                Console.WriteLine("Debug:  Redirects Remaining: {0}", wrs.RedirectsRemain);
+                Console.WriteLine("Debug:  Redirects Remaining: {0}  url {1}", wrs.RedirectsRemain, url);
 #endif
                 HttpWebRequest req = GetWebRequest(url, wrs);
                 try
@@ -298,7 +298,6 @@ namespace EVEMon.Common
             return GetUrlString(url, wrs, out junk);
         }
 
- 
         public static string GetUrlString(string url, WebRequestState wrs, out HttpWebResponse resp)
         {
             Stream s = GetUrlStream(url, wrs, out resp);

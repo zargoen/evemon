@@ -173,7 +173,7 @@ namespace EVEMon
             {
                 SetNoCharacter();
                 MessageBox.Show("No characters were found on that account.",
-                                "No Characters Found",
+                                "No Characters Found. This may be because CCP have disabled the online character sheet.",
                                 MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }

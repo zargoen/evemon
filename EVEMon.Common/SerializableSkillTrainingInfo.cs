@@ -78,6 +78,12 @@ namespace EVEMon.Common
                 get { return ConvertDateTimeToTimeString(m_As_At); }
                 set { m_As_At = ConvertTimeStringToDateTime(value); }
             }
+
+            [XmlIgnore]
+            public DateTime GetDateTimeAtUpdate
+            {
+                get { return m_As_At; }
+            }
         }
 
         private DateTime m_endTime;
@@ -162,6 +168,8 @@ namespace EVEMon.Common
         public static DateTime ConvertTimeStringToDateTime(string timeUTC)
         {
             // timeUTC  = yyyy-mm-dd hh:mm:ss
+            if (timeUTC == null || timeUTC == "")
+                return DateTime.MinValue;
             DateTime dt = new DateTime(
                             Int32.Parse(timeUTC.Substring(0, 4)),
                             Int32.Parse(timeUTC.Substring(5, 2)),

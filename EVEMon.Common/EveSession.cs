@@ -329,12 +329,23 @@ namespace EVEMon.Common
             try
             {
                 string stxt =
-                    GetSessionUrlText("http://myeve.eve-online.com/character/skilltree.asp?characterID=" +
+                    GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
                                       charId.ToString());
-                if (String.IsNullOrEmpty(stxt) || !stxt.Contains("skills trained, for a total of"))
+                if (String.IsNullOrEmpty(stxt))
                 {
                     return null;
                 }
+                XmlDocument sdoc = new XmlDocument();
+                try
+                {
+                    sdoc.LoadXml(stxt);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHandler.LogException(e, true);
+                    return null;
+                }
+
                 string xtxt =
                     GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp?characterID=" + charId.ToString());
                 if (String.IsNullOrEmpty(xtxt))
@@ -351,8 +362,7 @@ namespace EVEMon.Common
                     ExceptionHandler.LogException(e, true);
                     return null;
                 }
-
-                SerializableSkillInTraining sit = ProcessSkilltreeHtml(stxt);
+                SerializableSkillInTraining sit = ProcessTrainingSkillXml(sdoc, charId);
                 int timeLeftInCache = DEFAULT_RETRY_INTERVAL;
                 SerializableCharacterInfo sci = ProcessCharacterXml(xdoc, charId, out timeLeftInCache);
                 sci.TimeLeftInCache = timeLeftInCache;
@@ -433,8 +443,6 @@ namespace EVEMon.Common
             
         }
 
-        
-
         private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int charId, out int cacheExpires)
         {
             XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
@@ -448,6 +456,41 @@ namespace EVEMon.Common
             {
                 return (SerializableCharacterInfo) xs.Deserialize(xnr);
             }
+        }
+
+        private SerializableSkillInTraining ProcessTrainingSkillXml(XmlDocument xdoc, int charId)
+        {
+            SerializableSkillTrainingInfo temp = null;
+            XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
+            XmlElement charRoot =
+                xdoc.DocumentElement.SelectSingleNode("/skillTraining[@characterID='" +
+                                                      charId.ToString() + "']") as XmlElement;
+
+            using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+            {
+                temp = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+            }
+
+            // Now we need to convert SerializableSkillTrainingInfo into a SerializableSkillInTraining
+            SerializableSkillInTraining sit = null;
+            string error = temp.Error;
+            if (error == "characterID does not belong to you.")
+                return null; // really should throw an exception here
+            if (error == "You are trying too fast.")
+                return null; // should be setting a timer to retry here
+            DateTime end = temp.getTrainingEndTime;
+            if (end == DateTime.MinValue)
+                return null;
+
+            sit.SkillName = Skill.SkillNamesByID[temp.TrainingSkillWithTypeID];
+            sit.TrainingToLevel = temp.TrainingSkillToLevel;
+            sit.EstimatedCompletion = temp.getTrainingEndTime.ToLocalTime();
+            TimeSpan trainingTime = temp.getTrainingEndTime.ToLocalTime() - temp.getTrainingStartTime.ToLocalTime();
+            double spPerMinute = (temp.TrainingSkillDestinationSP - temp.TrainingSkillStartSP) / trainingTime.TotalMinutes;
+            TimeSpan timeSoFar = temp.CurrentTime.GetDateTimeAtUpdate - temp.getTrainingStartTime;
+            sit.CurrentPoints = temp.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * spPerMinute);
+            sit.NeededPoints = temp.TrainingSkillDestinationSP;
+            return sit;
         }
 
         private SerializableSkillInTraining ProcessSkilltreeHtml(string htmld)
