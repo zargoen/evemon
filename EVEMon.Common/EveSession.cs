@@ -328,8 +328,7 @@ namespace EVEMon.Common
         {
             try
             {
-                string stxt =
-                    GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
+                string stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
                                       charId.ToString());
                 if (String.IsNullOrEmpty(stxt))
                 {
@@ -460,36 +459,40 @@ namespace EVEMon.Common
 
         private SerializableSkillInTraining ProcessTrainingSkillXml(XmlDocument xdoc, int charId)
         {
-            SerializableSkillTrainingInfo temp = null;
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
-            XmlElement charRoot =
-                xdoc.DocumentElement.SelectSingleNode("/skillTraining[@characterID='" +
-                                                      charId.ToString() + "']") as XmlElement;
-
-            using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
-            {
-                temp = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
-            }
-
-            // Now we need to convert SerializableSkillTrainingInfo into a SerializableSkillInTraining
             SerializableSkillInTraining sit = null;
-            string error = temp.Error;
-            if (error == "characterID does not belong to you.")
-                return null; // really should throw an exception here
-            if (error == "You are trying too fast.")
-                return null; // should be setting a timer to retry here
-            DateTime end = temp.getTrainingEndTime;
-            if (end == DateTime.MinValue)
-                return null;
+            if (xdoc != null)
+            {
+                SerializableSkillTrainingInfo temp = null;
+                XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
+                XmlElement charRoot = xdoc.DocumentElement;
 
-            sit.SkillName = Skill.SkillNamesByID[temp.TrainingSkillWithTypeID];
-            sit.TrainingToLevel = temp.TrainingSkillToLevel;
-            sit.EstimatedCompletion = temp.getTrainingEndTime.ToLocalTime();
-            TimeSpan trainingTime = temp.getTrainingEndTime.ToLocalTime() - temp.getTrainingStartTime.ToLocalTime();
-            double spPerMinute = (temp.TrainingSkillDestinationSP - temp.TrainingSkillStartSP) / trainingTime.TotalMinutes;
-            TimeSpan timeSoFar = temp.CurrentTime.GetDateTimeAtUpdate - temp.getTrainingStartTime;
-            sit.CurrentPoints = temp.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * spPerMinute);
-            sit.NeededPoints = temp.TrainingSkillDestinationSP;
+                int test = Convert.ToInt32(charRoot.GetAttribute("characterID"));
+
+                using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+                {
+                    temp = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+                }
+
+                // Now we need to convert SerializableSkillTrainingInfo into a SerializableSkillInTraining
+                string error = temp.Error;
+                if (error == "characterID does not belong to you.")
+                    return null; // really should throw an exception here
+                if (error == "You are trying too fast.")
+                    return null; // should be setting a timer to retry here
+                DateTime end = temp.getTrainingEndTime;
+                if (end == DateTime.MinValue)
+                    return null;
+
+                sit = new SerializableSkillInTraining();
+                sit.SkillName = Skill.SkillNamesByID[temp.TrainingSkillWithTypeID];
+                sit.TrainingToLevel = temp.TrainingSkillToLevel;
+                sit.EstimatedCompletion = temp.getTrainingEndTime.ToLocalTime();
+                TimeSpan trainingTime = temp.getTrainingEndTime.ToLocalTime() - temp.getTrainingStartTime.ToLocalTime();
+                double spPerMinute = (temp.TrainingSkillDestinationSP - temp.TrainingSkillStartSP) / trainingTime.TotalMinutes;
+                TimeSpan timeSoFar = temp.CurrentTime.GetDateTimeAtUpdate - temp.getTrainingStartTime;
+                sit.CurrentPoints = temp.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * spPerMinute);
+                sit.NeededPoints = temp.TrainingSkillDestinationSP;
+            }
             return sit;
         }
 

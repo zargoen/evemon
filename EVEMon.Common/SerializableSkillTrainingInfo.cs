@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
-    [XmlRoot("SkillTraining")]
+    [XmlRoot("skillTraining")]
     public class SerializableSkillTrainingInfo
     {
         private int m_characterId;
@@ -21,7 +21,7 @@ namespace EVEMon.Common
             set { m_characterId = value; }
         }
 
-        private string m_error;
+        private string m_error = String.Empty;
 
         /// <summary>
         /// If this is non 0 length or not null then an error has occurred
@@ -49,7 +49,7 @@ namespace EVEMon.Common
             set { m_timer = value; }
         }
 
-        private CT m_curTime;
+        private CT m_curTime = new CT();
 
         [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
         public CT CurrentTime
