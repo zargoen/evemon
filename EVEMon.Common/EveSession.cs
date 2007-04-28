@@ -334,7 +334,7 @@ namespace EVEMon.Common
                 {
                     return null;
                 }
-                XmlDocument sdoc = new XmlDocument();
+                 XmlDocument sdoc = new XmlDocument();
                 try
                 {
                     sdoc.LoadXml(stxt);
@@ -489,9 +489,16 @@ namespace EVEMon.Common
                 sit.EstimatedCompletion = temp.getTrainingEndTime.ToLocalTime();
                 TimeSpan trainingTime = temp.getTrainingEndTime.ToLocalTime() - temp.getTrainingStartTime.ToLocalTime();
                 double spPerMinute = (temp.TrainingSkillDestinationSP - temp.TrainingSkillStartSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = temp.CurrentTime.GetDateTimeAtUpdate - temp.getTrainingStartTime;
+                TimeSpan timeSoFar = temp.GetDateTimeAtUpdate - temp.getTrainingStartTime;
                 sit.CurrentPoints = temp.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * spPerMinute);
                 sit.NeededPoints = temp.TrainingSkillDestinationSP;
+
+                // Compensate for differences between TQ time and client machine time
+                // this means that the user will see the skill complete at the exact same
+                // second that it completes on TQ (the user can adjust this with the offset
+                // notification setting) - Brad.
+                TimeSpan TQOffset = DateTime.Now - temp.GetDateTimeAtUpdate.ToLocalTime();
+                sit.EstimatedCompletion += TQOffset;
             }
             return sit;
         }

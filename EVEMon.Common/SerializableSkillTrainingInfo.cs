@@ -49,43 +49,62 @@ namespace EVEMon.Common
             set { m_timer = value; }
         }
 
-        private CT m_curTime = new CT();
+        private DateTime m_curTime;
 
-        [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
-        public CT CurrentTime
+        [XmlElement("currentTime")]
+        public string DateTimeAtUpdate
+        {
+            get { return ConvertDateTimeToTimeString(m_curTime); }
+            set { m_curTime = ConvertTimeStringToDateTime(value); }
+        }
+
+        [XmlIgnore]
+        public DateTime GetDateTimeAtUpdate
         {
             get { return m_curTime; }
-            set { m_curTime = value; }
         }
 
-        [XmlRoot("currentTime")]
-        public class CT
-        {
-            private int m_offset;
+        /* This doesn't work!!  there is no subnode of currentTime called DateTimeAtUpdate! and we don't 
+         * need the offset anyway
+         
+                private CT m_curTime = new CT();
 
-            [XmlAttribute("offset")]
-            public int Offset
-            {
-                get { return m_offset; }
-                set { m_offset = value; }
-            }
+                [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
+                public CT CurrentTime
+                {
+                    get { return m_curTime; }
+                    set { m_curTime = value; }
+                }
 
-            private DateTime m_As_At;
+                [XmlRoot("currentTime")]
+                public class CT
+                {
+                    private int m_offset;
 
-            [XmlElement]
-            public string DateTimeAtUpdate
-            {
-                get { return ConvertDateTimeToTimeString(m_As_At); }
-                set { m_As_At = ConvertTimeStringToDateTime(value); }
-            }
+                    [XmlAttribute("offset")]
+                    public int Offset
+                    {
+                        get { return m_offset; }
+                        set { m_offset = value; }
+                    }
 
-            [XmlIgnore]
-            public DateTime GetDateTimeAtUpdate
-            {
-                get { return m_As_At; }
-            }
-        }
+                    private DateTime m_As_At;
 
+                    // This doesn't work! there is no subnode of currentTime called DateTimeAtUpdate!
+                    [XmlElement]
+                    public string DateTimeAtUpdate
+                    {
+                        get { return ConvertDateTimeToTimeString(m_As_At); }
+                        set { m_As_At = ConvertTimeStringToDateTime(value); }
+                    }
+
+                    [XmlIgnore]
+                    public DateTime GetDateTimeAtUpdate
+                    {
+                        get { return m_As_At; }
+                    }
+                }
+                */
         private DateTime m_endTime;
 
         [XmlElement("trainingEndTime")]
