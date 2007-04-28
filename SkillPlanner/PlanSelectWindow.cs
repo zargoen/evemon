@@ -94,6 +94,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
+                btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
                 lbPlanList.EndUpdate();
             }
         }
