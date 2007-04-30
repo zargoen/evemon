@@ -31,12 +31,14 @@ namespace EVEMon
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillsPieChart));
             this.skillPieChartControl = new EVEMon.PieChart.PieChartControl();
             this.pieControlPanel = new System.Windows.Forms.Panel();
+            this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.pieAngle = new System.Windows.Forms.NumericUpDown();
             this.pieHeight = new System.Windows.Forms.NumericUpDown();
             this.pieAngleLabel = new System.Windows.Forms.Label();
             this.pieHeightLabel = new System.Windows.Forms.Label();
             this.m_colorDialog = new System.Windows.Forms.ColorDialog();
+            this.savePieDialog = new System.Windows.Forms.SaveFileDialog();
             this.pieControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieHeight)).BeginInit();
@@ -61,6 +63,7 @@ namespace EVEMon
             // 
             this.pieControlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.pieControlPanel.Controls.Add(this.saveButton);
             this.pieControlPanel.Controls.Add(this.closeButton);
             this.pieControlPanel.Controls.Add(this.pieAngle);
             this.pieControlPanel.Controls.Add(this.pieHeight);
@@ -70,6 +73,17 @@ namespace EVEMon
             this.pieControlPanel.Name = "pieControlPanel";
             this.pieControlPanel.Size = new System.Drawing.Size(642, 26);
             this.pieControlPanel.TabIndex = 1;
+            // 
+            // saveButton
+            // 
+            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveButton.Location = new System.Drawing.Point(485, 3);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(76, 24);
+            this.saveButton.TabIndex = 5;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // closeButton
             // 
@@ -152,6 +166,11 @@ namespace EVEMon
             this.pieHeightLabel.TabIndex = 0;
             this.pieHeightLabel.Text = "Pie height:";
             // 
+            // savePieDialog
+            // 
+            this.savePieDialog.DefaultExt = "png";
+            this.savePieDialog.Filter = "PNG Image|*.png";
+            // 
             // SkillsPieChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -183,5 +202,7 @@ namespace EVEMon
         private System.Windows.Forms.NumericUpDown pieHeight;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.ColorDialog m_colorDialog;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.SaveFileDialog savePieDialog;
     }
 }

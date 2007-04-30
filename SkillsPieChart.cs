@@ -125,5 +125,17 @@ namespace EVEMon
                 skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
             }
         }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            Bitmap pie = new Bitmap(skillPieChartControl.Width, skillPieChartControl.Height);
+            Rectangle bounds = new Rectangle(0, 0, skillPieChartControl.Width, skillPieChartControl.Height);
+            skillPieChartControl.DrawToBitmap(pie, bounds);
+            DialogResult savePieResult = savePieDialog.ShowDialog();
+            if (savePieResult == DialogResult.OK)
+            {
+                pie.Save(savePieDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
     }
 }
