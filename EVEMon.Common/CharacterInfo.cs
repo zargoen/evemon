@@ -1155,7 +1155,7 @@ namespace EVEMon.Common
                         else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
                             m_SkillInTraining = SkillInTraining;
-                            newTrainingSkill.SetTrainingInfo(level, SkillInTraining.getTrainingEndTime);
+                            newTrainingSkill.SetTrainingInfo(level, SkillInTraining.getTrainingEndTime.ToLocalTime() - SkillInTraining.getTQOffset());
                         }
                     }
                 }

@@ -349,6 +349,7 @@ namespace EVEMon.Common
                     using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
                     {
                         ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+                        ssti.setTQOffset();
                     }
                 }
                 return ssti;

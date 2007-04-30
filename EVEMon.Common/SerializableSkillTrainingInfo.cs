@@ -230,5 +230,17 @@ namespace EVEMon.Common
                 return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
             }
         }
+        TimeSpan m_TQOffset;
+
+        public TimeSpan getTQOffset()
+        {
+            return m_TQOffset;
+        }
+
+        public void setTQOffset()
+        {
+            // set must only be done at deserialisation when we can compare current time agaisnt machine time
+            m_TQOffset = m_curTime.ToLocalTime() - DateTime.Now;
+        }
     }
 }
