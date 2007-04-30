@@ -32,7 +32,6 @@ namespace EVEMon
         private DateTime m_nextScheduledUpdateAt = DateTime.MinValue;
         private string m_skillTrainingName;
         private DateTime m_estimatedCompletion;
-        private DateTime m_realCompletion;
         private CharacterInfo m_grandCharacterInfo;
         private int m_lastTickSPPaint = 0;
         private bool m_updatingPortrait = false;
@@ -1050,8 +1049,8 @@ namespace EVEMon
 
         void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
         {
-            if (m_realCompletion != DateTime.MinValue)
-                m_estimatedCompletion = m_realCompletion.AddSeconds(-m_settings.NotificationOffset);
+            if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
+                m_estimatedCompletion = m_grandCharacterInfo.CurrentlyTrainingSkill.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
         }
 
         /// <summary>
