@@ -156,9 +156,19 @@ namespace EVEMon.Common
             set { m_isCached = value; }
         }
 
+        private SerializableSkillTrainingInfo m_TrainingSkillInfo;
+
+        [XmlElement("skillTraining", typeof (SerializableSkillTrainingInfo))]
+        public SerializableSkillTrainingInfo TrainingSkillInfo
+        {
+            get { return m_TrainingSkillInfo; }
+            set { m_TrainingSkillInfo = value; }
+        }
+
         private SerializableSkillInTraining m_skillInTraining;
 
         [XmlElement("skillInTraining")]
+        [Obsolete]
         public SerializableSkillInTraining SkillInTraining
         {
             get { return m_skillInTraining; }

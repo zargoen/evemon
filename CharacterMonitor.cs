@@ -74,7 +74,6 @@ namespace EVEMon
             m_cfi = null;
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterMonitor"/> class.  For file based characters
         /// </summary>
@@ -232,7 +231,6 @@ namespace EVEMon
             m_settings.NotificationOffsetChanged -= new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
         }
 
-
         void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
         {
             // Here is where we check and change the alert on schedule collision
@@ -293,8 +291,6 @@ namespace EVEMon
                 m_grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
             }
         }
-
-
 
         /// <summary>
         /// Gets or sets a value indicating whether the panel is currently visible
@@ -456,13 +452,13 @@ namespace EVEMon
                     m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
                 }
             }
+            //UpdateTrainingSkillInfo();
         }
 
         private void UpdateGrandCharacterInfo()
         {
             m_session.UpdateGrandCharacterInfoAsync(m_grandCharacterInfo, Program.MainWindow,
                                                     new UpdateGrandCharacterInfoCallback(GrandCharacterUpdatedCallback));
-
         }
 
         /// <summary>
@@ -481,8 +477,55 @@ namespace EVEMon
                 //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
                 tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
                 tmrUpdateCharacter.Enabled = true;
+
+                miHitTrainingSkill.Enabled = true;
+                m_canUpdateSkills = true;
+
                 StopThrobber();
             }));
+        }
+
+        private void UpdateTrainingSkillInfo()
+        {
+            m_session.UpdateTrainingSkillInfoAsync(m_grandCharacterInfo, Program.MainWindow,
+                                                    new UpdateTrainingSkillInfoCallback(TrainingSkillUpdatedCallback));
+        }
+
+        /// <summary>
+        /// Updates the Training Skill timer when finished updating
+        /// </summary>
+        /// <param name="s">The eve session - not used.</param>
+        /// <param name="timeLeftInCache">The time left in cache - that is, the minimum time before the xml shows what skill you are training.</param>
+        private void TrainingSkillUpdatedCallback(EveSession s, int timeToNextUpdate)
+        {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                m_canUpdateSkills = false;
+                miHitTrainingSkill.Enabled = false;
+                if (timeToNextUpdate != -1) // Only reason the timer would = -1 would be if the Character login details were correct, but didn't have this char on that account.
+                {
+                    tmrMinTrainingSkillRetry.Interval = timeToNextUpdate == 0 ? 900000 : timeToNextUpdate;
+                    tmrMinTrainingSkillRetry.Enabled = true;
+                }
+            }));
+        }
+
+        private bool m_canUpdateSkills = false;
+
+        private void tmrMTSRTick(object sender, EventArgs e)
+        {
+            tmrMinTrainingSkillRetry.Enabled = false;
+            miHitTrainingSkill.Enabled = true;
+            m_canUpdateSkills = true;
+        }
+
+        private void miHitTrainingSkill_Click(object sender, EventArgs e)
+        {
+            // Update the currently Training Skill Info here, if the timer allows.
+            if (m_canUpdateSkills)
+            {
+                UpdateTrainingSkillInfo();
+            }
         }
 
         /// <summary>
@@ -739,6 +782,7 @@ namespace EVEMon
                 }
             }
         }
+
         private void UpdateCharacterImageRemote()
         {
             pbCharImage.Image = null;
@@ -1381,7 +1425,6 @@ namespace EVEMon
             MessageBox.Show(sb.ToString(), String.Format("Skills owned by {0}", GrandCharacterInfo.Name), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-
         /// <summary>
         /// Handles the Click event of the miChangeInfo control.  Displays a new login window and gets username/password from the user.
         /// </summary>
@@ -1628,13 +1671,11 @@ namespace EVEMon
             btnPlan.ContextMenuStrip = plans;
         }
 
-
         private void btnMoreOptions_Click(object sender, EventArgs e)
         {
             cmsMoreOptions.Show(btnMoreOptions,
                                 btnMoreOptions.PointToClient(MousePosition), ToolStripDropDownDirection.Default);
         }
-
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1836,24 +1877,20 @@ namespace EVEMon
             }
         }
 
-
         private void miUpdatePicture_Click(object sender, EventArgs e)
         {
             UpdateCharacterImageRemote();
         }
-
 
         private void miUpdatePictureFromEVECache_Click(object sender, EventArgs e)
         {
             UpdateCharacterImageLocal();
         }
 
-
         private void miSetEVEFolder_Click(object sender, EventArgs e)
         {
             RequestEVEFolder();
         }
-
 
         private void pbCharImage_Click(object sender, EventArgs e)
         {
@@ -1935,12 +1972,10 @@ namespace EVEMon
             ttToolTip.Active = true;
         }
 
-
         private void tsbIneveSync_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
         }
-
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -2123,11 +2158,11 @@ namespace EVEMon
                         sw.WriteLine(": {0} {1}/{2} Points",
                                      skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
                                      s.SkillLevel5.ToString("#,##0"));
-                        if (ci.SkillInTraining != null && ci.SkillInTraining.SkillName == s.Name)
+                        if (ci.TrainingSkillInfo != null && ci.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
                         {
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
-                                         Skill.GetRomanForInt(ci.SkillInTraining.TrainingToLevel),
-                                         (ci.SkillInTraining.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset)).ToString());
+                                         Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
+                                         (ci.TrainingSkillInfo.getTrainingEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
                         }
                     }
                     writeSubSep();

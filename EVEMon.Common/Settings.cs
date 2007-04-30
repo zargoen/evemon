@@ -362,7 +362,6 @@ namespace EVEMon.Common
                 ShowLoginNameChanged(this, new EventArgs());
         }
 
-
         private List<SerializableColor> m_skillPieChartColors = new List<SerializableColor>();
 
         public List<SerializableColor> SkillPieChartColors
@@ -443,6 +442,7 @@ namespace EVEMon.Common
         // needs to be before plans.
         
         ColumnPreference m_columnPreferences = new ColumnPreference();
+
         public ColumnPreference ColumnPreferences
         {
             get { return m_columnPreferences; }
@@ -1405,8 +1405,6 @@ namespace EVEMon.Common
         
         #endregion
     }
-
-    
 
     [XmlRoot("proxySetting")]
     public class ProxySetting: ICloneable

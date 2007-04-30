@@ -56,12 +56,6 @@ namespace EVEMon.Common
             /// the skill data that had been loaded for the last loaded character.
             /// Now, it only gets loaded for each character.
             /// 
-            bool buildSkills = false;
-            if (Skill.SkillNamesByID == null || Skill.SkillNamesByID.Count == 0)
-            {
-                Skill.SkillNamesByID = new Dictionary<int, string>();
-                buildSkills = true;
-            }
             Dictionary<string, Skill> SkillsByName = new Dictionary<string, Skill>();
 
             string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
@@ -106,8 +100,6 @@ namespace EVEMon.Common
                         gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
                         m_AllSkillsByID[_id] = gs;
                         skills.Add(gs);
-                        if (buildSkills)
-                            Skill.SkillNamesByID[_id] = _name;
                         SkillsByName[_name] = gs;
                     }
 
@@ -759,6 +751,13 @@ namespace EVEMon.Common
             }
         }
 
+        public void AssignFromSerializableSkillTrainingInfo(SerializableSkillTrainingInfo sti)
+        {
+            this.SuppressEvents();
+            this.check_training_skills(sti);
+            this.ResumeEvents();
+        }
+
         public void AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
         {
             this.SuppressEvents();
@@ -944,7 +943,7 @@ namespace EVEMon.Common
                     }
                 }
             }
-            this.check_training_skills(ci.SkillInTraining);
+            check_training_skills(ci.TrainingSkillInfo);
             this.ResumeEvents();
         }
 
@@ -1075,13 +1074,20 @@ namespace EVEMon.Common
             Settings.GetInstance().SetOwnedBooks(m_name, owned);
         }
 
-        public void check_training_skills(SerializableSkillInTraining SkillInTraining)
+        private SerializableSkillTrainingInfo m_SkillInTraining;
+
+        public SerializableSkillTrainingInfo SerialSIT
+        {
+            get { return m_SkillInTraining; }
+        }
+
+        public void check_training_skills(SerializableSkillTrainingInfo SkillInTraining)
         {
             // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
             // 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.SkillName != this.CurrentlyTrainingSkill.Name) || ((TimeSpan)SkillInTraining.EstimatedCompletion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
+            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id) || ((TimeSpan)SkillInTraining.getTrainingEndTime.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
@@ -1127,27 +1133,29 @@ namespace EVEMon.Common
                     // Now we depart even more from the version above.
                     // We have to deal with making this character actually show that he is learning the
                     // skill the XML file says he's learning. But we do this carefully as it may be complete
-                    string skill_name = SkillInTraining.SkillName;
-                    int level = SkillInTraining.TrainingToLevel;
+                    string skill_name = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID].Name;
+                    int level = SkillInTraining.TrainingSkillToLevel;
                     Skill newTrainingSkill = this.GetSkill(skill_name);
+                    int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
                     if (newTrainingSkill != null)
                     {
-                        if (SkillInTraining.NeededPoints <= SkillInTraining.CurrentPoints)
+                        if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
                         {
                             if (old_skill.old_skill_completed && skill_name == old_skill.old_SkillName && level == old_skill.old_TrainingToLevel)
                             {
                                 newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(level);
                             }
-                            if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (skill_name != old_skill.old_SkillName || (skill_name == old_skill.old_SkillName && SkillInTraining.TrainingToLevel != old_skill.old_TrainingToLevel))))
+                            if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (skill_name != old_skill.old_SkillName || (skill_name == old_skill.old_SkillName && SkillInTraining.TrainingSkillToLevel != old_skill.old_TrainingToLevel))))
                             {
                                 this.GetSkill(skill_name).CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(level);
-                                old_skill = new OldSkillinfo(skill_name, SkillInTraining.TrainingToLevel, true, SkillInTraining.EstimatedCompletion);
+                                old_skill = new OldSkillinfo(skill_name, SkillInTraining.TrainingSkillToLevel, true, SkillInTraining.getTrainingEndTime);
                                 OnDownloadAttemptComplete(this.Name, skill_name, true);
                             }
                         }
-                        else if (SkillInTraining.NeededPoints > SkillInTraining.CurrentPoints)
+                        else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
-                            newTrainingSkill.SetTrainingInfo(level, SkillInTraining.EstimatedCompletion);
+                            m_SkillInTraining = SkillInTraining;
+                            newTrainingSkill.SetTrainingInfo(level, SkillInTraining.getTrainingEndTime);
                         }
                     }
                 }
@@ -1161,11 +1169,13 @@ namespace EVEMon.Common
                 // Order is everything in this section!!
                 if (SkillInTraining != null)
                 {
-                    Skill newTrainingSkill = this.GetSkill(SkillInTraining.SkillName);
+                    string _name = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID].Name;
+                    Skill newTrainingSkill = this.GetSkill(_name);
                     if (newTrainingSkill != null)
                     {
-                        old_skill = new OldSkillinfo(SkillInTraining.SkillName, SkillInTraining.TrainingToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.NeededPoints, SkillInTraining.EstimatedCompletion);
+                        old_skill = new OldSkillinfo(_name, SkillInTraining.TrainingSkillToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.TrainingSkillDestinationSP, SkillInTraining.getTrainingEndTime);
                     }
+                    m_SkillInTraining = SkillInTraining;
                 }
                 first_run = false;
             }
@@ -1356,9 +1366,8 @@ namespace EVEMon.Common
                 }
             }
 
-            Skill gsit = this.CurrentlyTrainingSkill;
-            if (gsit != null)
-            {
+            ci.TrainingSkillInfo = this.m_SkillInTraining;
+                /*
                 SerializableSkillInTraining sit = new SerializableSkillInTraining();
                 sit.SkillName = gsit.Name;
                 sit.TrainingToLevel = gsit.TrainingToLevel;
@@ -1366,7 +1375,7 @@ namespace EVEMon.Common
                 sit.EstimatedCompletion = gsit.EstimatedCompletion;
                 sit.NeededPoints = gsit.GetPointsRequiredForLevel(gsit.TrainingToLevel);
                 ci.SkillInTraining = sit;
-            }
+                */
 
             return ci;
         }

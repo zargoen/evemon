@@ -43,16 +43,25 @@ namespace EVEMon.Common
         /// this has a value of <value>900</value> when it's been successful - this value may change at little or no notice.
         /// </summary>
         [XmlElement("tryAgainIn")]
-        public int timertonextupdate
+        public int TimerToNextUpdate
         {
             get { return m_timer; }
             set { m_timer = value; }
         }
+        
+        private int m_offset;
 
-        private DateTime m_curTime;
+        [XmlElement("currentTimeTQOffset")]
+        public int Offset
+        {
+            get { return m_offset; }
+            set { m_offset = value; }
+        }
+
+        private DateTime m_curTime = DateTime.MinValue;
 
         [XmlElement("currentTime")]
-        public string DateTimeAtUpdate
+        public string CurrentTime
         {
             get { return ConvertDateTimeToTimeString(m_curTime); }
             set { m_curTime = ConvertTimeStringToDateTime(value); }
@@ -63,49 +72,46 @@ namespace EVEMon.Common
         {
             get { return m_curTime; }
         }
+        /* This does work, now. The missing piece to the puzzle was [XmlText]
+         * Currently though, Garthagk has yet to revert back to the format that uses this :(
+        private CT m_curTime = new CT();
 
-        /* This doesn't work!!  there is no subnode of currentTime called DateTimeAtUpdate! and we don't 
-         * need the offset anyway
-         
-                private CT m_curTime = new CT();
+        [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
+        public CT CurrentTime
+        {
+            get { return m_curTime; }
+            set { m_curTime = value; }
+        }
 
-                [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
-                public CT CurrentTime
-                {
-                    get { return m_curTime; }
-                    set { m_curTime = value; }
-                }
+        [XmlRoot("currentTime")]
+        public class CT
+        {
+            private int m_offset;
 
-                [XmlRoot("currentTime")]
-                public class CT
-                {
-                    private int m_offset;
+            [XmlAttribute("offset")]
+            public int Offset
+            {
+                get { return m_offset; }
+                set { m_offset = value; }
+            }
 
-                    [XmlAttribute("offset")]
-                    public int Offset
-                    {
-                        get { return m_offset; }
-                        set { m_offset = value; }
-                    }
+            private DateTime m_curTime = DateTime.MinValue;
 
-                    private DateTime m_As_At;
+            [XmlText]
+            public string CurrentTime
+            {
+                get { return ConvertDateTimeToTimeString(m_curTime); }
+                set { m_curTime = ConvertTimeStringToDateTime(value); }
+            }
 
-                    // This doesn't work! there is no subnode of currentTime called DateTimeAtUpdate!
-                    [XmlElement]
-                    public string DateTimeAtUpdate
-                    {
-                        get { return ConvertDateTimeToTimeString(m_As_At); }
-                        set { m_As_At = ConvertTimeStringToDateTime(value); }
-                    }
-
-                    [XmlIgnore]
-                    public DateTime GetDateTimeAtUpdate
-                    {
-                        get { return m_As_At; }
-                    }
-                }
-                */
-        private DateTime m_endTime;
+            [XmlIgnore]
+            public DateTime GetDateTimeAtUpdate
+            {
+                get { return m_curTime; }
+            }
+        }
+        */
+        private DateTime m_endTime = DateTime.MinValue;
 
         [XmlElement("trainingEndTime")]
         public string TrainingEndTimeString
@@ -120,7 +126,7 @@ namespace EVEMon.Common
             get { return m_endTime; }
         }
 
-        private DateTime m_startTime;
+        private DateTime m_startTime = DateTime.MinValue;
 
         [XmlElement("trainingStartTime")]
         public string TrainingStartTimeString
@@ -199,6 +205,30 @@ namespace EVEMon.Common
                             0,
                             DateTimeKind.Utc);
             return dt;
+        }
+
+        [XmlIgnore]
+        public int EstimatedCurrentPoints
+        {
+            get
+            {
+                TimeSpan trainingTime = m_endTime.ToLocalTime() - m_startTime.ToLocalTime();
+                double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
+                TimeSpan timeSoFar = DateTime.Now - m_startTime;
+                return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
+            }
+        }
+
+        [XmlIgnore]
+        public int EstimatedPointsAtUpdate
+        {
+            get
+            {
+                TimeSpan trainingTime = m_endTime.ToLocalTime() - m_startTime.ToLocalTime();
+                double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
+                TimeSpan timeSoFar = m_curTime.AddSeconds(-m_offset) - m_startTime;
+                return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
+            }
         }
     }
 }

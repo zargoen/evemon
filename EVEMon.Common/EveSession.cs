@@ -318,6 +318,47 @@ namespace EVEMon.Common
                                              });
         }*/
 
+        private SerializableSkillTrainingInfo GetTrainingSkillInfo(int charId)
+        {
+            try
+            {
+                string stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
+                         charId.ToString());
+                if (String.IsNullOrEmpty(stxt))
+                {
+                    return null;
+                }
+                XmlDocument sdoc = new XmlDocument();
+                try
+                {
+                    sdoc.LoadXml(stxt);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHandler.LogException(e, true);
+                    return null;
+                }
+                SerializableSkillTrainingInfo ssti = null;
+                if (sdoc != null)
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
+                    XmlElement charRoot = sdoc.DocumentElement;
+
+                    int test = Convert.ToInt32(charRoot.GetAttribute("characterID"));
+
+                    using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+                    {
+                        ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+                    }
+                }
+                return ssti;
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                return null;
+            }
+        }
 
         /// <summary>
         /// Gets the character info from the myeve website and stores it in the local cache.
@@ -328,23 +369,6 @@ namespace EVEMon.Common
         {
             try
             {
-                string stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
-                                      charId.ToString());
-                if (String.IsNullOrEmpty(stxt))
-                {
-                    return null;
-                }
-                 XmlDocument sdoc = new XmlDocument();
-                try
-                {
-                    sdoc.LoadXml(stxt);
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                    return null;
-                }
-
                 string xtxt =
                     GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp?characterID=" + charId.ToString());
                 if (String.IsNullOrEmpty(xtxt))
@@ -361,11 +385,9 @@ namespace EVEMon.Common
                     ExceptionHandler.LogException(e, true);
                     return null;
                 }
-                SerializableSkillInTraining sit = ProcessTrainingSkillXml(sdoc, charId);
                 int timeLeftInCache = DEFAULT_RETRY_INTERVAL;
                 SerializableCharacterInfo sci = ProcessCharacterXml(xdoc, charId, out timeLeftInCache);
                 sci.TimeLeftInCache = timeLeftInCache;
-                sci.SkillInTraining = sit;
 
                 //save the xml in the character cache
                 LocalXmlCache.Instance.Save(xdoc);
@@ -457,52 +479,12 @@ namespace EVEMon.Common
             }
         }
 
-        private SerializableSkillInTraining ProcessTrainingSkillXml(XmlDocument xdoc, int charId)
-        {
-            SerializableSkillInTraining sit = null;
-            if (xdoc != null)
-            {
-                SerializableSkillTrainingInfo temp = null;
-                XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
-                XmlElement charRoot = xdoc.DocumentElement;
-
-                int test = Convert.ToInt32(charRoot.GetAttribute("characterID"));
-
-                using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
-                {
-                    temp = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
-                }
-
-                // Now we need to convert SerializableSkillTrainingInfo into a SerializableSkillInTraining
-                string error = temp.Error;
-                if (error == "characterID does not belong to you.")
-                    return null; // really should throw an exception here
-                if (error == "You are trying too fast.")
-                    return null; // should be setting a timer to retry here
-                DateTime end = temp.getTrainingEndTime;
-                if (end == DateTime.MinValue)
-                    return null;
-
-                sit = new SerializableSkillInTraining();
-                sit.SkillName = Skill.SkillNamesByID[temp.TrainingSkillWithTypeID];
-                sit.TrainingToLevel = temp.TrainingSkillToLevel;
-                sit.EstimatedCompletion = temp.getTrainingEndTime.ToLocalTime();
-                TimeSpan trainingTime = temp.getTrainingEndTime.ToLocalTime() - temp.getTrainingStartTime.ToLocalTime();
-                double spPerMinute = (temp.TrainingSkillDestinationSP - temp.TrainingSkillStartSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = temp.GetDateTimeAtUpdate - temp.getTrainingStartTime;
-                sit.CurrentPoints = temp.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * spPerMinute);
-                sit.NeededPoints = temp.TrainingSkillDestinationSP;
-
-                // Compensate for differences between TQ time and client machine time
-                // this means that the user will see the skill complete at the exact same
-                // second that it completes on TQ (the user can adjust this with the offset
-                // notification setting) - Brad.
-                TimeSpan TQOffset = DateTime.Now - temp.GetDateTimeAtUpdate.ToLocalTime();
-                sit.EstimatedCompletion += TQOffset;
-            }
-            return sit;
-        }
-
+        /// <summary>
+        /// Use this function at your peril!!
+        /// If we do things this way CCP WILL block that version of EVEMon!
+        /// </summary>
+        /// <param name="htmld"></param>
+        /// <returns></returns>
         private SerializableSkillInTraining ProcessSkilltreeHtml(string htmld)
         {
             SerializableSkillInTraining sit = null;
@@ -661,6 +643,35 @@ namespace EVEMon.Common
             args.UpdateGrandCharacterInfoCallback(null, timeLeftInCache);
         }
 
+        private class UpdateSTArgs
+        {
+            public CharacterInfo GrandCharacterInfo;
+            public Control InvokeControl;
+            public UpdateTrainingSkillInfoCallback UpdateTrainingSkillInfoCallback;
+        }
+
+        public void UpdateTrainingSkillInfoAsync(CharacterInfo grandCharacterInfo, Control invokeControl,
+                                                  UpdateTrainingSkillInfoCallback callback)
+        {
+            UpdateSTArgs xx = new UpdateSTArgs();
+            xx.GrandCharacterInfo = grandCharacterInfo;
+            xx.InvokeControl = invokeControl;
+            xx.UpdateTrainingSkillInfoCallback = callback;
+#if DEBUG_SINGLETHREAD
+            UpdateSkillTrainingInfoAsyncCaller(xx);
+#else
+            ThreadPool.QueueUserWorkItem(new WaitCallback(UpdateSkillTrainingInfoAsyncCaller), xx);
+#endif
+        }
+
+        private void UpdateSkillTrainingInfoAsyncCaller(object state)
+        {
+            UpdateSTArgs args = (UpdateSTArgs)state;
+            GC.Collect();
+            int timeToNextUpdate = this.UpdateSkillTrainingInfo(args.GrandCharacterInfo, args.InvokeControl);
+            args.UpdateTrainingSkillInfoCallback(null, timeToNextUpdate);
+        }
+
         // Now default is set to 30 minutes instead of 5 minutes for the retry interval
         // to be more polite to the server.
         private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
@@ -668,12 +679,12 @@ namespace EVEMon.Common
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
+            SerializableSkillTrainingInfo temp = grandCharacterInfo.SerialSIT;
             SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
 
             if (sci == null)
             {
                 autoRand = new Random();
-                // 1 hour multiplied by something between 0.0 and 1.0
                 grandCharacterInfo.DownloadFailed += 1;
                 double offset = (DEFAULT_RETRY_INTERVAL * grandCharacterInfo.DownloadFailed) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
                 return (int)offset;
@@ -681,15 +692,43 @@ namespace EVEMon.Common
             else
             {
                 grandCharacterInfo.DownloadFailed = 0;
+                sci.TrainingSkillInfo = temp;
             }
 
             invokeControl.Invoke(new MethodInvoker(delegate
                                                        {
                                                            grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
                                                        }));
-
             return sci.TimeLeftInCache;
         }
+
+        public int UpdateSkillTrainingInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
+        {
+            SerializableSkillTrainingInfo ssti = GetTrainingSkillInfo(grandCharacterInfo.CharacterId);
+            if (ssti == null)
+            {
+                return 0;
+            }
+            else
+            {
+                string error = ssti.Error;
+                if (error == "characterID does not belong to you.")
+                    throw new Exception(error); // really should throw an exception here... so now we do!
+                if (error == "You are trying too fast.")
+                    return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
+                DateTime end = ssti.getTrainingEndTime;
+                if (end == DateTime.MinValue)
+                    return (1000 * ssti.TimerToNextUpdate); // No skill training so set timer accordingly and be done
+            }
+
+            invokeControl.Invoke(new MethodInvoker(delegate
+                                                       {
+                                                           grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
+                                                       }));
+
+            return (1000 * ssti.TimerToNextUpdate);
+        }
+
         #endregion
     }
     [XmlRoot("pair")]
@@ -722,6 +761,8 @@ namespace EVEMon.Common
     }
 
     public delegate void UpdateGrandCharacterInfoCallback(EveSession sender, int timeLeftInCache);
+
+    public delegate void UpdateTrainingSkillInfoCallback(EveSession sender, int timeRetryIn);
 
     public delegate void GetImageCallback(EveSession sender, Image i);
 
