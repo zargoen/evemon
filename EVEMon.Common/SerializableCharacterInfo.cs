@@ -129,6 +129,15 @@ namespace EVEMon.Common
             set { m_timeLeftInCache = value; }
         }
 
+        private DateTime m_expires = DateTime.MinValue;
+
+        [XmlAttribute("expires")]
+        public DateTime XMLExpires
+        {
+            get { return m_expires; }
+            set { m_expires = value; }
+        }
+
         private string m_name = String.Empty;
 
         [XmlAttribute("name")]
@@ -459,6 +468,7 @@ namespace EVEMon.Common
         private int m_rank;
         private int m_skillPoints;
         private int m_level;
+        private int m_lastConfirmedLvl;
 
         [XmlAttribute("typeName")]
         public string Name
@@ -545,6 +555,13 @@ namespace EVEMon.Common
         {
             get { return m_level; }
             set { m_level = value; }
+        }
+
+        [XmlElement("lastconfirmedlevel")]
+        public int LastConfirmedLevel
+        {
+            get { return m_lastConfirmedLvl; }
+            set { m_lastConfirmedLvl = value; }
         }
 
         private int[] m_skillLevel = new int[5] {0, 0, 0, 0, 0};

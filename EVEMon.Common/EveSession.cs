@@ -696,11 +696,22 @@ namespace EVEMon.Common
                 grandCharacterInfo.DownloadFailed = 0;
                 sci.TrainingSkillInfo = temp;
             }
+            sci.XMLExpires = DateTime.Now.Add(TimeSpan.FromMilliseconds(sci.TimeLeftInCache));
 
-            invokeControl.Invoke(new MethodInvoker(delegate
-                                                       {
-                                                           grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
-                                                       }));
+            if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() < new TimeSpan(0, 3, 30))
+            {
+                invokeControl.Invoke(new MethodInvoker(delegate
+                                                           {
+                                                               grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(temp);
+                                                           }));
+            }
+            else
+            {
+                invokeControl.Invoke(new MethodInvoker(delegate
+                                                           {
+                                                               grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
+                                                           }));
+            }
             return sci.TimeLeftInCache;
         }
 

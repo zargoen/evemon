@@ -23,6 +23,7 @@ namespace EVEMon.Common
         private string m_EVEFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
+        private DateTime m_expires;
         
         // These are the new replacements for m_attributeBonuses
         private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
@@ -751,6 +752,12 @@ namespace EVEMon.Common
             }
         }
 
+        public DateTime XMLExpires
+        {
+            get { return m_expires; }
+            set { m_expires = value; }
+        }
+
         public void AssignFromSerializableSkillTrainingInfo(SerializableSkillTrainingInfo sti)
         {
             this.SuppressEvents();
@@ -768,6 +775,7 @@ namespace EVEMon.Common
             this.Race = ci.Race;
             this.Bloodline = ci.BloodLine;
             this.CorporationName = ci.CorpName;
+            this.XMLExpires = ci.XMLExpires;
             if (ci.IsCached == true)
             {
                 this.EVEFolder = ci.EVEFolder;
@@ -939,7 +947,10 @@ namespace EVEMon.Common
                     {
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
-                        gs.LastConfirmedLvl = gs.Level;
+                        if (ci.TimeLeftInCache != -1)
+                            gs.LastConfirmedLvl = gs.Level;
+                        else
+                            gs.LastConfirmedLvl = s.LastConfirmedLevel;
                     }
                 }
             }
@@ -1268,6 +1279,7 @@ namespace EVEMon.Common
             ci.CorpName = this.CorporationName;
             ci.EVEFolder = this.EVEFolder; // to CI
             ci.Balance = this.Balance;
+            ci.XMLExpires = this.XMLExpires;
 
             ci.ImplantSets.Clear();
             foreach (string x in this.implantSets.Keys)
@@ -1354,6 +1366,7 @@ namespace EVEMon.Common
                         s.Level = gs.Level;
                         s.Rank = gs.Rank;
                         s.SkillPoints = gs.CurrentSkillPoints;
+                        s.LastConfirmedLevel = gs.LastConfirmedLvl;
                         sg.Skills.Add(s);
                         added = true;
                     }
