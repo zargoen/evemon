@@ -451,6 +451,7 @@ namespace EVEMon
                     m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
                 }
             }
+            UpdateTrainingSkillInfo();
         }
 
         private void UpdateGrandCharacterInfo()
