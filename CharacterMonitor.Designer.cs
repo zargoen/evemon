@@ -700,7 +700,7 @@ namespace EVEMon
             this.miHitTrainingSkill.Name = "miHitTrainingSkill";
             this.miHitTrainingSkill.Size = new System.Drawing.Size(216, 22);
             this.miHitTrainingSkill.Text = "Update Skill Training Info";
-            this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer";
+            this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
             this.miHitTrainingSkill.Click += new System.EventHandler(this.miHitTrainingSkill_Click);
             // 
             // CharacterMonitor

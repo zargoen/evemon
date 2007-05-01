@@ -451,7 +451,6 @@ namespace EVEMon
                     m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
                 }
             }
-            //UpdateTrainingSkillInfo();
         }
 
         private void UpdateGrandCharacterInfo()
@@ -477,8 +476,11 @@ namespace EVEMon
                 tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
                 tmrUpdateCharacter.Enabled = true;
 
-                miHitTrainingSkill.Enabled = true;
-                m_canUpdateSkills = true;
+                if (tmrMinTrainingSkillRetry.Enabled == false)
+                {
+                    miHitTrainingSkill.Enabled = true;
+                    m_canUpdateSkills = true;
+                }
 
                 StopThrobber();
             }));
@@ -505,6 +507,7 @@ namespace EVEMon
                 {
                     tmrMinTrainingSkillRetry.Interval = timeToNextUpdate == 0 ? 900000 : timeToNextUpdate;
                     tmrMinTrainingSkillRetry.Enabled = true;
+                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
                 }
             }));
         }
@@ -514,8 +517,19 @@ namespace EVEMon
         private void tmrMTSRTick(object sender, EventArgs e)
         {
             tmrMinTrainingSkillRetry.Enabled = false;
-            miHitTrainingSkill.Enabled = true;
-            m_canUpdateSkills = true;
+            if (m_charId < 0)
+            {
+                tmrMinTrainingSkillRetry.Interval = 300000;
+                tmrMinTrainingSkillRetry.Enabled = true;
+                miHitTrainingSkill.ToolTipText = "You had an issue with connecting.\nPlease wait 5 minutes and try again.";
+                return;
+            }
+            else
+            {
+                miHitTrainingSkill.Enabled = true;
+                m_canUpdateSkills = true;
+                miHitTrainingSkill.ToolTipText = "Timer has expired.\nPlease click to attempt download of training info.";
+            }
         }
 
         private void miHitTrainingSkill_Click(object sender, EventArgs e)
