@@ -349,7 +349,8 @@ namespace EVEMon.Common
                     using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
                     {
                         ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
-                        ssti.setTQOffset();
+                        // This set must only be done at deserialisation when we can compare current time agaisnt machine time
+                        ssti.TQOffset = ssti.GetDateTimeAtUpdate.ToLocalTime() - DateTime.Now;
                     }
                 }
                 return ssti;

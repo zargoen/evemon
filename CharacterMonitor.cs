@@ -2159,7 +2159,7 @@ namespace EVEMon
                                      s.SkillLevel5.ToString("#,##0"));
                         if (ci.TrainingSkillInfo != null && ci.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
                         {
-                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.ToLocalTime() - ci.TrainingSkillInfo.getTQOffset();
+                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(ci.TrainingSkillInfo.TQOffset).ToLocalTime();
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
                                          (adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());

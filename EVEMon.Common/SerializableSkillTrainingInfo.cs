@@ -51,7 +51,9 @@ namespace EVEMon.Common
         
         private int m_offset;
 
+        // This is actually unrequired for anything useful.
         [XmlElement("currentTimeTQOffset")]
+        [Obsolete]
         public int Offset
         {
             get { return m_offset; }
@@ -212,9 +214,9 @@ namespace EVEMon.Common
         {
             get
             {
-                TimeSpan trainingTime = m_endTime.ToLocalTime() - m_startTime.ToLocalTime();
+                TimeSpan trainingTime = m_endTime - m_startTime;
                 double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = DateTime.Now - m_startTime;
+                TimeSpan timeSoFar = DateTime.Now - (m_startTime.Subtract(TQOffset).ToLocalTime());
                 return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
             }
         }
@@ -224,23 +226,20 @@ namespace EVEMon.Common
         {
             get
             {
-                TimeSpan trainingTime = m_endTime.ToLocalTime() - m_startTime.ToLocalTime();
+                TimeSpan trainingTime = m_endTime - m_startTime;
                 double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = m_curTime.AddSeconds(-m_offset) - m_startTime;
+                TimeSpan timeSoFar = m_curTime - m_startTime;
                 return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
             }
         }
-        TimeSpan m_TQOffset;
 
-        public TimeSpan getTQOffset()
-        {
-            return m_TQOffset;
-        }
+        private TimeSpan m_TQOffset = TimeSpan.Zero;
 
-        public void setTQOffset()
+        [XmlElement]
+        public TimeSpan TQOffset
         {
-            // set must only be done at deserialisation when we can compare current time agaisnt machine time
-            m_TQOffset = m_curTime.ToLocalTime() - DateTime.Now;
+            get { return m_TQOffset; }
+            set { m_TQOffset = value; }
         }
     }
 }
