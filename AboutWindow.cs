@@ -25,25 +25,24 @@ namespace EVEMon
             myFontbold = new System.Drawing.Font("Tahoma", 8, FontStyle.Bold);
 
             slPriority = new SortedList();
-            slPriority.Add("01", "EVEMon Legend");
-            slPriority.Add("02", "EVEMon Forum Troll");
-            slPriority.Add("03", "EVEMon Guru");
-            slPriority.Add("04", "EVEMon Developer");
-            slPriority.Add("05", "EVEMon Noob");
-            slPriority.Add("06", "Past Contributor");
+            slPriority.Add("01", "EVEMon Guru:");
+            slPriority.Add("02", "Guru (Retired):");
+            slPriority.Add("03", "Developers:");
+            slPriority.Add("04", "Developers (Retired):");
+            slPriority.Add("05", "Contributors:");
 
             slDevelopers = new SortedList();
-            slDevelopers.Add("Six Anari","01");
+            slDevelopers.Add("Brad Stone", "01");
+            slDevelopers.Add("Eewec Ourbyni", "01");
 
+            slDevelopers.Add("Six Anari","02");
             slDevelopers.Add("Anders Chydenius","02");
-           
-            slDevelopers.Add("Brad Stone", "03");
-            slDevelopers.Add("Eewec Ourbyni", "03");
+
+            slDevelopers.Add("mrcue", "03");
 
             slDevelopers.Add("DCShadow", "04");
             slDevelopers.Add("Jalon Mevek", "04");
             slDevelopers.Add("Labogh", "04");
-            slDevelopers.Add("mrcue","04");
             slDevelopers.Add("romanl", "04");
             slDevelopers.Add("Safrax", "04");
             slDevelopers.Add("Stevil Knevil", "04");
@@ -131,9 +130,9 @@ namespace EVEMon
             if (e.Index > -1)
             {
                 string sLine = slOutput.GetByIndex(e.Index).ToString();
-                if (sLine.Contains("EVEMon")) 
+                if (sLine.Contains(":")) 
                 {
-                    sLine = sLine + ":";
+                    //sLine = sLine + ":";
                     e.Graphics.DrawString(sLine, myFontbold, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
                 }
                 else
