@@ -26,53 +26,56 @@ namespace EVEMon
 
             slPriority = new SortedList();
             slPriority.Add("01", "EVEMon Legend");
-            slPriority.Add("02", "EVEMon Guru");
-            slPriority.Add("03", "EVEMon Developer");
-            slPriority.Add("04", "EVEMon Noob");
-            slPriority.Add("05", "Past Contributor");
+            slPriority.Add("02", "EVEMon Forum Troll");
+            slPriority.Add("03", "EVEMon Guru");
+            slPriority.Add("04", "EVEMon Developer");
+            slPriority.Add("05", "EVEMon Noob");
+            slPriority.Add("06", "Past Contributor");
 
             slDevelopers = new SortedList();
             slDevelopers.Add("Six Anari","01");
+
             slDevelopers.Add("Anders Chydenius","02");
            
             slDevelopers.Add("Brad Stone", "03");
-            slDevelopers.Add("DCShadow", "03");
-            slDevelopers.Add("Eewec","03");
-            slDevelopers.Add("Jalon Mevek", "03");
-            slDevelopers.Add("Labogh", "03");
-            slDevelopers.Add("mrcue","03");
-            slDevelopers.Add("romanl", "03");
-            slDevelopers.Add("Safrax", "03");
-            slDevelopers.Add("Stevil Knevil", "03");
-            slDevelopers.Add("TheBelgarion", "03");
+            slDevelopers.Add("Eewec Ourbyni", "03");
 
-            slDevelopers.Add("Adam Butt", "04");
-            slDevelopers.Add("bugusnot", "04");
-            slDevelopers.Add("Collin Grady", "04");
-            slDevelopers.Add("cybertech", "04");
-            slDevelopers.Add("exi", "04");
-            slDevelopers.Add("FangVV", "04");
-            slDevelopers.Add("Femaref", "04");
-            slDevelopers.Add("Flash", "04");
-            slDevelopers.Add("Galideeth", "04");
-            slDevelopers.Add("gavinl", "04");
-            slDevelopers.Add("Grauw", "04");
-            slDevelopers.Add("happyslinky", "04");
-            slDevelopers.Add("justinian", "04");
-            slDevelopers.Add("Lexiica", "04");
-            slDevelopers.Add("Michayel Lyon", "04");
-            slDevelopers.Add("mintoko", "04");
-            slDevelopers.Add("Nascent Nimbus", "04");
-            slDevelopers.Add("Nilyen", "04");
-            slDevelopers.Add("Nimrel", "04");
-            slDevelopers.Add("phorge", "04");
-            slDevelopers.Add("Richard Slater", "04");
-            slDevelopers.Add("Ruldar", "04");
-            slDevelopers.Add("Sertan Deras", "04");
-            slDevelopers.Add("shaver", "04");
-            slDevelopers.Add("Shocky", "04");
-            slDevelopers.Add("Spiff Nutter", "04");
-            slDevelopers.Add("vardoj", "04");
+            slDevelopers.Add("DCShadow", "04");
+            slDevelopers.Add("Jalon Mevek", "04");
+            slDevelopers.Add("Labogh", "04");
+            slDevelopers.Add("mrcue","04");
+            slDevelopers.Add("romanl", "04");
+            slDevelopers.Add("Safrax", "04");
+            slDevelopers.Add("Stevil Knevil", "04");
+            slDevelopers.Add("TheBelgarion", "04");
+
+            slDevelopers.Add("Adam Butt", "05");
+            slDevelopers.Add("bugusnot", "05");
+            slDevelopers.Add("Collin Grady", "05");
+            slDevelopers.Add("cybertech", "05");
+            slDevelopers.Add("exi", "05");
+            slDevelopers.Add("FangVV", "05");
+            slDevelopers.Add("Femaref", "05");
+            slDevelopers.Add("Flash", "05");
+            slDevelopers.Add("Galideeth", "05");
+            slDevelopers.Add("gavinl", "05");
+            slDevelopers.Add("Grauw", "05");
+            slDevelopers.Add("happyslinky", "05");
+            slDevelopers.Add("justinian", "05");
+            slDevelopers.Add("Lexiica", "05");
+            slDevelopers.Add("Michayel Lyon", "05");
+            slDevelopers.Add("mintoko", "05");
+            slDevelopers.Add("Nascent Nimbus", "05");
+            slDevelopers.Add("Nilyen", "05");
+            slDevelopers.Add("Nimrel", "05");
+            slDevelopers.Add("phorge", "05");
+            slDevelopers.Add("Richard Slater", "05");
+            slDevelopers.Add("Ruldar", "05");
+            slDevelopers.Add("Sertan Deras", "05");
+            slDevelopers.Add("shaver", "05");
+            slDevelopers.Add("Shocky", "05");
+            slDevelopers.Add("Spiff Nutter", "05");
+            slDevelopers.Add("vardoj", "05");
 
             slOutput = new SortedList();
 
