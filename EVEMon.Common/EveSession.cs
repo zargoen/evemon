@@ -350,7 +350,7 @@ namespace EVEMon.Common
                     {
                         ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
                         // This set must only be done at deserialisation when we can compare current time agaisnt machine time
-                        ssti.TQOffset = ssti.GetDateTimeAtUpdate.ToLocalTime() - DateTime.Now;
+                        ssti.TQOffset = ((TimeSpan)(ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(DateTime.Now))).TotalMilliseconds;
                     }
                 }
                 return ssti;

@@ -1098,7 +1098,7 @@ namespace EVEMon.Common
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
             // 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id) || ((TimeSpan)(SkillInTraining.getTrainingEndTime.Subtract(SkillInTraining.TQOffset).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30)))
+            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id) || ((TimeSpan)(((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30)))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
@@ -1159,14 +1159,14 @@ namespace EVEMon.Common
                             if (old_skill == null || !old_skill.old_skill_completed || old_skill.old_SkillName == null || (old_skill.old_SkillName != null && (skill_name != old_skill.old_SkillName || (skill_name == old_skill.old_SkillName && SkillInTraining.TrainingSkillToLevel != old_skill.old_TrainingToLevel))))
                             {
                                 this.GetSkill(skill_name).CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(level);
-                                old_skill = new OldSkillinfo(skill_name, SkillInTraining.TrainingSkillToLevel, true, SkillInTraining.getTrainingEndTime.Subtract(SkillInTraining.TQOffset).ToLocalTime());
+                                old_skill = new OldSkillinfo(skill_name, SkillInTraining.TrainingSkillToLevel, true, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
                                 OnDownloadAttemptComplete(this.Name, skill_name, true);
                             }
                         }
                         else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
                             m_SkillInTraining = SkillInTraining;
-                            newTrainingSkill.SetTrainingInfo(level, SkillInTraining.getTrainingEndTime.Subtract(SkillInTraining.TQOffset).ToLocalTime());
+                            newTrainingSkill.SetTrainingInfo(level, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
                         }
                     }
                 }
@@ -1184,7 +1184,7 @@ namespace EVEMon.Common
                     Skill newTrainingSkill = this.GetSkill(_name);
                     if (newTrainingSkill != null)
                     {
-                        old_skill = new OldSkillinfo(_name, SkillInTraining.TrainingSkillToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.TrainingSkillDestinationSP, SkillInTraining.getTrainingEndTime.Subtract(SkillInTraining.TQOffset).ToLocalTime());
+                        old_skill = new OldSkillinfo(_name, SkillInTraining.TrainingSkillToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.TrainingSkillDestinationSP, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
                     }
                     m_SkillInTraining = SkillInTraining;
                 }

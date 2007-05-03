@@ -518,7 +518,7 @@ namespace EVEMon
         private void tmrMTSRTick(object sender, EventArgs e)
         {
             tmrMinTrainingSkillRetry.Enabled = false;
-            if (m_charId < 0)
+            if (m_grandCharacterInfo.CharacterId < 0)
             {
                 tmrMinTrainingSkillRetry.Interval = 300000;
                 tmrMinTrainingSkillRetry.Enabled = true;
@@ -2016,6 +2016,11 @@ namespace EVEMon
 
             tmrUpdateCharacter.Enabled = false;
             StartThrobber();
+            // m_charId is only not -1 when it's a file based char... thus never going to use this function
+            // the value we *should* be using is m_grandCharacterInfo.CharacterId BUT
+            // that means we don't refresh the session with ccp first after the initial login.
+            // What does this mean... it means we don't change this code until ccp get permanent logins working
+            // Thus we ALWAYS call DownloadCharacter(), unless something miraculous has happend
             if (m_charId < 0)
             {
                 DownloadCharacter();
@@ -2174,7 +2179,7 @@ namespace EVEMon
                                      s.SkillLevel5.ToString("#,##0"));
                         if (ci.TrainingSkillInfo != null && ci.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
                         {
-                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(ci.TrainingSkillInfo.TQOffset).ToLocalTime();
+                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(ci.TrainingSkillInfo.TQOffset)).ToLocalTime();
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
                                          (adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());

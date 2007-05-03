@@ -216,7 +216,7 @@ namespace EVEMon.Common
             {
                 TimeSpan trainingTime = m_endTime - m_startTime;
                 double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = DateTime.Now - (m_startTime.Subtract(TQOffset).ToLocalTime());
+                TimeSpan timeSoFar = DateTime.Now - ((DateTime)m_startTime.Subtract(TimeSpan.FromMilliseconds(m_TQOffset))).ToLocalTime();
                 return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
             }
         }
@@ -233,10 +233,10 @@ namespace EVEMon.Common
             }
         }
 
-        private TimeSpan m_TQOffset = TimeSpan.Zero;
+        private double m_TQOffset = 0.0;
 
-        [XmlElement]
-        public TimeSpan TQOffset
+        [XmlElement("TQOffset")]
+        public double TQOffset
         {
             get { return m_TQOffset; }
             set { m_TQOffset = value; }
