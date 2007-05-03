@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common
 {
     [XmlRoot("skillTraining")]
-    public class SerializableSkillTrainingInfo
+    public class SerializableSkillTrainingInfo : ICloneable
     {
         private int m_characterId;
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common
             set { m_characterId = value; }
         }
 
-        private string m_error = String.Empty;
+        private string m_error = string.Empty;
 
         /// <summary>
         /// If this is non 0 length or not null then an error has occurred
@@ -240,6 +240,40 @@ namespace EVEMon.Common
         {
             get { return m_TQOffset; }
             set { m_TQOffset = value; }
+        }
+
+        public object Clone()
+        {
+            SerializableSkillTrainingInfo ssti = new SerializableSkillTrainingInfo();
+            ssti.m_characterId = this.m_characterId;
+            ssti.m_error = (string)this.m_error.Clone();
+            ssti.m_timer = this.m_timer;
+            ssti.m_offset = this.m_offset;
+            ssti.m_curTime = this.m_curTime;
+            ssti.m_endTime = this.m_endTime;
+            ssti.m_startTime = this.m_startTime;
+            ssti.m_typeID = this.m_typeID;
+            ssti.m_startSP = this.m_startSP;
+            ssti.m_destSP = this.m_destSP;
+            ssti.m_toLevel = this.m_toLevel;
+            ssti.m_TQOffset = this.m_TQOffset;
+            return ssti;
+        }
+
+        public void CopyFrom(SerializableSkillTrainingInfo ssti)
+        {
+            this.m_characterId = ssti.m_characterId;
+            this.m_error = (string)ssti.m_error.Clone();
+            this.m_timer = ssti.m_timer;
+            this.m_offset = ssti.m_offset;
+            this.m_curTime = ssti.m_curTime;
+            this.m_endTime = ssti.m_endTime;
+            this.m_startTime = ssti.m_startTime;
+            this.m_typeID = ssti.m_typeID;
+            this.m_startSP = ssti.m_startSP;
+            this.m_destSP = ssti.m_destSP;
+            this.m_toLevel = ssti.m_toLevel;
+            this.m_TQOffset = ssti.m_TQOffset;
         }
     }
 }

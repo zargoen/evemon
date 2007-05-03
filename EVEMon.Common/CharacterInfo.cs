@@ -1096,7 +1096,17 @@ namespace EVEMon.Common
         {
             // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
-            // 
+            
+            // First one thing we can do no matter what
+            if (SkillInTraining != null)
+            {
+                Skill temp = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
+                if (temp != null)
+                {
+                    temp.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
+                }
+            }
+
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
             if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id) || ((TimeSpan)(((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30)))
             {
@@ -1165,7 +1175,7 @@ namespace EVEMon.Common
                         }
                         else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
-                            m_SkillInTraining = SkillInTraining;
+                            m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
                             newTrainingSkill.SetTrainingInfo(level, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
                         }
                     }
@@ -1186,7 +1196,7 @@ namespace EVEMon.Common
                     {
                         old_skill = new OldSkillinfo(_name, SkillInTraining.TrainingSkillToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.TrainingSkillDestinationSP, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
                     }
-                    m_SkillInTraining = SkillInTraining;
+                    m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
                 }
                 first_run = false;
             }
@@ -1378,8 +1388,10 @@ namespace EVEMon.Common
                     ci.SkillGroups.Add(sg);
                 }
             }
-
-            ci.TrainingSkillInfo = this.m_SkillInTraining;
+            if (this.m_SkillInTraining != null)
+                ci.TrainingSkillInfo = (SerializableSkillTrainingInfo)this.m_SkillInTraining.Clone();
+            else
+                ci.TrainingSkillInfo = null;
                 /*
                 SerializableSkillInTraining sit = new SerializableSkillInTraining();
                 sit.SkillName = gsit.Name;
