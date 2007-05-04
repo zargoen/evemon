@@ -70,20 +70,17 @@ namespace EVEMon
             foreach (Object o in tabOrder)
             {
                 // o will be a CharLoginInfo or a CharFileInfo object
-                CharLoginInfo cli = o as CharLoginInfo;
-                if (cli != null)
+                if (o.GetType() == typeof(CharLoginInfo))
                 {
+                    CharLoginInfo cli = (CharLoginInfo)o;
                     AddTab(cli);
                 }
-                else
+                else if (o.GetType() == typeof(CharFileInfo))
                 {
-                    CharFileInfo cfi = o as CharFileInfo;
-                    if (cfi != null)
+                    CharFileInfo cfi = (CharFileInfo)o;
+                    if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
                     {
-                        if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
-                        {
-                            invalidFiles.Add(cfi);
-                        }
+                        invalidFiles.Add(cfi);
                     }
                 }
             }
@@ -274,10 +271,16 @@ namespace EVEMon
             List<String> tabOrder = new List<string>();
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
-                CharFileInfo cfi = tp.Tag as CharFileInfo;
-                CharLoginInfo cli = tp.Tag as CharLoginInfo;
-                if (cfi != null) tabOrder.Add(cfi.CharacterName);
-                if (cli != null) tabOrder.Add(cli.CharacterName);
+                if (tp.GetType() == typeof(CharFileInfo))
+                {
+                    CharFileInfo cfi = (CharFileInfo)tp.Tag;
+                    tabOrder.Add(cfi.CharacterName);
+                }
+                else if (tp.GetType() == typeof(CharLoginInfo))
+                {
+                    CharLoginInfo cli = (CharLoginInfo)tp.Tag;
+                    tabOrder.Add(cli.CharacterName);
+                }
             }
             m_settings.TabOrderName = tabOrder;
         }
