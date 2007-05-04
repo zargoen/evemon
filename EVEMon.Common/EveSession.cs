@@ -698,14 +698,7 @@ namespace EVEMon.Common
             }
             sci.XMLExpires = DateTime.Now.Add(TimeSpan.FromMilliseconds(sci.TimeLeftInCache));
 
-            if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() < new TimeSpan(0, 3, 30))
-            {
-                invokeControl.Invoke(new MethodInvoker(delegate
-                                                           {
-                                                               grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(temp);
-                                                           }));
-            }
-            else
+            if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
             {
                 invokeControl.Invoke(new MethodInvoker(delegate
                                                            {

@@ -117,6 +117,14 @@ namespace EVEMon.Common
             }
         }
 
+        ///<summary>
+        ///Gets the unadjusted skillpoints
+        ///</summary>
+        public int UnadjustedCurrentSkillPoints
+        {
+            get { return m_currentSkillPoints; }
+        }
+
         /// <summary>
         /// Gets whether this skill is a learning skill.
         /// </summary>

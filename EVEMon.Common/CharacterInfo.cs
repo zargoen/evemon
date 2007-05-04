@@ -1101,7 +1101,7 @@ namespace EVEMon.Common
             if (SkillInTraining != null)
             {
                 Skill temp = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-                if (temp != null)
+                if (temp != null && temp.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
                 {
                     temp.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
                 }
