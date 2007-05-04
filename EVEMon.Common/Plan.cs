@@ -19,6 +19,7 @@ namespace EVEMon.Common
         #region Members
         // Plan Name
         private string m_planName;
+
         [XmlIgnore]
         public string Name
         {
@@ -28,6 +29,7 @@ namespace EVEMon.Common
 
         // The Character
         private CharacterInfo m_grandCharacterInfo = null;
+
         [XmlIgnore]
         public CharacterInfo GrandCharacterInfo
         {
@@ -59,13 +61,14 @@ namespace EVEMon.Common
             }
         }
 
-         private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
             CheckForCompletedSkills();
         }
 
         // The Plan Entries
         private MonitoredList<Plan.Entry> m_entries = new MonitoredList<Plan.Entry>();
+
         [XmlArrayItem("entry")]
         public MonitoredList<Plan.Entry> Entries
         {
@@ -100,6 +103,7 @@ namespace EVEMon.Common
 
         // Generate events when the plan changes
         public event EventHandler<EventArgs> Changed;
+
         private void OnChange()
         {
             FireEvent(delegate

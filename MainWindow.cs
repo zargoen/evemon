@@ -231,6 +231,7 @@ namespace EVEMon
             AddTab(cfi,"(File) " + sci.Name,cm,"File based character");
             return true;
         }
+
         /// <summary>
         /// Adds a tab for an online based character
         /// </summary>
@@ -529,11 +530,13 @@ namespace EVEMon
             CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
             if (cm != null)
                 cm.Stop();
+            string name = string.Empty;
             cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
             if (tp.Tag is CharLoginInfo)
             {
                 CharLoginInfo cli = tp.Tag as CharLoginInfo;
+                name = cli.CharacterName;
                 m_settings.CharacterList.Remove(cli);
                 m_settings.RemoveAllPlansFor(cli.CharacterName);
                 m_settings.RemoveCharacterCache(cli.CharacterName);
@@ -542,12 +545,24 @@ namespace EVEMon
             else if (tp.Tag is CharFileInfo)
             {
                 CharFileInfo cfi = tp.Tag as CharFileInfo;
+                name = cfi.CharacterName;
                 RemoveCharFileInfo(cfi);
                 UpdateTabOrder();
             }
+            List<Pair<string, string>> toRemove = new List<Pair<string,string>>();
+            foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
+            {
+                if (grp.A == name)
+                {
+                    toRemove.Add(grp);
+                }
+            }
+            foreach (Pair<string, string> grp in toRemove)
+            {
+                m_settings.CollapsedGroups.Remove(grp);
+            }
             cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
-
         }
 
         private void RemoveCharFileInfo(CharFileInfo cfi)

@@ -175,15 +175,18 @@ namespace EVEMon
                 {
                     if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
                     {
-                        m_groupCollapsed.Add(gsg, true);
-                        foreach (Skill gs in gsg)
+                        if (!m_groupCollapsed.ContainsKey(gsg))
                         {
-                            if (gs.Known)
+                            m_groupCollapsed.Add(gsg, true);
+                            foreach (Skill gs in gsg)
                             {
-                                lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
+                                if (gs.Known)
+                                {
+                                    lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
+                                }
                             }
+                            gsg.isCollapsed = true;
                         }
-                        gsg.isCollapsed = true;
                     }
                 }
             }
