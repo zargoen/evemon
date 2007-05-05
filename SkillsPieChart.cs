@@ -70,6 +70,12 @@ namespace EVEMon
             string[] newTexts = new string[c_info.SkillGroups.Count];
             string[] newToolTips = new string[c_info.SkillGroups.Count];
             float[] newSliceRelativeDisplacements = new float[c_info.SkillGroups.Count];
+
+            decimal[] n_newValues = new decimal[c_info.SkillGroups.Count];
+            string[] n_newTexts = new string[c_info.SkillGroups.Count];
+            string[] n_newToolTips = new string[c_info.SkillGroups.Count];
+            float[] n_newSliceRelativeDisplacements = new float[c_info.SkillGroups.Count];
+
             int tinyGroups = 1;
             for (int i = 0; i < c_info.SkillGroups.Count; i++)
             {
@@ -83,10 +89,38 @@ namespace EVEMon
                 newSliceRelativeDisplacements[i] = (newValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
                 newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
             }
-            skillPieChartControl.Values = newValues;
-            skillPieChartControl.Texts = newTexts;
-            skillPieChartControl.ToolTips = newToolTips;
-            skillPieChartControl.SliceRelativeDisplacements = newSliceRelativeDisplacements;
+
+            // reordening the slices
+            for (int num = 0; num < c_info.SkillGroups.Count; num++)
+            {
+                decimal tempsp = decimal.MinValue;
+                int biggest = -1;
+                for (int y = 0; y < newValues.Length; y++)
+                {
+                    if (tempsp == -1)
+                    {
+                        tempsp = newValues[y];
+                        biggest = y;
+                    }
+                    if (newValues[y] > tempsp)
+                    {
+                        tempsp = newValues[y];
+                        biggest = y;
+                    }
+
+                }
+                
+                n_newValues[num] = tempsp;
+                n_newTexts[num] = newTexts[biggest];
+                n_newSliceRelativeDisplacements[num] = newSliceRelativeDisplacements[biggest];
+                n_newToolTips[num] = newToolTips[biggest];
+                newValues[biggest] = 0;
+            }
+
+            skillPieChartControl.Values = n_newValues;
+            skillPieChartControl.Texts = n_newTexts;
+            skillPieChartControl.ToolTips = n_newToolTips;
+            skillPieChartControl.SliceRelativeDisplacements = n_newSliceRelativeDisplacements;
         }
 
         private void SkillsPieChart_FormClosing(object sender, FormClosingEventArgs e)
