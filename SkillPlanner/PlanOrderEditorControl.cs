@@ -549,24 +549,42 @@ namespace EVEMon.SkillPlanner
             }
             if (lvSkills.SelectedItems.Count > 1)
             {
+                List<Skill> countedSkills = new List<Skill>();
                 TimeSpan selectedTrainTime = TimeSpan.Zero;
+                TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
                 int cost = 0;
-                foreach (ListViewItem current in lvSkills.SelectedItems)
+
+                // need to loop through all entries to include effect of training skills
+                // in the total time of selected skills.
+                EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
-                    Plan.Entry pe = (Plan.Entry)current.Tag;
+                    ListViewItem lvi = lvSkills.Items[i];
+                    Plan.Entry pe = (Plan.Entry)lvi.Tag;
                     Skill gs = pe.Skill;
-                    selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
-                    if (!gs.Known && !gs.Owned)
-                        cost += gs.Cost;
+                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                    if (lvSkills.SelectedItems.Contains(lvi))
+                    {
+                        // ensure cost is only counted once!
+                        if (!countedSkills.Contains(gs))
+                        {
+                            countedSkills.Add(gs);
+                            if (!gs.Known && !gs.Owned)
+                                cost += gs.Cost;
+                        }
+                        selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
+                        selectedTimeWithLearning += trainTime;
+                    }
+                    scratchpad.ApplyALevelOf(gs);
                 }
 
                 String sb = String.Format("{0} Skills selected, Training time: {1}",
                                             lvSkills.SelectedItems.Count,
-                                            Skill.TimeSpanToDescriptiveText(selectedTrainTime,
-                                                                                     DescriptiveTextOptions.FullText |
-                                                                                     DescriptiveTextOptions.
-                                                                                         IncludeCommas |
-                                                                                     DescriptiveTextOptions.SpaceText));
+                                            Skill.TimeSpanToDescriptiveText(selectedTrainTime,DescriptiveTextOptions.IncludeCommas));
+                if (selectedTimeWithLearning != selectedTrainTime)
+                {
+                    sb += String.Format(" ({0} with preceding learning skills)", Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning,DescriptiveTextOptions.IncludeCommas));
+                }
                 if (cost > 0)
                     sb += String.Format(", cost of unknown skills is {0:0,0,0}", cost); 
                 m_plannerWindow.UpdateStatusBarSelected(sb);
