@@ -69,7 +69,7 @@ namespace EVEMon.Common
         {
             get
             {
-                string cacheDir = Settings.EveMonData + "\\cache\\images";
+                string cacheDir = Settings.EveMonDataDir + "\\cache\\images";
                 if (!Directory.Exists(cacheDir))
                 {
                     Directory.CreateDirectory(cacheDir);

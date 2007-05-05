@@ -56,7 +56,7 @@ namespace EVEMon
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
-            Settings.GetInstance().Save();
+            Settings.GetInstance().SaveImmediate();
 
             SetRelocatorState(false);
             if (m_logger != null)

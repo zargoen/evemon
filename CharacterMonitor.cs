@@ -787,7 +787,7 @@ namespace EVEMon
         {
             if (pbCharImage.Image == null)
             {
-                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
                 if (File.Exists(cacheFileName))
                 {
                     pbCharImage.Image = PortraitFromCache(cacheFileName);
@@ -826,7 +826,7 @@ namespace EVEMon
             {
                 // generate paths and file patterns required for 
                 string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
-                string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
                 int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
 
                 // create a pattern that matches anything "<characterId>*.png"
@@ -1293,7 +1293,7 @@ namespace EVEMon
         /// <param name="i">The retrieved image.</param>
         private void GotCharacterImage(EveSession sender, Image newImage)
         {
-            string cacheFileName = Settings.EveMonData + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+            string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
 
             //the image was not retrieved - go to plan B
             if (newImage == null)

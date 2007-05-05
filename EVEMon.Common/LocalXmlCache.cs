@@ -26,21 +26,7 @@ namespace EVEMon.Common
         /// </summary>
         LocalXmlCache()
         {
-            string dataDir = string.Empty;
-            try
-            {
-                dataDir = Directory.GetCurrentDirectory();
-                string fn = dataDir + "/settings.xml";
-                if (!File.Exists(fn))
-                {
-                    dataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                }
-            }
-            catch (Exception)
-            {
-                dataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            }
-            string evemonDir = dataDir + "\\EVEMon\\cache";
+            string evemonDir = Settings.EveMonDataDir  + "\\EVEMon\\cache";
 
             if (!Directory.Exists(evemonDir))
                 Directory.CreateDirectory(evemonDir);

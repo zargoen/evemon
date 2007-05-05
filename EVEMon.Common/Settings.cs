@@ -1015,7 +1015,7 @@ namespace EVEMon.Common
 
         }
 
-        private bool m_neverSave = false;
+        private static bool m_neverSave = false;
 
         public void NeverSave()
         {
@@ -1023,22 +1023,33 @@ namespace EVEMon.Common
         }
 
         [XmlIgnore]
-
-        public static string EveMonData
+        private static string m_DataDir = String.Empty;
+        private static string m_SettingsFile = null;
+        public static string EveMonDataDir
         {
             get
-            {   
-                string m_DataDir = Directory.GetCurrentDirectory();
-                string fn = m_DataDir + "/settings.xml";
-                if (!File.Exists(fn))
+            {
+                if (m_DataDir == String.Empty)
                 {
-                    m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
-                 }
-                 if (!Directory.Exists(m_DataDir))
-                     Directory.CreateDirectory(m_DataDir);
-                 if (!Directory.Exists(m_DataDir+"\\cache"))
-                     Directory.CreateDirectory(m_DataDir+"\\cache");
-                 return m_DataDir;
+                    m_SettingsFile = "/settings.xml";
+#if DEBUG
+                    m_SettingsFile = "/settings-debug.xml";
+#endif
+
+                    m_DataDir = Directory.GetCurrentDirectory();
+
+                    string fn = m_DataDir + m_SettingsFile;
+
+                    if (!File.Exists(fn))
+                    {
+                        m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
+                    }
+                    if (!Directory.Exists(m_DataDir))
+                        Directory.CreateDirectory(m_DataDir);
+                    if (!Directory.Exists(m_DataDir + "\\cache"))
+                        Directory.CreateDirectory(m_DataDir + "\\cache");
+                }
+                return m_DataDir;
             }
         }
 
@@ -1046,15 +1057,38 @@ namespace EVEMon.Common
         {
             get
             {
-                string fn = EveMonData + "/settings.xml";
-#if DEBUG
-                fn = EveMonData + "/settings-debug.xml";
-#endif
-                return fn;
+                return EveMonDataDir +  m_SettingsFile;
             }
         }
 
         public void Save()
+        {
+            // Saves will be cached for 10 seconds to avoid thrashing the disk when this method is called very rapidly
+            // such as at startup. 
+            // note that this is a Thread timer, not 
+            // a Windows.Forms timer - the timer will trigger 30 seconds after it's first set to 
+            // trigger, irresepctive of how many times this method is called.
+
+            // This should also massively reduce the possiblilty of creating a blank settings file when
+            // Save() is called simultaniously from multiple threads.
+    
+            m_saveTimer.Change(10000, System.Threading.Timeout.Infinite);
+        }
+
+        public void SaveImmediate()
+        {
+            SaveCallback(this);
+        }
+
+        public static void SaveTo(Stream s)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Settings));
+            xs.Serialize(s, Settings.GetInstance());
+        }
+
+        private static System.Threading.Timer m_saveTimer = new System.Threading.Timer(SaveCallback);
+
+        private static void SaveCallback(Object state)
         {
             if (!m_neverSave)
             {
@@ -1068,13 +1102,6 @@ namespace EVEMon.Common
                 }
             }
         }
-
-        public void SaveTo(Stream s)
-        {
-            XmlSerializer xs = new XmlSerializer(typeof(Settings));
-            xs.Serialize(s, this);
-        }
-
 
         public static void Reset()
         {
