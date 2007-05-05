@@ -779,6 +779,8 @@ namespace EVEMon.SkillPlanner
             }
 
             miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miShowInSkillExplorer.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miMarkOwned.Enabled = (lvSkills.SelectedItems.Count > 0);
             if (lvSkills.SelectedItems.Count == 1 &&
                 GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]).PlanGroups.Count > 0)
             {
