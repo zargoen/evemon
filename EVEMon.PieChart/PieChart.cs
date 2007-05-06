@@ -521,13 +521,43 @@ namespace EVEMon.PieChart
             drawFormat.LineAlignment = StringAlignment.Center;
             using (Brush fontBrush = new SolidBrush(m_foreColor))
             {
+                int num = 0;
+                PointF[] points = new PointF[m_pieSlices.Length];
                 foreach (PieSlice slice in m_pieSlices)
                 {
                     if (slice.Text != null && slice.Text.Length > 0)
                     {
                         PointF point = slice.GetTextPosition();
+
+                        foreach (PointF oldpoint in points)
+                        {
+                            for (int x = 0; x <= 1; x++)
+                            {
+                                float diffy = oldpoint.Y - point.Y;
+                                float diffx = oldpoint.X - point.X;
+
+                                if (diffy < 0) diffy *= -1;
+                                if (diffx < 0) diffx *= -1;
+
+                                if (diffx < 70 && diffy < 16)
+                                {
+                                    if (x == 0)
+                                    {
+                                        point = slice.GetTextPositionOut(4.5f);
+                                    }
+                                    else
+                                    {
+                                        point = slice.GetTextPositionOut(2.2f);
+                                    }
+                                }
+                            }
+                        }
+
+                        points[num] = point;
                         graphics.DrawString(slice.Text, m_font, fontBrush, point, drawFormat);
                     }
+
+                    num++;
                 }
             }
         }

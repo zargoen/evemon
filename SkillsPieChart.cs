@@ -81,11 +81,8 @@ namespace EVEMon
             {
                 SerializableSkillGroup sg = c_info.SkillGroups[i];
                 newValues[i] = 0;
+                newValues[i] += sg.GetTotalPoints();
                 newTexts[i] = sg.Name;
-                foreach (SerializableSkill s in sg.Skills)
-                {
-                    newValues[i] += s.SkillPoints;
-                }
                 newSliceRelativeDisplacements[i] = (newValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
                 newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
             }

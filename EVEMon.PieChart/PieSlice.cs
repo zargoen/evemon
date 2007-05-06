@@ -327,6 +327,22 @@ namespace EVEMon.PieChart {
         }
 
         /// <summary>
+        ///   Evaluates the point in the middle of the slice.
+        /// </summary>
+        /// <returns>
+        ///   <c>PointF</c> in the middle of the pie top.
+        /// </returns>
+        public virtual PointF GetTextPositionOut(float div)
+        {
+            if (SweepAngle >= 180)
+                return PeripheralPoint(m_center.X, m_center.Y, m_boundingRectangle.Width / div, m_boundingRectangle.Height / div, GetActualAngle(StartAngle) + SweepAngle / 2);
+            float x = (m_pointStart.X + m_pointEnd.X) / 2;
+            float y = (m_pointStart.Y + m_pointEnd.Y) / 2;
+            float angle = (float)(Math.Atan2(y - m_center.Y, x - m_center.X) * 180 / Math.PI);
+            return PeripheralPoint(m_center.X, m_center.Y, m_boundingRectangle.Width / div, m_boundingRectangle.Height / div, GetActualAngle(angle));
+        }
+
+        /// <summary>
         ///   Gets or sets the bounding rectangle.
         /// </summary>
         internal RectangleF BoundingRectangle {
