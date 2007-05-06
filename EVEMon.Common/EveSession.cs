@@ -652,7 +652,7 @@ namespace EVEMon.Common
             public UpdateTrainingSkillInfoCallback UpdateTrainingSkillInfoCallback;
         }
 
-        public void UpdateTrainingSkillInfoAsync(CharacterInfo grandCharacterInfo, Control invokeControl,
+        public void UpdateSkillTrainingInfoAsync(CharacterInfo grandCharacterInfo, Control invokeControl,
                                                   UpdateTrainingSkillInfoCallback callback)
         {
             UpdateSTArgs xx = new UpdateSTArgs();
@@ -721,7 +721,13 @@ namespace EVEMon.Common
                 if (error == "characterID does not belong to you.")
                     throw new Exception(error); // really should throw an exception here... so now we do!
                 if (error == "You are trying too fast.")
+                {
+                    invokeControl.Invoke(new MethodInvoker(delegate
+                                                               {
+                                                                   grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(grandCharacterInfo.SerialSIT);
+                                                               }));
                     return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
+                }
                 DateTime end = ssti.getTrainingEndTime;
                 if (end == DateTime.MinValue)
                     return (1000 * ssti.TimerToNextUpdate); // No skill training so set timer accordingly and be done
@@ -731,7 +737,6 @@ namespace EVEMon.Common
                                                        {
                                                            grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
                                                        }));
-
             return (1000 * ssti.TimerToNextUpdate);
         }
 

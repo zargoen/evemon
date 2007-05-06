@@ -492,7 +492,7 @@ namespace EVEMon
 
         private void UpdateTrainingSkillInfo()
         {
-            m_session.UpdateTrainingSkillInfoAsync(m_grandCharacterInfo, Program.MainWindow,
+            m_session.UpdateSkillTrainingInfoAsync(m_grandCharacterInfo, Program.MainWindow,
                                                     new UpdateTrainingSkillInfoCallback(TrainingSkillUpdatedCallback));
         }
 

@@ -16,14 +16,15 @@ namespace EVEMon.Common
     [XmlRoot("logindata2")]
     public class Settings
     {
-
         private bool m_useLogitechG15Display = false;
+
         public bool UseLogitechG15Display {
             get { return m_useLogitechG15Display; }
             set { m_useLogitechG15Display = value; OnUseLogitechG15DisplayChanged(); }
         }
 
         private bool m_g15acycle = false;
+
         public bool G15ACycle
         {
             get { return m_g15acycle; }
@@ -32,6 +33,7 @@ namespace EVEMon.Common
 
         public event EventHandler<EventArgs> NotificationOffsetChanged;
         private int m_notificationOffset = 0;
+
         public int NotificationOffset
         {
             get { return m_notificationOffset; }
@@ -43,13 +45,15 @@ namespace EVEMon.Common
         }
 
         private int m_g15acycleint = 20;
+
         public int G15ACycleint
         {
             get { return m_g15acycleint; }
             set { m_g15acycleint = value; }
         }
 
-        private void OnUseLogitechG15DisplayChanged() {
+        private void OnUseLogitechG15DisplayChanged()
+        {
             if (UseLogitechG15DisplayChanged != null)
                 UseLogitechG15DisplayChanged(this, new EventArgs());
         }
@@ -57,8 +61,10 @@ namespace EVEMon.Common
         public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
 
         #region Skill Planner Highlighting
+
         private bool m_HighlightPlannedSkills;
         public event EventHandler<EventArgs> HighlightPlannedSkillsChanged;
+
         public bool SkillPlannerHighlightPlannedSkills
         {
             get { return m_HighlightPlannedSkills; }
@@ -73,6 +79,7 @@ namespace EVEMon.Common
 
         private bool m_HighlightPrerequisites;
         public event EventHandler<EventArgs> HighlightPrerequisitesChanged;
+
         public bool SkillPlannerHighlightPrerequisites
         {
             get { return m_HighlightPrerequisites; }
@@ -87,6 +94,7 @@ namespace EVEMon.Common
 
         private bool m_DimUntrainable=true;
         public event EventHandler<EventArgs> DimUntrainableChanged;
+
         public bool SkillPlannerDimUntrainable
         {
             get { return m_DimUntrainable; }
@@ -98,7 +106,6 @@ namespace EVEMon.Common
             if (DimUntrainableChanged != null)
                 DimUntrainableChanged(this, new EventArgs());
         }
-
 
         #endregion
 
@@ -134,7 +141,8 @@ namespace EVEMon.Common
             set { m_enableEmailAlert = value; }
         }
 
-        # region XML Update
+        #region XML Update
+
         private bool m_DisableXMLAutoUpdate;
 
         public bool DisableXMLAutoUpdate
@@ -175,7 +183,6 @@ namespace EVEMon.Common
             }
             return true;
         }
-       
 
         private bool m_EnableSkillCompleteDialog;
 
@@ -184,6 +191,7 @@ namespace EVEMon.Common
             get { return m_EnableSkillCompleteDialog; }
             set { m_EnableSkillCompleteDialog = value; }
         }
+
         #endregion
 
         private bool m_DisableEVEMonVersionCheck;
@@ -211,6 +219,7 @@ namespace EVEMon.Common
         }
 
         #region Email Settings
+
         private string m_emailServer;
 
         public string EmailServer
@@ -387,6 +396,7 @@ namespace EVEMon.Common
         }
 
         #region Owned Skills
+
         private List<Pair<string,string>> m_ownedbooks = new List<Pair<string,string>>();
 
         public List<Pair<string, string>> OwnedBooks
@@ -640,10 +650,10 @@ namespace EVEMon.Common
             this.Save();
         }
 
-
         #endregion Plan Settings
 
         #region Character Cache
+ 
         private List<SerializableCharacterInfo> m_cachedCharacterInfo = new List<SerializableCharacterInfo>();
 
         public List<SerializableCharacterInfo> CachedCharacterInfo
@@ -712,9 +722,11 @@ namespace EVEMon.Common
             get { return m_defaultSaveOptions; }
             set { m_defaultSaveOptions = value; }
         }
+
         #endregion // Character Cache
 
         #region Worksafe Settings
+
         private bool m_worksafeMode = false;
 
         public bool WorksafeMode
@@ -730,6 +742,7 @@ namespace EVEMon.Common
         }
 
         public event EventHandler<EventArgs> WorksafeChanged;
+
         #endregion // Worksafe Settings
 
         private bool m_playSoundOnSkillComplete = true;
@@ -741,6 +754,7 @@ namespace EVEMon.Common
         }
 
         #region In Game Browser server
+
         private bool m_runIgbServer = true;
         private bool m_igbServerPublic = false;
         private int m_igbPort = 80;
@@ -781,6 +795,7 @@ namespace EVEMon.Common
         }
 
         public event EventHandler<EventArgs> RunIGBServerChanged;
+
         #endregion // In Game Browser server
 
         private bool m_relocateEveWindow = false;
@@ -843,6 +858,7 @@ namespace EVEMon.Common
         }
 
         #region Tranquility Status
+
         private bool m_checkTranquilityStatus = true;
 
         public bool CheckTranquilityStatus
@@ -873,9 +889,11 @@ namespace EVEMon.Common
             get { return m_statusUpdateInterval; }
             set {m_statusUpdateInterval = value; }
         }
+
         #endregion // Tranquility Status
 
         #region Schedule Entries
+
         private List<ScheduleEntry> m_schedule = new List<ScheduleEntry>();
 
         [XmlArrayItem("simple", typeof(SimpleScheduleEntry))]
@@ -1025,6 +1043,7 @@ namespace EVEMon.Common
         [XmlIgnore]
         private static string m_DataDir = String.Empty;
         private static string m_SettingsFile = null;
+
         public static string EveMonDataDir
         {
             get
@@ -1108,6 +1127,7 @@ namespace EVEMon.Common
             Settings s = new Settings();
             s.Save();
         }
+
         #endregion // Settings File Save / Load
 
         public bool AddFileCharacter(CharFileInfo cfi)
@@ -1136,6 +1156,7 @@ namespace EVEMon.Common
         }
 
         #region Character Settings
+
         public ICharacterSettings GetCharacterSettings(string userName)
         {
             foreach (ICharacterSettings guy in m_characterList)
@@ -1154,12 +1175,14 @@ namespace EVEMon.Common
             }
             return null;
         }
+
         #endregion
 
         #region Main Window Tab Order
+
         private List<string> m_tabOrderName = new List<string>();
 
-       // List of either CharLoginInfo or CharFileInfo objects in the order
+        // List of either CharLoginInfo or CharFileInfo objects in the order
         // we want them displayed
         private List<Object> m_tabOrder = new List<object>();
 
@@ -1243,6 +1266,7 @@ namespace EVEMon.Common
                 if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
             }
         }
+
         #endregion
 
         #region Browser Defaults
@@ -1278,6 +1302,7 @@ namespace EVEMon.Common
             get { return m_ShowOfficerItems; }
             set { m_ShowOfficerItems = value; }
         }
+
         private bool m_ShowFactionItems = false;
 
         public bool ShowFactionItems
@@ -1317,6 +1342,7 @@ namespace EVEMon.Common
             get { return m_ShowGalenteShips; }
             set { m_ShowGalenteShips = value; }
         }
+
         private bool m_ShowMinmatarShips = true;
 
         public bool ShowMinmatarShips
@@ -1324,6 +1350,7 @@ namespace EVEMon.Common
             get { return m_ShowMinmatarShips; }
             set { m_ShowMinmatarShips = value; }
         }
+
         private bool m_ShowFactionShips = true;
 
         public bool ShowFactionShips 
@@ -1339,9 +1366,7 @@ namespace EVEMon.Common
             get { return m_ShowOreShips; }
             set { m_ShowOreShips = value; }
         }
-	
-        
-	
+
         private int m_itemSkillFilter = 0;
 
         public int ItemSkillFilter
