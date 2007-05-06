@@ -608,7 +608,18 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="SP1_Support\Microsoft.VC80.CRT.manifest">
+    </EmbeddedResource>
     <Content Include="SkillTrained.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SP1_Support\msvcm80.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SP1_Support\msvcp80.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SP1_Support\msvcr80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
