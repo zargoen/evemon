@@ -54,7 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Microsoft.VC80.CRT.manifest" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Lcdisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
