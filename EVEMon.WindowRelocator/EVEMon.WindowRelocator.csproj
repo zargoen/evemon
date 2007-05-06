@@ -42,6 +42,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CbtHook.cs" />
+    <EmbeddedResource Include="Microsoft.VC80.CRT.manifest" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Relocator.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
