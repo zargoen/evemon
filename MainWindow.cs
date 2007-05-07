@@ -1114,6 +1114,7 @@ namespace EVEMon
 
         private void skillGroupPieChartButton_Click(object sender, EventArgs e)
         {
+            if (tcCharacterTabs.SelectedTab == null) return;
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             SkillsPieChart pie = new SkillsPieChart();
 
