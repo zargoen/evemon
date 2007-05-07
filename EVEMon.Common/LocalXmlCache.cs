@@ -26,7 +26,7 @@ namespace EVEMon.Common
         /// </summary>
         LocalXmlCache()
         {
-            string evemonDir = Settings.EveMonDataDir  + "\\EVEMon\\cache";
+            string evemonDir = Settings.EveMonDataDir  + "\\cache";
 
             if (!Directory.Exists(evemonDir))
                 Directory.CreateDirectory(evemonDir);
