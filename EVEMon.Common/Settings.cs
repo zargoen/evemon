@@ -16,11 +16,22 @@ namespace EVEMon.Common
     [XmlRoot("logindata2")]
     public class Settings
     {
+        // Important!!
+        // Any Updates to settings class members must lock(mutexLock)
+        private static Object mutexLock = new Object();
+
         private bool m_useLogitechG15Display = false;
 
         public bool UseLogitechG15Display {
             get { return m_useLogitechG15Display; }
-            set { m_useLogitechG15Display = value; OnUseLogitechG15DisplayChanged(); }
+            set 
+            {
+                lock (mutexLock)
+                {
+                    m_useLogitechG15Display = value;
+                    OnUseLogitechG15DisplayChanged();
+                }
+            }
         }
 
         private bool m_g15acycle = false;
@@ -28,7 +39,13 @@ namespace EVEMon.Common
         public bool G15ACycle
         {
             get { return m_g15acycle; }
-            set { m_g15acycle = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15acycle = value;
+                }
+            }
         }
 
         public event EventHandler<EventArgs> NotificationOffsetChanged;
@@ -37,11 +54,15 @@ namespace EVEMon.Common
         public int NotificationOffset
         {
             get { return m_notificationOffset; }
-            set {
-                m_notificationOffset = value;
-                if (NotificationOffsetChanged != null)
-                    NotificationOffsetChanged(this, new EventArgs());
-                 }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_notificationOffset = value;
+                    if (NotificationOffsetChanged != null)
+                        NotificationOffsetChanged(this, new EventArgs());
+                }
+            }
         }
 
         private int m_g15acycleint = 20;
@@ -49,7 +70,13 @@ namespace EVEMon.Common
         public int G15ACycleint
         {
             get { return m_g15acycleint; }
-            set { m_g15acycleint = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15acycleint = value;
+                }
+            }
         }
 
         private void OnUseLogitechG15DisplayChanged()
@@ -68,7 +95,13 @@ namespace EVEMon.Common
         public bool SkillPlannerHighlightPlannedSkills
         {
             get { return m_HighlightPlannedSkills; }
-            set { m_HighlightPlannedSkills = value; OnHighlightPlannedSkillsChanged(); }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightPlannedSkills = value; OnHighlightPlannedSkillsChanged();
+                }
+            }
         }
 
         private void OnHighlightPlannedSkillsChanged()
@@ -83,7 +116,13 @@ namespace EVEMon.Common
         public bool SkillPlannerHighlightPrerequisites
         {
             get { return m_HighlightPrerequisites; }
-            set { m_HighlightPrerequisites = value; OnHighlightPrerequisitesChanged(); }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightPrerequisites = value; OnHighlightPrerequisitesChanged();
+                }
+            }
         }
 
         private void OnHighlightPrerequisitesChanged()
@@ -98,7 +137,13 @@ namespace EVEMon.Common
         public bool SkillPlannerDimUntrainable
         {
             get { return m_DimUntrainable; }
-            set { m_DimUntrainable = value; OnDimUntrainableChanged(); }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DimUntrainable = value; OnDimUntrainableChanged();
+                }
+            }
         }
 
         private void OnDimUntrainableChanged()
@@ -114,7 +159,13 @@ namespace EVEMon.Common
         public List<CharLoginInfo> CharacterList
         {
             get { return m_characterList; }
-            set { m_characterList = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_characterList = value;
+                }
+            }
         }
 
         private string m_tooltipString = "%n - %s %tr - %r";
@@ -122,7 +173,13 @@ namespace EVEMon.Common
         public string TooltipString
         {
             get { return m_tooltipString; }
-            set { m_tooltipString = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_tooltipString = value;
+                }
+            }
         }
 
         private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
@@ -130,15 +187,26 @@ namespace EVEMon.Common
         public List<CharFileInfo> CharFileList
         {
             get { return m_charFileList; }
-            set { m_charFileList = value; }
+            set 
+            {
+                lock (mutexLock)
+                {
+                    m_charFileList = value;
+                }
+            }
         }
-
         private bool m_enableEmailAlert = false;
 
         public bool EnableEmailAlert
         {
             get { return m_enableEmailAlert; }
-            set { m_enableEmailAlert = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_enableEmailAlert = value;
+                }
+            }
         }
 
         #region XML Update
@@ -148,7 +216,13 @@ namespace EVEMon.Common
         public bool DisableXMLAutoUpdate
         {
             get { return m_DisableXMLAutoUpdate; }
-            set { m_DisableXMLAutoUpdate = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DisableXMLAutoUpdate = value;
+                }
+            }
         }
 
         private bool m_DeleteCharacterSilently;
@@ -156,7 +230,13 @@ namespace EVEMon.Common
         public bool DeleteCharacterSilently
         {
             get { return m_DeleteCharacterSilently; }
-            set { m_DeleteCharacterSilently = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DeleteCharacterSilently = value;
+                }
+            }
         }
 
         private bool m_KeepCharacterPlans;
@@ -164,24 +244,33 @@ namespace EVEMon.Common
         public bool KeepCharacterPlans
         {
             get { return m_KeepCharacterPlans; }
-            set { m_KeepCharacterPlans = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_KeepCharacterPlans = value;
+                }
+            }
         }
 
         public bool ResetCache()
         {
-            if (File.Exists(SettingsFileName))
+            bool resetOK = true;
+            lock (mutexLock)
             {
-                try
+                if (File.Exists(SettingsFileName))
                 {
-                    File.Delete(SettingsFileName);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
+                    try
+                    {
+                        File.Delete(SettingsFileName);
+                    }
+                    catch (Exception)
+                    {
+                        resetOK = false;
+                    }
                 }
             }
-            return true;
+            return resetOK;
         }
 
         private bool m_EnableSkillCompleteDialog;
@@ -189,7 +278,13 @@ namespace EVEMon.Common
         public bool EnableSkillCompleteDialog
         {
             get { return m_EnableSkillCompleteDialog; }
-            set { m_EnableSkillCompleteDialog = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_EnableSkillCompleteDialog = value;
+                }
+            }
         }
 
         #endregion
@@ -199,7 +294,13 @@ namespace EVEMon.Common
         public bool DisableEVEMonVersionCheck
         {
             get { return m_DisableEVEMonVersionCheck; }
-            set { m_DisableEVEMonVersionCheck = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DisableEVEMonVersionCheck = value;
+                }
+            }
         }	
 
         private bool m_enableBalloonTips = true;
@@ -207,7 +308,13 @@ namespace EVEMon.Common
         public bool EnableBalloonTips
         {
             get { return m_enableBalloonTips; }
-            set { m_enableBalloonTips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_enableBalloonTips = value;
+                }
+            }
         }
 
         private bool m_closeToTray = false;
@@ -215,7 +322,13 @@ namespace EVEMon.Common
         public bool CloseToTray
         {
             get { return m_closeToTray; }
-            set { m_closeToTray = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_closeToTray = value;
+                }
+            }
         }
 
         #region Email Settings
@@ -225,7 +338,13 @@ namespace EVEMon.Common
         public string EmailServer
         {
             get { return m_emailServer; }
-            set { m_emailServer = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailServer = value;
+                }
+            }
         }
 
         private bool m_emailServerRequiresSsl = false;
@@ -233,7 +352,13 @@ namespace EVEMon.Common
         public bool EmailServerRequiresSsl
         {
             get { return m_emailServerRequiresSsl; }
-            set { m_emailServerRequiresSsl = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailServerRequiresSsl = value;
+                }
+            }
         }
 
         private bool m_emailAuthRequired = false;
@@ -241,7 +366,13 @@ namespace EVEMon.Common
         public bool EmailAuthRequired
         {
             get { return m_emailAuthRequired; }
-            set { m_emailAuthRequired = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailAuthRequired = value;
+                }
+            }
         }
 
         private string m_emailUsername;
@@ -250,13 +381,25 @@ namespace EVEMon.Common
         public string EmailAuthUsername
         {
             get { return m_emailUsername; }
-            set { m_emailUsername = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailUsername = value;
+                }
+            }
         }
 
         public string EmailAuthPassword
         {
             get { return m_emailPassword; }
-            set { m_emailPassword = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailPassword = value;
+                }
+            }
         }
 
         private string m_emailFromAddress;
@@ -264,7 +407,13 @@ namespace EVEMon.Common
         public string EmailFromAddress
         {
             get { return m_emailFromAddress; }
-            set { m_emailFromAddress = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailFromAddress = value;
+                }
+            }
         }
 
         private string m_emailToAddress;
@@ -272,7 +421,13 @@ namespace EVEMon.Common
         public string EmailToAddress
         {
             get { return m_emailToAddress; }
-            set { m_emailToAddress = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailToAddress = value;
+                }
+            }
         }
 
         private int m_portNumber;
@@ -280,7 +435,13 @@ namespace EVEMon.Common
         public int PortNumber
         {
             get { return m_portNumber; }
-            set { m_portNumber = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_portNumber = value;
+                }
+            }
         }
 
         private bool m_emailUseShortFormat = false;
@@ -288,7 +449,13 @@ namespace EVEMon.Common
         public bool EmailUseShortFormat
         {
             get { return m_emailUseShortFormat; }
-            set { m_emailUseShortFormat = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailUseShortFormat = value;
+                }
+            }
         }
 
         #endregion // Email Settings
@@ -298,7 +465,13 @@ namespace EVEMon.Common
         public SystemTrayDisplayOptions SystemTrayOptions
         {
             get { return m_systemTrayOptions; }
-            set { m_systemTrayOptions = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_systemTrayOptions = value;
+                }
+            }
         }
 
         public bool SystemTrayOptionsIsNever
@@ -321,17 +494,21 @@ namespace EVEMon.Common
         public string IgnoreUpdateVersion
         {
             get { return m_ignoreUpdateVersion; }
-            set {
-                Version v = new Version("0.0.0.0");
-                try
+            set
+            {
+                lock (mutexLock)
                 {
-                    v = new Version(value);
+                    Version v = new Version("0.0.0.0");
+                    try
+                    {
+                        v = new Version(value);
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHandler.LogException(e, false);
+                    }
+                    m_ignoreUpdateVersion = v.ToString();
                 }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-                m_ignoreUpdateVersion = v.ToString();
             }
         }
 
@@ -340,7 +517,13 @@ namespace EVEMon.Common
         public bool TitleToTime
         {
             get { return m_titleToTime; }
-            set { m_titleToTime = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTime = value;
+                }
+            }
         }
 
         private int m_titleToTimeLayout = 0;
@@ -348,7 +531,13 @@ namespace EVEMon.Common
         public int TitleToTimeLayout 
         {
             get { return m_titleToTimeLayout; }
-            set { m_titleToTimeLayout = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTimeLayout = value;
+                }
+            }
         }
 
         private bool m_showLoginName;
@@ -356,10 +545,13 @@ namespace EVEMon.Common
         public bool ShowLoginName
         {
             get { return m_showLoginName; }
-            set 
-            { 
-                m_showLoginName = value;
-                OnShowLoginNameChanged();
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_showLoginName = value;
+                    OnShowLoginNameChanged();
+                }
             }
         }
 
@@ -376,7 +568,13 @@ namespace EVEMon.Common
         public List<SerializableColor> SkillPieChartColors
         {
             get { return m_skillPieChartColors; }
-            set { m_skillPieChartColors = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillPieChartColors = value;
+                }
+            }
         }
 
         private float m_skillPieChartInitialAngle = -30F;
@@ -384,7 +582,13 @@ namespace EVEMon.Common
         public float SkillPieChartInitialAngle
         {
             get { return m_skillPieChartInitialAngle; }
-            set { m_skillPieChartInitialAngle = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillPieChartInitialAngle = value;
+                }
+            }
         }
 
         private float m_skillPieChartSliceRelativeHeight = 0.15F;
@@ -392,7 +596,13 @@ namespace EVEMon.Common
         public float SkillPieChartSliceRelativeHeight
         {
             get { return m_skillPieChartSliceRelativeHeight; }
-            set { m_skillPieChartSliceRelativeHeight = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillPieChartSliceRelativeHeight = value;
+                }
+            }
         }
 
         #region Owned Skills
@@ -415,34 +625,37 @@ namespace EVEMon.Common
 
         public void SetOwnedBooks(string characterName, List<String> ownedBooks)
         {
-            List<Pair<string, string>> newList = new List<Pair<string, string>>();
-            bool added = false;
-            foreach (Pair<string, string> x in m_ownedbooks)
+            lock (mutexLock)
             {
-                if (x.A == characterName)
+                List<Pair<string, string>> newList = new List<Pair<string, string>>();
+                bool added = false;
+                foreach (Pair<string, string> x in m_ownedbooks)
                 {
-                    if (!added)
+                    if (x.A == characterName)
                     {
-                        foreach(string book in ownedBooks)
+                        if (!added)
                         {
-                            newList.Add(new Pair<string,string>(characterName,book));
+                            foreach (string book in ownedBooks)
+                            {
+                                newList.Add(new Pair<string, string>(characterName, book));
+                            }
+                            added = true;
                         }
-                        added = true;
+                    }
+                    else
+                    {
+                        newList.Add(x);
                     }
                 }
-                else
+                if (!added)
                 {
-                    newList.Add(x);
+                    foreach (string book in ownedBooks)
+                    {
+                        newList.Add(new Pair<string, string>(characterName, book));
+                    }
                 }
+                m_ownedbooks = newList;
             }
-            if (!added)
-            {
-                foreach (string book in ownedBooks)
-                {
-                    newList.Add(new Pair<string, string>(characterName, book));
-                }
-            }
-            m_ownedbooks = newList;
         }
 
         #endregion
@@ -456,7 +669,13 @@ namespace EVEMon.Common
         public ColumnPreference ColumnPreferences
         {
             get { return m_columnPreferences; }
-            set { m_columnPreferences = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_columnPreferences = value;
+                }
+            }
         }
 
         private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
@@ -537,29 +756,34 @@ namespace EVEMon.Common
             else
                 p.A = charName + "::" + planName;
             p.B = plan;
-            m_plans.Add(p);
-
-            plan.Name = planName;
+            lock (mutexLock)
+            {
+                m_plans.Add(p);
+                plan.Name = planName;
+            }
             this.Save();
         }
 
         public void RemovePlanFor(string charName, string planName)
         {
-            for (int i = 0; i < m_plans.Count; i++)
+            lock(mutexLock)
             {
-                if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
+                for (int i = 0; i < m_plans.Count; i++)
                 {
-                    Plan p = m_plans[i].B;
-                    p.CloseEditor();
-                    m_plans.RemoveAt(i);
-                    i--;
-                }
-                else if (m_plans[i].A == charName + "::" + planName)
-                {
-                    Plan p = m_plans[i].B;
-                    p.CloseEditor();
-                    m_plans.RemoveAt(i);
-                    i--;
+                    if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                        i--;
+                    }
+                    else if (m_plans[i].A == charName + "::" + planName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
             this.Save();
@@ -571,22 +795,25 @@ namespace EVEMon.Common
                 return false;
 
             bool found = false;
-            for (int i = 0; i < m_plans.Count; i++)
+            lock (mutexLock)
             {
-                if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
+                for (int i = 0; i < m_plans.Count; i++)
                 {
-                    m_plans[i].A = charName + "::" + newName;
-                    found = true;
-                    break;
-                }
-                else if (m_plans[i].A == charName + "::" + planName)
-                {
-                    if (newName != PLAN_DEFAULT)
+                    if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
+                    {
                         m_plans[i].A = charName + "::" + newName;
-                    else
-                        m_plans[i].A = charName;
-                    found = true;
-                    break;
+                        found = true;
+                        break;
+                    }
+                    else if (m_plans[i].A == charName + "::" + planName)
+                    {
+                        if (newName != PLAN_DEFAULT)
+                            m_plans[i].A = charName + "::" + newName;
+                        else
+                            m_plans[i].A = charName;
+                        found = true;
+                        break;
+                    }
                 }
             }
             this.Save();
@@ -595,14 +822,17 @@ namespace EVEMon.Common
 
         public void RemoveAllPlansFor(string charName)
         {
-            for (int i = 0; i < m_plans.Count; i++)
+            lock (mutexLock)
             {
-                if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
+                for (int i = 0; i < m_plans.Count; i++)
                 {
-                    Plan p = m_plans[i].B;
-                    p.CloseEditor();
-                    m_plans.RemoveAt(i);
-                    i--;
+                    if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
             this.Save();
@@ -610,42 +840,45 @@ namespace EVEMon.Common
 
         public void RearrangePlansFor(string charName, List<string> newOrder)
         {
-            List<Pair<string, Plan>> plans = new List<Pair<string, Plan>>();
-            for (int i = 0; i < newOrder.Count; i++)
+            lock (mutexLock)
             {
-                plans.Add(null);
-            }
-            for (int i = 0; i < m_plans.Count; i++)
-            {
-                if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
+                List<Pair<string, Plan>> plans = new List<Pair<string, Plan>>();
+                for (int i = 0; i < newOrder.Count; i++)
                 {
-                    Pair<string, Plan> tp = m_plans[i];
-                    m_plans.RemoveAt(i);
-                    i--;
-
-                    bool added = false;
-                    string tPlanName = null;
-                    if (tp.A == charName)
-                        tPlanName = PLAN_DEFAULT;
-                    else
-                        tPlanName = tp.A.Substring(tp.A.IndexOf("::") + 2);
-                    for (int x = 0; x < newOrder.Count; x++)
-                    {
-                        if (newOrder[x] == tPlanName)
-                        {
-                            plans[x] = tp;
-                            added = true;
-                            break;
-                        }
-                    }
-                    if (!added)
-                        plans.Add(tp);
+                    plans.Add(null);
                 }
-            }
-            foreach (Pair<string, Plan> p in plans)
-            {
-                if (p != null)
-                    m_plans.Add(p);
+                for (int i = 0; i < m_plans.Count; i++)
+                {
+                    if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
+                    {
+                        Pair<string, Plan> tp = m_plans[i];
+                        m_plans.RemoveAt(i);
+                        i--;
+
+                        bool added = false;
+                        string tPlanName = null;
+                        if (tp.A == charName)
+                            tPlanName = PLAN_DEFAULT;
+                        else
+                            tPlanName = tp.A.Substring(tp.A.IndexOf("::") + 2);
+                        for (int x = 0; x < newOrder.Count; x++)
+                        {
+                            if (newOrder[x] == tPlanName)
+                            {
+                                plans[x] = tp;
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added)
+                            plans.Add(tp);
+                    }
+                }
+                foreach (Pair<string, Plan> p in plans)
+                {
+                    if (p != null)
+                        m_plans.Add(p);
+                }
             }
             this.Save();
         }
@@ -673,18 +906,24 @@ namespace EVEMon.Common
 
         public void RemoveCharacterCache(string charName)
         {
-            for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
+            lock (mutexLock)
             {
-                if (m_cachedCharacterInfo[i].Name == charName)
-                    m_cachedCharacterInfo.RemoveAt(i);
+                for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
+                {
+                    if (m_cachedCharacterInfo[i].Name == charName)
+                        m_cachedCharacterInfo.RemoveAt(i);
+                }
             }
         }
 
         public void SetCharacterCache(SerializableCharacterInfo sci)
         {
-            RemoveCharacterCache(sci.Name);
-            sci.IsCached = true;
-            m_cachedCharacterInfo.Add(sci);
+            lock (mutexLock)
+            {
+                RemoveCharacterCache(sci.Name);
+                sci.IsCached = true;
+                m_cachedCharacterInfo.Add(sci);
+            }
         }
 
         private List<string> m_confirmedTips = new List<string>();
@@ -714,13 +953,25 @@ namespace EVEMon.Common
         public PlanTextOptions DefaultCopyOptions
         {
             get { return m_defaultCopyOptions; }
-            set { m_defaultCopyOptions = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_defaultCopyOptions = value;
+                }
+            }
         }
 
         public PlanTextOptions DefaultSaveOptions
         {
             get { return m_defaultSaveOptions; }
-            set { m_defaultSaveOptions = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_defaultSaveOptions = value;
+                }
+            }
         }
 
         #endregion // Character Cache
@@ -732,7 +983,13 @@ namespace EVEMon.Common
         public bool WorksafeMode
         {
             get { return m_worksafeMode; }
-            set { m_worksafeMode = value; OnWorksafeChanged(); }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_worksafeMode = value; OnWorksafeChanged();
+                }
+            }
         }
 
         private void OnWorksafeChanged()
@@ -750,7 +1007,13 @@ namespace EVEMon.Common
         public bool PlaySoundOnSkillComplete
         {
             get { return m_playSoundOnSkillComplete; }
-            set { m_playSoundOnSkillComplete = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_playSoundOnSkillComplete = value;
+                }
+            }
         }
 
         #region In Game Browser server
@@ -764,8 +1027,11 @@ namespace EVEMon.Common
             get { return m_igbServerPublic; }
             set
             {
-                m_igbServerPublic = value;
-                OnRunIGBServerChanged();
+                lock (mutexLock)
+                {
+                    m_igbServerPublic = value;
+                    OnRunIGBServerChanged();
+                }
             }
         }
 
@@ -777,15 +1043,24 @@ namespace EVEMon.Common
             }
             set
             {
-                m_igbPort = value;
-                OnRunIGBServerChanged();
+                lock (mutexLock)
+                {
+                    m_igbPort = value;
+                    OnRunIGBServerChanged();
+                }
             }
         }
 
         public bool RunIGBServer
         {
             get { return m_runIgbServer; }
-            set { m_runIgbServer = value; OnRunIGBServerChanged(); }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_runIgbServer = value; OnRunIGBServerChanged();
+                }
+            }
         }
 
         private void OnRunIGBServerChanged()
@@ -805,8 +1080,11 @@ namespace EVEMon.Common
             get { return m_relocateEveWindow; }
             set
             {
-                m_relocateEveWindow = value;
-                OnRelocateEveWindowChanged();
+                lock (mutexLock)
+                {
+                    m_relocateEveWindow = value;
+                    OnRelocateEveWindowChanged();
+                }
             }
         }
 
@@ -825,10 +1103,13 @@ namespace EVEMon.Common
             get { return m_relocateTargetScreen; }
             set
             {
-                if (m_relocateTargetScreen != value)
+                lock (mutexLock)
                 {
-                    m_relocateTargetScreen = value;
-                    OnRelocateEveWindowChanged();
+                    if (m_relocateTargetScreen != value)
+                    {
+                        m_relocateTargetScreen = value;
+                        OnRelocateEveWindowChanged();
+                    }
                 }
             }
         }
@@ -838,7 +1119,13 @@ namespace EVEMon.Common
         public int SkillIconGroup
         {
             get { return m_skillIconGroup; }
-            set { m_skillIconGroup = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillIconGroup = value;
+                }
+            }
         }
 
         private bool m_useCustomProxySettings = false;
@@ -846,7 +1133,13 @@ namespace EVEMon.Common
         public bool UseCustomProxySettings
         {
             get { return m_useCustomProxySettings; }
-            set { m_useCustomProxySettings = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_useCustomProxySettings = value;
+                }
+            }
         }
 
         private ProxySetting m_httpProxy = new ProxySetting();
@@ -854,7 +1147,13 @@ namespace EVEMon.Common
         public ProxySetting HttpProxy
         {
             get { return m_httpProxy; }
-            set { m_httpProxy = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_httpProxy = value;
+                }
+            }
         }
 
         #region Tranquility Status
@@ -866,11 +1165,14 @@ namespace EVEMon.Common
             get { return m_checkTranquilityStatus; }
             set 
             {
+                lock (mutexLock)
+                {
                     if (m_checkTranquilityStatus != value)
                     {
-                    m_checkTranquilityStatus = value;
-                    OnCheckTranquilityStatusChanged();
+                        m_checkTranquilityStatus = value;
+                        OnCheckTranquilityStatusChanged();
                     }
+                }
             }
         }
 
@@ -887,7 +1189,13 @@ namespace EVEMon.Common
         public int StatusUpdateInterval
         {
             get { return m_statusUpdateInterval; }
-            set {m_statusUpdateInterval = value; }
+            set 
+            {
+                lock(mutexLock)
+                {
+                    m_statusUpdateInterval = value; 
+                }
+            }
         }
 
         #endregion // Tranquility Status
@@ -903,27 +1211,39 @@ namespace EVEMon.Common
             get { return m_schedule; }
             set 
             {
-                m_schedule = value;
-                OnScheduleEntriesChanged();
+                lock (mutexLock)
+                {
+                    m_schedule = value;
+                    OnScheduleEntriesChanged();
+                }
             }
         }
 
         public void ScheduleAdd(ScheduleEntry x)
         {
-            m_schedule.Add(x);
-            OnScheduleEntriesChanged();
+            lock (mutexLock)
+            {
+                m_schedule.Add(x);
+                OnScheduleEntriesChanged();
+            }
         }
 
         public void ScheduleRemoveAt(int i)
         {
-            m_schedule.RemoveAt(i);
-            OnScheduleEntriesChanged();
+            lock (mutexLock)
+            {
+                m_schedule.RemoveAt(i);
+                OnScheduleEntriesChanged();
+            }
         }
 
         private void OnScheduleEntriesChanged()
         {
-            if (ScheduleEntriesChanged != null)
-                ScheduleEntriesChanged(this, new EventArgs());
+            lock (mutexLock)
+            {
+                if (ScheduleEntriesChanged != null)
+                    ScheduleEntriesChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> ScheduleEntriesChanged;
@@ -935,7 +1255,13 @@ namespace EVEMon.Common
         public SerializableDictionary<string, int> SavedSplitterDistances
         {
             get { return m_savedSplitterDistances; }
-            set { m_savedSplitterDistances = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_savedSplitterDistances = value;
+                }
+            }
         }
 	
         private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
@@ -943,7 +1269,13 @@ namespace EVEMon.Common
         public SerializableDictionary<string, Rectangle> SavedWindowLocations
         {
             get { return m_savedWindowLocations; }
-            set { m_savedWindowLocations = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_savedWindowLocations = value;
+                }
+            }
         }
 
         #region Settings File Save / Load
@@ -952,12 +1284,18 @@ namespace EVEMon.Common
 
         public static Settings GetInstance()
         {
-            return Load();
+            lock (mutexLock)
+            {
+                return Load();
+            }
         }
 
         public static Settings Restore(string filename)
         {
-            return LoadFromFile(filename);
+            lock (mutexLock)
+            {
+                return LoadFromFile(filename);
+            }
         }
 
         public static Settings Load()
@@ -1037,7 +1375,10 @@ namespace EVEMon.Common
 
         public void NeverSave()
         {
-            m_neverSave = true;
+            lock (mutexLock)
+            {
+                m_neverSave = true;
+            }
         }
 
         [XmlIgnore]
@@ -1048,27 +1389,30 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_DataDir == String.Empty)
+                lock (mutexLock)
                 {
-                    m_SettingsFile = "/settings.xml";
+                    if (m_DataDir == String.Empty)
+                    {
+                        m_SettingsFile = "/settings.xml";
 #if DEBUG
-                    m_SettingsFile = "/settings-debug.xml";
+                        m_SettingsFile = "/settings-debug.xml";
 #endif
 
-                    m_DataDir = Directory.GetCurrentDirectory();
+                        m_DataDir = Directory.GetCurrentDirectory();
 
-                    string fn = m_DataDir + m_SettingsFile;
+                        string fn = m_DataDir + m_SettingsFile;
 
-                    if (!File.Exists(fn))
-                    {
-                        m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
+                        if (!File.Exists(fn))
+                        {
+                            m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
+                        }
+                        if (!Directory.Exists(m_DataDir))
+                            Directory.CreateDirectory(m_DataDir);
+                        if (!Directory.Exists(m_DataDir + "\\cache"))
+                            Directory.CreateDirectory(m_DataDir + "\\cache");
                     }
-                    if (!Directory.Exists(m_DataDir))
-                        Directory.CreateDirectory(m_DataDir);
-                    if (!Directory.Exists(m_DataDir + "\\cache"))
-                        Directory.CreateDirectory(m_DataDir + "\\cache");
+                    return m_DataDir;
                 }
-                return m_DataDir;
             }
         }
 
@@ -1101,23 +1445,29 @@ namespace EVEMon.Common
 
         public static void SaveTo(Stream s)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Settings));
-            xs.Serialize(s, Settings.GetInstance());
+            lock (mutexLock)
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(Settings));
+                xs.Serialize(s, Settings.GetInstance());
+            }
         }
 
         private static System.Threading.Timer m_saveTimer = new System.Threading.Timer(SaveCallback);
 
         private static void SaveCallback(Object state)
         {
-            if (!m_neverSave)
+            lock (mutexLock)
             {
-                string fn = SettingsFileName;
-
-                //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
-                //using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(m_key), FileMode.Create, store))
-                using (FileStream s = new FileStream(fn, FileMode.Create, FileAccess.Write))
+                if (!m_neverSave)
                 {
-                    SaveTo(s);
+                    string fn = SettingsFileName;
+
+                    //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
+                    //using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(m_key), FileMode.Create, store))
+                    using (FileStream s = new FileStream(fn, FileMode.Create, FileAccess.Write))
+                    {
+                        SaveTo(s);
+                    }
                 }
             }
         }
@@ -1132,25 +1482,30 @@ namespace EVEMon.Common
 
         public bool AddFileCharacter(CharFileInfo cfi)
         {
-            // TODO:
-            foreach (CharFileInfo tx in m_charFileList)
+            lock (mutexLock)
             {
-                if (cfi.Filename == tx.Filename)
-                    return false;
+                foreach (CharFileInfo tx in m_charFileList)
+                {
+                    if (cfi.Filename == tx.Filename)
+                        return false;
+                }
+                m_charFileList.Add(cfi);
             }
-            m_charFileList.Add(cfi);
             this.Save();
             return true;
         }
 
         public bool AddCharacter(CharLoginInfo cli)
         {
-            foreach (CharLoginInfo tx in m_characterList)
+            lock (mutexLock)
             {
-                if (cli.CharacterName == tx.CharacterName)
-                    return false;
+                foreach (CharLoginInfo tx in m_characterList)
+                {
+                    if (cli.CharacterName == tx.CharacterName)
+                        return false;
+                }
+                m_characterList.Add(cli);
             }
-            m_characterList.Add(cli);
             this.Save();
             return true;
         }
@@ -1190,7 +1545,13 @@ namespace EVEMon.Common
         public List<String> TabOrderName
         {
             get { return m_tabOrderName; }
-            set {  m_tabOrderName = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_tabOrderName = value;
+                }
+            }
         }
 
         [XmlIgnore]
@@ -1198,58 +1559,64 @@ namespace EVEMon.Common
         {
             get
             {
-                // Build list of charFileInfo  and CharLoginInfo objects in the requried tab order
-                foreach (String name in m_tabOrderName)
+                lock (mutexLock)
                 {
-                    bool found = false;
-                    foreach (CharLoginInfo ci in m_characterList)
+                    // Build list of charFileInfo  and CharLoginInfo objects in the requried tab order
+                    foreach (String name in m_tabOrderName)
                     {
-                        if (ci.CharacterName == name)
+                        bool found = false;
+                        foreach (CharLoginInfo ci in m_characterList)
                         {
-                            m_tabOrder.Add(ci);
-                            found = true;
-                            break;
+                            if (ci.CharacterName == name)
+                            {
+                                m_tabOrder.Add(ci);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) continue;
+
+                        foreach (CharFileInfo cfi in m_charFileList)
+                        {
+                            if (cfi.CharacterName == name)
+                            {
+                                m_tabOrder.Add(cfi);
+                                found = true;
+                                break;
+                            }
                         }
                     }
-                    if (found) continue;
 
+                    // Now we know that the tab order contains known characters...
+                    // Check if we're missing any
+                    foreach (CharLoginInfo cli in m_characterList)
+                    {
+                        if (!m_tabOrder.Contains(cli))
+                        {
+                            m_tabOrder.Add(cli);
+                        }
+                    }
                     foreach (CharFileInfo cfi in m_charFileList)
                     {
-                        if (cfi.CharacterName == name)
+                        if (!m_tabOrder.Contains(cfi))
                         {
                             m_tabOrder.Add(cfi);
-                            found = true;
-                            break;
                         }
                     }
-                }
 
-                // Now we know that the tab order contains known characters...
-                // Check if we're missing any
-                foreach (CharLoginInfo cli in m_characterList)
-                {
-                    if (!m_tabOrder.Contains(cli))
-                    {
-                        m_tabOrder.Add(cli);
-                    }
+                    // Now reset the tab order name list from the TabOrder list, which will remove
+                    // any unknown characetrs from the list
+                    SetTabOrderName();
+                    return m_tabOrder;
                 }
-                foreach (CharFileInfo cfi in m_charFileList)
-                {
-                    if (!m_tabOrder.Contains(cfi))
-                    {
-                        m_tabOrder.Add(cfi);
-                    }
-                }
-
-                // Now reset the tab order name list from the TabOrder list, which will remove
-                // any unknown characetrs from the list
-                SetTabOrderName();
-                return m_tabOrder;
             }
             set 
             {
-                m_tabOrder = value;
-                SetTabOrderName();
+                lock (mutexLock)
+                {
+                    m_tabOrder = value;
+                    SetTabOrderName();
+                }
             }
         }
 
@@ -1257,13 +1624,16 @@ namespace EVEMon.Common
         //  from the list of charXXInfo tab order
         private void SetTabOrderName()
         {
-            m_tabOrderName.Clear();
-            foreach (Object o in m_tabOrder)
+            lock (mutexLock)
             {
-                CharFileInfo cfi = o as CharFileInfo;
-                CharLoginInfo cli = o as CharLoginInfo;
-                if (cli != null) m_tabOrderName.Add(cli.CharacterName);
-                if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
+                m_tabOrderName.Clear();
+                foreach (Object o in m_tabOrder)
+                {
+                    CharFileInfo cfi = o as CharFileInfo;
+                    CharLoginInfo cli = o as CharLoginInfo;
+                    if (cli != null) m_tabOrderName.Add(cli.CharacterName);
+                    if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
+                }
             }
         }
 
@@ -1276,7 +1646,13 @@ namespace EVEMon.Common
         public bool ShowT1Items
         {
             get { return m_ShowT1Items; }
-            set { m_ShowT1Items = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowT1Items = value;
+                }
+            }
         }
 
         private bool m_ShowT2Items = true;
@@ -1284,7 +1660,13 @@ namespace EVEMon.Common
         public bool ShowT2Items
         {
             get { return m_ShowT2Items; }
-            set { m_ShowT2Items = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowT2Items = value;
+                }
+            }
         }
 
         private bool m_ShowNamedItems = true;
@@ -1292,7 +1674,13 @@ namespace EVEMon.Common
         public bool ShowNamedItems
         {
             get { return m_ShowNamedItems; }
-            set { m_ShowNamedItems = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowNamedItems = value;
+                }
+            }
         }
 
         private bool m_ShowOfficerItems = false;
@@ -1300,7 +1688,13 @@ namespace EVEMon.Common
         public bool ShowOfficerItems
         {
             get { return m_ShowOfficerItems; }
-            set { m_ShowOfficerItems = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowOfficerItems = value;
+                }
+            }
         }
 
         private bool m_ShowFactionItems = false;
@@ -1308,7 +1702,13 @@ namespace EVEMon.Common
         public bool ShowFactionItems
         {
             get { return m_ShowFactionItems; }
-            set { m_ShowFactionItems = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowFactionItems = value;
+                }
+            }
         }
 
         private bool m_ShowDeadspaceItems = false;
@@ -1316,7 +1716,13 @@ namespace EVEMon.Common
         public bool ShowDeadspaceItems
         {
             get { return m_ShowDeadspaceItems; }
-            set { m_ShowDeadspaceItems = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowDeadspaceItems = value;
+                }
+            }
         }
 
         private bool m_ShowAmarrShips = true;
@@ -1324,7 +1730,13 @@ namespace EVEMon.Common
         public bool ShowAmarrShips
         {
             get { return m_ShowAmarrShips; }
-            set { m_ShowAmarrShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowAmarrShips = value;
+                }
+            }
         }
 
         private bool m_ShowCaldariShips = true;
@@ -1332,7 +1744,13 @@ namespace EVEMon.Common
         public bool ShowCaldariShips
         {
             get { return m_ShowCaldariShips; }
-            set { m_ShowCaldariShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowCaldariShips = value;
+                }
+            }
         }
 
         private bool m_ShowGalenteShips = true;
@@ -1340,7 +1758,13 @@ namespace EVEMon.Common
         public bool ShowGallenteShips
         {
             get { return m_ShowGalenteShips; }
-            set { m_ShowGalenteShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowGalenteShips = value;
+                }
+            }
         }
 
         private bool m_ShowMinmatarShips = true;
@@ -1348,7 +1772,13 @@ namespace EVEMon.Common
         public bool ShowMinmatarShips
         {
             get { return m_ShowMinmatarShips; }
-            set { m_ShowMinmatarShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowMinmatarShips = value;
+                }
+            }
         }
 
         private bool m_ShowFactionShips = true;
@@ -1356,7 +1786,13 @@ namespace EVEMon.Common
         public bool ShowFactionShips 
         {
             get { return m_ShowFactionShips; }
-            set { m_ShowFactionShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowFactionShips = value;
+                }
+            }
         }
 
         private bool m_ShowOreShips = true;
@@ -1364,7 +1800,13 @@ namespace EVEMon.Common
         public bool ShowOreShips
         {
             get { return m_ShowOreShips; }
-            set { m_ShowOreShips = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowOreShips = value;
+                }
+            }
         }
 
         private int m_itemSkillFilter = 0;
@@ -1372,7 +1814,13 @@ namespace EVEMon.Common
         public int ItemSkillFilter
         {
             get { return m_itemSkillFilter; }
-            set { m_itemSkillFilter = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_itemSkillFilter = value;
+                }
+            }
         }
 
         private int m_itemSlotFilter = 0;
@@ -1380,7 +1828,13 @@ namespace EVEMon.Common
         public int ItemSlotFilter
         {
             get { return m_itemSlotFilter; }
-            set { m_itemSlotFilter = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_itemSlotFilter = value;
+                }
+            }
         }
 
         private String m_itemBrowserSearch = String.Empty;
@@ -1388,7 +1842,13 @@ namespace EVEMon.Common
         public String ItemBrowserSearch
         {
             get { return m_itemBrowserSearch; }
-            set { m_itemBrowserSearch = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_itemBrowserSearch = value;
+                }
+            }
         }
 	
 	    private int m_plannerTab = 0;
@@ -1396,7 +1856,13 @@ namespace EVEMon.Common
         public int PlannerTab
         {
             get { return m_plannerTab; }
-            set { m_plannerTab = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_plannerTab = value;
+                }
+            }
         }
 
         private int m_skillBrowserFilter = 0;
@@ -1404,7 +1870,13 @@ namespace EVEMon.Common
         public int SkillBrowserFilter
         {
             get { return m_skillBrowserFilter; }
-            set { m_skillBrowserFilter = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillBrowserFilter = value;
+                }
+            }
         }
 
         private bool m_storeBrowserFilters = false;
@@ -1412,7 +1884,13 @@ namespace EVEMon.Common
         public bool StoreBrowserFilters
         {
             get { return m_storeBrowserFilters; }
-            set { m_storeBrowserFilters = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_storeBrowserFilters = value;
+                }
+            }
         }
         
         private int m_skillBrowserSort=0;
@@ -1420,7 +1898,13 @@ namespace EVEMon.Common
         public int SkillBrowserSort
         {   
             get { return m_skillBrowserSort; }
-            set { m_skillBrowserSort = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillBrowserSort = value;
+                }
+            }
         }
         
         private String m_skillBrowserSearch  = String.Empty;
@@ -1428,7 +1912,13 @@ namespace EVEMon.Common
         public String SkillBrowserSearch
         {
             get { return m_skillBrowserSearch; }
-            set { m_skillBrowserSearch = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillBrowserSearch = value;
+                }
+            }
         }
 
         private bool m_showPrivateSkills = true;
@@ -1436,7 +1926,13 @@ namespace EVEMon.Common
         public bool ShowPrivateSkills
         {
             get { return m_showPrivateSkills; }
-            set { m_showPrivateSkills = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_showPrivateSkills = value;
+                }
+            }
         }
 	
         private int m_shipBrowserFilter = 0;
@@ -1444,7 +1940,13 @@ namespace EVEMon.Common
         public int ShipBrowserFilter
         {
             get { return m_shipBrowserFilter; }
-            set { m_shipBrowserFilter = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_shipBrowserFilter = value;
+                }
+            }
         }
 
         private String m_shipBrowserSearch = String.Empty;
@@ -1452,7 +1954,13 @@ namespace EVEMon.Common
         public String ShipBrowserSearch
         {
             get { return m_shipBrowserSearch; }
-            set { m_shipBrowserSearch = value; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_shipBrowserSearch = value;
+                }
+            }
         }
         
         #endregion
