@@ -37,6 +37,7 @@ namespace EVEMon
             this.pieHeight = new System.Windows.Forms.NumericUpDown();
             this.pieAngleLabel = new System.Windows.Forms.Label();
             this.pieHeightLabel = new System.Windows.Forms.Label();
+            this.sortBySizeCheck = new System.Windows.Forms.CheckBox();
             this.m_colorDialog = new System.Windows.Forms.ColorDialog();
             this.savePieDialog = new System.Windows.Forms.SaveFileDialog();
             this.pieControlPanel.SuspendLayout();
@@ -69,6 +70,7 @@ namespace EVEMon
             this.pieControlPanel.Controls.Add(this.pieHeight);
             this.pieControlPanel.Controls.Add(this.pieAngleLabel);
             this.pieControlPanel.Controls.Add(this.pieHeightLabel);
+            this.pieControlPanel.Controls.Add(this.sortBySizeCheck);
             this.pieControlPanel.Location = new System.Drawing.Point(12, 421);
             this.pieControlPanel.Name = "pieControlPanel";
             this.pieControlPanel.Size = new System.Drawing.Size(642, 26);
@@ -166,6 +168,16 @@ namespace EVEMon
             this.pieHeightLabel.TabIndex = 0;
             this.pieHeightLabel.Text = "Pie height:";
             // 
+            // sortBySizeCheck
+            // 
+            this.sortBySizeCheck.AutoSize = true;
+            this.sortBySizeCheck.Location = new System.Drawing.Point(280, 5);
+            this.sortBySizeCheck.Name = "sortBySizeCheck";
+            this.sortBySizeCheck.Size = new System.Drawing.Size(80, 17);
+            this.sortBySizeCheck.TabIndex = 6;
+            this.sortBySizeCheck.Text = "Sort by size";
+            this.sortBySizeCheck.CheckedChanged += new System.EventHandler(this.sortBySizeCheck_CheckedChanged);
+            // 
             // savePieDialog
             // 
             this.savePieDialog.DefaultExt = "png";
@@ -204,5 +216,6 @@ namespace EVEMon
         private System.Windows.Forms.ColorDialog m_colorDialog;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.SaveFileDialog savePieDialog;
+        private System.Windows.Forms.CheckBox sortBySizeCheck;
     }
 }

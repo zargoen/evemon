@@ -26,6 +26,7 @@ namespace EVEMon
             skillPieChartControl.FitChart = true;
             skillPieChartControl.SliceRelativeHeight = m_settings.SkillPieChartSliceRelativeHeight;
             skillPieChartControl.InitialAngle = m_settings.SkillPieChartInitialAngle;
+            sortBySizeCheck.Checked = m_settings.SkillPieChartSortBySize;
             pieHeight.Value = (decimal)m_settings.SkillPieChartSliceRelativeHeight;
             pieAngle.Value = (decimal)m_settings.SkillPieChartInitialAngle;
             skillPieChartControl.ShadowStyle = ShadowStyle.GradualShadow;
@@ -87,37 +88,13 @@ namespace EVEMon
                 newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
             }
 
-            // reordening the slices
-            for (int num = 0; num < c_info.SkillGroups.Count; num++)
-            {
-                decimal tempsp = decimal.MinValue;
-                int biggest = -1;
-                for (int y = 0; y < newValues.Length; y++)
-                {
-                    if (tempsp == -1)
-                    {
-                        tempsp = newValues[y];
-                        biggest = y;
-                    }
-                    if (newValues[y] > tempsp)
-                    {
-                        tempsp = newValues[y];
-                        biggest = y;
-                    }
+            skillPieChartControl.Values = newValues;
+            skillPieChartControl.Texts = newTexts;
+            skillPieChartControl.ToolTips = newToolTips;
+            skillPieChartControl.SliceRelativeDisplacements = newSliceRelativeDisplacements;
 
-                }
-                
-                n_newValues[num] = tempsp;
-                n_newTexts[num] = newTexts[biggest];
-                n_newSliceRelativeDisplacements[num] = newSliceRelativeDisplacements[biggest];
-                n_newToolTips[num] = newToolTips[biggest];
-                newValues[biggest] = 0;
-            }
-
-            skillPieChartControl.Values = n_newValues;
-            skillPieChartControl.Texts = n_newTexts;
-            skillPieChartControl.ToolTips = n_newToolTips;
-            skillPieChartControl.SliceRelativeDisplacements = n_newSliceRelativeDisplacements;
+            //skillPieChartControl.CopyDataToDrawVars();
+            skillPieChartControl.OrderSlices(m_settings.SkillPieChartSortBySize);
         }
 
         private void SkillsPieChart_FormClosing(object sender, FormClosingEventArgs e)
@@ -154,6 +131,7 @@ namespace EVEMon
             if (index != -1 && m_colorDialog.ShowDialog() == DialogResult.OK)
             {
                 skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
+                skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
             }
         }
 
@@ -167,6 +145,13 @@ namespace EVEMon
             {
                 pie.Save(savePieDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
+        }
+
+        private void sortBySizeCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.SkillPieChartSortBySize = sortBySizeCheck.Checked;
+            // skillPieChartControl.CopyDataToDrawVars();
+            skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
         }
     }
 }

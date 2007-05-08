@@ -605,6 +605,20 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_skillPieChartSortBySize = false;
+
+        public bool SkillPieChartSortBySize
+        {
+            get { return m_skillPieChartSortBySize; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillPieChartSortBySize = value;
+                }
+            }
+        }
+
         #region Owned Skills
 
         private List<Pair<string,string>> m_ownedbooks = new List<Pair<string,string>>();

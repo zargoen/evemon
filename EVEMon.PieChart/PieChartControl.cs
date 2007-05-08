@@ -237,7 +237,7 @@ namespace EVEMon.PieChart
         /// </param>
         protected void DoDraw(Graphics graphics)
         {
-            if (m_values != null && m_values.Length > 0)
+            if (m_drawValues != null && m_drawValues.Length > 0)
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 float width = ClientSize.Width - m_leftMargin - m_rightMargin;
@@ -247,13 +247,13 @@ namespace EVEMon.PieChart
                     return;
                 if (m_pieChart != null)
                     m_pieChart.Dispose();
-                if (m_colors != null && m_colors.Length > 0)
-                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_values, m_colors, m_sliceRelativeHeight, m_texts);
+                if (m_drawColors != null && m_drawColors.Length > 0)
+                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_drawColors, m_sliceRelativeHeight, m_drawTexts);
                 else
-                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_values, m_sliceRelativeHeight, m_texts);
+                    m_pieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight, m_drawTexts);
                 m_pieChart.FitToBoundingRectangle = m_fitChart;
                 m_pieChart.InitialAngle = m_initialAngle;
-                m_pieChart.SliceRelativeDisplacements = m_relativeSliceDisplacements;
+                m_pieChart.SliceRelativeDisplacements = m_drawRelativeSliceDisplacements;
                 m_pieChart.EdgeColorType = m_edgeColorType;
                 m_pieChart.EdgeLineWidth = m_edgeLineWidth;
                 m_pieChart.ShadowStyle = m_shadowStyle;
@@ -307,10 +307,10 @@ namespace EVEMon.PieChart
                 }
                 if (m_highlightedIndex != -1)
                 {
-                    if (m_toolTipTexts == null || m_toolTipTexts.Length <= m_highlightedIndex || m_toolTipTexts[m_highlightedIndex].Length == 0)
+                    if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex || m_drawToolTipTexts[m_highlightedIndex].Length == 0)
                         m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
                     else
-                        m_toolTip.SetToolTip(this, m_toolTipTexts[m_highlightedIndex]);
+                        m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
                 }
                 else
                 {
@@ -362,6 +362,73 @@ namespace EVEMon.PieChart
             }
         }
 
+        /// <summary>
+        /// Will copy the original data to the vars used for drawing
+        /// The original is needed to use for ordering
+        /// </summary>
+        public void CopyDataToDrawVars()
+        {
+            this.m_drawValues = (decimal[]) this.m_values.Clone();
+            this.m_drawColors = (Color[]) this.m_colors.Clone();
+            this.m_drawRelativeSliceDisplacements = (float[]) this.m_relativeSliceDisplacements.Clone();
+            this.m_drawToolTipTexts = (string[]) this.m_toolTipTexts.Clone();
+            this.m_drawTexts = (string[]) this.m_texts.Clone();
+        }
+
+        public void OrderSlices(bool orderBySize)
+        {
+            if (orderBySize == true && this.m_values != null)
+            {
+                // prefill the draw vars
+                this.CopyDataToDrawVars();
+
+                // take a copy of the original values
+                // then use it to do the calculations
+                decimal[] values = (decimal[]) this.m_values.Clone();
+                Color[] colours = (Color[]) this.m_colors.Clone();
+                float[] displacements = (float[]) this.m_relativeSliceDisplacements.Clone();
+                string[] tooltips = (string[]) this.m_toolTipTexts.Clone();
+                string[] texts = (string[]) this.m_texts.Clone();
+
+                // reordering the slices
+                for (int num = 0; num < values.Length; num++)
+                {
+                    decimal tempsp = decimal.MinValue;
+                    int biggest = -1;
+                    for (int y = 0; y < values.Length; y++)
+                    {
+                        if (tempsp == -1)
+                        {
+                            tempsp = values[y];
+                            biggest = y;
+                        }
+                        if (values[y] > tempsp && values[y] > 0)
+                        {
+                            tempsp = values[y];
+                            biggest = y;
+                        }
+
+                    }
+
+                    this.m_drawValues[num] = values[biggest];
+                    this.m_drawTexts[num] = texts[biggest];
+                    this.m_drawRelativeSliceDisplacements[num] = displacements[biggest];
+                    this.m_drawToolTipTexts[num] = tooltips[biggest];
+                    this.m_drawColors[num] = colours[biggest];
+                    values[biggest] = 0;
+                }
+            }
+            else
+            {
+                if (this.m_values != null)
+                {
+                    this.CopyDataToDrawVars();
+                }
+            }
+
+            this.Refresh();
+        }
+
         private PieChart3D m_pieChart = null;
         private float m_leftMargin;
         private float m_topMargin;
@@ -381,6 +448,15 @@ namespace EVEMon.PieChart
         private float m_initialAngle;
         private int m_highlightedIndex = -1;
         private ToolTip m_toolTip = null;
+
+        // These are used for the actual drawing. They are modified depending
+        // on wether sorting by size is on or off
+        private decimal[] m_drawValues = null;
+        private Color[] m_drawColors = null;
+        private float[] m_drawRelativeSliceDisplacements = new float[] { 0F };
+        private string[] m_drawToolTipTexts = null;
+        private string[] m_drawTexts = null;
+
         /// <summary>
         ///   Default AutoPopDelay of the ToolTip control.
         /// </summary>
