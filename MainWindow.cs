@@ -272,12 +272,12 @@ namespace EVEMon
             List<String> tabOrder = new List<string>();
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
-                if (tp.GetType() == typeof(CharFileInfo))
+                if (tp.Tag.GetType() == typeof(CharFileInfo))
                 {
                     CharFileInfo cfi = (CharFileInfo)tp.Tag;
                     tabOrder.Add(cfi.CharacterName);
                 }
-                else if (tp.GetType() == typeof(CharLoginInfo))
+                else if (tp.Tag.GetType() == typeof(CharLoginInfo))
                 {
                     CharLoginInfo cli = (CharLoginInfo)tp.Tag;
                     tabOrder.Add(cli.CharacterName);
