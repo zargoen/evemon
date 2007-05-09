@@ -7,7 +7,7 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ItemBrowserControl : UserControl
+    public partial class ItemBrowserControl : EveObjectBrowserControl
     {
         public ItemBrowserControl()
         {
@@ -41,12 +41,12 @@ namespace EVEMon.SkillPlanner
 
         private void itemSelectControl1_SelectedItemChanged(object sender, EventArgs e)
         {
-            Item i = itemSelectControl1.SelectedObject  as Item;
+            Item item = itemSelectControl1.SelectedObject  as Item;
             foreach (Control c in splitContainer1.Panel2.Controls)
             {
-                c.Visible = (i != null);
+                c.Visible = (item != null);
             }
-            if (i != null)
+            if (item != null)
             {
                 Bitmap b = new Bitmap(pbItemIcon.ClientSize.Width, pbItemIcon.ClientSize.Height);
                 using (Graphics g = Graphics.FromImage(b))
@@ -56,7 +56,7 @@ namespace EVEMon.SkillPlanner
                 pbItemIcon.Image = b;
 
                 StringBuilder sb = new StringBuilder();
-                ItemCategory cat = i.ParentCategory;
+                ItemCategory cat = item.ParentCategory;
                 while (cat != null)
                 {
                     sb.Insert(0, cat.Name);
@@ -67,44 +67,20 @@ namespace EVEMon.SkillPlanner
                     }
                 }
                 lblItemCategory.Text = sb.ToString();
-                lblItemName.Text = i.Name;
-                lblItemDescription.Text = i.Description;
-                lvItemProperties.BeginUpdate();
-                try
-                {
-                    // remove excess columns that might have been added by 'compare with' earlier
-                    while (lvItemProperties.Columns.Count > 2)
-                        lvItemProperties.Columns.RemoveAt(2);
-                    // (re)construct item properties list
-                    lvItemProperties.Items.Clear();
-
-                    ListViewItem listItem = new ListViewItem(new string[] { "Class",i.Metagroup });
-                    listItem.Name = "Class";
-                    lvItemProperties.Items.Add(listItem);
-
-                    foreach (EntityProperty prop in i.Properties)
-                    {
-                        listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
-                        listItem.Name = prop.Name;
-                        lvItemProperties.Items.Add(listItem);
-                    }
-                }
-                finally
-                {
-                    lvItemProperties.EndUpdate();
-                }
+                lblItemName.Text = item.Name;
+                lblItemDescription.Text = item.Description;
 
                 m_allSkillsKnown = true;
                 m_skillsUnplanned = false;
 
-                SetSkillLabel(0, lblItemSkill1, i);
-                SetSkillLabel(1, lblItemSkill2, i);
-                SetSkillLabel(2, lblItemSkill3, i);
+                SetSkillLabel(0, lblItemSkill1, item);
+                SetSkillLabel(1, lblItemSkill2, item);
+                SetSkillLabel(2, lblItemSkill3, item);
 
                 if (!m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (EntityRequiredSkill irs in i.RequiredSkills)
+                    foreach (EntityRequiredSkill irs in item.RequiredSkills)
                     {
                         Pair<Skill, int> p = new Pair<Skill, int>();
                         p.A = m_plan.GrandCharacterInfo.GetSkill(irs.Name);
@@ -131,11 +107,11 @@ namespace EVEMon.SkillPlanner
                     btnItemSkillsAdd.Enabled = false;
                 }
 
-                if (!String.IsNullOrEmpty(i.Icon))
+                if (!String.IsNullOrEmpty(item.Icon))
                 {
                     bool pic_got = false;
                     System.Resources.IResourceReader basic;
-                    if (i.ParentCategory != null && i.ParentCategory.Name != "Drone Upgrades" && i.ParentCategory.ParentCategory != null && ((i.ParentCategory.ParentCategory.Name == "Drones") || (i.ParentCategory.ParentCategory.ParentCategory != null && i.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
+                    if (item.ParentCategory != null && item.ParentCategory.Name != "Drone Upgrades" && item.ParentCategory.ParentCategory != null && ((item.ParentCategory.ParentCategory.Name == "Drones") || (item.ParentCategory.ParentCategory.ParentCategory != null && item.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
                     {
                         if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Drones64_64.resources"))
                         {
@@ -143,7 +119,7 @@ namespace EVEMon.SkillPlanner
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
-                                if (basicx.Key.ToString() == "_" + i.Id)
+                                if (basicx.Key.ToString() == "_" + item.Id)
                                 {
                                     pbItemIcon.Image = (System.Drawing.Image)basicx.Value;
                                     pic_got = true;
@@ -159,7 +135,7 @@ namespace EVEMon.SkillPlanner
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
-                                if (basicx.Key.ToString() == i.Icon.ToString().Substring(i.Icon.ToString().LastIndexOf('/') + 1, i.Icon.ToString().Substring(i.Icon.ToString().LastIndexOf('/') + 1).Length - 4))
+                                if (basicx.Key.ToString() == item.Icon.ToString().Substring(item.Icon.ToString().LastIndexOf('/') + 1, item.Icon.ToString().Substring(item.Icon.ToString().LastIndexOf('/') + 1).Length - 4))
                                 {
                                     pbItemIcon.Image = (System.Drawing.Image)basicx.Value;
                                     pic_got = true;
@@ -169,16 +145,85 @@ namespace EVEMon.SkillPlanner
                     }
                     if (!pic_got)
                     {
-                        EveSession.GetImageAsync("http://www.eve-online.com" + i.Icon, true,
+                        EveSession.GetImageAsync("http://www.eve-online.com" + item.Icon, true,
                                                  delegate(EveSession sess, Image img)
                                                  {
                                                      if (
-                                                         itemSelectControl1.SelectedObject == i)
+                                                         itemSelectControl1.SelectedObject == item)
                                                      {
-                                                         GotItemImage(i.Id, img);
+                                                         GotItemImage(item.Id, img);
                                                      }
                                                  });
                     }
+                }
+
+                lvItemProperties.BeginUpdate();
+                try
+                {
+                    // remove excess columns that might have been added by 'compare with' earlier
+                    while (lvItemProperties.Columns.Count > 2)
+                        lvItemProperties.Columns.RemoveAt(2);
+                    // (re)construct item properties list
+                    lvItemProperties.Items.Clear();
+
+                    ListViewItem listItem = new ListViewItem(new string[] { "Class", item.Metagroup });
+                    listItem.Name = "Class";
+                    lvItemProperties.Items.Add(listItem);
+
+                    foreach (EntityProperty prop in item.Properties)
+                    {
+                        listItem = new ListViewItem(new string[] { prop.Name, prop.Value });
+                        listItem.Name = prop.Name;
+                        lvItemProperties.Items.Add(listItem);
+                    }
+
+
+                    // Add compare with columns (if additional selections)
+                    for (int i_item = 0; i_item < itemSelectControl1.SelectedObjects.Count; i_item++)
+                    {
+                        Item selectedItem = itemSelectControl1.SelectedObjects[i_item] as Item;
+                        // Skip if it's the mothership
+                        if (selectedItem == itemSelectControl1.SelectedObject) continue;
+
+                        // add new column header and values
+                        lvItemProperties.Columns.Add(selectedItem.Name);
+                        foreach (EntityProperty prop in selectedItem.Properties)
+                        {
+                            ListViewItem[] items = lvItemProperties.Items.Find(prop.Name, false);
+                            if (items.Length != 0)
+                            {
+                                // existing property
+                                ListViewItem oldItem = items[0];
+                                oldItem.SubItems.Add(prop.Value);
+                            }
+                            else
+                            {
+                                // new property
+                                int skipColumns = lvItemProperties.Columns.Count - 2;
+                                ListViewItem newItem = lvItemProperties.Items.Add(prop.Name);
+                                newItem.Name = prop.Name;
+                                while (skipColumns-- > 0)
+                                    newItem.SubItems.Add("");
+                                newItem.SubItems.Add(prop.Value);
+                            }
+                        }
+                        // mark items with changed value in blue
+                        foreach (ListViewItem li in lvItemProperties.Items)
+                        {
+                            for (int i = 2; i < li.SubItems.Count; i++)
+                            {
+                                if (li.SubItems[i - 1].Text.CompareTo(li.SubItems[i].Text) != 0)
+                                {
+                                    li.BackColor = Color.LightBlue;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    lvItemProperties.EndUpdate();
                 }
             }
         }
@@ -262,57 +307,6 @@ namespace EVEMon.SkillPlanner
             }
             m_plan.PlanSetTo(skillsToAdd, m_note, true);
             itemSelectControl1_SelectedItemChanged(new Object(), new EventArgs());
-        }
-
-        private void btnCompareWith_Click(object sender, EventArgs e)
-        {
-            // ask user to select an item for comparison
-            Item selectedItem = ItemCompareWindow.CompareWithItemInput(itemSelectControl1.SelectedObject as Item,m_plan);
-            if (selectedItem != null)
-            {
-                lvItemProperties.BeginUpdate();
-                try
-                {
-                    // add new column header and values
-                    lvItemProperties.Columns.Add(selectedItem.Name);
-                    foreach (EntityProperty prop in selectedItem.Properties)
-                    {
-                        ListViewItem[] items = lvItemProperties.Items.Find(prop.Name, false);
-                        if (items.Length != 0)
-                        {
-                            // existing property
-                            ListViewItem oldItem = items[0];
-                            oldItem.SubItems.Add(prop.Value);
-                        }
-                        else
-                        {
-                            // new property
-                            int skipColumns = lvItemProperties.Columns.Count - 2;
-                            ListViewItem newItem = lvItemProperties.Items.Add(prop.Name);
-                            newItem.Name = prop.Name;
-                            while (skipColumns-- > 0)
-                                newItem.SubItems.Add("");
-                            newItem.SubItems.Add(prop.Value);
-                        }
-                    }
-                    // mark items with changed value in blue
-                    foreach (ListViewItem listItem in lvItemProperties.Items)
-                    {
-                        for (int i = 2; i < listItem.SubItems.Count; i++)
-                        {
-                            if (listItem.SubItems[i - 1].Text.CompareTo(listItem.SubItems[i].Text) != 0)
-                            {
-                                listItem.BackColor = Color.LightBlue;
-                                break;
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    lvItemProperties.EndUpdate();
-                }
-            }
         }
     }
 }

@@ -10,7 +10,7 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ShipBrowserControl : UserControl
+    public partial class ShipBrowserControl : EveObjectBrowserControl
     {
         private Plan m_plan;
         public Plan Plan
@@ -256,6 +256,105 @@ namespace EVEMon.SkillPlanner
                             lvShipProperties.Items.Add(listItem);
                         }
                     }
+
+
+                    // Add compare with columns (if additional selections)
+                    for (int i_ship = 0; i_ship < shipSelectControl.SelectedObjects.Count; i_ship++)
+                    {
+                        Ship selectedShip = shipSelectControl.SelectedObjects[i_ship] as Ship;
+                        // Skip if it's the mothership
+                        if (selectedShip == shipSelectControl.SelectedObject) continue;
+
+                        // add new column header and values
+                        lvShipProperties.Columns.Add(selectedShip.Name);
+
+                        // use the  display logic to get any new attributes in the right order
+
+                        int lastpos = 0;
+                        for (int i = 0; i < m_DisplayAttributes.Count; i++)
+                        {
+                            AttributeDisplayData att = m_DisplayAttributes[i];
+
+                            if (att.isHeader) continue;
+
+                            m_propName = att.xmlName;
+                            EntityProperty sp = selectedShip.Properties.Find(findShipProperty);
+                            if (sp != null)
+                            {
+                                // found a property to display. Does it exist already?
+                                int pos = AddAnotherValue(sp.Name, sp.Value);
+                                if (pos >= 0)
+                                {
+                                    lastpos = pos;
+                                }
+                                else
+                                {
+                                    // attribute wasn't in the list - add it if needed
+                                    if (att.hideIfZero && sp.Value.StartsWith("0"))
+                                    {
+                                        // nope. 
+                                        continue;
+                                    }
+
+                                    // adding a previously missing property
+                                    int skipColumns = lvShipProperties.Columns.Count - 2;
+                                    ListViewItem newItem = lvShipProperties.Items.Insert(lastpos + 1, sp.Name);
+                                    newItem.Name = sp.Name;
+                                    while (skipColumns-- > 0)
+                                        newItem.SubItems.Add("");
+                                    newItem.SubItems.Add(removeNegative(sp.Value));
+
+                                }
+                            }
+                            else if (att.alwaysShow)
+                            {
+                                // Ship is missing a displayed attribute - fake one!
+                                lastpos = AddAnotherValue(att.xmlName, "0");
+                            }
+                        }
+
+                        // we've dealt with the formatted, ordered list, now add the rest
+
+                        // Display any properties not shown in the sorted list
+                        foreach (EntityProperty prop in selectedShip.Properties)
+                        {
+                            // make sure we haven't already displayed this property
+                            if (!m_DisplayAttributes.Contains(prop.Name))
+                            {
+                                ListViewItem[] items = lvShipProperties.Items.Find(prop.Name, false);
+                                if (items.Length != 0)
+                                {
+                                    // existing property
+                                    ListViewItem oldItem = items[0];
+                                    oldItem.SubItems.Add(removeNegative(prop.Value));
+                                }
+                                else
+                                {
+                                    int skipColumns = lvShipProperties.Columns.Count - 2;
+                                    ListViewItem newItem = lvShipProperties.Items.Add(prop.Name);
+                                    newItem.Name = prop.Name;
+                                    while (skipColumns-- > 0)
+                                        newItem.SubItems.Add("");
+                                    newItem.SubItems.Add(removeNegative(prop.Value));
+                                }
+
+                            }
+                        }
+
+
+                        // mark properties with changed value in blue
+                        foreach (ListViewItem li in lvShipProperties.Items)
+                        {
+                            for (int i = 2; i < li.SubItems.Count; i++)
+                            {
+                                if (li.SubItems[i - 1].Text.CompareTo(li.SubItems[i].Text) != 0)
+                                {
+                                    li.BackColor = Color.LightBlue;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
                 finally
                 {
@@ -362,113 +461,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void btnCompareWith_Click(object sender, EventArgs e)
-        {
-            // ask user to select a ship for comparison
-            Ship selectedShip = ShipCompareWindow.CompareWithShipInput(shipSelectControl.SelectedObject as Ship, m_plan);
-            if (selectedShip != null)
-            {
-                lvShipProperties.BeginUpdate();
-                try
-                {
-                    // add new column header and values
-                    lvShipProperties.Columns.Add(selectedShip.Name);
-
-                    // use the  display logic to get any new attributes in the right order
-
-
-                    int lastpos = 0;
-                    for (int i = 0; i < m_DisplayAttributes.Count; i++)
-                    {
-                        AttributeDisplayData att = m_DisplayAttributes[i];
-                   
-                        if (att.isHeader) continue;
-
-                        m_propName = att.xmlName;
-                        EntityProperty sp = selectedShip.Properties.Find(findShipProperty);
-                        if (sp != null)
-                        {
-                            // found a property to display. Does it exist already?
-                            int pos = AddAnotherValue(sp.Name, sp.Value);
-                            if (pos >= 0)
-                            {
-                                lastpos = pos;
-                            }
-                            else 
-                            {
-                                // attribute wasn't in the list - add it if needed
-                                if (att.hideIfZero && sp.Value.StartsWith("0"))
-                                {
-                                    // nope. 
-                                    continue;
-                                }
-
-                                // adding a previously missing property
-                                int skipColumns = lvShipProperties.Columns.Count - 2;
-                                ListViewItem newItem = lvShipProperties.Items.Insert(lastpos+1,sp.Name);
-                                newItem.Name = sp.Name;
-                                while (skipColumns-- > 0)
-                                    newItem.SubItems.Add("");
-                                newItem.SubItems.Add(removeNegative(sp.Value));
-
-                            }
-                        }
-                        else if (att.alwaysShow)
-                        {
-                            // Ship is missing a displayed attribute - fake one!
-                            lastpos = AddAnotherValue(att.xmlName ,"0");
-                        }
-                    }
-
-                    // we've dealt with the formatted, ordered list, now add the rest
-
-                    // Display any properties not shown in the sorted list
-                    foreach (EntityProperty prop in selectedShip.Properties)
-                    {
-                        // make sure we haven't already displayed this property
-                        if (!m_DisplayAttributes.Contains(prop.Name))
-                        {
-                            ListViewItem[] items = lvShipProperties.Items.Find(prop.Name, false);
-                            if (items.Length != 0)
-                            {
-                                // existing property
-                                ListViewItem oldItem = items[0];
-                                oldItem.SubItems.Add(removeNegative(prop.Value));
-                            }
-                            else
-                            {
-                                int skipColumns = lvShipProperties.Columns.Count - 2;
-                                ListViewItem newItem = lvShipProperties.Items.Add(prop.Name);
-                                newItem.Name = prop.Name;
-                                while (skipColumns-- > 0)
-                                    newItem.SubItems.Add("");
-                                newItem.SubItems.Add(removeNegative(prop.Value));
-                            }
-
-                        }
-                    }
-
-
-                    // mark properties with changed value in blue
-                    foreach (ListViewItem listItem in lvShipProperties.Items)
-                    {
-                        for (int i = 2; i < listItem.SubItems.Count; i++)
-                        {
-                            if (listItem.SubItems[i - 1].Text.CompareTo(listItem.SubItems[i].Text) != 0)
-                            {
-                                listItem.BackColor = Color.LightBlue;
-                                break;
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    lvShipProperties.EndUpdate();
-                }
-            }
-        }
-
         private int AddAnotherValue(string name, string value)
         {
             ListViewItem[] items = lvShipProperties.Items.Find(name, false);
@@ -483,6 +475,7 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
+
 
 
 

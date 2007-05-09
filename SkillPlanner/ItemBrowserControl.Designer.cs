@@ -34,7 +34,6 @@ namespace EVEMon.SkillPlanner
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.lblItemDescription = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnCompareWith = new System.Windows.Forms.Button();
             this.btnItemSkillsAdd = new System.Windows.Forms.Button();
             this.lblItemTimeRequired = new System.Windows.Forms.Label();
             this.lblItemSkill3 = new System.Windows.Forms.Label();
@@ -116,7 +115,6 @@ namespace EVEMon.SkillPlanner
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.btnCompareWith);
             this.groupBox2.Controls.Add(this.btnItemSkillsAdd);
             this.groupBox2.Controls.Add(this.lblItemTimeRequired);
             this.groupBox2.Controls.Add(this.lblItemSkill3);
@@ -128,16 +126,6 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Required Skills";
-            // 
-            // btnCompareWith
-            // 
-            this.btnCompareWith.Location = new System.Drawing.Point(6, 87);
-            this.btnCompareWith.Name = "btnCompareWith";
-            this.btnCompareWith.Size = new System.Drawing.Size(95, 23);
-            this.btnCompareWith.TabIndex = 10;
-            this.btnCompareWith.Text = "Compare With...";
-            this.btnCompareWith.UseVisualStyleBackColor = true;
-            this.btnCompareWith.Click += new System.EventHandler(this.btnCompareWith_Click);
             // 
             // btnItemSkillsAdd
             // 
@@ -214,16 +202,17 @@ namespace EVEMon.SkillPlanner
             this.pbItemIcon.TabIndex = 5;
             this.pbItemIcon.TabStop = false;
             // 
-            // itemSelectControl11
+            // itemSelectControl1
             // 
             this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
             this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.itemSelectControl1.Name = "itemSelectControl11";
+            this.itemSelectControl1.Name = "itemSelectControl1";
             this.itemSelectControl1.Plan = null;
             this.itemSelectControl1.SelectedObject = null;
+            this.itemSelectControl1.SelectedObjects = null;
             this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
             this.itemSelectControl1.TabIndex = 0;
             this.itemSelectControl1.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
@@ -263,7 +252,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListView lvItemProperties;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.Button btnCompareWith;
         private ItemSelectControl itemSelectControl1;
     }
 }

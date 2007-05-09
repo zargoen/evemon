@@ -178,29 +178,61 @@ namespace EVEMon.SkillPlanner
         #region Events
         private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (tvItems.SelectedNode != null)
+            if (tvItems.SelectedNodes.Count != 0)
             {
-                SetSelectedObject(tvItems.SelectedNode.Tag as EveObject);
+                List<EveObject> selectedObjects = new List<EveObject>();
+                foreach (TreeNode node in tvItems.SelectedNodes)
+                {
+                    selectedObjects.Add(node.Tag as EveObject);
+                }
+                SetSelectedObjects(selectedObjects);
             }
             else
             {
-                SetSelectedObject(null);
+                SetSelectedObjects(null);
             }
         }
 
-        protected EveObject m_selectedObject = null;
+        protected List<EveObject> m_selectedObjects = null;
 
+        /// <summary>
+        /// All the selected objects (through multi-select)
+        /// </summary>
+        public List<EveObject> SelectedObjects
+        {
+            get { return m_selectedObjects; }
+            set { m_selectedObjects = value; }
+        }
+
+        /// <summary>
+        /// The primary selected object
+        /// </summary>
         public EveObject SelectedObject
         {
-            get { return m_selectedObject; }
-            set { m_selectedObject = value; }
+            get
+            {
+                if (m_selectedObjects != null && m_selectedObjects.Count != 0)
+                {
+                    return m_selectedObjects[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                List<EveObject> selectedObjects = new List<EveObject>();
+                selectedObjects.Add(value);
+                m_selectedObjects = selectedObjects;
+            }
         }
 
         public event EventHandler<EventArgs> SelectedObjectChanged;
 
-        protected void SetSelectedObject(EveObject s)
+        protected void SetSelectedObjects(List<EveObject> s)
         {
-            m_selectedObject = s;
+            m_selectedObjects = s;
             if (SelectedObjectChanged != null)
             {
                 SelectedObjectChanged(this, new EventArgs());
@@ -209,7 +241,19 @@ namespace EVEMon.SkillPlanner
         
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetSelectedObject(lbSearchList.SelectedItem as EveObject);
+            if (lbSearchList.SelectedItems.Count != 0)
+            {
+                List<EveObject> selectedObjects = new List<EveObject>();
+                foreach (Object node in lbSearchList.SelectedItems)
+                {
+                    selectedObjects.Add(node as EveObject);
+                }
+                SetSelectedObjects(selectedObjects);
+            }
+            else
+            {
+                SetSelectedObjects(null);
+            }
         }
         #endregion
 

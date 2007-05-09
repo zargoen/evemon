@@ -39,7 +39,6 @@ namespace EVEMon.SkillPlanner
             this.lblShipDescription = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnCompareWith = new System.Windows.Forms.Button();
             this.btnShipSkillsAdd = new System.Windows.Forms.Button();
             this.lblShipTimeRequired = new System.Windows.Forms.Label();
             this.lblShipSkill3 = new System.Windows.Forms.Label();
@@ -95,6 +94,7 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Name = "shipSelectControl";
             this.shipSelectControl.Plan = null;
             this.shipSelectControl.SelectedObject = null;
+            this.shipSelectControl.SelectedObjects = null;
             this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
@@ -182,7 +182,6 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.btnCompareWith);
             this.groupBox1.Controls.Add(this.btnShipSkillsAdd);
             this.groupBox1.Controls.Add(this.lblShipTimeRequired);
             this.groupBox1.Controls.Add(this.lblShipSkill3);
@@ -196,16 +195,6 @@ namespace EVEMon.SkillPlanner
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Required Skills";
-            // 
-            // btnCompareWith
-            // 
-            this.btnCompareWith.Location = new System.Drawing.Point(6, 84);
-            this.btnCompareWith.Name = "btnCompareWith";
-            this.btnCompareWith.Size = new System.Drawing.Size(95, 23);
-            this.btnCompareWith.TabIndex = 11;
-            this.btnCompareWith.Text = "Compare With...";
-            this.btnCompareWith.UseVisualStyleBackColor = true;
-            this.btnCompareWith.Click += new System.EventHandler(this.btnCompareWith_Click);
             // 
             // btnShipSkillsAdd
             // 
@@ -349,7 +338,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ListView lvShipProperties;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.Button btnCompareWith;
         private ShipSelectControl shipSelectControl;
 
 
