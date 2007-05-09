@@ -158,7 +158,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Properties\Settings.cs" />
     <Compile Include="ProxyAuthenticationWindow.cs">
       <SubType>Form</SubType>
     </Compile>
