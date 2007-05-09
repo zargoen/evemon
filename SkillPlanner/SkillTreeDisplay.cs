@@ -809,10 +809,16 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            if (clickedSkill != null && SkillClicked != null)
+            if (clickedSkill != null)
             {
-                SkillClickedEventArgs se = new SkillClickedEventArgs(clickedSkill, e.Button, e.Location);
-                SkillClicked(this, se);
+                if (SkillClicked != null)
+                {
+                    SkillClickedEventArgs se = new SkillClickedEventArgs(clickedSkill, e.Button, e.Location);
+                    SkillClicked(this, se);
+                }
+
+                NewPlannerWindow npw = m_plan.PlannerWindow.Target as NewPlannerWindow;
+                npw.ShowSkillInTree(clickedSkill);
             }
         }
     }
