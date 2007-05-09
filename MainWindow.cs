@@ -45,7 +45,7 @@ namespace EVEMon
 
             G15Handler.Init();
 
-            
+
             AddCharacters();
             if (m_settings.CheckTranquilityStatus)
             {
@@ -228,7 +228,7 @@ namespace EVEMon
             }
             cfi.CharacterName = sci.Name;
             CharacterMonitor cm = new CharacterMonitor(cfi, sci);
-            AddTab(cfi,"(File) " + sci.Name,cm,"File based character");
+            AddTab(cfi, "(File) " + sci.Name, cm, "File based character");
             return true;
         }
 
@@ -240,7 +240,7 @@ namespace EVEMon
         private bool AddTab(CharLoginInfo cli)
         {
             CharacterMonitor cm = new CharacterMonitor(cli);
-            AddTab(cli,cli.CharacterName,cm,"Username: " + cli.Username);
+            AddTab(cli, cli.CharacterName, cm, "Username: " + cli.Username);
             return true;
         }
 
@@ -251,7 +251,7 @@ namespace EVEMon
         /// <param name="charInfo">either a file based on online based info object</param>
         /// <param name="title">Titke for the tab  - "character name" or "(file) character name"</param>
         /// <param name="cm">The Character Monitor object to attach to this tab</param>
-        private void AddTab(object charInfo,string title,CharacterMonitor cm,string tooltip)
+        private void AddTab(object charInfo, string title, CharacterMonitor cm, string tooltip)
         {
             TabPage tp = new TabPage(title);
             tp.ToolTipText = tooltip;
@@ -318,7 +318,7 @@ namespace EVEMon
                             case 3: // multi Char - finishing skill next first
                                 tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
                                 break;
-                            case 4: // multi Char - selected char first 
+                            case 4: // multi Char - selected char first
                                 if (selectedCharId == gci.CharacterId)
                                     tsb.Insert(0, gciTimeSpanText + (tsb.Length > 0 ? " | " : String.Empty));
                                 else
@@ -413,7 +413,7 @@ namespace EVEMon
                     }
 
                     //if (tcCharacterTabsNew.SelectedTab.Text.Equals(tp.Text))
-                        //selectedCharId = gci.CharacterId;
+                    //selectedCharId = gci.CharacterId;
                 }
             }
             return gcis;
@@ -421,7 +421,7 @@ namespace EVEMon
 
         private List<string> m_completedSkills = new List<string>();
 
-       
+
         private void cm_DownloadAttemptCompleted(object sender, CharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
@@ -502,7 +502,7 @@ namespace EVEMon
                             m_completedSkills.Remove(sa);
                             if (m_completedSkills.Count == 0)
                             {
-                                // need to disable the alert and associated stuff 
+                                // need to disable the alert and associated stuff
                                 niAlertIcon.Visible = false;
                                 tmrAlertRefresh.Enabled = false;
                             }
@@ -827,10 +827,10 @@ namespace EVEMon
                         string tooltipText = m_tooltipText;
                         foreach (TimeSpan ts in gcis.Keys)
                         {
-                            tooltipText = Regex.Replace(tooltipText, '%' + gcis[ts].CharacterId.ToString() + 'r', 
+                            tooltipText = Regex.Replace(tooltipText, '%' + gcis[ts].CharacterId.ToString() + 'r',
                                 Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
                         }
-                        
+
                         ttw.Text = tooltipText;
                         ttw.Show();
                     }
@@ -1039,7 +1039,7 @@ namespace EVEMon
                 {
                     RemoveTab(tab);
                 }
-                // Reset the settings. Settings are resaved upon exiting the application, no need to 
+                // Reset the settings. Settings are resaved upon exiting the application, no need to
                 // change this.
                 m_settings.KeepCharacterPlans = tempKeepPlans;
 
@@ -1059,27 +1059,44 @@ namespace EVEMon
         private void trayIconToolStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             planToolStripMenuItem.DropDownItems.Clear();
+            List<string> characters = new List<string>();
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 if (cli != null)
                 {
-                    ToolStripMenuItem tempItem = new ToolStripMenuItem(cli.CharacterName);
-                    foreach (string planName in m_settings.GetPlansForCharacter(cli.CharacterName))
-                    {
-                        ToolStripMenuItem planItem = new ToolStripMenuItem(planName);
-                        planItem.Click += new EventHandler(planItem_Click);
-                        tempItem.DropDownItems.Add(planItem);
-                    }
-                    planToolStripMenuItem.DropDownItems.Add(tempItem);
+                    characters.Add(cli.CharacterName);
                 }
+            }
+            foreach (CharFileInfo cfi in m_settings.CharFileList)
+            {
+                if (cfi != null)
+                {
+                    characters.Add(cfi.CharacterName + "|" + cfi.Filename);
+                }
+            }
+            characters.Sort();
+            foreach (string character in characters)
+            {
+                char[] split = { '|' };
+                string[] characterInfo = character.Split(split);
+                string planLookup = characterInfo[characterInfo.Length - 1];
+                ToolStripMenuItem characterItem = new ToolStripMenuItem(characterInfo[0]);
+                characterItem.ToolTipText = planLookup;
+                foreach (string planName in m_settings.GetPlansForCharacter(planLookup))
+                {
+                    ToolStripMenuItem planItem = new ToolStripMenuItem(planName);
+                    planItem.Click += new EventHandler(planItem_Click);
+                    characterItem.DropDownItems.Add(planItem);
+                }
+                planToolStripMenuItem.DropDownItems.Add(characterItem);
             }
         }
 
         void planItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Plan plan = m_settings.GetPlanByName(planItem.OwnerItem.Text, planItem.Text);
-            plan.ShowEditor(m_settings, plan.GrandCharacterInfo);
+            Plan plan = m_settings.GetPlanByName(planItem.OwnerItem.ToolTipText, planItem.Text);
+            plan.ShowEditor(m_settings, GetGrandCharacterInfo(planItem.OwnerItem.Text));
         }
 
         private void UpdateTabVisibility(object sender, ControlEventArgs e)
@@ -1169,6 +1186,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 
