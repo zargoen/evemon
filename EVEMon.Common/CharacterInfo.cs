@@ -94,7 +94,18 @@ namespace EVEMon.Common
                         EveAttribute _secAttr =
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
                         int _rank = Convert.ToInt32(sel.GetAttribute("r"));
-                        int _cost = Convert.ToInt32(sel.GetAttribute("c"));
+                        int _cost = 0;
+                        try
+                        {
+                            string cost = sel.GetAttribute("c");
+                            _cost = Convert.ToInt32(cost);
+                        }
+                        catch (FormatException fe)
+                        {
+                            FormatException ex = new FormatException("Skill is " + _name + " cost is " + sel.GetAttribute("c"), fe); 
+                            throw ex;
+                        }
+
                         Skill gs = new Skill(
                             this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
                         gs.Changed += new EventHandler(gs_Changed);
