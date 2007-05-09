@@ -54,6 +54,8 @@
 //
 //		18/8/2005
 //			- Added events BeforeDeselect and AfterDeselect
+//      09/5/2007
+//          - Added an InvokeRequired check to Flashnode()
 // 
 // *****************************************************************************
 
