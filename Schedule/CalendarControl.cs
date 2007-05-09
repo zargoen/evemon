@@ -230,7 +230,7 @@ namespace EVEMon.Schedule
             CalculateCellMetrics();
             DateTime mdt = new DateTime(m_date.Year, m_date.Month, 1);
 
-            int box_number = m_date.Day + (((int) mdt.DayOfWeek + 6)%7) - 1;
+            int box_number = m_date.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
             int x_co = box_number%7;
             int y_co = (int) Math.Floor(box_number/7.0);
             Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x_co),
@@ -249,7 +249,7 @@ namespace EVEMon.Schedule
 
                 CalculateCellMetrics();
 
-                int box_number = today.Day + (((int) mdt.DayOfWeek + 6)%7) - 1;
+                int box_number = today.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
                 int x_co = box_number%7;
                 int y_co = (int) Math.Floor(box_number/7.0);
                 Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width*x_co),
