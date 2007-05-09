@@ -95,15 +95,18 @@ namespace EVEMon.Common
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
                         int _rank = Convert.ToInt32(sel.GetAttribute("r"));
                         int _cost = 0;
+
+                        // for a very very few users, this throws an exception on the skill "Salvage drone operation" - I have NO IDEA why.
+                        // - Brad 9 May 2007
+
                         try
                         {
                             string cost = sel.GetAttribute("c");
                             _cost = Convert.ToInt32(cost);
                         }
-                        catch (FormatException fe)
+                        catch (FormatException)
                         {
-                            FormatException ex = new FormatException("Skill is " + _name + " cost is " + sel.GetAttribute("c"), fe); 
-                            throw ex;
+                            // Ignore the exception - cost is zero anyway.
                         }
 
                         Skill gs = new Skill(
