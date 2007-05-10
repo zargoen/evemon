@@ -859,21 +859,22 @@ namespace EVEMon.SkillPlanner
                 }
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
-                {
                     return;
-                }
+
                 Dictionary<Plan.Entry, Plan.Entry> backup = new Dictionary<Plan.Entry, Plan.Entry>();
+				bool loweringPriorities = true; // if only lowering priorities
                 foreach (ListViewItem lvi in lvSkills.SelectedItems)
                 {
                     Plan.Entry penew = lvi.Tag as Plan.Entry;
                     Plan.Entry peold = (Plan.Entry)penew.Clone();
+					loweringPriorities &= (f.Priority > peold.Priority);
                     penew.Priority = f.Priority;
                     backup.Add(penew,peold);
                 }
 
                 if (!m_plan.CheckPriorities(false))
                 {
-                    DialogResult drb = MessageBox.Show("This would result in a priorioty conflict. (Either pre-requisites with a lower priority, or dependant skills with a higher priorty.)\nClick Yes if you wish to do this, and adjust the other skills, or No if you do not wish to change the priority", "Priority Conflict", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult drb = MessageBox.Show("This would result in a priorioty conflict. (Either pre-requisites with a lower priority, or dependant skills with a higher priority.)\nClick Yes if you wish to do this, and adjust the other skills, or No if you do not wish to change the priority", "Priority Conflict", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (drb == DialogResult.No)
                     {
                         // cancel!
@@ -884,7 +885,7 @@ namespace EVEMon.SkillPlanner
                     }
                     else
                     {
-                        m_plan.CheckPriorities(true);
+                        m_plan.CheckPriorities(true, loweringPriorities);
                     }
                 }
 

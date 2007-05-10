@@ -563,49 +563,100 @@ namespace EVEMon.Common
             }
         }
 
+		public bool CheckPriorities(bool fixConflicts)
+		{
+			return CheckPriorities(fixConflicts, false);
+		}
+
+		/// <summary>
+		/// Find the highest priority of all dependants of a skill
+		/// </summary>
+		/// <param name="posSkillToCheck"></param>
+		int HighestDepPriority(int posSkillToCheck)
+		{
+			Plan.Entry pe = m_entries[posSkillToCheck];
+			Skill s = pe.Skill;
+
+			int highestDepPriority = Int32.MaxValue;
+
+			for (int j = posSkillToCheck + 1; j < m_entries.Count; j++) {
+				Plan.Entry ped = m_entries[j];
+				Skill sd = ped.Skill;
+				if (sd.Name == s.Name && pe.Level < ped.Level) {
+					if (ped.Priority < highestDepPriority)
+						highestDepPriority = ped.Priority;
+				}
+				else {
+					int neededLevel = 0;
+					bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+					if (hap && neededLevel >= pe.Level) {
+						if (ped.Priority < highestDepPriority)
+							highestDepPriority = ped.Priority;
+					}
+				}
+			}
+
+			return highestDepPriority;
+		}
+
+		/// <summary>
+		/// Lower priorities of all dependant skills to match parent skill
+		/// </summary>
+		/// <param name="posSkill">position of parent skill</param>
+		public void LowerDepSkills(int posSkill) {
+			Plan.Entry pe = m_entries[posSkill];
+			Skill s = pe.Skill;
+
+			for (int j = posSkill + 1; j < m_entries.Count; j++) {
+				Plan.Entry ped = m_entries[j];
+				Skill sd = ped.Skill;
+				if (sd.Name == s.Name && pe.Level < ped.Level) {
+					if (ped.Priority < pe.Priority)
+						ped.Priority = pe.Priority;
+				}
+				else {
+					int neededLevel = 0;
+					bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+					if (hap && neededLevel >= pe.Level) {
+						if (ped.Priority < pe.Priority)
+							ped.Priority = pe.Priority;
+					}
+				}
+			}
+		}
+
         /// <summary>
         /// Check that the plan has a consistant set of priorities (i.e. pre-reqs have a higher priority
         /// than dependant skills
         /// 
-        /// If fixConflicts is true, then we set the priority of prerequisistes to the same as the 
+        /// If fixConflicts is true, then we set the priority of prerequisites to the same as the 
         /// highest priority of any dependant skill
+		/// unless loweringPriorities is true, then we set all dependant skills to the priority of the
+		/// prerequisite
         /// </summary>
         /// <param name="fixConflicts"></param>
-        /// <returns></returns>
-        public bool CheckPriorities(bool fixConflicts)
+		/// <param name="loweringPriorities"></param>
+		/// <returns>priorities are ok</returns>
+        public bool CheckPriorities(bool fixConflicts, bool loweringPriorities)
         {
             bool planOK = true;
-            // start with 2nd entry in plan
+            // check all plan entries
             for (int i = 0; i < m_entries.Count; i++)
             {
                 Plan.Entry pe = m_entries[i];
                 Skill s = pe.Skill;
-                int highestDepPriority = Int32.MaxValue;
+                int highestDepPriority = HighestDepPriority(i);
                 // find all dependants on this skill and get the highest priority
-                for (int j = i+1; j < m_entries.Count; j++)
-                {
-                    Plan.Entry ped = m_entries[j];
-                    Skill sd = ped.Skill;
-                    if (sd.Name == s.Name && pe.Level < ped.Level)
-                    {
-                        if (ped.Priority < highestDepPriority) highestDepPriority = ped.Priority;
-                    }
-                    else
-                    {
-                        int neededLevel=0;
-                        bool x = sd.HasAsPrerequisite(s, out neededLevel);
-                        if (x && neededLevel >= pe.Level)
-                        {
-                            if (ped.Priority < highestDepPriority) highestDepPriority = ped.Priority;
-                        }
-                    }
-                }
                 if (pe.Priority > highestDepPriority)
                 {
                     planOK = false;
                     if (fixConflicts) 
                     {
-                        pe.Priority = highestDepPriority;
+						if (loweringPriorities) {
+							LowerDepSkills(i);
+						}
+						else
+							pe.Priority = highestDepPriority;
                     }
                     else 
                     {
