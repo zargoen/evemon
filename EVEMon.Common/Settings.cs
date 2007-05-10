@@ -1172,6 +1172,49 @@ namespace EVEMon.Common
 
         #region Tranquility Status
 
+        private string m_customTQAddress = "87.237.38.200";
+
+        public string CustomTQAddress
+        {
+            get { return m_customTQAddress == null ? "" : m_customTQAddress; }
+            set 
+            {
+                lock (mutexLock)
+                {
+                    m_customTQAddress = value;
+                }
+            }
+        }
+
+        private string m_customTQPort = "26000";
+
+        public string CustomTQPort
+        {
+            get { return m_customTQPort == null ? "" : m_customTQPort; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_customTQPort = value;
+                }
+            }
+        }
+
+        private bool m_useCustomTQCheckSettings = false;
+
+        public bool UseCustomTQCheckSettings
+        {
+            get { return m_useCustomTQCheckSettings; }
+            set 
+            {
+                lock (mutexLock)
+                {
+                    m_useCustomTQCheckSettings = value;
+                }
+            }
+        }
+
+
         private bool m_checkTranquilityStatus = true;
 
         public bool CheckTranquilityStatus

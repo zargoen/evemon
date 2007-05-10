@@ -105,6 +105,9 @@ namespace EVEMon
                 httpSetting.Port = 0;
             }
             s.HttpProxy = httpSetting;
+            s.CustomTQAddress = tbTQServerAddress.Text;
+            s.CustomTQPort    = tbTQServerPort.Text;
+            s.UseCustomTQCheckSettings = cbCustomTQSettings.Checked;
 
             m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
             m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
@@ -117,6 +120,43 @@ namespace EVEMon
             m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
 
             m_settings.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
+        }
+
+        private void ShowErrorMessage(string caption, string message)
+        {
+            MessageBox.Show(message,
+                            caption,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+        }
+
+        private bool ValidateTQSettings()
+        {
+            int tmp = 0;
+            string portError = string.Format("Custom TQ port value must be a number between {0} and {1}", System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort);
+
+            // Check port is 1) an int and 2) a valid tcp port
+            if (!int.TryParse(tbTQServerPort.Text, out tmp))
+            {
+                ShowErrorMessage("Non numeric value", portError);
+                return false;
+            }
+            else if (tmp < System.Net.IPEndPoint.MinPort || tmp > System.Net.IPEndPoint.MaxPort)
+            {
+                ShowErrorMessage("Invalid Custom TQ port", portError);
+                return false;
+            }
+
+            System.Net.IPAddress addy;
+
+            if (!System.Net.IPAddress.TryParse(tbTQServerAddress.Text, out addy))
+            {
+                ShowErrorMessage("Invalid custom TQ IP address", "Custom TQ address value must be a valid IP address. Example: 87.237.38.200");
+                return false;
+            }
+
+
+            return true;
         }
 
         private bool ValidateIGBSettings() {
@@ -140,7 +180,7 @@ namespace EVEMon
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (!ValidateIGBSettings()) return;
+            if (!ValidateIGBSettings() || !ValidateTQSettings()) return;
             ApplyToSettings(m_settings);
             m_settings.Save();
 
@@ -253,6 +293,14 @@ namespace EVEMon
             cbTooltipDisplay.Items.Add(" -- Custom -- ");
 
             tbTooltipString.Text = m_settings.TooltipString;
+
+            // New bits to allow custom server/port options when checking the server status
+            tbTQServerAddress.Text      = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
+            tbTQServerPort.Text         = m_settings.CustomTQPort != "" ? m_settings.CustomTQPort : "26000";
+            cbCustomTQSettings.Checked  = m_settings.UseCustomTQCheckSettings;
+
+            // If we're using custom TQ settings enable the groupbox and hence the options
+            tlpCustomTQSettings.Enabled = cbCustomTQSettings.Checked;
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
@@ -591,6 +639,18 @@ namespace EVEMon
         private void tbNotificationOffset_ValueChanged(object sender, EventArgs e)
         {
             lblNotificationOffset.Text = FormatOffset(tbNotificationOffset.Value);
+        }
+
+        private void cbCustomTQSettings_CheckedChanged(object sender, EventArgs e)
+        {
+            tlpCustomTQSettings.Enabled = cbCustomTQSettings.Checked;
+
+            // Make sure we reset the defaults when turned off
+            if (!cbCustomTQSettings.Checked)
+            {
+                tbTQServerPort.Text = "26000";
+                tbTQServerAddress.Text = "87.237.38.200";
+            }
         }
     }
 }

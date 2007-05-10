@@ -91,7 +91,7 @@ namespace EVEMon.Common
         {
             try
             {
-                m_motd = EVEMonWebRequest.GetUrlString("http://www.eve-online.com/motd.asp?server=87.237.38.200");
+                m_motd = EVEMonWebRequest.GetUrlString("http://www.eve-online.com/motd.asp?server=" + m_settings.CustomTQAddress);
             }
             catch (EVEMonNetworkException ne)
             {
@@ -196,7 +196,20 @@ namespace EVEMon.Common
                 TcpClient conn = new TcpClient();
                 try
                 {
-                    conn.BeginConnect("87.237.38.200", 26000, ConnectCallback, conn);
+                    // Set default port and ip - also perform final validation
+                    int serverPort = 26000;
+                    System.Net.IPAddress serverAddress = System.Net.IPAddress.Parse("87.237.38.200");
+
+                    // If the user selected port is valid use that one, maybe they hand edited the xml file and bypassed input validation
+                    if (int.TryParse(m_settings.CustomTQPort, out serverPort) && System.Net.IPAddress.TryParse(m_settings.CustomTQAddress, out serverAddress))
+                    {
+                        if (System.Diagnostics.Debugger.IsAttached)
+                            System.Diagnostics.Debug.WriteLine("DEBUG: TQ check connecting to [" + serverAddress.ToString() + ":" + serverPort.ToString() + "]");
+
+                        conn.BeginConnect(serverAddress.ToString(), serverPort, ConnectCallback, conn);
+                    }
+                    else
+                        throw new Exception("Invalid TQ server IP or port"); // Shouldn't ever get here
                 }
                 catch (Exception)
                 {
