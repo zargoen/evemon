@@ -130,7 +130,15 @@ namespace EVEMon
             int index = m_pieChart.FindPieSliceUnderPoint(new PointF(ev.X, ev.Y));
             if (index != -1 && m_colorDialog.ShowDialog() == DialogResult.OK)
             {
-                skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
+                if (sortBySizeCheck.Checked)
+                {
+                    int realIndex = skillPieChartControl.GetIndex(index);
+                    skillPieChartControl.Colors[realIndex] = Color.FromArgb(125, m_colorDialog.Color);
+                }
+                else
+                {
+                    skillPieChartControl.Colors[index] = Color.FromArgb(125, m_colorDialog.Color);
+                }
                 skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
             }
         }

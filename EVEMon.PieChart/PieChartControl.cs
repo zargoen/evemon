@@ -362,6 +362,11 @@ namespace EVEMon.PieChart
             }
         }
 
+        public int GetIndex(int sliceIndex)
+        {
+            return this.m_sortOrder[sliceIndex];
+        }
+
         /// <summary>
         /// Will copy the original data to the vars used for drawing
         /// The original is needed to use for ordering
@@ -373,6 +378,14 @@ namespace EVEMon.PieChart
             this.m_drawRelativeSliceDisplacements = (float[]) this.m_relativeSliceDisplacements.Clone();
             this.m_drawToolTipTexts = (string[]) this.m_toolTipTexts.Clone();
             this.m_drawTexts = (string[]) this.m_texts.Clone();
+
+
+            // fill the sort order to default:
+            this.m_sortOrder = new int[this.m_values.Length];
+            for (int i = 0; i < this.m_values.Length; i++)
+            {
+                this.m_sortOrder[i] = i;
+            }
         }
 
         public void OrderSlices(bool orderBySize)
@@ -415,6 +428,7 @@ namespace EVEMon.PieChart
                     this.m_drawRelativeSliceDisplacements[num] = displacements[biggest];
                     this.m_drawToolTipTexts[num] = tooltips[biggest];
                     this.m_drawColors[num] = colours[biggest];
+                    this.m_sortOrder[num] = biggest;
                     values[biggest] = 0;
                 }
             }
@@ -456,6 +470,7 @@ namespace EVEMon.PieChart
         private float[] m_drawRelativeSliceDisplacements = new float[] { 0F };
         private string[] m_drawToolTipTexts = null;
         private string[] m_drawTexts = null;
+        private int[] m_sortOrder = null;
 
         /// <summary>
         ///   Default AutoPopDelay of the ToolTip control.
