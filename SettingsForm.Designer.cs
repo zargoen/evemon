@@ -30,23 +30,23 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode19,
-            treeNode20,
-            treeNode21,
-            treeNode22,
-            treeNode23,
-            treeNode24,
-            treeNode25,
-            treeNode26});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -190,6 +190,7 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
+            this.cbShowTQBalloon = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -1171,26 +1172,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode19.Name = "Node1";
-            treeNode19.Text = "Node1";
-            treeNode20.Name = "Node2";
-            treeNode20.Text = "Node2";
-            treeNode21.Name = "Node3";
-            treeNode21.Text = "Node3";
-            treeNode22.Name = "Node4";
-            treeNode22.Text = "Node4";
-            treeNode23.Name = "Node5";
-            treeNode23.Text = "Node5";
-            treeNode24.Name = "Node6";
-            treeNode24.Text = "Node6";
-            treeNode25.Name = "Node7";
-            treeNode25.Text = "Node7";
-            treeNode26.Name = "Node8";
-            treeNode26.Text = "Node8";
-            treeNode27.Name = "Node0";
-            treeNode27.Text = "Node0";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode27});
+            treeNode9});
             this.tvlist.Size = new System.Drawing.Size(402, 90);
             this.tvlist.TabIndex = 9;
             // 
@@ -1625,11 +1626,10 @@ namespace EVEMon
             this.flowLayoutPanel11.Controls.Add(this.groupBox8);
             this.flowLayoutPanel11.Controls.Add(this.groupBox9);
             this.flowLayoutPanel11.Controls.Add(this.gbTQSettings);
-            this.flowLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel11.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel11.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(446, 478);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(324, 383);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1787,6 +1787,7 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTQSettings.AutoSize = true;
             this.gbTQSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbTQSettings.Controls.Add(this.cbShowTQBalloon);
             this.gbTQSettings.Controls.Add(this.tlpCustomTQSettings);
             this.gbTQSettings.Controls.Add(this.cbCustomTQSettings);
             this.gbTQSettings.Controls.Add(this.cbCheckTranquilityStatus);
@@ -1795,7 +1796,7 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
             this.gbTQSettings.Location = new System.Drawing.Point(3, 193);
             this.gbTQSettings.Name = "gbTQSettings";
-            this.gbTQSettings.Size = new System.Drawing.Size(318, 162);
+            this.gbTQSettings.Size = new System.Drawing.Size(318, 187);
             this.gbTQSettings.TabIndex = 8;
             this.gbTQSettings.TabStop = false;
             this.gbTQSettings.Text = "Tranquility Status";
@@ -1811,7 +1812,7 @@ namespace EVEMon
             this.tlpCustomTQSettings.Controls.Add(this.tbTQServerAddress, 1, 0);
             this.tlpCustomTQSettings.Controls.Add(this.label16, 0, 0);
             this.tlpCustomTQSettings.Enabled = false;
-            this.tlpCustomTQSettings.Location = new System.Drawing.Point(9, 88);
+            this.tlpCustomTQSettings.Location = new System.Drawing.Point(9, 113);
             this.tlpCustomTQSettings.Name = "tlpCustomTQSettings";
             this.tlpCustomTQSettings.RowCount = 2;
             this.tlpCustomTQSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -1858,7 +1859,7 @@ namespace EVEMon
             // cbCustomTQSettings
             // 
             this.cbCustomTQSettings.AutoSize = true;
-            this.cbCustomTQSettings.Location = new System.Drawing.Point(6, 65);
+            this.cbCustomTQSettings.Location = new System.Drawing.Point(6, 90);
             this.cbCustomTQSettings.Name = "cbCustomTQSettings";
             this.cbCustomTQSettings.Size = new System.Drawing.Size(180, 17);
             this.cbCustomTQSettings.TabIndex = 4;
@@ -1923,11 +1924,10 @@ namespace EVEMon
             this.flowLayoutPanel7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel7.Controls.Add(this.tabControl1);
             this.flowLayoutPanel7.Controls.Add(this.flowLayoutPanel8);
-            this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel7.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel7.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(469, 573);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(466, 548);
             this.flowLayoutPanel7.TabIndex = 1;
             this.flowLayoutPanel7.WrapContents = false;
             // 
@@ -2004,6 +2004,16 @@ namespace EVEMon
             // chName
             // 
             this.chName.Text = "Sample";
+            // 
+            // cbShowTQBalloon
+            // 
+            this.cbShowTQBalloon.AutoSize = true;
+            this.cbShowTQBalloon.Location = new System.Drawing.Point(6, 65);
+            this.cbShowTQBalloon.Name = "cbShowTQBalloon";
+            this.cbShowTQBalloon.Size = new System.Drawing.Size(226, 17);
+            this.cbShowTQBalloon.TabIndex = 6;
+            this.cbShowTQBalloon.Text = "Show balloon tip when TQ status changes";
+            this.cbShowTQBalloon.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -2281,5 +2291,6 @@ namespace EVEMon
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox cbCustomTQSettings;
         private System.Windows.Forms.TextBox tbTQServerPort;
+        private System.Windows.Forms.CheckBox cbShowTQBalloon;
     }
 }

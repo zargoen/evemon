@@ -51,7 +51,7 @@ namespace EVEMon
             {
                 EveServer server = EveServer.GetInstance();
                 server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
-                if (m_settings.EnableBalloonTips)
+                if (m_settings.ShowTQBalloon)
                     server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
             }
             if (startMinimized)
@@ -123,6 +123,15 @@ namespace EVEMon
                 "To begin using EVEMon, click the \"Add Character\" button in " +
                 "the upper left corner of the window, enter your login information " +
                 "and choose a character to monitor.");
+        }
+
+        void m_settings_ShowTQBalloonChanged(object sender, EventArgs e)
+        {
+            EveServer server = EveServer.GetInstance();
+            if (m_settings.ShowTQBalloon)
+                server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+            else
+                server.ServerStatusChanged -= new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
         }
 
         void m_settings_CheckTranquilityStatusChanged(object sender, EventArgs e)

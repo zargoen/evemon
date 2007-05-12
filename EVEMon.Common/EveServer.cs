@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using System.Runtime;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.Common
 {
@@ -188,6 +190,24 @@ namespace EVEMon.Common
             if (m_checkingServer == true)
                 return;
 
+            // check that we have a network connection
+            if (!InternetCS.IsConnectedToInternet())
+            {
+                // oops, we've lost the network - reset timer to 30 seconds
+                m_tmrCheck.Interval = 30000;
+                m_statusText = "// Server Status Unknown";
+                if (ServerStatusUpdated != null)
+                    ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+                return;
+            }
+
+            // check to see if we are recovering from loss of connection (timer was set to 30 seconds)
+            if (m_tmrCheck.Interval == 30000)
+            {
+                // network is back - set timer to correct value.
+                m_tmrCheck.Interval = m_settings.StatusUpdateInterval * 60000;
+            }
+
             // switch on the semaphore
             m_checkingServer = true;
 
@@ -249,4 +269,22 @@ namespace EVEMon.Common
             }
         }
     }
+
+    public class InternetCS
+{
+
+    //Creating the extern function...
+    [DllImport("wininet.dll")]
+    private extern static bool InternetGetConnectedState( out int Description, int ReservedValue ) ;
+
+    //Creating a function that uses the API function...
+    public static bool IsConnectedToInternet( )
+    {
+
+        int Desc ;
+        return InternetGetConnectedState( out Desc, 0 ) ;
+
+    }
+
+}
 }

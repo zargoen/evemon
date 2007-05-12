@@ -1233,6 +1233,21 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_showTQBalloon = true;
+
+        public bool ShowTQBalloon
+        {
+            get { return m_showTQBalloon = true; }
+            set { m_showTQBalloon = value; }
+        }
+
+        public event EventHandler<EventArgs> ShowTQBalloonChanged;
+        private void OnShowTQBalloonChanged()
+        {
+            if (ShowTQBalloonChanged != null)
+                ShowTQBalloonChanged(this, new EventArgs());
+        }
+
         private void OnCheckTranquilityStatusChanged()
         {
             if (CheckTranquilityStatusChanged != null)

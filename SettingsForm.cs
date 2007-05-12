@@ -108,6 +108,7 @@ namespace EVEMon
             s.CustomTQAddress = tbTQServerAddress.Text;
             s.CustomTQPort    = tbTQServerPort.Text;
             s.UseCustomTQCheckSettings = cbCustomTQSettings.Checked;
+            s.ShowTQBalloon = cbShowTQBalloon.Checked;
 
             m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
             m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
@@ -301,6 +302,7 @@ namespace EVEMon
 
             // If we're using custom TQ settings enable the groupbox and hence the options
             tlpCustomTQSettings.Enabled = cbCustomTQSettings.Checked;
+            cbShowTQBalloon.Checked = m_settings.ShowTQBalloon;
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
@@ -364,6 +366,8 @@ namespace EVEMon
 
             btnOk.Enabled = isValid;
             numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;
+            cbShowTQBalloon.Enabled = cbCheckTranquilityStatus.Checked;
+            cbCustomTQSettings.Enabled = cbCheckTranquilityStatus.Checked;
         }
 
         private bool ValidateProxySetting(string host, string port)
