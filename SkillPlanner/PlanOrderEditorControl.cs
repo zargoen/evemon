@@ -510,12 +510,12 @@ namespace EVEMon.SkillPlanner
                     Plan.Entry selectedSkill = (Plan.Entry)lvSkills.SelectedItems[0].Tag;
                     // Single select so check for pre-requisite highlighting
                     int neededLevel;
-                    if (currentSkill.Skill.HasAsPrerequisite(selectedSkill.Skill, out neededLevel, false))
+                    if (currentSkill.Skill.HasAsPrerequisite(selectedSkill.Skill, out neededLevel))
                     {
                         if (currentSkill.Level == 1 && neededLevel >= selectedSkill.Level)
                             isPostRequisite = true;
                     }
-                    if (selectedSkill.Skill.HasAsPrerequisite(currentSkill.Skill, out neededLevel, false))
+                    if (selectedSkill.Skill.HasAsPrerequisite(currentSkill.Skill, out neededLevel))
                     {
                         if (currentSkill.Level == neededLevel)
                             isPreRequisite = true;
@@ -1066,7 +1066,7 @@ namespace EVEMon.SkillPlanner
                     {
                         Plan.Entry currentSkill = (Plan.Entry)current.Tag;
                         int neededLevel;
-                        if (currentSkill.Skill.HasAsPrerequisite(pe.Skill, out neededLevel, false))
+                        if (currentSkill.Skill.HasAsPrerequisite(pe.Skill, out neededLevel))
                         {
                             if (currentSkill.Level == 1 && neededLevel > i)
                             {

@@ -580,7 +580,7 @@ namespace EVEMon.Common
 
 			int highestDepPriority = Int32.MaxValue;
 
-			for (int j = posSkillToCheck + 1; j < m_entries.Count; j++) {
+			for (int j = posSkillToCheck + 1; j < m_entries.Count; ++j) {
 				Plan.Entry ped = m_entries[j];
 				Skill sd = ped.Skill;
 				if (sd.Name == s.Name && pe.Level < ped.Level) {
@@ -588,7 +588,7 @@ namespace EVEMon.Common
 						highestDepPriority = ped.Priority;
 				}
 				else {
-					int neededLevel = 0;
+					int neededLevel;
 					bool hap = sd.HasAsPrerequisite(s, out neededLevel);
 					if (hap && neededLevel >= pe.Level) {
 						if (ped.Priority < highestDepPriority)
@@ -608,7 +608,7 @@ namespace EVEMon.Common
 			Plan.Entry pe = m_entries[posSkill];
 			Skill s = pe.Skill;
 
-			for (int j = posSkill + 1; j < m_entries.Count; j++) {
+			for (int j = posSkill + 1; j < m_entries.Count; ++j) {
 				Plan.Entry ped = m_entries[j];
 				Skill sd = ped.Skill;
 				if (sd.Name == s.Name && pe.Level < ped.Level) {
@@ -642,27 +642,20 @@ namespace EVEMon.Common
         {
             bool planOK = true;
             // check all plan entries
-            for (int i = 0; i < m_entries.Count; i++)
-            {
+            for (int i = 0; i < m_entries.Count; i++) {
                 Plan.Entry pe = m_entries[i];
-                Skill s = pe.Skill;
                 int highestDepPriority = HighestDepPriority(i);
                 // find all dependants on this skill and get the highest priority
-                if (pe.Priority > highestDepPriority)
-                {
+                if (pe.Priority > highestDepPriority) {
                     planOK = false;
-                    if (fixConflicts) 
-                    {
-						if (loweringPriorities) {
+                    if (fixConflicts) {
+						if (loweringPriorities)
 							LowerDepSkills(i);
-						}
 						else
 							pe.Priority = highestDepPriority;
                     }
-                    else 
-                    {
+                    else
                         break;
-                    }
                 }
             }
             return planOK;
@@ -1068,17 +1061,14 @@ namespace EVEMon.Common
                 foreach (Plan.Entry pe in m_entries)
                 {
                     Skill tSkill = pe.Skill;
-                    int thisMinNeeded;
-                    if (tSkill.HasAsPrerequisite(gs, out thisMinNeeded))
+                    int thisMaxNeeded;
+                    if (tSkill.HasAsPrerequisite(gs, out thisMaxNeeded))
                     {
-                        if (thisMinNeeded == 5) // All are needed, fail now
-                        {
+                        if (thisMaxNeeded == 5) // All are needed, fail now
                             return false;
-                        }
-                        if (thisMinNeeded > minNeeded)
-                        {
-                            minNeeded = thisMinNeeded;
-                        }
+
+                        if (thisMaxNeeded > minNeeded)
+                            minNeeded = thisMaxNeeded;
                     }
                 }
                 // Remove this skill...

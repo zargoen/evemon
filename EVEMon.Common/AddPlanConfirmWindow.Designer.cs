@@ -94,6 +94,11 @@ namespace EVEMon.Common
             this.nudPriority.Name = "nudPriority";
             this.nudPriority.Size = new System.Drawing.Size(38, 21);
             this.nudPriority.TabIndex = 4;
+            this.nudPriority.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label3
             // 

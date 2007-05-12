@@ -25,6 +25,11 @@ namespace EVEMon.SkillPlanner
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void ChangePriorityForm_Load(object sender, EventArgs e)
+        {
+            nudPriority.Select(0, 3);
+        }
     }
 
 }

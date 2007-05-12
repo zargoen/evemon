@@ -320,7 +320,7 @@ namespace EVEMon.SkillPlanner
             {
                 TimeSpan fastestSpan = TimeSpan.MaxValue;
                 Plan.Entry fastestPe = null;
-                // find the fatstest skill that already has it's prereqs added to the plan
+                // find the fastest skill that already has it's prereqs added to the plan
                 for (int i = 0; i < m_skillsToInsert.Count; i++)
                 {
                     Plan.Entry thisPe = m_skillsToInsert[i];
@@ -355,7 +355,7 @@ namespace EVEMon.SkillPlanner
                 }
                 if (fastestPe == null)
                 {
-                    throw new ApplicationException("no suitable skill -- should never happen!");
+                    throw new ApplicationException("no suitable skill -- should never happen! (Possibly bad: " + m_skillsToInsert[0].SkillName + ")");
                 }
 
                 m_plan.Entries.Add((Plan.Entry) fastestPe.Clone());

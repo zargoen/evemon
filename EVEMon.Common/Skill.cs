@@ -659,8 +659,8 @@ namespace EVEMon.Common
         /// <returns><code>true</code> if it is a prerequisite.</returns>
         public bool HasAsPrerequisite(Skill gs)
         {
-            int neededLevel;
-            return HasAsPrerequisite(gs, out neededLevel, true);
+            int neededLevel = 0;
+            return HasAsPrerequisite(gs, ref neededLevel, true);
         }
 
         /// <summary>
@@ -672,32 +672,28 @@ namespace EVEMon.Common
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         public bool HasAsPrerequisite(Skill gs, out int neededLevel)
         {
-            return HasAsPrerequisite(gs, out neededLevel, true);
+			neededLevel = 0;
+            return HasAsPrerequisite(gs, ref neededLevel, true);
         }
 
         /// <summary>
         /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
+		/// Find the highest level needed by searching entire prerequisite tree.
         /// </summary>
         /// <param name="gs">Skill to check.</param>
         /// <param name="neededLevel">The level that is needed. Out parameter.</param>
         /// <param name="recurse">Pass <code>true</code> to check recursively.</param>
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
-        public bool HasAsPrerequisite(Skill gs, out int neededLevel, bool recurse)
+        public bool HasAsPrerequisite(Skill gs, ref int neededLevel, bool recurse)
         {
-            foreach (Prereq pp in this.Prereqs)
-            {
-                if (pp.Skill == gs)
-                {
-                    neededLevel = pp.Level;
-                    return true;
-                }
-                if (recurse && pp.Skill.HasAsPrerequisite(gs, out neededLevel, true))
-                {
-                    return true;
-                }
+            foreach (Prereq pp in this.Prereqs) {
+				if (pp.Skill == gs)
+					neededLevel = Math.Max(pp.Level, neededLevel);
+
+				if (recurse)
+					pp.Skill.HasAsPrerequisite(gs, ref neededLevel, true);
             }
-            neededLevel = 0;
-            return false;
+            return (neededLevel > 0);
         }
 
         /// <summary>

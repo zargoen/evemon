@@ -40,9 +40,19 @@ namespace EVEMon.SkillPlanner
             // nudPriority
             // 
             this.nudPriority.Location = new System.Drawing.Point(56, 95);
+            this.nudPriority.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.nudPriority.Name = "nudPriority";
             this.nudPriority.Size = new System.Drawing.Size(41, 20);
             this.nudPriority.TabIndex = 0;
+            this.nudPriority.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label1
             // 
@@ -86,8 +96,10 @@ namespace EVEMon.SkillPlanner
             // 
             // ChangePriorityForm
             // 
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(266, 160);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -98,6 +110,7 @@ namespace EVEMon.SkillPlanner
             this.Name = "ChangePriorityForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change Plan Entry Priorty";
+            this.Load += new System.EventHandler(this.ChangePriorityForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudPriority)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
