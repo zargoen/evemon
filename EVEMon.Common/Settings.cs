@@ -1237,7 +1237,7 @@ namespace EVEMon.Common
 
         public bool ShowTQBalloon
         {
-            get { return m_showTQBalloon = true; }
+            get { return m_showTQBalloon; }
             set { m_showTQBalloon = value; }
         }
 
