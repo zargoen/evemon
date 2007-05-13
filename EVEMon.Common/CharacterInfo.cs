@@ -1106,19 +1106,51 @@ namespace EVEMon.Common
             get { return m_SkillInTraining; }
         }
 
+        private SerializableSkillTrainingInfo m_OldSkillInTraining = null;
+
+        public SerializableSkillTrainingInfo OldSerialSIT
+        {
+            get { return m_OldSkillInTraining; }
+            set { m_OldSkillInTraining = value; }
+        }
+
         public void checkTrainingSkills(SerializableSkillTrainingInfo SkillInTraining)
         {
             // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
             
             // First one thing we can do no matter what
+            Skill _SkillInTraining = null;
+            DateTime _SITLocalCompleteTime = DateTime.MinValue;
+            DateTime _SITLocalStartTime = DateTime.MinValue;
             if (SkillInTraining != null)
             {
-                Skill temp = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-                if (temp != null && temp.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
+                _SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
+
+                // This would be a good place to change the prereqs too so they are also trained up fully.
+                // This just does one level of prereqs... we really need recursive updating...
+                if (_SkillInTraining != null)
                 {
-                    temp.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
+                    foreach (Skill.Prereq pReq in _SkillInTraining.Prereqs)
+                    {
+                        if (pReq != null && pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
+                        {
+                            pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
+                            pReq.Skill.Known = true;
+                            OnSkillChanged(pReq.Skill);
+                        }
+                    }
+
+                    // Once we have done the pre-reqs, we can set this skill's current skill points
+                    if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
+                    {
+                        _SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
+                        _SkillInTraining.Known = true;
+                        OnSkillChanged(_SkillInTraining);
+                    }
                 }
+                _SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+                _SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
             }
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
