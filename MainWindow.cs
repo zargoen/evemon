@@ -459,10 +459,10 @@ namespace EVEMon
                     }
                 }
 
-                // if the scheduler says be quiet, how much should be suppressed?
-                if (e.Complete && !ShouldbeSilent)
+                if (e.Complete)
                 {
-                    if (m_settings.PlaySoundOnSkillComplete)
+                    // if the scheduler says be quiet, how much should be suppressed?
+                    if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
                         MP3Player.Play("SkillTrained.mp3", true);
 
                     int skillLevel = GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level;

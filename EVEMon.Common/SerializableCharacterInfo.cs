@@ -174,16 +174,6 @@ namespace EVEMon.Common
             set { m_TrainingSkillInfo = value; }
         }
 
-        private SerializableSkillInTraining m_skillInTraining;
-
-        [XmlElement("skillInTraining")]
-        [Obsolete]
-        public SerializableSkillInTraining SkillInTraining
-        {
-            get { return m_skillInTraining; }
-            set { m_skillInTraining = value; }
-        }
-
         private string m_race = String.Empty;
 
         [XmlElement("race")]
@@ -618,6 +608,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("skillInTraining")]
+    [Obsolete]
     public class SerializableSkillInTraining
     {
         private string m_skillName = String.Empty;
