@@ -372,26 +372,38 @@ namespace EVEMon
         {
             SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
             m_settings.SetCharacterCache(sci);
-            if (m_grandCharacterInfo.OldSerialSIT != null && m_grandCharacterInfo.AllSkillsByTypeID.ContainsKey(m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID))
+            if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
             {
-                /*int toremove;
+                int toremove;
+                bool add = true;
                 do
                 {
                     toremove = -1;
-                    foreach (Pair<string, SerializableSkillTrainingInfo> x in m_settings.OldSkills)
+                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
                     {
                         if (x.A == m_charName)
                         {
-                            toremove = m_settings.OldSkills.IndexOf(x);
-                            break;
+                            if (x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
+                            {
+                                add = false;
+                                x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
+                                x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
+                                if (!x.B.old_skill_completed)
+                                {
+                                    toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                                }
+                            }
+                            else
+                            {
+                                toremove = m_settings.OldSkillLearnt.IndexOf(x);
+                            }
                         }
                     }
                     if (toremove != -1)
-                        m_settings.OldSkills.RemoveAt(toremove);
-                } while (toremove != -1);*/
-                m_settings.OldSkillsDict[m_charName] = m_grandCharacterInfo.OldSerialSIT;
-                //if (m_grandCharacterInfo.OldSerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.OldSerialSIT.TQOffset)).ToLocalTime() < DateTime.Now)
-                    //m_settings.OldSkills.Add(new Pair<string, SerializableSkillTrainingInfo>(m_charName, m_grandCharacterInfo.OldSerialSIT));
+                        m_settings.OldSkillLearnt.RemoveAt(toremove);
+                } while (toremove != -1);
+                if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
+                    m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
             }
             m_settings.Save();
         }
@@ -431,21 +443,17 @@ namespace EVEMon
             m_grandCharacterInfo.CharacterId = charId;
             GetCharacterImage();
 
+            //actually perform the update.  This is then happening asynchronously, is this a problem?
+            UpdateGrandCharacterInfo();
+
             //loads the details from the settings file as to what was actually training the last time you had EVEMon running
-            /*foreach (Pair<string, SerializableSkillTrainingInfo> x in m_settings.OldSkills)
+            foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
             {
                 if (x.A == m_charName)
                 {
-                    m_grandCharacterInfo.OldSerialSIT = x.B;
-                    break;
+                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
                 }
-            }*/
-            UpdateGrandCharacterInfo();
-
-            if (m_settings.OldSkillsDict.ContainsKey(m_charName))
-                m_grandCharacterInfo.OldSerialSIT = m_settings.OldSkillsDict[m_charName];
-            //actually perform the update.  This is then happening asynchronously, is this a problem?
-
+            }
             UpdateTrainingSkillInfo();
         }
 
@@ -1363,7 +1371,7 @@ namespace EVEMon
             tmrUpdateCharacter.Interval = 1000 * 60 * 30;
             tmrUpdateCharacter.Enabled = true;
             SetErrorThrobber();
-            this.m_grandCharacterInfo.checkOldSkill();
+            this.m_grandCharacterInfo.check_old_skill();
         }
         #endregion
 
@@ -2058,15 +2066,15 @@ namespace EVEMon
                     }
                 }
             }
-            if (m_grandCharacterInfo.DLComplete && m_estimatedCompletion < DateTime.Now &&
-                m_grandCharacterInfo.SerialSIT != null)
+            if (m_grandCharacterInfo.DL_Complete && m_estimatedCompletion < DateTime.Now &&
+                m_grandCharacterInfo.CurrentlyTrainingSkill != null)
             {
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in GrandCharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
 
-                // The following line triggers the required code in GrandCharacterInfo.cs for that character
-                m_grandCharacterInfo.triggerSkillComplete(m_charName);
+                // The following line triggers the required code in GrandCharacterInfo.cs
+                m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
 
                 UpdateSkillHeaderStats();
             }

@@ -85,6 +85,7 @@
     <Compile Include="LocalXmlCache.cs" />
     <Compile Include="MonitoredList.cs" />
     <Compile Include="EveSession.cs" />
+    <Compile Include="OldSkillInfo.cs" />
     <Compile Include="PlanTextOptions.cs" />
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="Plan.cs" />

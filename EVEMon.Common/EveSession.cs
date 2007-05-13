@@ -484,11 +484,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Use this function at your peril!!
         /// If we do things this way CCP WILL block that version of EVEMon!
-        /// Not Only that but it uses obsolete code, so Ner!
         /// </summary>
         /// <param name="htmld"></param>
         /// <returns></returns>
-        /*private SerializableSkillInTraining ProcessSkilltreeHtml(string htmld)
+        private SerializableSkillInTraining ProcessSkilltreeHtml(string htmld)
         {
             SerializableSkillInTraining sit = null;
             int cti = htmld.IndexOf("Currently training to: ");
@@ -516,7 +515,7 @@ namespace EVEMon.Common
                 sit = null;
             }
             return sit;
-        }*/
+        }
 
         private TimeSpan ConvertTimeStringToTimeSpan(string timeLeft)
         {

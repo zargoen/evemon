@@ -233,14 +233,6 @@ namespace EVEMon.Common
             }
         }
 
-        public int EstimatedPointsAtTime(DateTime checkTime)
-        {
-            TimeSpan trainingTime = m_endTime - m_startTime;
-            double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-            TimeSpan timeSoFar = checkTime - m_startTime.ToLocalTime();
-            return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
-        }
-
         private double m_TQOffset = 0.0;
 
         [XmlElement("TQOffset")]
