@@ -985,8 +985,14 @@ namespace EVEMon.Common
             // has been updated properly!
             // Using 3 minutes 30 seconds as a ball park for standard deviation due to download
             // to settings file lag etc. Feel free to reduce it so long as we don't start getting issues from it being to short.
-            if (this.CurrentlyTrainingSkill != null && oldSkill != null && (oldSkill.old_SkillName == null || oldSkill.old_SkillName != this.CurrentlyTrainingSkill.Name || ((TimeSpan)oldSkill.old_estimated_completion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
+            if (this.CurrentlyTrainingSkill != null &&
+                    oldSkill != null &&
+                        (oldSkill.old_SkillName == null ||
+                        oldSkill.old_SkillName != this.CurrentlyTrainingSkill.Name ||
+                        ((TimeSpan)oldSkill.old_estimated_completion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
+            {
                 this.CancelCurrentSkillTraining();
+            }
             if (!firstRun && oldSkill != null)
             {
                 // If this isn't the first run and old_skill has actually been initalised
@@ -1154,7 +1160,11 @@ namespace EVEMon.Common
             }
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null && (SkillInTraining == null || (SkillInTraining != null && SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id) || ((TimeSpan)(((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30)))
+            if (this.CurrentlyTrainingSkill != null &&
+                    (SkillInTraining == null || 
+                    (SkillInTraining != null && 
+                        (SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id || 
+                        (((TimeSpan)(((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30))))))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
