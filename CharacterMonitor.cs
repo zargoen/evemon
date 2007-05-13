@@ -1363,7 +1363,7 @@ namespace EVEMon
             tmrUpdateCharacter.Interval = 1000 * 60 * 30;
             tmrUpdateCharacter.Enabled = true;
             SetErrorThrobber();
-            this.m_grandCharacterInfo.check_old_skill();
+            this.m_grandCharacterInfo.checkOldSkill();
         }
         #endregion
 
@@ -2058,7 +2058,7 @@ namespace EVEMon
                     }
                 }
             }
-            if (m_grandCharacterInfo.DL_Complete && m_estimatedCompletion < DateTime.Now &&
+            if (m_grandCharacterInfo.DLComplete && m_estimatedCompletion < DateTime.Now &&
                 m_grandCharacterInfo.CurrentlyTrainingSkill != null)
             {
                 // Trigger event on skill completion
@@ -2066,7 +2066,7 @@ namespace EVEMon
                 // it should be triggered from there as all skill manipulation is done in that file.
 
                 // The following line triggers the required code in GrandCharacterInfo.cs
-                m_grandCharacterInfo.trigger_skill_complete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
+                m_grandCharacterInfo.triggerSkillComplete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
 
                 UpdateSkillHeaderStats();
             }
