@@ -233,6 +233,14 @@ namespace EVEMon.Common
             }
         }
 
+        public int EstimatedPointsAtTime(DateTime checkTime)
+        {
+            TimeSpan trainingTime = m_endTime - m_startTime;
+            double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
+            TimeSpan timeSoFar = checkTime - m_startTime.ToLocalTime();
+            return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
+        }
+
         private double m_TQOffset = 0.0;
 
         [XmlElement("TQOffset")]
@@ -240,6 +248,15 @@ namespace EVEMon.Common
         {
             get { return m_TQOffset; }
             set { m_TQOffset = value; }
+        }
+
+        private bool m_AlertRaisedAlready = false;
+
+        [XmlElement("AlertRaisedAlready")]
+        public bool AlertRaisedAlready
+        {
+            get { return m_AlertRaisedAlready; }
+            set { m_AlertRaisedAlready = value; }
         }
 
         public object Clone()
@@ -257,6 +274,7 @@ namespace EVEMon.Common
             ssti.m_destSP = this.m_destSP;
             ssti.m_toLevel = this.m_toLevel;
             ssti.m_TQOffset = this.m_TQOffset;
+            ssti.m_AlertRaisedAlready = this.m_AlertRaisedAlready;
             return ssti;
         }
 
@@ -274,6 +292,7 @@ namespace EVEMon.Common
             this.m_destSP = ssti.m_destSP;
             this.m_toLevel = ssti.m_toLevel;
             this.m_TQOffset = ssti.m_TQOffset;
+            this.m_AlertRaisedAlready = ssti.m_AlertRaisedAlready;
         }
     }
 }
