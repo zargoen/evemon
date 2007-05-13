@@ -30,23 +30,23 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -171,6 +171,7 @@ namespace EVEMon
             this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbAutomaticEOSkillUpdate = new System.Windows.Forms.CheckBox();
             this.gbTQSettings = new System.Windows.Forms.GroupBox();
+            this.cbShowTQBalloon = new System.Windows.Forms.CheckBox();
             this.tlpCustomTQSettings = new System.Windows.Forms.TableLayoutPanel();
             this.tbTQServerPort = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -190,7 +191,10 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.cbShowTQBalloon = new System.Windows.Forms.CheckBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel25 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -213,7 +217,6 @@ namespace EVEMon
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
-            this.flowLayoutPanel22.SuspendLayout();
             this.gboxTooltipOptions.SuspendLayout();
             this.gbSkillPlannerHighlighting.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -250,6 +253,9 @@ namespace EVEMon
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.flowLayoutPanel25.SuspendLayout();
+            this.flowLayoutPanel26.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -910,6 +916,7 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel16.Controls.Add(this.groupBox11);
+            this.flowLayoutPanel16.Controls.Add(this.groupBox7);
             this.flowLayoutPanel16.Controls.Add(this.gboxTooltipOptions);
             this.flowLayoutPanel16.Controls.Add(this.gbSkillPlannerHighlighting);
             this.flowLayoutPanel16.Controls.Add(this.groupBox10);
@@ -928,7 +935,7 @@ namespace EVEMon
             this.groupBox11.Controls.Add(this.flowLayoutPanel15);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(414, 93);
+            this.groupBox11.Size = new System.Drawing.Size(414, 66);
             this.groupBox11.TabIndex = 10;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "General";
@@ -946,7 +953,7 @@ namespace EVEMon
             this.flowLayoutPanel15.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel15.Name = "flowLayoutPanel15";
             this.flowLayoutPanel15.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel15.Size = new System.Drawing.Size(408, 73);
+            this.flowLayoutPanel15.Size = new System.Drawing.Size(408, 46);
             this.flowLayoutPanel15.TabIndex = 3;
             // 
             // cbWorksafeMode
@@ -976,35 +983,34 @@ namespace EVEMon
             // 
             this.flowLayoutPanel22.AutoSize = true;
             this.flowLayoutPanel22.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel22.Controls.Add(this.cbTitleToTime);
-            this.flowLayoutPanel22.Controls.Add(this.cbWindowsTitleList);
             this.flowLayoutPanel22.Location = new System.Drawing.Point(9, 23);
             this.flowLayoutPanel22.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel22.Name = "flowLayoutPanel22";
-            this.flowLayoutPanel22.Size = new System.Drawing.Size(338, 27);
+            this.flowLayoutPanel22.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel22.TabIndex = 2;
             this.flowLayoutPanel22.WrapContents = false;
             // 
             // cbTitleToTime
             // 
             this.cbTitleToTime.AutoSize = true;
-            this.cbTitleToTime.Location = new System.Drawing.Point(3, 3);
+            this.cbTitleToTime.Location = new System.Drawing.Point(12, 3);
             this.cbTitleToTime.Name = "cbTitleToTime";
-            this.cbTitleToTime.Size = new System.Drawing.Size(102, 17);
+            this.cbTitleToTime.Size = new System.Drawing.Size(193, 17);
             this.cbTitleToTime.TabIndex = 6;
-            this.cbTitleToTime.Text = "Set titlebar to : ";
+            this.cbTitleToTime.Text = "Show character info in window title";
             this.cbTitleToTime.UseVisualStyleBackColor = true;
+            this.cbTitleToTime.CheckedChanged += new System.EventHandler(this.cbTitleToTime_CheckedChanged);
             // 
             // cbWindowsTitleList
             // 
             this.cbWindowsTitleList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbWindowsTitleList.FormattingEnabled = true;
             this.cbWindowsTitleList.Items.AddRange(new object[] {
-            "single character - finishing skill next",
-            "single character - selected character",
-            "multi character - finishing skill next first",
-            "multi character - selected character first "});
-            this.cbWindowsTitleList.Location = new System.Drawing.Point(111, 3);
+            "Single character - finishing skill next",
+            "Single character - selected character",
+            "Multi character - finishing skill next first",
+            "Multi character - selected character first "});
+            this.cbWindowsTitleList.Location = new System.Drawing.Point(3, 3);
             this.cbWindowsTitleList.Name = "cbWindowsTitleList";
             this.cbWindowsTitleList.Size = new System.Drawing.Size(224, 21);
             this.cbWindowsTitleList.TabIndex = 1;
@@ -1012,7 +1018,7 @@ namespace EVEMon
             // cbShowLoginName
             // 
             this.cbShowLoginName.AutoSize = true;
-            this.cbShowLoginName.Location = new System.Drawing.Point(12, 53);
+            this.cbShowLoginName.Location = new System.Drawing.Point(12, 26);
             this.cbShowLoginName.Name = "cbShowLoginName";
             this.cbShowLoginName.Size = new System.Drawing.Size(205, 17);
             this.cbShowLoginName.TabIndex = 9;
@@ -1024,7 +1030,7 @@ namespace EVEMon
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 102);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 153);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
             this.gboxTooltipOptions.Size = new System.Drawing.Size(413, 101);
             this.gboxTooltipOptions.TabIndex = 7;
@@ -1070,9 +1076,9 @@ namespace EVEMon
             this.gbSkillPlannerHighlighting.AutoSize = true;
             this.gbSkillPlannerHighlighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
-            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 209);
+            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 260);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
-            this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(414, 66);
+            this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(414, 43);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
             this.gbSkillPlannerHighlighting.TabStop = false;
             this.gbSkillPlannerHighlighting.Text = "Skill Planner";
@@ -1085,11 +1091,10 @@ namespace EVEMon
             this.flowLayoutPanel13.Controls.Add(this.flowLayoutPanel14);
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightPrerequisites);
             this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel13.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel13.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel13.Name = "flowLayoutPanel13";
             this.flowLayoutPanel13.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel13.Size = new System.Drawing.Size(408, 46);
+            this.flowLayoutPanel13.Size = new System.Drawing.Size(408, 23);
             this.flowLayoutPanel13.TabIndex = 1;
             this.flowLayoutPanel13.WrapContents = false;
             // 
@@ -1108,7 +1113,7 @@ namespace EVEMon
             this.flowLayoutPanel14.AutoSize = true;
             this.flowLayoutPanel14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel14.Enabled = false;
-            this.flowLayoutPanel14.Location = new System.Drawing.Point(34, 23);
+            this.flowLayoutPanel14.Location = new System.Drawing.Point(182, 0);
             this.flowLayoutPanel14.Margin = new System.Windows.Forms.Padding(25, 0, 25, 0);
             this.flowLayoutPanel14.Name = "flowLayoutPanel14";
             this.flowLayoutPanel14.Size = new System.Drawing.Size(0, 0);
@@ -1118,7 +1123,7 @@ namespace EVEMon
             // cbHighlightPrerequisites
             // 
             this.cbHighlightPrerequisites.AutoSize = true;
-            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(12, 26);
+            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(210, 3);
             this.cbHighlightPrerequisites.Name = "cbHighlightPrerequisites";
             this.cbHighlightPrerequisites.Size = new System.Drawing.Size(136, 17);
             this.cbHighlightPrerequisites.TabIndex = 8;
@@ -1132,7 +1137,7 @@ namespace EVEMon
             this.groupBox10.AutoSize = true;
             this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 281);
+            this.groupBox10.Location = new System.Drawing.Point(3, 309);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(414, 143);
             this.groupBox10.TabIndex = 13;
@@ -1172,26 +1177,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode19.Name = "Node1";
+            treeNode19.Text = "Node1";
+            treeNode20.Name = "Node2";
+            treeNode20.Text = "Node2";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "Node3";
+            treeNode22.Name = "Node4";
+            treeNode22.Text = "Node4";
+            treeNode23.Name = "Node5";
+            treeNode23.Text = "Node5";
+            treeNode24.Name = "Node6";
+            treeNode24.Text = "Node6";
+            treeNode25.Name = "Node7";
+            treeNode25.Text = "Node7";
+            treeNode26.Name = "Node8";
+            treeNode26.Text = "Node8";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode27});
             this.tvlist.Size = new System.Drawing.Size(402, 90);
             this.tvlist.TabIndex = 9;
             // 
@@ -1629,7 +1634,7 @@ namespace EVEMon
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel11.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(324, 383);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(294, 383);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1641,7 +1646,7 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(318, 60);
+            this.groupBox8.Size = new System.Drawing.Size(288, 60);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
@@ -1683,7 +1688,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
             this.groupBox9.Location = new System.Drawing.Point(3, 69);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(318, 118);
+            this.groupBox9.Size = new System.Drawing.Size(288, 118);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
@@ -1796,10 +1801,20 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
             this.gbTQSettings.Location = new System.Drawing.Point(3, 193);
             this.gbTQSettings.Name = "gbTQSettings";
-            this.gbTQSettings.Size = new System.Drawing.Size(318, 187);
+            this.gbTQSettings.Size = new System.Drawing.Size(288, 187);
             this.gbTQSettings.TabIndex = 8;
             this.gbTQSettings.TabStop = false;
             this.gbTQSettings.Text = "Tranquility Status";
+            // 
+            // cbShowTQBalloon
+            // 
+            this.cbShowTQBalloon.AutoSize = true;
+            this.cbShowTQBalloon.Location = new System.Drawing.Point(6, 65);
+            this.cbShowTQBalloon.Name = "cbShowTQBalloon";
+            this.cbShowTQBalloon.Size = new System.Drawing.Size(226, 17);
+            this.cbShowTQBalloon.TabIndex = 6;
+            this.cbShowTQBalloon.Text = "Show balloon tip when TQ status changes";
+            this.cbShowTQBalloon.UseVisualStyleBackColor = true;
             // 
             // tlpCustomTQSettings
             // 
@@ -2005,15 +2020,46 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // cbShowTQBalloon
+            // groupBox7
             // 
-            this.cbShowTQBalloon.AutoSize = true;
-            this.cbShowTQBalloon.Location = new System.Drawing.Point(6, 65);
-            this.cbShowTQBalloon.Name = "cbShowTQBalloon";
-            this.cbShowTQBalloon.Size = new System.Drawing.Size(226, 17);
-            this.cbShowTQBalloon.TabIndex = 6;
-            this.cbShowTQBalloon.Text = "Show balloon tip when TQ status changes";
-            this.cbShowTQBalloon.UseVisualStyleBackColor = true;
+            this.groupBox7.Controls.Add(this.flowLayoutPanel25);
+            this.groupBox7.Location = new System.Drawing.Point(3, 75);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(414, 72);
+            this.groupBox7.TabIndex = 14;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Window Title";
+            // 
+            // flowLayoutPanel25
+            // 
+            this.flowLayoutPanel25.Controls.Add(this.cbTitleToTime);
+            this.flowLayoutPanel25.Controls.Add(this.flowLayoutPanel26);
+            this.flowLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel25.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel25.Location = new System.Drawing.Point(3, 17);
+            this.flowLayoutPanel25.Name = "flowLayoutPanel25";
+            this.flowLayoutPanel25.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.flowLayoutPanel25.Size = new System.Drawing.Size(408, 52);
+            this.flowLayoutPanel25.TabIndex = 7;
+            // 
+            // cbSkillInTitle
+            // 
+            this.cbSkillInTitle.AutoSize = true;
+            this.cbSkillInTitle.Location = new System.Drawing.Point(233, 3);
+            this.cbSkillInTitle.Name = "cbSkillInTitle";
+            this.cbSkillInTitle.Size = new System.Drawing.Size(121, 17);
+            this.cbSkillInTitle.TabIndex = 7;
+            this.cbSkillInTitle.Text = "Show skill in training";
+            this.cbSkillInTitle.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel26
+            // 
+            this.flowLayoutPanel26.Controls.Add(this.cbWindowsTitleList);
+            this.flowLayoutPanel26.Controls.Add(this.cbSkillInTitle);
+            this.flowLayoutPanel26.Location = new System.Drawing.Point(12, 26);
+            this.flowLayoutPanel26.Name = "flowLayoutPanel26";
+            this.flowLayoutPanel26.Size = new System.Drawing.Size(394, 22);
+            this.flowLayoutPanel26.TabIndex = 8;
             // 
             // SettingsForm
             // 
@@ -2072,8 +2118,6 @@ namespace EVEMon
             this.groupBox11.PerformLayout();
             this.flowLayoutPanel15.ResumeLayout(false);
             this.flowLayoutPanel15.PerformLayout();
-            this.flowLayoutPanel22.ResumeLayout(false);
-            this.flowLayoutPanel22.PerformLayout();
             this.gboxTooltipOptions.ResumeLayout(false);
             this.gboxTooltipOptions.PerformLayout();
             this.gbSkillPlannerHighlighting.ResumeLayout(false);
@@ -2141,6 +2185,11 @@ namespace EVEMon
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.flowLayoutPanel25.ResumeLayout(false);
+            this.flowLayoutPanel25.PerformLayout();
+            this.flowLayoutPanel26.ResumeLayout(false);
+            this.flowLayoutPanel26.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2292,5 +2341,9 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbCustomTQSettings;
         private System.Windows.Forms.TextBox tbTQServerPort;
         private System.Windows.Forms.CheckBox cbShowTQBalloon;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel25;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel26;
+        private System.Windows.Forms.CheckBox cbSkillInTitle;
     }
 }

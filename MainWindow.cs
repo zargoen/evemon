@@ -299,20 +299,21 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
-                int selectedCharId = (tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor).GrandCharacterInfo.CharacterId;
-
-                //there are real optimization opportunities here - this gets updated every second
-
-                string tooltipText = m_tooltipText;
                 StringBuilder tsb = new StringBuilder();
-                foreach (TimeSpan ts in gcis.Keys)
-                {
-                    CharacterInfo gci = gcis[ts];
 
-                    string gciTimeSpanText = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default) + " " + gci.Name;
-                    if (m_settings.TitleToTime)
+                if (m_settings.TitleToTime)
+                {
+                    SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
+                    int selectedCharId = (tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor).GrandCharacterInfo.CharacterId;
+
+                    //there are real optimization opportunities here - this gets updated every second
+
+                    foreach (TimeSpan ts in gcis.Keys)
                     {
+                        CharacterInfo gci = gcis[ts];
+
+                        string gciTimeSpanText = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default) + " " + gci.Name
+                            + (m_settings.TitleToTimeSkill == true ? " (" + gci.CurrentlyTrainingSkill.Name + ")" : "");
                         switch (m_settings.TitleToTimeLayout)
                         {
                             case 1: // single Char - finishing skill next
@@ -1195,6 +1196,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 

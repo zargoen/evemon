@@ -45,6 +45,7 @@ namespace EVEMon
             s.CloseToTray = cbCloseToTray.Checked;
             s.TitleToTime = cbTitleToTime.Checked;
             s.TitleToTimeLayout = cbWindowsTitleList.SelectedIndex + 1;
+            s.TitleToTimeSkill = cbSkillInTitle.Checked;
             s.WorksafeMode = cbWorksafeMode.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
             s.RelocateTargetScreen = cbScreenList.SelectedIndex;
@@ -228,6 +229,7 @@ namespace EVEMon
             cbCloseToTray.Checked = m_settings.CloseToTray;
             cbTitleToTime.Checked = m_settings.TitleToTime;
             cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout - 1;
+            cbSkillInTitle.Checked = m_settings.TitleToTimeSkill;
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
@@ -368,6 +370,8 @@ namespace EVEMon
             numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;
             cbShowTQBalloon.Enabled = cbCheckTranquilityStatus.Checked;
             cbCustomTQSettings.Enabled = cbCheckTranquilityStatus.Checked;
+            cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
+            cbSkillInTitle.Enabled = cbTitleToTime.Checked;
         }
 
         private bool ValidateProxySetting(string host, string port)
@@ -655,6 +659,11 @@ namespace EVEMon
                 tbTQServerPort.Text = "26000";
                 tbTQServerAddress.Text = "87.237.38.200";
             }
+        }
+
+        private void cbTitleToTime_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateDisables();
         }
     }
 }

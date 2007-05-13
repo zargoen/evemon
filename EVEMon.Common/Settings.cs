@@ -512,6 +512,7 @@ namespace EVEMon.Common
             }
         }
 
+        #region Window Title
         private bool m_titleToTime = true;
 
         public bool TitleToTime
@@ -528,7 +529,7 @@ namespace EVEMon.Common
 
         private int m_titleToTimeLayout = 0;
 
-        public int TitleToTimeLayout 
+        public int TitleToTimeLayout
         {
             get { return m_titleToTimeLayout; }
             set
@@ -539,6 +540,21 @@ namespace EVEMon.Common
                 }
             }
         }
+
+        private bool m_titleToTimeSkill = false;
+
+        public bool TitleToTimeSkill
+        {
+            get { return m_titleToTimeSkill; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTimeSkill = value;
+                }
+            }
+        }
+        #endregion
 
         private bool m_showLoginName;
 
