@@ -45,6 +45,7 @@ namespace EVEMon.SkillPlanner
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(268, 213);
             this.textBox1.TabIndex = 0;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // btnOk
             // 
@@ -82,10 +83,8 @@ namespace EVEMon.SkillPlanner
             this.Name = "EditEntryNoteWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Notes";
-            this.Load += new System.EventHandler(this.EditEntryNoteWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

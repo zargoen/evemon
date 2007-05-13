@@ -501,7 +501,6 @@ namespace EVEMon.SkillPlanner
                 bool isPreRequisite = false;
                 bool isPostRequisite = false;
 
-
                 if (!m_WorksafeMode &&
                     m_HighlightPrerequisites &&
                     lvSkills.SelectedItems.Count == 1)
@@ -510,12 +509,12 @@ namespace EVEMon.SkillPlanner
                     Plan.Entry selectedSkill = (Plan.Entry)lvSkills.SelectedItems[0].Tag;
                     // Single select so check for pre-requisite highlighting
                     int neededLevel;
-                    if (currentSkill.Skill.HasAsPrerequisite(selectedSkill.Skill, out neededLevel))
+                    if (currentSkill.Skill.HasAsImmedPrereq(selectedSkill.Skill, out neededLevel))
                     {
                         if (currentSkill.Level == 1 && neededLevel >= selectedSkill.Level)
                             isPostRequisite = true;
                     }
-                    if (selectedSkill.Skill.HasAsPrerequisite(currentSkill.Skill, out neededLevel))
+                    if (selectedSkill.Skill.HasAsImmedPrereq(currentSkill.Skill, out neededLevel))
                     {
                         if (currentSkill.Level == neededLevel)
                             isPreRequisite = true;
@@ -922,38 +921,27 @@ namespace EVEMon.SkillPlanner
         private void miChangeNote_Click(object sender, EventArgs e)
         {
             if (lvSkills.SelectedItems.Count < 0)
-            {
                 return;
-            }
 
             string sn = "Selected Skills";
             string noteText = "";
-            Plan.Entry pe = null;
+            Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
+			noteText = pe.Notes;
+			if (lvSkills.SelectedItems.Count == 1)
+				sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
 
-            if (lvSkills.SelectedItems.Count == 1)
-            {
-                pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
-                sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
-                noteText = pe.Notes;
-            }
-            using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
-            {
+			using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn)) {
                 f.NoteText = noteText;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
-                {
                     return;
-                }
+
                 noteText = f.NoteText;
             }
-            if (pe != null)
-            {
+            if (lvSkills.SelectedItems.Count == 1)
                 pe.Notes = noteText;
-            }
-            else
-            {
-                foreach (ListViewItem lvi in lvSkills.SelectedItems)
-                {
+            else {
+                foreach (ListViewItem lvi in lvSkills.SelectedItems) {
                     pe = lvi.Tag as Plan.Entry;
                     pe.Notes = noteText;
                 }
@@ -1066,7 +1054,7 @@ namespace EVEMon.SkillPlanner
                     {
                         Plan.Entry currentSkill = (Plan.Entry)current.Tag;
                         int neededLevel;
-                        if (currentSkill.Skill.HasAsPrerequisite(pe.Skill, out neededLevel))
+                        if (currentSkill.Skill.HasAsImmedPrereq(pe.Skill, out neededLevel))
                         {
                             if (currentSkill.Level == 1 && neededLevel > i)
                             {
@@ -1267,6 +1255,12 @@ namespace EVEMon.SkillPlanner
                 miShowInSkillBrowser_Click(sender, e);
             }
          }
+
+		private void lvSkills_KeyDown(object sender, KeyEventArgs e) {
+			if (e.Control && e.KeyCode == Keys.Enter)
+				if (lvSkills.SelectedItems.Count > 0)
+					miChangeNote_Click(sender, e);
+		}
 
      }
 

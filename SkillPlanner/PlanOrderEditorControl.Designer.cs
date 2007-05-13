@@ -83,7 +83,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(204, 242);
+            this.cmsContextMenu.Size = new System.Drawing.Size(204, 220);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -154,7 +154,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo0
             // 
             this.miChangeTo0.Name = "miChangeTo0";
-            this.miChangeTo0.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo0.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo0.Tag = "0";
             this.miChangeTo0.Text = "Remove";
             this.miChangeTo0.Click += new System.EventHandler(this.miRemoveFromPlan_Click);
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo1
             // 
             this.miChangeTo1.Name = "miChangeTo1";
-            this.miChangeTo1.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo1.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo1.Tag = "1";
             this.miChangeTo1.Text = "Level 1";
             this.miChangeTo1.Click += new System.EventHandler(this.miChangeToN_Click);
@@ -170,7 +170,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo2
             // 
             this.miChangeTo2.Name = "miChangeTo2";
-            this.miChangeTo2.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo2.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo2.Tag = "2";
             this.miChangeTo2.Text = "Level 2";
             this.miChangeTo2.Click += new System.EventHandler(this.miChangeToN_Click);
@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo3
             // 
             this.miChangeTo3.Name = "miChangeTo3";
-            this.miChangeTo3.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo3.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo3.Tag = "3";
             this.miChangeTo3.Text = "Level 3";
             this.miChangeTo3.Click += new System.EventHandler(this.miChangeToN_Click);
@@ -186,7 +186,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo4
             // 
             this.miChangeTo4.Name = "miChangeTo4";
-            this.miChangeTo4.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo4.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo4.Tag = "4";
             this.miChangeTo4.Text = "Level 4";
             this.miChangeTo4.Click += new System.EventHandler(this.miChangeToN_Click);
@@ -194,7 +194,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo5
             // 
             this.miChangeTo5.Name = "miChangeTo5";
-            this.miChangeTo5.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo5.Size = new System.Drawing.Size(124, 22);
             this.miChangeTo5.Tag = "5";
             this.miChangeTo5.Text = "Level 5";
             this.miChangeTo5.Click += new System.EventHandler(this.miChangeToN_Click);
@@ -343,6 +343,7 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
             this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
+            this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
             this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
             this.lvSkills.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyUp);
             // 
@@ -363,7 +364,6 @@ namespace EVEMon.SkillPlanner
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

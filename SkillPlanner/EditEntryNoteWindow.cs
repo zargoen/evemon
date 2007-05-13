@@ -30,10 +30,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void EditEntryNoteWindow_Load(object sender, EventArgs e)
-        {
-        }
-
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -45,5 +41,10 @@ namespace EVEMon.SkillPlanner
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+		private void textBox1_KeyDown(object sender, KeyEventArgs e) {
+			if (e.Control && e.KeyCode == Keys.Enter)
+				btnOk_Click(sender, e);
+		}
     }
 }

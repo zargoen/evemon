@@ -663,6 +663,19 @@ namespace EVEMon.Common
             return HasAsPrerequisite(gs, ref neededLevel, true);
         }
 
+		/// <summary>
+		/// Checks whether a certain skill is an immediate prerequisite of this skill,
+		/// and the level needed
+		/// </summary>
+		/// <param name="gs">Skill that may be an immediate prereq</param>
+		/// <param name="neededLevel">needed level of skill</param>
+		/// <returns>Skill gs is an immediate prereq of this skill</returns>
+		public bool HasAsImmedPrereq(Skill gs, out int neededLevel)
+		{
+			neededLevel = 0;
+			return HasAsPrerequisite(gs, ref neededLevel, false);
+		}
+
         /// <summary>
         /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
         /// The check is performed recursively through all prerequisites.
@@ -684,7 +697,7 @@ namespace EVEMon.Common
         /// <param name="neededLevel">The level that is needed. Out parameter.</param>
         /// <param name="recurse">Pass <code>true</code> to check recursively.</param>
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
-        public bool HasAsPrerequisite(Skill gs, ref int neededLevel, bool recurse)
+        private bool HasAsPrerequisite(Skill gs, ref int neededLevel, bool recurse)
         {
             foreach (Prereq pp in this.Prereqs) {
 				if (pp.Skill == gs)
