@@ -374,36 +374,30 @@ namespace EVEMon
             m_settings.SetCharacterCache(sci);
             if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
             {
-                int toremove;
+                bool toremove = false;
                 bool add = true;
-                do
+                if (m_settings.OldSkillLearntDict.ContainsKey(m_charName))
                 {
-                    toremove = -1;
-                    foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+                    OldSkillinfo x = m_settings.OldSkillLearntDict[m_charName];
+                    if (x.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
                     {
-                        if (x.A == m_charName)
+                        add = false;
+                        x.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
+                        x.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
+                        if (!x.old_skill_completed)
                         {
-                            if (x.B.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.B.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
-                            {
-                                add = false;
-                                x.B.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
-                                x.B.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
-                                if (!x.B.old_skill_completed)
-                                {
-                                    toremove = m_settings.OldSkillLearnt.IndexOf(x);
-                                }
-                            }
-                            else
-                            {
-                                toremove = m_settings.OldSkillLearnt.IndexOf(x);
-                            }
+                            toremove = true;
                         }
                     }
-                    if (toremove != -1)
-                        m_settings.OldSkillLearnt.RemoveAt(toremove);
-                } while (toremove != -1);
+                    else
+                    {
+                        toremove = true;
+                    }
+                    if (toremove)
+                        m_settings.OldSkillLearntDict.Remove(m_charName);
+                }
                 if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
-                    m_settings.OldSkillLearnt.Add(new Pair<string, OldSkillinfo>(m_charName, m_grandCharacterInfo.OldTrainingSkill));
+                    m_settings.OldSkillLearntDict[m_charName] = m_grandCharacterInfo.OldTrainingSkill;
             }
             m_settings.Save();
         }
@@ -447,12 +441,10 @@ namespace EVEMon
             UpdateGrandCharacterInfo();
 
             //loads the details from the settings file as to what was actually training the last time you had EVEMon running
-            foreach (Pair<string, OldSkillinfo> x in m_settings.OldSkillLearnt)
+            if (m_settings.OldSkillLearntDict.ContainsKey(m_charName))
             {
-                if (x.A == m_charName)
-                {
-                    m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.B.old_SkillName, x.B.old_TrainingToLevel, x.B.old_skill_completed, x.B.old_estimated_completion);
-                }
+                OldSkillinfo x = m_settings.OldSkillLearntDict[m_charName];
+                m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.old_SkillName, x.old_TrainingToLevel, x.old_skill_completed, x.old_estimated_completion);
             }
             UpdateTrainingSkillInfo();
         }

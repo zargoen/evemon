@@ -970,11 +970,21 @@ namespace EVEMon.Common
             get { return m_collapsedGroups; }
         }
 
-        private List<Pair<string, OldSkillinfo>> m_oldskilllearnt = new List<Pair<string, OldSkillinfo>>();
+        private SerializableDictionary<string, OldSkillinfo> m_oldSkillLearntDict = new SerializableDictionary<string, OldSkillinfo>();
 
-        public List<Pair<string, OldSkillinfo>> OldSkillLearnt
+        public SerializableDictionary<string, OldSkillinfo> OldSkillLearntDict
         {
-            get { return m_oldskilllearnt; }
+            get { return m_oldSkillLearntDict; }
+            set
+            {
+                if (value != null)
+                {
+                    lock (mutexLock)
+                    {
+                        m_oldSkillLearntDict = value;
+                    }
+                }
+            }
         }
 
         private PlanTextOptions m_defaultCopyOptions = new PlanTextOptions();
