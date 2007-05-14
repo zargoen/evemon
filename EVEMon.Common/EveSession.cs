@@ -679,66 +679,73 @@ namespace EVEMon.Common
         // to be more polite to the server.
         private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
         private Random autoRand;
+        private Object mutexLock = new Object();
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
-            SerializableSkillTrainingInfo temp = grandCharacterInfo.SerialSIT;
-            SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
+            lock (mutexLock)
+            {
+                SerializableSkillTrainingInfo temp = grandCharacterInfo.SerialSIT;
+                SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
 
-            if (sci == null)
-            {
-                autoRand = new Random();
-                grandCharacterInfo.DownloadFailed += 1;
-                double offset = (DEFAULT_RETRY_INTERVAL * grandCharacterInfo.DownloadFailed) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
-                return (int)offset;
-            }
-            else
-            {
-                grandCharacterInfo.DownloadFailed = 0;
-                sci.TrainingSkillInfo = temp;
-            }
-            sci.XMLExpires = DateTime.Now.Add(TimeSpan.FromMilliseconds(sci.TimeLeftInCache));
+                if (sci == null)
+                {
+                    autoRand = new Random();
+                    grandCharacterInfo.DownloadFailed += 1;
+                    double offset = (DEFAULT_RETRY_INTERVAL * grandCharacterInfo.DownloadFailed) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
+                    return (int)offset;
+                }
+                else
+                {
+                    grandCharacterInfo.DownloadFailed = 0;
+                    sci.TrainingSkillInfo = temp;
+                }
+                sci.XMLExpires = DateTime.Now.Add(TimeSpan.FromMilliseconds(sci.TimeLeftInCache));
 
-            if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
-            {
-                invokeControl.Invoke(new MethodInvoker(delegate
-                                                           {
-                                                               grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
-                                                           }));
+                if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
+                {
+                    invokeControl.Invoke(new MethodInvoker(delegate
+                                                               {
+                                                                   grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
+                                                               }));
+                }
+                return sci.TimeLeftInCache;
             }
-            return sci.TimeLeftInCache;
         }
 
         public int UpdateSkillTrainingInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
-            SerializableSkillTrainingInfo ssti = GetTrainingSkillInfo(grandCharacterInfo.CharacterId);
-            if (ssti == null)
+            lock (mutexLock)
             {
-                return 0;
-            }
-            else
-            {
-                string error = ssti.Error;
-                if (error == "characterID does not belong to you.")
-                    throw new Exception(error); // really should throw an exception here... so now we do!
-                if (error == "You are trying too fast.")
+                SerializableSkillTrainingInfo ssti = GetTrainingSkillInfo(grandCharacterInfo.CharacterId);
+                if (ssti == null)
                 {
-                    invokeControl.Invoke(new MethodInvoker(delegate
-                                                               {
-                                                                   grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(grandCharacterInfo.SerialSIT);
-                                                               }));
-                    return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
+                    return 0;
                 }
-                DateTime end = ssti.getTrainingEndTime;
-                if (end == DateTime.MinValue)
-                    return (1000 * ssti.TimerToNextUpdate); // No skill training so set timer accordingly and be done
-            }
+                else
+                {
+                    string error = ssti.Error;
+                    if (error == "characterID does not belong to you.")
+                        throw new Exception(error); // really should throw an exception here... so now we do!
+                    if (error == "You are trying too fast.")
+                    {
+                        invokeControl.Invoke(new MethodInvoker(delegate
+                                                                   {
+                                                                       grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(grandCharacterInfo.SerialSIT);
+                                                                   }));
+                        return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
+                    }
+                    DateTime end = ssti.getTrainingEndTime;
+                    if (end == DateTime.MinValue)
+                        return (1000 * ssti.TimerToNextUpdate); // No skill training so set timer accordingly and be done
+                }
 
-            invokeControl.Invoke(new MethodInvoker(delegate
-                                                       {
-                                                           grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
-                                                       }));
-            return (1000 * ssti.TimerToNextUpdate);
+                invokeControl.Invoke(new MethodInvoker(delegate
+                                                           {
+                                                               grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
+                                                           }));
+                return (1000 * ssti.TimerToNextUpdate);
+            }
         }
 
         #endregion
