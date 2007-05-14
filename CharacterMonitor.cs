@@ -499,7 +499,8 @@ namespace EVEMon
                 {
                     tmrMinTrainingSkillRetry.Interval = timeToNextUpdate == 0 ? 900000 : timeToNextUpdate;
                     tmrMinTrainingSkillRetry.Enabled = true;
-                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
+                    DateTime nextUpdate = DateTime.Now + new TimeSpan(0, 0, (timeToNextUpdate / 1000));
+                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToShortTimeString() + ")";
                 }
             }));
         }
