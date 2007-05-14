@@ -1097,11 +1097,11 @@ namespace EVEMon.Common
             if (SkillInTraining != null)
             {
                 _SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-
                 // This would be a good place to change the prereqs too so they are also trained up fully.
                 // This just does one level of prereqs... we really need recursive updating...
                 if (_SkillInTraining != null)
                 {
+                    // All PreReqs must have been trained for this to be training.
                     foreach (Skill.Prereq pReq in _SkillInTraining.Prereqs)
                     {
                         if (pReq != null && pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
@@ -1111,13 +1111,24 @@ namespace EVEMon.Common
                             OnSkillChanged(pReq.Skill);
                         }
                     }
-
                     // Once we have done the pre-reqs, we can set this skill's current skill points
                     if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
                     {
                         _SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
                         _SkillInTraining.Known = true;
                         OnSkillChanged(_SkillInTraining);
+                    }
+                    // Now look at the previous skill we were training and set accordingly.
+                    // We haven't changed the current and old skills yet, so...
+                    if (m_SkillInTraining != null && m_SkillInTraining.TrainingSkillWithTypeID != SkillInTraining.TrainingSkillWithTypeID)
+                    {
+                        if (SkillInTraining.getTrainingStartTime < m_SkillInTraining.getTrainingEndTime)
+                        {
+                            // We need to adjust the SP of the previously training skill as it was changed before completion
+                            // I'm assuming here that you haven't changed implants or something and it's not a prereq of the current skill in training
+                            // You could stick some extra checks in here to make sure.
+                            this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID].CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(SkillInTraining.getTrainingStartTime);
+                        }
                     }
                 }
                 _SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
