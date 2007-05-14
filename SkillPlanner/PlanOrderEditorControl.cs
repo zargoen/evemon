@@ -223,6 +223,10 @@ namespace EVEMon.SkillPlanner
                     }
                     double deltaPointsOfLevel = Convert.ToDouble(reqToThisLevel - reqBeforeThisLevel);
                     double pctComplete = pointsInThisLevel / deltaPointsOfLevel;
+                    
+                    // A really... well, I dislike this "fix" but...
+                    if (pctComplete > 100.0)
+                        pctComplete = 100.0;
 
                     DateTime thisStart = start;
                     start += trainTime;
@@ -742,6 +746,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         #region Context Menu
+
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
             miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
@@ -837,6 +842,7 @@ namespace EVEMon.SkillPlanner
             Skill gs = pe.Skill;
             m_plannerWindow.ShowSkillInExplorer(gs);
         }
+
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key
@@ -1021,7 +1027,6 @@ namespace EVEMon.SkillPlanner
             m_plan.PlanTo(pe.Skill, Int32.Parse(level));
         }
 
-
         private bool SetChangeLevelMenu()
         {
             bool result = false;
@@ -1073,10 +1078,10 @@ namespace EVEMon.SkillPlanner
             return result;
         }
 
-
         #endregion Context Menu
 
         #region Plan Re-Ordering
+
         private void tsbMoveUp_Click(object sender, EventArgs e)
         {
             Dictionary<string, bool> seld = new Dictionary<string, bool>();
@@ -1207,6 +1212,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
         #endregion Plan Re-Ordering
 
         private Plan.Entry GetPlanEntryForListViewItem(ListViewItem lvi)
@@ -1261,7 +1267,5 @@ namespace EVEMon.SkillPlanner
 				if (lvSkills.SelectedItems.Count > 0)
 					miChangeNote_Click(sender, e);
 		}
-
      }
-
 }

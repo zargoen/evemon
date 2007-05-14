@@ -403,6 +403,7 @@ namespace EVEMon.Common
         #endregion Suggestions
 
         #region Statistics
+
         [XmlIgnore]
         public TimeSpan TotalTrainingTime
         {
@@ -477,8 +478,8 @@ namespace EVEMon.Common
                 return cost;
             }
         }
-        #endregion Statistics
 
+        #endregion Statistics
 
         public void CheckForMissingPrerequisites()
         {
@@ -747,8 +748,6 @@ namespace EVEMon.Common
             return Int32.MinValue;
         }
 
-
-        
         /// <summary>
         /// Test if this skill & level is not trained and is not already in the list of candidate entries
         /// This is needed as sometimes the chain of prerequisites will include the same skill twice
@@ -763,7 +762,6 @@ namespace EVEMon.Common
         /// <param name="list">The list of prereqs we're already adding</param>
         /// <param name="Note">The reason we're adding these skills</param>
         /// <returns>true if we should add this entry</returns>
-        
         private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
             // check that the current level is less than the requsted level
@@ -817,7 +815,6 @@ namespace EVEMon.Common
                     // (need a second check to ensure other prepreqs have not added this yet)
                     else if (ShouldAdd(pgs, i, planEntries,Note))
                     {
-
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
                         pe.Level = i;
@@ -845,7 +842,6 @@ namespace EVEMon.Common
         {
             PlanTo(gs, level, note, false);
         }
-
 
         /// <summary>
         /// Check if the plan contains the given Skill at the specified level.
@@ -1710,6 +1706,4 @@ namespace EVEMon.Common
     {
         Form CreateWindow(Settings s, Plan p);
     }
-
-
 }
