@@ -453,6 +453,9 @@
     <None Include="Resources\icons\Skill_Select\Group7\Red_Dice.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\icons\Skill_Select\Group8\Bars.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Schedule\CalendarControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CalendarControl.cs</DependentUpon>
@@ -593,6 +596,7 @@
     <Content Include="Microsoft.VC80.CRT.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>

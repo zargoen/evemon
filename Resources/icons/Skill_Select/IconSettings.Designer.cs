@@ -115,5 +115,17 @@ namespace EVEMon.Resources.icons.Skill_Select {
                 this["Group7"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Bars")]
+        public string Group8 {
+            get {
+                return ((string)(this["Group8"]));
+            }
+            set {
+                this["Group8"] = value;
+            }
+        }
     }
 }
