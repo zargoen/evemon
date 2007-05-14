@@ -1097,6 +1097,8 @@ namespace EVEMon.Common
             if (SkillInTraining != null)
             {
                 _SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
+                _SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+                _SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
                 // This would be a good place to change the prereqs too so they are also trained up fully.
                 // This just does one level of prereqs... we really need recursive updating...
                 if (_SkillInTraining != null)
@@ -1128,13 +1130,11 @@ namespace EVEMon.Common
                             // I'm assuming here that you haven't changed implants or something and it's not a prereq of the current skill in training
                             // You could stick some extra checks in here to make sure.
                             Skill theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-                            theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(SkillInTraining.getTrainingStartTime);
+                            theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
                             OnSkillChanged(theOneImInterestedIn);
                         }
                     }
                 }
-                _SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
-                _SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
             }
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
