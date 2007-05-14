@@ -1127,7 +1127,9 @@ namespace EVEMon.Common
                             // We need to adjust the SP of the previously training skill as it was changed before completion
                             // I'm assuming here that you haven't changed implants or something and it's not a prereq of the current skill in training
                             // You could stick some extra checks in here to make sure.
-                            this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID].CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(SkillInTraining.getTrainingStartTime);
+                            Skill theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                            theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(SkillInTraining.getTrainingStartTime);
+                            OnSkillChanged(theOneImInterestedIn);
                         }
                     }
                 }
