@@ -973,120 +973,85 @@ namespace EVEMon.Common
         }
 
         public void checkOldSkill()
-        {// This function has now been cleaned.... I think it still works properly too, which is a bonus.
-            // This is called from CharacterMonitor.cs when a fresh XML file has failed to be obtained.
-            // In other words, this is the default behaviour when there is a problem
-
-            // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-
-            //first we must check that the old_skill skill is still the skill that is currently training, and that
-            // the estimated completion is within 3 minutes 30 seconds of the old one
-            // if not, then it needs canceling, this of course assumes that the old_skill data
-            // has been updated properly!
-            // Using 3 minutes 30 seconds as a ball park for standard deviation due to download
-            // to settings file lag etc. Feel free to reduce it so long as we don't start getting issues from it being to short.
+        {
+            DateTime _OSITLocalCompleteTime = DateTime.MinValue;
+            if (m_OldSkillInTraining != null)
+            {
+                _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
+            }
             if (this.CurrentlyTrainingSkill != null &&
-                    oldSkill != null &&
-                        (oldSkill.old_SkillName == null ||
-                        oldSkill.old_SkillName != this.CurrentlyTrainingSkill.Name ||
-                        ((TimeSpan)oldSkill.old_estimated_completion.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
+                    m_OldSkillInTraining != null &&
+                        (m_OldSkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id ||
+                        ((TimeSpan)_OSITLocalCompleteTime.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
             {
                 this.CancelCurrentSkillTraining();
             }
-            if (!firstRun && oldSkill != null)
+            if (!firstRun && m_OldSkillInTraining != null)
             {
-                // If this isn't the first run and old_skill has actually been initalised
-                // 
-                // The code for the first run is at the bottom of the section in normal running,
-                // This section isn't normal running, this is called when something has gone wrong in normal running
-                if (oldSkill.old_SkillName != null && this.GetSkill(oldSkill.old_SkillName) != null)
+                Skill _OSIT = m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
+                if (_OSIT != null)
                 {
-                    // first we look at the status of the skill indicated by old_skill and check on it's progress
-                    // for this we need a few bool values to use as flags.
-                    // Could probaly use an enumerated type for this
-                    // Both default to negative
                     bool add = false;
                     bool check = false;
-                    string skillName = oldSkill.old_SkillName;
-                    int level = oldSkill.old_TrainingToLevel;
-                    if (oldSkill.old_skill_completed)
+                    string skillName = _OSIT.Name;
+                    int level = m_OldSkillInTraining.TrainingSkillToLevel;
+                    if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
-                        // Check to see if the oldskill has NOT completed (This does happen from time to time)
-                        if (this.GetSkill(skillName).CurrentSkillPoints < this.GetSkill(skillName).GetPointsRequiredForLevel(level))
-                        {
-                            // so we need to check the skill alerts and remove this skill as it hasn't completed yet.
-                            // This assumes no one has looked at the skill alerts in a while.
+                        if (_OSIT.UnadjustedCurrentSkillPoints < _OSIT.GetPointsRequiredForLevel(level))
                             check = true;
-                        }
                     }
                     else
                     {
-                        // Check old skill for completion
-                        if (this.GetSkill(skillName).CurrentSkillPoints >= this.GetSkill(skillName).GetPointsRequiredForLevel(level))
+                        if (_OSIT.UnadjustedCurrentSkillPoints >= _OSIT.GetPointsRequiredForLevel(level))
                         {
-                            // So we need to add this skill (if it's not already there)
-                            // to the skill alerts as according to the current XML it's done.
-                            // This skill should have been added when it completed during run time
-                            // but this might be the first time it's been looked at
-                            // due to the initial startup failing to get the XML
-
-                            // First set the skill points before the skill gets cancelled as currently training
-                            if (this.GetSkill(skillName).InTraining && this.GetSkill(skillName).TrainingToLevel == level)
+                            if (_OSIT.InTraining && _OSIT.TrainingToLevel == level)
                             {
-                                this.GetSkill(skillName).CurrentSkillPoints = this.GetSkill(skillName).GetPointsRequiredForLevel(level);
+                                _OSIT.CurrentSkillPoints = _OSIT.GetPointsRequiredForLevel(level);
                                 this.CancelCurrentSkillTraining();
                             }
-                            oldSkill.old_skill_completed = true;
+                            m_OldSkillInTraining.AlertRaisedAlready = true;
                             add = true;
                         }
-                        // This is out here as the above checks to see if it's been completed NOW,
-                        // when the original old_skill.old_skill_complete it may have been a guess
-                        // so in that case, 'add' would still be false.
                         check = true;
                     }
-                    // This is where we use the two flags
                     if (check)
                     {
                         OnDownloadAttemptComplete(this.Name, skillName, add);
                     }
                 }
-                if (oldSkill.old_SkillName != null && this.CurrentlyTrainingSkill == null)
+                if (m_OldSkillInTraining != null && this.CurrentlyTrainingSkill == null)
                 {
-                    // Now we start having some fun with the Currently training skill values.
-                    Skill newTrainingSkill = this.GetSkill(oldSkill.old_SkillName);
                     // Check we actually have a skill in training
-                    string skill_name = oldSkill.old_SkillName;
-                    int level = oldSkill.old_TrainingToLevel;
-                    if (newTrainingSkill != null)
+                    if (_OSIT != null)
                     {
+                        string skillName = _OSIT.Name;
+                        int level = m_OldSkillInTraining.TrainingSkillToLevel;
                         // See if the old_skill in the current details has completed it's training
-                        if (this.GetSkill(skill_name).CurrentSkillPoints >= this.GetSkill(skill_name).GetPointsRequiredForLevel(level))
+                        if (_OSIT.CurrentSkillPoints >= _OSIT.GetPointsRequiredForLevel(level))
                         {
-                            if (oldSkill.old_skill_completed)
+                            if (m_OldSkillInTraining.AlertRaisedAlready)
                             {
-                                // Right, so it's completed, but old_skill has already been flagged as dealt with in this regard... so...
-                                // Oh yeah, if you don't do this skill points for some odd reason reset to the old XML values when you cancel the skill training so...
-                                this.GetSkill(skill_name).CurrentSkillPoints = this.GetSkill(skill_name).CurrentSkillPoints;
+                                _OSIT.CurrentSkillPoints = _OSIT.CurrentSkillPoints;
                             }
-                            if (!oldSkill.old_skill_completed)
+                            if (!m_OldSkillInTraining.AlertRaisedAlready)
                             {
                                 // Right, so the skill needs to be flagged as done.
                                 // Oh yeah, if you don't do this skill points for some odd reason reset to the old XML values when you cancel the skill training so...
-                                this.GetSkill(skill_name).CurrentSkillPoints = this.GetSkill(skill_name).CurrentSkillPoints;
-                                oldSkill.old_skill_completed = true;
+                                _OSIT.CurrentSkillPoints = _OSIT.CurrentSkillPoints;
+                                m_OldSkillInTraining.AlertRaisedAlready = true;
                                 // Oh, yeah, we need to add this skill to the alerts...
                                 // The alerter takes care of whether it's already there or not.
-                                OnDownloadAttemptComplete(this.Name, oldSkill.old_SkillName, true);
+                                OnDownloadAttemptComplete(this.Name, skillName, true);
                             }
                         }
-                        else if (this.GetSkill(skill_name).CurrentSkillPoints < this.GetSkill(skill_name).GetPointsRequiredForLevel(level))
+                        else if (_OSIT.CurrentSkillPoints < _OSIT.GetPointsRequiredForLevel(level))
                         {
                             // Here is where we set the currently training skill according to the last
                             // known skill in training.
                             // To make doubly sure we have no old training skills lurking ...out with the old...
                             this.CancelCurrentSkillTraining();
                             // ...and in with the new
-                            newTrainingSkill.SetTrainingInfo(level, oldSkill.old_estimated_completion);
+                            _OSIT.SetTrainingInfo(level, m_OldSkillInTraining.getTrainingEndTime);
                         }
                     }
                 }
@@ -1105,7 +1070,7 @@ namespace EVEMon.Common
             Settings.GetInstance().SetOwnedBooks(m_name, owned);
         }
 
-        private SerializableSkillTrainingInfo m_SkillInTraining;
+        private SerializableSkillTrainingInfo m_SkillInTraining = null;
 
         public SerializableSkillTrainingInfo SerialSIT
         {
@@ -1164,75 +1129,90 @@ namespace EVEMon.Common
                     (SkillInTraining == null || 
                     (SkillInTraining != null && 
                         (SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id || 
-                        (((TimeSpan)(((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30))))))
+                        (((TimeSpan)(_SITLocalCompleteTime.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30))))))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
             }
             if (!firstRun)
             {
-                if (oldSkill != null && oldSkill.old_SkillName != null && this.GetSkill(oldSkill.old_SkillName) != null)
+                // Go through the m_OldSkillInTraining stuff.
+                if (m_OldSkillInTraining != null && this.m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))
                 {
                     bool add = false;
                     bool check = false;
-                    string skillName = oldSkill.old_SkillName;
-                    int level = oldSkill.old_TrainingToLevel;
-                    if (oldSkill.old_skill_completed)
+                    Skill oldskill = this.m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
+                    int level = m_OldSkillInTraining.TrainingSkillToLevel;
+                    DateTime _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
+                    if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
-                        if (this.GetSkill(skillName).CurrentSkillPoints < this.GetSkill(skillName).GetPointsRequiredForLevel(level))
+                        if (_OSITLocalCompleteTime <= DateTime.Now && SkillInTraining != null && _OSITLocalCompleteTime > _SITLocalStartTime)
                         {
                             check = true;
+                            oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
+                            m_OldSkillInTraining.AlertRaisedAlready = false;
+                            OnSkillChanged(oldskill);
                         }
                     }
                     else
                     {
-                        if (this.GetSkill(skillName).CurrentSkillPoints >= this.GetSkill(skillName).GetPointsRequiredForLevel(level))
-                        {// Check old skill for completion
-                            oldSkill.old_skill_completed = true;
-                            add = true;
+                        if ((SkillInTraining == null && _OSITLocalCompleteTime <= DateTime.Now) ||
+                             (SkillInTraining != null && _OSITLocalCompleteTime <= _SITLocalStartTime))
+                        {
+                            if (m_OldSkillInTraining.EstimatedPointsAtUpdate >= oldskill.GetPointsRequiredForLevel(level))
+                            {
+                                m_OldSkillInTraining.AlertRaisedAlready = true;
+                                add = true;
+                            }
+                            else
+                            {
+                                m_OldSkillInTraining = null;
+                            }
+                            check = true;
                         }
-                        else if (this.GetSkill(skillName).CurrentSkillPoints < this.GetSkill(skillName).GetPointsRequiredForLevel(level))
-                        {// If this is literally the second pass then the old_skill values need to be checked so that the rest is consistently coded
-                            oldSkill.old_SkillName = null;
-                            oldSkill.old_TrainingToLevel = 0;
-                            oldSkill.old_skill_completed = false;
-                            oldSkill.old_estimated_completion = DateTime.MaxValue;
-                        }
-                        check = true;
                     }
+
                     if (check)
                     {
-                        OnDownloadAttemptComplete(this.Name, skillName, add);
+                        OnDownloadAttemptComplete(this.Name, oldskill.Name, add);
                     }
                 }
+
+                // Now for the real meaty bit.
                 if (SkillInTraining != null && this.CurrentlyTrainingSkill == null)
                 {
                     // Now we depart even more from the version above.
                     // We have to deal with making this character actually show that he is learning the
                     // skill the XML file says he's learning. But we do this carefully as it may be complete
-                    string skillName = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID].Name;
+                    Skill newTrainingSkill = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID];
                     int level = SkillInTraining.TrainingSkillToLevel;
-                    Skill newTrainingSkill = this.GetSkill(skillName);
                     int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
+                    bool SkillComplete = (_SITLocalCompleteTime < DateTime.Now);
+                    DateTime _OSITLocalCompleteTime = DateTime.MinValue;
+                    if (m_OldSkillInTraining != null)
+                    {
+                        _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
+                    }
+
                     if (newTrainingSkill != null)
                     {
                         if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
                         {
-                            if (oldSkill.old_skill_completed && skillName == oldSkill.old_SkillName && level == oldSkill.old_TrainingToLevel)
+                            if (m_OldSkillInTraining != null && m_OldSkillInTraining.AlertRaisedAlready && newTrainingSkill.Id == m_OldSkillInTraining.TrainingSkillWithTypeID && level == m_OldSkillInTraining.TrainingSkillToLevel)
                             {
-                                newTrainingSkill.CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(level);
+                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
                             }
-                            if (oldSkill == null || !oldSkill.old_skill_completed || oldSkill.old_SkillName == null || (oldSkill.old_SkillName != null && (skillName != oldSkill.old_SkillName || (skillName == oldSkill.old_SkillName && SkillInTraining.TrainingSkillToLevel != oldSkill.old_TrainingToLevel))))
+                            if (m_OldSkillInTraining == null || !m_OldSkillInTraining.AlertRaisedAlready || (m_OldSkillInTraining != null && (newTrainingSkill.Id != m_OldSkillInTraining.TrainingSkillWithTypeID || (newTrainingSkill.Id == m_OldSkillInTraining.TrainingSkillWithTypeID && SkillInTraining.TrainingSkillToLevel != m_OldSkillInTraining.TrainingSkillToLevel))))
                             {
-                                this.GetSkill(skillName).CurrentSkillPoints = newTrainingSkill.GetPointsRequiredForLevel(level);
-                                oldSkill = new OldSkillinfo(skillName, SkillInTraining.TrainingSkillToLevel, true, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
-                                OnDownloadAttemptComplete(this.Name, skillName, true);
+                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
+                                m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+                                OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
                             }
                         }
                         else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
                             m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-                            newTrainingSkill.SetTrainingInfo(level, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
+                            newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime);
                         }
                     }
                 }
@@ -1246,12 +1226,7 @@ namespace EVEMon.Common
                 // Order is everything in this section!!
                 if (SkillInTraining != null)
                 {
-                    string _name = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID].Name;
-                    Skill newTrainingSkill = this.GetSkill(_name);
-                    if (newTrainingSkill != null)
-                    {
-                        oldSkill = new OldSkillinfo(_name, SkillInTraining.TrainingSkillToLevel, newTrainingSkill.CurrentSkillPoints >= SkillInTraining.TrainingSkillDestinationSP, ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime());
-                    }
+                    m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
                     m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
                 }
                 firstRun = false;
@@ -1260,13 +1235,6 @@ namespace EVEMon.Common
 
         private bool firstRun = true;
         private bool m_attemptedDLComplete = false;
-        private OldSkillinfo oldSkill = new OldSkillinfo();
-
-        public OldSkillinfo OldTrainingSkill
-        {
-            get { return oldSkill; }
-            set { oldSkill = value; }
-        }
 
         public bool DLComplete
         {
@@ -1308,16 +1276,17 @@ namespace EVEMon.Common
             }
         }
 
-        public void triggerSkillComplete(string CharacterName, string skillName)
+        public void triggerSkillComplete(string CharacterName)
         { // Basically trigger the event when a skill completes between downloads
-            Skill newlyCompletedSkill = this.GetSkill(skillName);
+            Skill newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
             if (newlyCompletedSkill != null)
             {
                 newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
-                oldSkill = new OldSkillinfo(newlyCompletedSkill.Name, newlyCompletedSkill.TrainingToLevel, true, DateTime.MinValue);
+                m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
+                m_SkillInTraining = null;
                 this.CancelCurrentSkillTraining();
             }
-            OnDownloadAttemptComplete(CharacterName, skillName, true);
+            OnDownloadAttemptComplete(CharacterName, newlyCompletedSkill.Name, true);
         }
 
         private void OnDownloadAttemptComplete(string CharacterName, string skillName, bool Complete)

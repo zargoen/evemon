@@ -970,18 +970,18 @@ namespace EVEMon.Common
             get { return m_collapsedGroups; }
         }
 
-        private SerializableDictionary<string, OldSkillinfo> m_oldSkillLearntDict = new SerializableDictionary<string, OldSkillinfo>();
+        private SerializableDictionary<string, SerializableSkillTrainingInfo> m_oldSkillsDict = new SerializableDictionary<string, SerializableSkillTrainingInfo>();
 
-        public SerializableDictionary<string, OldSkillinfo> OldSkillLearntDict
+        public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSkillsDict
         {
-            get { return m_oldSkillLearntDict; }
+            get { return m_oldSkillsDict; }
             set
             {
                 if (value != null)
                 {
                     lock (mutexLock)
                     {
-                        m_oldSkillLearntDict = value;
+                        m_oldSkillsDict = value;
                     }
                 }
             }

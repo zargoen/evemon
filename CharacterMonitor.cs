@@ -372,19 +372,18 @@ namespace EVEMon
         {
             SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
             m_settings.SetCharacterCache(sci);
-            if (m_grandCharacterInfo.OldTrainingSkill != null && m_grandCharacterInfo.OldTrainingSkill.old_SkillName != null)
+            if (m_grandCharacterInfo.OldSerialSIT != null && m_grandCharacterInfo.AllSkillsByTypeID.ContainsKey(m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID))
             {
                 bool toremove = false;
                 bool add = true;
-                if (m_settings.OldSkillLearntDict.ContainsKey(m_charName))
+                if (m_settings.OldSkillsDict.ContainsKey(m_charName))
                 {
-                    OldSkillinfo x = m_settings.OldSkillLearntDict[m_charName];
-                    if (x.old_SkillName == m_grandCharacterInfo.OldTrainingSkill.old_SkillName && x.old_TrainingToLevel == m_grandCharacterInfo.OldTrainingSkill.old_TrainingToLevel)
+                    SerializableSkillTrainingInfo x = m_settings.OldSkillsDict[m_charName];
+                    if (x.TrainingSkillWithTypeID == m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID && x.TrainingSkillToLevel == m_grandCharacterInfo.OldSerialSIT.TrainingSkillToLevel)
                     {
                         add = false;
-                        x.old_skill_completed = m_grandCharacterInfo.OldTrainingSkill.old_skill_completed;
-                        x.old_estimated_completion = m_grandCharacterInfo.OldTrainingSkill.old_estimated_completion;
-                        if (!x.old_skill_completed)
+                        m_settings.OldSkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
+                        if (!x.AlertRaisedAlready)
                         {
                             toremove = true;
                         }
@@ -394,10 +393,10 @@ namespace EVEMon
                         toremove = true;
                     }
                     if (toremove)
-                        m_settings.OldSkillLearntDict.Remove(m_charName);
+                        m_settings.OldSkillsDict.Remove(m_charName);
                 }
-                if (add && m_grandCharacterInfo.OldTrainingSkill.old_skill_completed)
-                    m_settings.OldSkillLearntDict[m_charName] = m_grandCharacterInfo.OldTrainingSkill;
+                if (add && m_grandCharacterInfo.OldSerialSIT.AlertRaisedAlready)
+                    m_settings.OldSkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
             }
             m_settings.Save();
         }
@@ -440,12 +439,9 @@ namespace EVEMon
             //actually perform the update.  This is then happening asynchronously, is this a problem?
             UpdateGrandCharacterInfo();
 
-            //loads the details from the settings file as to what was actually training the last time you had EVEMon running
-            if (m_settings.OldSkillLearntDict.ContainsKey(m_charName))
-            {
-                OldSkillinfo x = m_settings.OldSkillLearntDict[m_charName];
-                m_grandCharacterInfo.OldTrainingSkill = new OldSkillinfo(x.old_SkillName, x.old_TrainingToLevel, x.old_skill_completed, x.old_estimated_completion);
-            }
+            if (m_settings.OldSkillsDict.ContainsKey(m_charName))
+                m_grandCharacterInfo.OldSerialSIT = (SerializableSkillTrainingInfo)m_settings.OldSkillsDict[m_charName].Clone();
+
             UpdateTrainingSkillInfo();
         }
 
@@ -2059,14 +2055,14 @@ namespace EVEMon
                 }
             }
             if (m_grandCharacterInfo.DLComplete && m_estimatedCompletion < DateTime.Now &&
-                m_grandCharacterInfo.CurrentlyTrainingSkill != null)
+                m_grandCharacterInfo.SerialSIT != null)
             {
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in GrandCharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
 
-                // The following line triggers the required code in GrandCharacterInfo.cs
-                m_grandCharacterInfo.triggerSkillComplete(m_charName, m_grandCharacterInfo.CurrentlyTrainingSkill.Name);
+                // The following line triggers the required code in GrandCharacterInfo.cs for that character
+                m_grandCharacterInfo.triggerSkillComplete(m_charName);
 
                 UpdateSkillHeaderStats();
             }
