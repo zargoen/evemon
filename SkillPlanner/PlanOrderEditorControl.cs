@@ -225,8 +225,8 @@ namespace EVEMon.SkillPlanner
                     double pctComplete = pointsInThisLevel / deltaPointsOfLevel;
                     
                     // A really... well, I dislike this "fix" but...
-                    if (pctComplete > 100.0)
-                        pctComplete = 100.0;
+                    if (pctComplete > 1.0)
+                        pctComplete = 1.0;
 
                     DateTime thisStart = start;
                     start += trainTime;
