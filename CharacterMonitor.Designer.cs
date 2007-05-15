@@ -56,18 +56,12 @@ namespace EVEMon
             this.throbber = new EVEMon.Throbber();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
+            this.miHitTrainingSkill = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUpdateTimer = new System.Windows.Forms.Label();
             this.flpAttributes = new System.Windows.Forms.FlowLayoutPanel();
             this.flpButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.llToggleAll = new System.Windows.Forms.LinkLabel();
-            this.btnMoreOptions = new System.Windows.Forms.Button();
-            this.cmsMoreOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.manualImplantGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbShowBooks = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbIneveSync = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnPlan = new EVEMon.Common.SplitButton();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSkillHeader = new System.Windows.Forms.Label();
             this.tmrTick = new System.Windows.Forms.Timer(this.components);
@@ -77,9 +71,8 @@ namespace EVEMon
             this.updatePicture = new System.Windows.Forms.ToolStripMenuItem();
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.lbSkills = new EVEMon.NoFlickerListBox();
             this.tmrMinTrainingSkillRetry = new System.Windows.Forms.Timer(this.components);
-            this.miHitTrainingSkill = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbSkills = new EVEMon.NoFlickerListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -92,7 +85,6 @@ namespace EVEMon
             this.cmsThrobberMenu.SuspendLayout();
             this.flpAttributes.SuspendLayout();
             this.flpButtons.SuspendLayout();
-            this.cmsMoreOptions.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
             this.cmsPictureOptions.SuspendLayout();
             this.SuspendLayout();
@@ -104,7 +96,7 @@ namespace EVEMon
             this.pbCharImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.pbCharImage.MinimumSize = new System.Drawing.Size(128, 128);
             this.pbCharImage.Name = "pbCharImage";
-            this.tlpInfo.SetRowSpan(this.pbCharImage, 3);
+            this.tlpInfo.SetRowSpan(this.pbCharImage, 2);
             this.pbCharImage.Size = new System.Drawing.Size(128, 128);
             this.pbCharImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCharImage.TabIndex = 0;
@@ -282,9 +274,9 @@ namespace EVEMon
             this.lblSPPerHour.Location = new System.Drawing.Point(0, 13);
             this.lblSPPerHour.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblSPPerHour.Name = "lblSPPerHour";
-            this.lblSPPerHour.Size = new System.Drawing.Size(35, 13);
+            this.lblSPPerHour.Size = new System.Drawing.Size(53, 13);
             this.lblSPPerHour.TabIndex = 1;
-            this.lblSPPerHour.Text = "label2";
+            this.lblSPPerHour.Text = "X sp/hour";
             // 
             // lblScheduleWarning
             // 
@@ -371,21 +363,18 @@ namespace EVEMon
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpInfo.Controls.Add(this.flpThrobber, 2, 0);
-            this.tlpInfo.Controls.Add(this.flpAttributes, 1, 2);
+            this.tlpInfo.Controls.Add(this.flpAttributes, 1, 1);
             this.tlpInfo.Controls.Add(this.flpButtons, 2, 2);
             this.tlpInfo.Controls.Add(this.flpCharacterInfo, 1, 0);
             this.tlpInfo.Controls.Add(this.pbCharImage, 0, 0);
-            this.tlpInfo.Controls.Add(this.lblSkillHeader, 0, 3);
+            this.tlpInfo.Controls.Add(this.lblSkillHeader, 0, 2);
             this.tlpInfo.Location = new System.Drawing.Point(0, 0);
             this.tlpInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.tlpInfo.Name = "tlpInfo";
-            this.tlpInfo.RowCount = 4;
+            this.tlpInfo.RowCount = 3;
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpInfo.Size = new System.Drawing.Size(392, 173);
             this.tlpInfo.TabIndex = 19;
             // 
@@ -397,11 +386,11 @@ namespace EVEMon
             this.flpThrobber.Controls.Add(this.throbber);
             this.flpThrobber.Controls.Add(this.lblUpdateTimer);
             this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpThrobber.Location = new System.Drawing.Point(357, 0);
+            this.flpThrobber.Location = new System.Drawing.Point(361, 0);
             this.flpThrobber.Margin = new System.Windows.Forms.Padding(0);
             this.flpThrobber.Name = "flpThrobber";
             this.tlpInfo.SetRowSpan(this.flpThrobber, 2);
-            this.flpThrobber.Size = new System.Drawing.Size(35, 37);
+            this.flpThrobber.Size = new System.Drawing.Size(31, 37);
             this.flpThrobber.TabIndex = 15;
             this.flpThrobber.WrapContents = false;
             // 
@@ -410,7 +399,7 @@ namespace EVEMon
             this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.throbber.BackColor = System.Drawing.Color.Transparent;
             this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
-            this.throbber.Location = new System.Drawing.Point(11, 0);
+            this.throbber.Location = new System.Drawing.Point(7, 0);
             this.throbber.Margin = new System.Windows.Forms.Padding(0);
             this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
@@ -438,6 +427,15 @@ namespace EVEMon
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
+            // miHitTrainingSkill
+            // 
+            this.miHitTrainingSkill.Enabled = false;
+            this.miHitTrainingSkill.Name = "miHitTrainingSkill";
+            this.miHitTrainingSkill.Size = new System.Drawing.Size(216, 22);
+            this.miHitTrainingSkill.Text = "Update Skill Training Info";
+            this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
+            this.miHitTrainingSkill.Click += new System.EventHandler(this.miHitTrainingSkill_Click);
+            // 
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
@@ -452,9 +450,9 @@ namespace EVEMon
             this.lblUpdateTimer.Location = new System.Drawing.Point(0, 24);
             this.lblUpdateTimer.Margin = new System.Windows.Forms.Padding(0);
             this.lblUpdateTimer.Name = "lblUpdateTimer";
-            this.lblUpdateTimer.Size = new System.Drawing.Size(35, 13);
+            this.lblUpdateTimer.Size = new System.Drawing.Size(31, 13);
             this.lblUpdateTimer.TabIndex = 17;
-            this.lblUpdateTimer.Text = "label2";
+            this.lblUpdateTimer.Text = "timer";
             this.lblUpdateTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.lblUpdateTimer.Visible = false;
             // 
@@ -482,22 +480,18 @@ namespace EVEMon
             this.flpButtons.AutoSize = true;
             this.flpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpButtons.Controls.Add(this.llToggleAll);
-            this.flpButtons.Controls.Add(this.btnMoreOptions);
-            this.flpButtons.Controls.Add(this.btnSave);
-            this.flpButtons.Controls.Add(this.btnPlan);
             this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flpButtons.Location = new System.Drawing.Point(326, 69);
+            this.flpButtons.Location = new System.Drawing.Point(336, 154);
             this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flpButtons.Name = "flpButtons";
-            this.tlpInfo.SetRowSpan(this.flpButtons, 2);
-            this.flpButtons.Size = new System.Drawing.Size(66, 101);
+            this.flpButtons.Size = new System.Drawing.Size(56, 16);
             this.flpButtons.TabIndex = 20;
             // 
             // llToggleAll
             // 
             this.llToggleAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llToggleAll.AutoSize = true;
-            this.llToggleAll.Location = new System.Drawing.Point(13, 88);
+            this.llToggleAll.Location = new System.Drawing.Point(3, 3);
             this.llToggleAll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.llToggleAll.Name = "llToggleAll";
             this.llToggleAll.Size = new System.Drawing.Size(53, 13);
@@ -505,92 +499,6 @@ namespace EVEMon
             this.llToggleAll.TabStop = true;
             this.llToggleAll.Text = "Toggle All";
             this.llToggleAll.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llToggleAll_LinkClicked);
-            // 
-            // btnMoreOptions
-            // 
-            this.btnMoreOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoreOptions.AutoSize = true;
-            this.btnMoreOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnMoreOptions.ContextMenuStrip = this.cmsMoreOptions;
-            this.btnMoreOptions.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnMoreOptions.Location = new System.Drawing.Point(3, 60);
-            this.btnMoreOptions.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.btnMoreOptions.Name = "btnMoreOptions";
-            this.btnMoreOptions.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnMoreOptions.Size = new System.Drawing.Size(63, 22);
-            this.btnMoreOptions.TabIndex = 19;
-            this.btnMoreOptions.Text = "More...";
-            this.btnMoreOptions.UseVisualStyleBackColor = true;
-            this.btnMoreOptions.Click += new System.EventHandler(this.btnMoreOptions_Click);
-            // 
-            // cmsMoreOptions
-            // 
-            this.cmsMoreOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manualImplantGroupsToolStripMenuItem,
-            this.tsbShowBooks,
-            this.tsbIneveSync});
-            this.cmsMoreOptions.Name = "cmsMoreOptions";
-            this.cmsMoreOptions.Size = new System.Drawing.Size(221, 70);
-            // 
-            // manualImplantGroupsToolStripMenuItem
-            // 
-            this.manualImplantGroupsToolStripMenuItem.Name = "manualImplantGroupsToolStripMenuItem";
-            this.manualImplantGroupsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
-            this.manualImplantGroupsToolStripMenuItem.Text = "Manual Implant Groups...";
-            this.manualImplantGroupsToolStripMenuItem.Click += new System.EventHandler(this.manualImplantGroupsToolStripMenuItem_Click);
-            // 
-            // tsbShowBooks
-            // 
-            this.tsbShowBooks.Name = "tsbShowBooks";
-            this.tsbShowBooks.Size = new System.Drawing.Size(220, 22);
-            this.tsbShowBooks.Text = "Show Owned Skillbooks...";
-            this.tsbShowBooks.Click += new System.EventHandler(this.tsbShowBooks_Click);
-            // 
-            // tsbIneveSync
-            // 
-            this.tsbIneveSync.CheckOnClick = true;
-            this.tsbIneveSync.Name = "tsbIneveSync";
-            this.tsbIneveSync.Size = new System.Drawing.Size(220, 22);
-            this.tsbIneveSync.Text = "Synchronize with inEve.net?";
-            this.tsbIneveSync.ToolTipText = "Automatically synchronize this character with the inEve skills showroom. ";
-            this.tsbIneveSync.CheckedChanged += new System.EventHandler(this.tsbIneveSync_CheckedChanged);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.AutoSize = true;
-            this.btnSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSave.Enabled = false;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnSave.Location = new System.Drawing.Point(3, 32);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnSave.Size = new System.Drawing.Size(63, 22);
-            this.btnSave.TabIndex = 12;
-            this.btnSave.Text = "Save...";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnPlan
-            // 
-            this.btnPlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPlan.AutoSize = true;
-            this.btnPlan.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPlan.ImageKey = "Normal";
-            this.btnPlan.Location = new System.Drawing.Point(3, 3);
-            this.btnPlan.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.btnPlan.Name = "btnPlan";
-            this.btnPlan.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnPlan.Size = new System.Drawing.Size(63, 23);
-            this.btnPlan.TabIndex = 20;
-            this.btnPlan.Text = "Plan...";
-            this.btnPlan.UseVisualStyleBackColor = true;
-            this.btnPlan.ContextMenuShowing += new System.EventHandler(this.btnPlan_ContextMenuShowing);
-            this.btnPlan.Click += new System.EventHandler(this.btnPlan_Click);
             // 
             // flpCharacterInfo
             // 
@@ -606,7 +514,6 @@ namespace EVEMon
             this.flpCharacterInfo.Location = new System.Drawing.Point(131, 0);
             this.flpCharacterInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.flpCharacterInfo.Name = "flpCharacterInfo";
-            this.tlpInfo.SetRowSpan(this.flpCharacterInfo, 2);
             this.flpCharacterInfo.Size = new System.Drawing.Size(132, 60);
             this.flpCharacterInfo.TabIndex = 18;
             this.flpCharacterInfo.WrapContents = false;
@@ -671,6 +578,11 @@ namespace EVEMon
             this.setEVEFolder.Text = "Set EVE Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.miSetEVEFolder_Click);
             // 
+            // tmrMinTrainingSkillRetry
+            // 
+            this.tmrMinTrainingSkillRetry.Interval = 1000;
+            this.tmrMinTrainingSkillRetry.Tick += new System.EventHandler(this.tmrMTSRTick);
+            // 
             // lbSkills
             // 
             this.lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -688,20 +600,6 @@ namespace EVEMon
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
-            // 
-            // tmrMinTrainingSkillRetry
-            // 
-            this.tmrMinTrainingSkillRetry.Interval = 1000;
-            this.tmrMinTrainingSkillRetry.Tick += new System.EventHandler(this.tmrMTSRTick);
-            // 
-            // miHitTrainingSkill
-            // 
-            this.miHitTrainingSkill.Enabled = false;
-            this.miHitTrainingSkill.Name = "miHitTrainingSkill";
-            this.miHitTrainingSkill.Size = new System.Drawing.Size(216, 22);
-            this.miHitTrainingSkill.Text = "Update Skill Training Info";
-            this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
-            this.miHitTrainingSkill.Click += new System.EventHandler(this.miHitTrainingSkill_Click);
             // 
             // CharacterMonitor
             // 
@@ -735,7 +633,6 @@ namespace EVEMon
             this.flpAttributes.PerformLayout();
             this.flpButtons.ResumeLayout(false);
             this.flpButtons.PerformLayout();
-            this.cmsMoreOptions.ResumeLayout(false);
             this.flpCharacterInfo.ResumeLayout(false);
             this.flpCharacterInfo.PerformLayout();
             this.cmsPictureOptions.ResumeLayout(false);
@@ -766,14 +663,12 @@ namespace EVEMon
         private System.Windows.Forms.Panel pnlCharData;
         private System.Windows.Forms.Timer tmrTick;
         private System.Windows.Forms.SaveFileDialog sfdSaveDialog;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblSkillHeader;
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.LinkLabel llToggleAll;
         private System.Windows.Forms.FlowLayoutPanel flpCharacterInfo;
         private System.Windows.Forms.TableLayoutPanel tlpInfo;
         private System.Windows.Forms.FlowLayoutPanel flpButtons;
-        private System.Windows.Forms.Button btnMoreOptions;
         private System.Windows.Forms.TableLayoutPanel tlpStatus;
         private System.Windows.Forms.FlowLayoutPanel flpStatusValues;
         private System.Windows.Forms.FlowLayoutPanel flpAttributes;
@@ -782,18 +677,13 @@ namespace EVEMon
         private System.Windows.Forms.ContextMenuStrip cmsThrobberMenu;
         private System.Windows.Forms.ToolStripMenuItem miHitEveO;
         private System.Windows.Forms.ToolStripMenuItem miChangeInfo;
-        private System.Windows.Forms.ContextMenuStrip cmsMoreOptions;
         private System.Windows.Forms.FlowLayoutPanel flpStatusLabels;
         private System.Windows.Forms.Label lblSPPerHour;
         private System.Windows.Forms.ToolStripMenuItem updatePicture;
         private System.Windows.Forms.ToolStripMenuItem updatePictureFromEVECache;
         private System.Windows.Forms.ToolStripMenuItem setEVEFolder;
         private System.Windows.Forms.ContextMenuStrip cmsPictureOptions;
-        private System.Windows.Forms.ToolStripMenuItem tsbIneveSync;
-        private EVEMon.Common.SplitButton btnPlan;
         private System.Windows.Forms.Label lblScheduleWarning;
-        private System.Windows.Forms.ToolStripMenuItem manualImplantGroupsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsbShowBooks;
         private Throbber throbber;
         private System.Windows.Forms.Timer tmrMinTrainingSkillRetry;
         private System.Windows.Forms.ToolStripMenuItem miHitTrainingSkill;

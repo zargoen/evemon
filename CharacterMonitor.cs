@@ -87,6 +87,14 @@ namespace EVEMon
             m_cfi = cfi;
         }
 
+        public string CharacterName
+        {
+            get
+            {
+                return m_charName;
+            }
+        }
+
         private string m_charName
         {
             get
@@ -198,9 +206,6 @@ namespace EVEMon
 
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
             m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
-
-            //set up individual character settings
-            tsbIneveSync.Checked = m_settings.GetCharacterSettings(m_charName).IneveSync;
         }
 
         /// <summary>
@@ -314,27 +319,6 @@ namespace EVEMon
                     UpdateSkillHeaderStats();
                 }
             }
-        }
-
-        /// <summary>
-        /// Enables the three main buttons on the form.
-        /// </summary>
-        private void EnableButtons()
-        {
-            btnSave.Enabled = true;
-            if (m_grandCharacterInfo.SkillPointTotal > 0 )
-            {
-                String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
-                btnPlan.ShowSplit = (m_settings.GetPlanCountForCharacter(planKey) > 0);
-                btnPlan.Enabled = true;
-            }
-            else
-            {
-                // need to disable split so button goes dimmed.s
-                btnPlan.ShowSplit = false;
-                btnPlan.Enabled = false;
-            }
-            btnMoreOptions.Enabled = true;
         }
 
         /// <summary>
@@ -500,7 +484,7 @@ namespace EVEMon
                     tmrMinTrainingSkillRetry.Interval = timeToNextUpdate == 0 ? 900000 : timeToNextUpdate;
                     tmrMinTrainingSkillRetry.Enabled = true;
                     DateTime nextUpdate = DateTime.Now + new TimeSpan(0, 0, (timeToNextUpdate / 1000));
-                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToShortTimeString() + ")";
+                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToLongTimeString() + ")";
                 }
             }));
         }
@@ -1077,7 +1061,6 @@ namespace EVEMon
                 return;
             }
 
-            EnableButtons();
             lbSkills.BeginUpdate();
             try
             {
@@ -1203,7 +1186,6 @@ namespace EVEMon
                 return;
             }
 
-            EnableButtons();
             SetAttributeLabel(lblIntelligence, EveAttribute.Intelligence);
             SetAttributeLabel(lblCharisma, EveAttribute.Charisma);
             SetAttributeLabel(lblPerception, EveAttribute.Perception);
@@ -1228,7 +1210,6 @@ namespace EVEMon
                 return;
             }
 
-            EnableButtons();
             lblBalance.Text = "Balance: " + m_grandCharacterInfo.Balance.ToString("#,##0.00") + " ISK";
 
             UpdateCachedCopy();
@@ -1250,7 +1231,6 @@ namespace EVEMon
                 return;
             }
 
-            EnableButtons();
             if (m_grandCharacterInfo.IsCached)
             {
                 lblCharacterName.Text = m_grandCharacterInfo.Name + " (cached)";
@@ -1406,6 +1386,11 @@ namespace EVEMon
         }
 
         private void tsbShowBooks_Click(object sender, EventArgs e)
+        {
+            ShowOwnedSkillbooks();
+        }
+
+        public void ShowOwnedSkillbooks()
         {
             // A quick MessageBox to show the skillbooks we own
             StringBuilder sb = new StringBuilder();
@@ -1580,12 +1565,7 @@ namespace EVEMon
             }
         }
 
-        /// <summary>
-        /// Handles the Click event of the btnPlan control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnPlan_Click(object sender, EventArgs e)
+        public void ShowPlanSelectWindow()
         {
             Plan p = null;
             using (PlanSelectWindow psw = new PlanSelectWindow(m_settings, m_grandCharacterInfo))
@@ -1597,8 +1577,6 @@ namespace EVEMon
                 DialogResult dr = psw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                 {
-                    // We might have deleted all our plans - check the split button 
-                    EnableButtons();
                     return;
                 }
                 p = psw.ResultPlan;
@@ -1632,8 +1610,6 @@ namespace EVEMon
                                 m_settings.AddPlanFor(m_cfi.Filename, p, planName);
                             }
                             doAgain = false;
-                            // this might be our first plan - enable the split button 
-                            EnableButtons();
                         }
                         catch (ApplicationException err)
                         {
@@ -1653,34 +1629,10 @@ namespace EVEMon
             p.ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
-        /// <summary>
-        /// Handles the ContextMenuShowing event of the btnPlan control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnPlan_ContextMenuShowing(object sender, EventArgs e)
+        public void ShowPlanEditor(string planName)
         {
-            ContextMenuStrip plans = new ContextMenuStrip();
             String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
-            foreach (string plan in m_settings.GetPlansForCharacter(planKey))
-            {
-
-                ToolStripMenuItem planItem = new ToolStripMenuItem(plan);
-                planItem.Click += delegate(object o, EventArgs ev)
-                {
-                    ToolStripMenuItem item = o as ToolStripMenuItem;
-                    m_settings.GetPlanByName(planKey, item.Text).ShowEditor(m_settings, m_grandCharacterInfo);
-                };
-                plans.Items.Add(planItem);
-            }
-
-            btnPlan.ContextMenuStrip = plans;
-        }
-
-        private void btnMoreOptions_Click(object sender, EventArgs e)
-        {
-            cmsMoreOptions.Show(btnMoreOptions,
-                                btnMoreOptions.PointToClient(MousePosition), ToolStripDropDownDirection.Default);
+            m_settings.GetPlanByName(planKey, planName).ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
@@ -1978,12 +1930,7 @@ namespace EVEMon
             ttToolTip.Active = true;
         }
 
-        private void tsbIneveSync_CheckedChanged(object sender, EventArgs e)
-        {
-            m_settings.GetCharacterSettings(m_charName).IneveSync = tsbIneveSync.Checked;
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
+        public void SaveCharacterXML()
         {
             sfdSaveDialog.FileName = m_grandCharacterInfo.Name;
             sfdSaveDialog.FilterIndex = (int)SaveFormat.Xml;
@@ -2304,6 +2251,11 @@ namespace EVEMon
         /// </summary>
         private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ShowManualImplantGroups();
+        }
+
+        public void ShowManualImplantGroups()
+        {
             using (ImpGroups.ImpGroups f = new ImpGroups.ImpGroups(m_grandCharacterInfo))
             {
                 DialogResult dr = f.ShowDialog();
@@ -2374,19 +2326,9 @@ namespace EVEMon
             }
         }
 
-        #region Garbage?
-
-        /*
-        public string LcdNote
+        public String GetPlanKey()
         {
-            get { return m_lcdNote; }
+            return (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
         }
-
-        public TimeSpan LcdTimeSpan
-        {
-            get { return m_lcdTimeSpan; }
-        }
-         * */
-        #endregion
     }
 }

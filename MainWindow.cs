@@ -530,9 +530,9 @@ namespace EVEMon
         {
             G15Handler.CharListUpdate();
             if (tcCharacterTabs.TabPages.Count > 0)
-                tsbRemoveChar.Enabled = true;
+                removeCharacterToolStripMenuItem.Enabled = true;
             else
-                tsbRemoveChar.Enabled = false;
+                removeCharacterToolStripMenuItem.Enabled = false;
         }
 
         private void RemoveTab(TabPage tp)
@@ -559,7 +559,7 @@ namespace EVEMon
                 RemoveCharFileInfo(cfi);
                 UpdateTabOrder();
             }
-            List<Pair<string, string>> toRemove = new List<Pair<string,string>>();
+            List<Pair<string, string>> toRemove = new List<Pair<string, string>>();
             foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
             {
                 if (grp.A == name)
@@ -586,7 +586,7 @@ namespace EVEMon
             m_settings.Save();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void addCharacterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (LoginCharSelect f = new LoginCharSelect())
             {
@@ -620,7 +620,7 @@ namespace EVEMon
             }
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void removeCharacterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             DialogResult dr =
@@ -632,7 +632,7 @@ namespace EVEMon
             }
         }
 
-        private void tsbOptions_Click(object sender, EventArgs e)
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SettingsForm sf = new SettingsForm(m_settings))
             {
@@ -761,7 +761,7 @@ namespace EVEMon
             m_settings.RunIGBServerChanged -= new EventHandler<EventArgs>(m_settings_RunIGBServerChanged);
         }
 
-        private void tsbAbout_Click(object sender, EventArgs e)
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Emailer.SendAlertMail(m_settings, "Industry", "Anders Chydenius");
             using (AboutWindow f = new AboutWindow())
@@ -875,7 +875,7 @@ namespace EVEMon
 
         private WeakReference<Schedule.ScheduleEditorWindow> m_scheduler;
 
-        private void tsbSchedule_Click(object sender, EventArgs e)
+        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Schedule.ScheduleEditorWindow sched = null;
 
@@ -907,7 +907,7 @@ namespace EVEMon
             }
         }
 
-        private void tsbMineralSheet_Click(object sender, EventArgs e)
+        private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MineralWorksheet ws = new MineralWorksheet(m_settings);
             ws.FormClosed += delegate
@@ -1034,7 +1034,7 @@ namespace EVEMon
                     break;
             }
         }
-        private void btnResetCache_Click(object sender, EventArgs e)
+        private void resetCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverble errors.
             DialogResult dr = MessageBox.Show("Are you sure you want to reset the cache, all settings will be lost including plans?",
@@ -1139,7 +1139,7 @@ namespace EVEMon
                 AutoShrink.Dirty(new TimeSpan(0, 0, 0, 0, 500)); // Clean up after 500 ms
         }
 
-        private void skillGroupPieChartButton_Click(object sender, EventArgs e)
+        private void skillsPieChartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (tcCharacterTabs.SelectedTab == null) return;
             TabPage activeTab = tcCharacterTabs.SelectedTab;
@@ -1194,13 +1194,106 @@ namespace EVEMon
             openFileDialog.ShowDialog();
         }
 
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        public CharacterMonitor GetCurrentCharacter()
+        {
+            if (tcCharacterTabs.SelectedTab == null) return null;
+            return tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
+        }
+
+        private void saveXMLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.SaveCharacterXML();
+            }
+        }
+
+        private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.ShowManualImplantGroups();
+            }
+        }
+
+        private void plansToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            while (plansToolStripMenuItem.DropDownItems.Count > 2)
+            {
+                plansToolStripMenuItem.DropDownItems.RemoveAt(2);
+            }
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm == null)
+            {
+                plansToolStripMenuItem.DropDownItems[0].Enabled = false;
+                plansToolStripMenuItem.DropDownItems[1].Visible = false;
+            }
+            else
+            {
+                plansToolStripMenuItem.DropDownItems[0].Enabled = true;
+                plansToolStripMenuItem.DropDownItems[1].Visible = true;
+                String planKey = cm.GetPlanKey();
+                foreach (string plan in m_settings.GetPlansForCharacter(planKey))
+                {
+                    ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
+                    menuPlanItem.Click += delegate(object o, EventArgs ev)
+                    {
+                        //CharacterMonitor cm = tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
+                        ToolStripMenuItem item = o as ToolStripMenuItem;
+                        cm.ShowPlanEditor(item.Text);
+                    };
+                    plansToolStripMenuItem.DropDownItems.Add(menuPlanItem);
+                }
+            }
+        }
+
+        private void manageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.ShowPlanSelectWindow();
+            }
+        }
+
+        private void toolsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                inEvenetToolStripMenuItem.Enabled = true;
+                inEvenetToolStripMenuItem.Checked = m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
+            }
+            else
+            {
+                inEvenetToolStripMenuItem.Enabled = false;
+            }
+        }
+
+        private void showOwnedSkillbooksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.ShowOwnedSkillbooks();
+            }
+        }
+
+        private void inEvenetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                m_settings.GetCharacterSettings(cm.CharacterName).IneveSync = !m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
+            }
+        }
     }
 }
-
-
-
-
-
-
-
 
