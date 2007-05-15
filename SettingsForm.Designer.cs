@@ -106,9 +106,13 @@ namespace EVEMon
             this.cbWorksafeMode = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel21 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel22 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbTitleToTime = new System.Windows.Forms.CheckBox();
-            this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbShowLoginName = new System.Windows.Forms.CheckBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel25 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbTitleToTime = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
+            this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
             this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
             this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
             this.tbTooltipString = new System.Windows.Forms.TextBox();
@@ -191,10 +195,6 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel25 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -217,6 +217,9 @@ namespace EVEMon
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.flowLayoutPanel25.SuspendLayout();
+            this.flowLayoutPanel26.SuspendLayout();
             this.gboxTooltipOptions.SuspendLayout();
             this.gbSkillPlannerHighlighting.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -253,9 +256,6 @@ namespace EVEMon
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.flowLayoutPanel25.SuspendLayout();
-            this.flowLayoutPanel26.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -990,16 +990,62 @@ namespace EVEMon
             this.flowLayoutPanel22.TabIndex = 2;
             this.flowLayoutPanel22.WrapContents = false;
             // 
+            // cbShowLoginName
+            // 
+            this.cbShowLoginName.AutoSize = true;
+            this.cbShowLoginName.Location = new System.Drawing.Point(12, 26);
+            this.cbShowLoginName.Name = "cbShowLoginName";
+            this.cbShowLoginName.Size = new System.Drawing.Size(205, 17);
+            this.cbShowLoginName.TabIndex = 9;
+            this.cbShowLoginName.Text = "Show Login name on Character sheet";
+            this.cbShowLoginName.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.flowLayoutPanel25);
+            this.groupBox7.Location = new System.Drawing.Point(3, 75);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(414, 83);
+            this.groupBox7.TabIndex = 14;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Window Title";
+            // 
+            // flowLayoutPanel25
+            // 
+            this.flowLayoutPanel25.Controls.Add(this.cbTitleToTime);
+            this.flowLayoutPanel25.Controls.Add(this.flowLayoutPanel26);
+            this.flowLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel25.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel25.Location = new System.Drawing.Point(3, 17);
+            this.flowLayoutPanel25.Name = "flowLayoutPanel25";
+            this.flowLayoutPanel25.Size = new System.Drawing.Size(408, 63);
+            this.flowLayoutPanel25.TabIndex = 7;
+            // 
             // cbTitleToTime
             // 
+            this.cbTitleToTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.cbTitleToTime.AutoSize = true;
             this.cbTitleToTime.Location = new System.Drawing.Point(12, 3);
+            this.cbTitleToTime.Margin = new System.Windows.Forms.Padding(12, 3, 3, 3);
             this.cbTitleToTime.Name = "cbTitleToTime";
             this.cbTitleToTime.Size = new System.Drawing.Size(193, 17);
             this.cbTitleToTime.TabIndex = 6;
             this.cbTitleToTime.Text = "Show character info in window title";
             this.cbTitleToTime.UseVisualStyleBackColor = true;
             this.cbTitleToTime.CheckedChanged += new System.EventHandler(this.cbTitleToTime_CheckedChanged);
+            // 
+            // flowLayoutPanel26
+            // 
+            this.flowLayoutPanel26.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.flowLayoutPanel26.Controls.Add(this.cbWindowsTitleList);
+            this.flowLayoutPanel26.Controls.Add(this.cbSkillInTitle);
+            this.flowLayoutPanel26.Location = new System.Drawing.Point(12, 26);
+            this.flowLayoutPanel26.Margin = new System.Windows.Forms.Padding(12, 3, 12, 1);
+            this.flowLayoutPanel26.Name = "flowLayoutPanel26";
+            this.flowLayoutPanel26.Size = new System.Drawing.Size(384, 28);
+            this.flowLayoutPanel26.TabIndex = 8;
             // 
             // cbWindowsTitleList
             // 
@@ -1015,22 +1061,24 @@ namespace EVEMon
             this.cbWindowsTitleList.Size = new System.Drawing.Size(224, 21);
             this.cbWindowsTitleList.TabIndex = 1;
             // 
-            // cbShowLoginName
+            // cbSkillInTitle
             // 
-            this.cbShowLoginName.AutoSize = true;
-            this.cbShowLoginName.Location = new System.Drawing.Point(12, 26);
-            this.cbShowLoginName.Name = "cbShowLoginName";
-            this.cbShowLoginName.Size = new System.Drawing.Size(205, 17);
-            this.cbShowLoginName.TabIndex = 9;
-            this.cbShowLoginName.Text = "Show Login name on Character sheet";
-            this.cbShowLoginName.UseVisualStyleBackColor = true;
+            this.cbSkillInTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbSkillInTitle.AutoSize = true;
+            this.cbSkillInTitle.Location = new System.Drawing.Point(233, 3);
+            this.cbSkillInTitle.Name = "cbSkillInTitle";
+            this.cbSkillInTitle.Size = new System.Drawing.Size(121, 21);
+            this.cbSkillInTitle.TabIndex = 7;
+            this.cbSkillInTitle.Text = "Show skill in training";
+            this.cbSkillInTitle.UseVisualStyleBackColor = true;
             // 
             // gboxTooltipOptions
             // 
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
             this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
             this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 153);
+            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 164);
             this.gboxTooltipOptions.Name = "gboxTooltipOptions";
             this.gboxTooltipOptions.Size = new System.Drawing.Size(413, 101);
             this.gboxTooltipOptions.TabIndex = 7;
@@ -1076,7 +1124,7 @@ namespace EVEMon
             this.gbSkillPlannerHighlighting.AutoSize = true;
             this.gbSkillPlannerHighlighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
-            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 260);
+            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 271);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
             this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(414, 43);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
@@ -1137,7 +1185,7 @@ namespace EVEMon
             this.groupBox10.AutoSize = true;
             this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 309);
+            this.groupBox10.Location = new System.Drawing.Point(3, 320);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(414, 143);
             this.groupBox10.TabIndex = 13;
@@ -1634,7 +1682,7 @@ namespace EVEMon
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel11.Location = new System.Drawing.Point(6, 6);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(294, 383);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(285, 383);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1646,7 +1694,7 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(288, 60);
+            this.groupBox8.Size = new System.Drawing.Size(279, 60);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
@@ -1688,7 +1736,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
             this.groupBox9.Location = new System.Drawing.Point(3, 69);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(288, 118);
+            this.groupBox9.Size = new System.Drawing.Size(279, 118);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
@@ -1801,7 +1849,7 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
             this.gbTQSettings.Location = new System.Drawing.Point(3, 193);
             this.gbTQSettings.Name = "gbTQSettings";
-            this.gbTQSettings.Size = new System.Drawing.Size(288, 187);
+            this.gbTQSettings.Size = new System.Drawing.Size(279, 187);
             this.gbTQSettings.TabIndex = 8;
             this.gbTQSettings.TabStop = false;
             this.gbTQSettings.Text = "Tranquility Status";
@@ -2020,47 +2068,6 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.flowLayoutPanel25);
-            this.groupBox7.Location = new System.Drawing.Point(3, 75);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(414, 72);
-            this.groupBox7.TabIndex = 14;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Window Title";
-            // 
-            // flowLayoutPanel25
-            // 
-            this.flowLayoutPanel25.Controls.Add(this.cbTitleToTime);
-            this.flowLayoutPanel25.Controls.Add(this.flowLayoutPanel26);
-            this.flowLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel25.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel25.Location = new System.Drawing.Point(3, 17);
-            this.flowLayoutPanel25.Name = "flowLayoutPanel25";
-            this.flowLayoutPanel25.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel25.Size = new System.Drawing.Size(408, 52);
-            this.flowLayoutPanel25.TabIndex = 7;
-            // 
-            // cbSkillInTitle
-            // 
-            this.cbSkillInTitle.AutoSize = true;
-            this.cbSkillInTitle.Location = new System.Drawing.Point(233, 3);
-            this.cbSkillInTitle.Name = "cbSkillInTitle";
-            this.cbSkillInTitle.Size = new System.Drawing.Size(121, 17);
-            this.cbSkillInTitle.TabIndex = 7;
-            this.cbSkillInTitle.Text = "Show skill in training";
-            this.cbSkillInTitle.UseVisualStyleBackColor = true;
-            // 
-            // flowLayoutPanel26
-            // 
-            this.flowLayoutPanel26.Controls.Add(this.cbWindowsTitleList);
-            this.flowLayoutPanel26.Controls.Add(this.cbSkillInTitle);
-            this.flowLayoutPanel26.Location = new System.Drawing.Point(12, 26);
-            this.flowLayoutPanel26.Name = "flowLayoutPanel26";
-            this.flowLayoutPanel26.Size = new System.Drawing.Size(394, 22);
-            this.flowLayoutPanel26.TabIndex = 8;
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2118,6 +2125,11 @@ namespace EVEMon
             this.groupBox11.PerformLayout();
             this.flowLayoutPanel15.ResumeLayout(false);
             this.flowLayoutPanel15.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.flowLayoutPanel25.ResumeLayout(false);
+            this.flowLayoutPanel25.PerformLayout();
+            this.flowLayoutPanel26.ResumeLayout(false);
+            this.flowLayoutPanel26.PerformLayout();
             this.gboxTooltipOptions.ResumeLayout(false);
             this.gboxTooltipOptions.PerformLayout();
             this.gbSkillPlannerHighlighting.ResumeLayout(false);
@@ -2185,11 +2197,6 @@ namespace EVEMon
             this.flowLayoutPanel8.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.flowLayoutPanel25.ResumeLayout(false);
-            this.flowLayoutPanel25.PerformLayout();
-            this.flowLayoutPanel26.ResumeLayout(false);
-            this.flowLayoutPanel26.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
