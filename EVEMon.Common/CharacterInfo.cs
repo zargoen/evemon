@@ -1051,7 +1051,7 @@ namespace EVEMon.Common
                             // To make doubly sure we have no old training skills lurking ...out with the old...
                             this.CancelCurrentSkillTraining();
                             // ...and in with the new
-                            _OSIT.SetTrainingInfo(level, m_OldSkillInTraining.getTrainingEndTime);
+                            _OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime);
                         }
                     }
                 }

@@ -1023,15 +1023,39 @@ namespace EVEMon
         private void TrainingSkillChangedCallback(object sender, EventArgs args)
         {
             //will need this if we ever do UI things here, which we probably will.
-            /*if (this.InvokeRequired)
+            if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
                                                   {
-                                                      CharacterSkillChangedCallback(sender, e);
+                                                      TrainingSkillChangedCallback(sender, args);
                                                   }));
                 return;
             }
-             */
+
+            if (m_grandCharacterInfo.SerialSIT != null)
+            {
+                SerializableSkillTrainingInfo SIT = m_grandCharacterInfo.SerialSIT;
+                Skill SSIT = m_grandCharacterInfo.AllSkillsByTypeID[SIT.TrainingSkillWithTypeID];
+                m_skillTrainingName = SSIT.Name + " " + Skill.GetRomanForInt(SIT.TrainingSkillToLevel);
+                lblTrainingSkill.Text = m_skillTrainingName;
+                double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.PrimaryAttribute) +
+                                       (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.SecondaryAttribute) / 2));
+                lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
+                DateTime LocalComplete = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
+                m_estimatedCompletion = LocalComplete.AddSeconds(-m_settings.NotificationOffset);
+
+                m_settings_ScheduleEntriesChanged(null, null);
+
+                CalculateLcdData();
+
+                pnlTraining.Visible = true;
+            }
+            else if (m_grandCharacterInfo.SerialSIT == null)
+            {
+                m_skillTrainingName = String.Empty;
+                m_estimatedCompletion = DateTime.MaxValue;
+                pnlTraining.Visible = false;
+            }
 
             if (m_session != null && m_settings.GetCharacterSettings(m_charName).IneveSync)
                 m_session.UpdateIneveAsync(m_grandCharacterInfo);
@@ -1136,28 +1160,6 @@ namespace EVEMon
                             }
                             lbSkills.Invalidate(lbSkills.GetItemRectangle(lbIndex));
                         }
-                    }
-
-                    if (gs.InTraining)
-                    {
-                        m_skillTrainingName = gs.Name + " " + Skill.GetRomanForInt(gs.TrainingToLevel);
-                        lblTrainingSkill.Text = m_skillTrainingName;
-                        double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(gs.PrimaryAttribute) +
-                                               (m_grandCharacterInfo.GetEffectiveAttribute(gs.SecondaryAttribute) / 2));
-                        lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
-                        m_estimatedCompletion = gs.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
-
-                        m_settings_ScheduleEntriesChanged(null, null);
-
-                        CalculateLcdData();
-
-                        pnlTraining.Visible = true;
-                    }
-                    else if (m_grandCharacterInfo.CurrentlyTrainingSkill == null)
-                    {
-                        m_skillTrainingName = String.Empty;
-                        m_estimatedCompletion = DateTime.MaxValue;
-                        pnlTraining.Visible = false;
                     }
                 }
             }
