@@ -257,13 +257,13 @@ namespace EVEMon.SkillPlanner
                         }
                     }
 
-
                     // Add compare with columns (if additional selections)
                     for (int i_ship = 0; i_ship < shipSelectControl.SelectedObjects.Count; i_ship++)
                     {
                         Ship selectedShip = shipSelectControl.SelectedObjects[i_ship] as Ship;
-                        // Skip if it's the mothership
-                        if (selectedShip == shipSelectControl.SelectedObject) continue;
+                        // Skip if it's the mothership or not a ship
+                        if (selectedShip == shipSelectControl.SelectedObject || selectedShip == null)
+                            continue;
 
                         // add new column header and values
                         lvShipProperties.Columns.Add(selectedShip.Name);
@@ -475,6 +475,7 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
+
 
 
 

@@ -175,24 +175,7 @@ namespace EVEMon.SkillPlanner
         }
         #endregion 
 
-        #region Events
-        private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (tvItems.SelectedNodes.Count != 0)
-            {
-                List<EveObject> selectedObjects = new List<EveObject>();
-                foreach (TreeNode node in tvItems.SelectedNodes)
-                {
-                    selectedObjects.Add(node.Tag as EveObject);
-                }
-                SetSelectedObjects(selectedObjects);
-            }
-            else
-            {
-                SetSelectedObjects(null);
-            }
-        }
-
+        #region Selected Objects
         protected List<EveObject> m_selectedObjects = null;
 
         /// <summary>
@@ -238,7 +221,31 @@ namespace EVEMon.SkillPlanner
                 SelectedObjectChanged(this, new EventArgs());
             }
         }
-        
+
+        private void updateSelectedTreeNodes()
+        {
+            if (tvItems.SelectedNodes.Count != 0)
+            {
+                List<EveObject> selectedObjects = new List<EveObject>();
+                foreach (TreeNode node in tvItems.SelectedNodes)
+                {
+                    selectedObjects.Add(node.Tag as EveObject);
+                }
+                SetSelectedObjects(selectedObjects);
+            }
+            else
+            {
+                SetSelectedObjects(null);
+            }
+        }
+        #endregion
+
+        #region Events
+        private void tvItems_SelectionsChanged(object sender, EventArgs e)
+        {
+            updateSelectedTreeNodes();
+        }
+
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbSearchList.SelectedItems.Count != 0)
@@ -256,6 +263,5 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion
-
     }
 }

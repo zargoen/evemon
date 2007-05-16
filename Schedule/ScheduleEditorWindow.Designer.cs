@@ -284,6 +284,7 @@ namespace EVEMon.Schedule
             this.Controls.Add(this.toolStrip1);
             this.MinimumSize = new System.Drawing.Size(720, 522);
             this.Name = "ScheduleEditorWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "My Schedule - EVEMon";
             this.Load += new System.EventHandler(this.ScheduleEditorWindow_Load);
             this.toolStrip1.ResumeLayout(false);

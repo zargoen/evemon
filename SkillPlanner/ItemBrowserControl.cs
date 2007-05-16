@@ -182,8 +182,9 @@ namespace EVEMon.SkillPlanner
                     for (int i_item = 0; i_item < itemSelectControl1.SelectedObjects.Count; i_item++)
                     {
                         Item selectedItem = itemSelectControl1.SelectedObjects[i_item] as Item;
-                        // Skip if it's the mothership
-                        if (selectedItem == itemSelectControl1.SelectedObject) continue;
+                        // Skip if it's the base item or not an item
+                        if (selectedItem == itemSelectControl1.SelectedObject || selectedItem == null)
+                            continue;
 
                         // add new column header and values
                         lvItemProperties.Columns.Add(selectedItem.Name);

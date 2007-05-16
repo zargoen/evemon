@@ -113,7 +113,6 @@ namespace EVEMon
             Environment.Exit(1);
         }
 
-
         public static Settings Settings
         {
             get { return Settings.GetInstance(); }
