@@ -71,6 +71,34 @@ namespace EVEMon.SkillPlanner
             return val;
         }
 
+        public int getBaseAttributeValue(EveAttribute ea)
+        {
+            int val = 0;
+            switch (ea)
+            {
+                case EveAttribute.Charisma:
+                    val = (int)nudCharisma.Value;
+                    break;
+                case EveAttribute.Intelligence:
+                    val = (int)nudIntelligence.Value;
+                    break;
+                case EveAttribute.Memory:
+                    val = (int)nudMemory.Value;
+                    break;
+                case EveAttribute.Perception:
+                    val = (int)nudPerception.Value;
+                    break;
+                case EveAttribute.Willpower:
+                    val = (int)nudWillpower.Value; ;
+                    break;
+                case EveAttribute.None:
+                    val = 0;
+                    break;
+            }
+            return val;
+
+        }
+
         public PlanOrderEditorControl PlanEditor
         {
             set { 
@@ -171,7 +199,7 @@ namespace EVEMon.SkillPlanner
             lblEffective.Text = EffectiveAttr(myValue).ToString("#0.00");
         }
 
-        private double EffectiveAttr(int value)
+        public double EffectiveAttr(int value)
         {
             int learningLevel = m_grandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
             double learningAdjust = 1.0 + (0.02 * Convert.ToDouble(learningLevel));

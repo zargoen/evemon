@@ -65,6 +65,7 @@ namespace EVEMon
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.manualImplantGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inEvenetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendToInEveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOwnedSkillbooksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.resetCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,7 +74,6 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcCharacterTabs = new EVEMon.DraggableTabControl();
-            this.sendToInEveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -357,8 +357,14 @@ namespace EVEMon
             this.inEvenetToolStripMenuItem.Name = "inEvenetToolStripMenuItem";
             this.inEvenetToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.inEvenetToolStripMenuItem.Text = "Synchronize with inEve.net ";
-            this.inEvenetToolStripMenuItem.ToolTipText = "Enable or Disbale synchronisation with the Eve Skills Showroom site";
             this.inEvenetToolStripMenuItem.Click += new System.EventHandler(this.inEvenetToolStripMenuItem_Click);
+            // 
+            // sendToInEveToolStripMenuItem
+            // 
+            this.sendToInEveToolStripMenuItem.Name = "sendToInEveToolStripMenuItem";
+            this.sendToInEveToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.sendToInEveToolStripMenuItem.Text = "Send Data To InEve";
+            this.sendToInEveToolStripMenuItem.Click += new System.EventHandler(this.sendToInEveToolStripMenuItem_Click);
             // 
             // showOwnedSkillbooksToolStripMenuItem
             // 
@@ -424,14 +430,6 @@ namespace EVEMon
             this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
             this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
             this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
-            // 
-            // sendToInEveToolStripMenuItem
-            // 
-            this.sendToInEveToolStripMenuItem.Name = "sendToInEveToolStripMenuItem";
-            this.sendToInEveToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
-            this.sendToInEveToolStripMenuItem.Text = "Send Data To InEve";
-            this.sendToInEveToolStripMenuItem.ToolTipText = "Send xml to InEve right now.";
-            this.sendToInEveToolStripMenuItem.Click += new System.EventHandler(this.sendToInEveToolStripMenuItem_Click);
             // 
             // MainWindow
             // 

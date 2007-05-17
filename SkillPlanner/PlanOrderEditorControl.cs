@@ -208,8 +208,12 @@ namespace EVEMon.SkillPlanner
                     if (m_implantCalculator != null)
                     {
                         int points = gs.GetPointsForLevelOnly(pe.Level,true);
-                        double p = m_implantCalculator.getAttributeValue(gs.PrimaryAttribute);
-                        double s = m_implantCalculator.getAttributeValue(gs.SecondaryAttribute);
+                        int baseP = m_implantCalculator.getBaseAttributeValue(gs.PrimaryAttribute);
+                        baseP += scratchpad.GetAttributeBonus(gs.PrimaryAttribute);
+                        double p = m_implantCalculator.EffectiveAttr(baseP);
+                        int  baseS = m_implantCalculator.getBaseAttributeValue(gs.SecondaryAttribute);
+                        baseS += scratchpad.GetAttributeBonus(gs.SecondaryAttribute);
+                        double s = m_implantCalculator.EffectiveAttr(baseS);
                         double minutes = Convert.ToDouble(points) / (p + (s / 2));
                         trainTimeImpCalc = TimeSpan.FromMinutes(minutes);
                     }
