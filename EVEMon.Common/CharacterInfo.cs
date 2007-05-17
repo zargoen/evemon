@@ -93,7 +93,17 @@ namespace EVEMon.Common
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
                         EveAttribute _secAttr =
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
-                        int _rank = Convert.ToInt32(sel.GetAttribute("r"));
+                        int _rank = 0;
+                        string _srank = sel.GetAttribute("r");
+                        
+                        try
+                        {
+                            _rank = Convert.ToInt32(_srank);
+                        }
+                        catch (FormatException fe)
+                        {
+                            throw new FormatException("Skill " + _name + ": rank string: " + _srank + " ", fe);
+                        }
                         int _cost = 0;
 
                         // for a very very few users, this throws an exception on the skill "Salvage drone operation" - I have NO IDEA why.
