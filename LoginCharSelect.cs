@@ -191,9 +191,6 @@ namespace EVEMon
 
         private void LoginCharSelect_Load(object sender, EventArgs e)
         {
-            gbSavedXML.Location = gbEveLogin.Location;
-            this.ClientSize = new Size(gbSavedXML.Width + (gbSavedXML.Left*2),
-                                       this.ClientSize.Height);
             cbCharacterType.SelectedIndex = 0;
         }
 

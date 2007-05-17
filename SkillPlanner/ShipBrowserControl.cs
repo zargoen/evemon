@@ -358,6 +358,7 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
+                    lvShipProperties.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent); 
                     lvShipProperties.EndUpdate();
                 }
 
@@ -475,6 +476,7 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
+
 
 
 

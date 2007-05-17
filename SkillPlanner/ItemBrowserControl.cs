@@ -224,6 +224,7 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
+                    lvItemProperties.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     lvItemProperties.EndUpdate();
                 }
             }

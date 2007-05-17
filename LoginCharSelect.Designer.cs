@@ -32,21 +32,21 @@ namespace EVEMon
             this.tbCharName = new System.Windows.Forms.TextBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.tbUsername = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lbLoginCharacter = new System.Windows.Forms.Label();
+            this.lbPassword = new System.Windows.Forms.Label();
+            this.lbUsername = new System.Windows.Forms.Label();
+            this.enterLoginLabel = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbSpecifyXML = new System.Windows.Forms.Label();
             this.tbFilename = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lbAddCharacter = new System.Windows.Forms.Label();
             this.cbCharacterType = new System.Windows.Forms.ComboBox();
             this.gbEveLogin = new System.Windows.Forms.GroupBox();
             this.gbSavedXML = new System.Windows.Forms.GroupBox();
             this.tbFileCharName = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.lbSavedCharacter = new System.Windows.Forms.Label();
             this.cbMonitorFile = new System.Windows.Forms.CheckBox();
             this.ofdOpenXml = new System.Windows.Forms.OpenFileDialog();
             this.gbEveLogin.SuspendLayout();
@@ -90,56 +90,56 @@ namespace EVEMon
             this.tbUsername.TabIndex = 0;
             this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
             // 
-            // label3
+            // lbLoginCharacter
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbLoginCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(63, 112);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Character:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbLoginCharacter.AutoSize = true;
+            this.lbLoginCharacter.Location = new System.Drawing.Point(63, 112);
+            this.lbLoginCharacter.Name = "lbLoginCharacter";
+            this.lbLoginCharacter.Size = new System.Drawing.Size(59, 13);
+            this.lbLoginCharacter.TabIndex = 2;
+            this.lbLoginCharacter.Text = "Character:";
+            this.lbLoginCharacter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label2
+            // lbPassword
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(65, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Password:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbPassword.AutoSize = true;
+            this.lbPassword.Location = new System.Drawing.Point(65, 85);
+            this.lbPassword.Name = "lbPassword";
+            this.lbPassword.Size = new System.Drawing.Size(57, 13);
+            this.lbPassword.TabIndex = 1;
+            this.lbPassword.Text = "Password:";
+            this.lbPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label1
+            // lbUsername
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(60, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "User name:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbUsername.AutoSize = true;
+            this.lbUsername.Location = new System.Drawing.Point(60, 58);
+            this.lbUsername.Name = "lbUsername";
+            this.lbUsername.Size = new System.Drawing.Size(62, 13);
+            this.lbUsername.TabIndex = 0;
+            this.lbUsername.Text = "User name:";
+            this.lbUsername.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label4
+            // enterLoginLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 28);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(257, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Enter your EVE Online login and choose a character:";
+            this.enterLoginLabel.AutoSize = true;
+            this.enterLoginLabel.Location = new System.Drawing.Point(15, 28);
+            this.enterLoginLabel.Name = "enterLoginLabel";
+            this.enterLoginLabel.Size = new System.Drawing.Size(257, 13);
+            this.enterLoginLabel.TabIndex = 1;
+            this.enterLoginLabel.Text = "Enter your EVE Online login and choose a character:";
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(500, 204);
+            this.btnOk.Location = new System.Drawing.Point(174, 204);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -151,7 +151,7 @@ namespace EVEMon
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(581, 204);
+            this.btnCancel.Location = new System.Drawing.Point(255, 204);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -159,14 +159,14 @@ namespace EVEMon
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label5
+            // lbSpecifyXML
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 28);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(210, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Specify a saved Character XML file to use:";
+            this.lbSpecifyXML.AutoSize = true;
+            this.lbSpecifyXML.Location = new System.Drawing.Point(15, 28);
+            this.lbSpecifyXML.Name = "lbSpecifyXML";
+            this.lbSpecifyXML.Size = new System.Drawing.Size(210, 13);
+            this.lbSpecifyXML.TabIndex = 0;
+            this.lbSpecifyXML.Text = "Specify a saved Character XML file to use:";
             // 
             // tbFilename
             // 
@@ -186,14 +186,14 @@ namespace EVEMon
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
-            // label6
+            // lbAddCharacter
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 15);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(107, 13);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Add character using:";
+            this.lbAddCharacter.AutoSize = true;
+            this.lbAddCharacter.Location = new System.Drawing.Point(12, 15);
+            this.lbAddCharacter.Name = "lbAddCharacter";
+            this.lbAddCharacter.Size = new System.Drawing.Size(107, 13);
+            this.lbAddCharacter.TabIndex = 5;
+            this.lbAddCharacter.Text = "Add character using:";
             // 
             // cbCharacterType
             // 
@@ -211,13 +211,13 @@ namespace EVEMon
             // gbEveLogin
             // 
             this.gbEveLogin.Controls.Add(this.btnCharSelect);
-            this.gbEveLogin.Controls.Add(this.label4);
+            this.gbEveLogin.Controls.Add(this.enterLoginLabel);
             this.gbEveLogin.Controls.Add(this.tbCharName);
-            this.gbEveLogin.Controls.Add(this.label1);
-            this.gbEveLogin.Controls.Add(this.label3);
+            this.gbEveLogin.Controls.Add(this.lbUsername);
+            this.gbEveLogin.Controls.Add(this.lbLoginCharacter);
             this.gbEveLogin.Controls.Add(this.tbPassword);
             this.gbEveLogin.Controls.Add(this.tbUsername);
-            this.gbEveLogin.Controls.Add(this.label2);
+            this.gbEveLogin.Controls.Add(this.lbPassword);
             this.gbEveLogin.Location = new System.Drawing.Point(12, 39);
             this.gbEveLogin.Name = "gbEveLogin";
             this.gbEveLogin.Size = new System.Drawing.Size(318, 154);
@@ -228,12 +228,12 @@ namespace EVEMon
             // gbSavedXML
             // 
             this.gbSavedXML.Controls.Add(this.tbFileCharName);
-            this.gbSavedXML.Controls.Add(this.label7);
+            this.gbSavedXML.Controls.Add(this.lbSavedCharacter);
             this.gbSavedXML.Controls.Add(this.cbMonitorFile);
             this.gbSavedXML.Controls.Add(this.btnBrowse);
-            this.gbSavedXML.Controls.Add(this.label5);
+            this.gbSavedXML.Controls.Add(this.lbSpecifyXML);
             this.gbSavedXML.Controls.Add(this.tbFilename);
-            this.gbSavedXML.Location = new System.Drawing.Point(336, 39);
+            this.gbSavedXML.Location = new System.Drawing.Point(12, 39);
             this.gbSavedXML.Name = "gbSavedXML";
             this.gbSavedXML.Size = new System.Drawing.Size(318, 154);
             this.gbSavedXML.TabIndex = 8;
@@ -250,17 +250,17 @@ namespace EVEMon
             this.tbFileCharName.TabStop = false;
             this.tbFileCharName.Text = "(None)";
             // 
-            // label7
+            // lbSavedCharacter
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbSavedCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(18, 112);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 13);
-            this.label7.TabIndex = 4;
-            this.label7.Text = "Character:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbSavedCharacter.AutoSize = true;
+            this.lbSavedCharacter.Location = new System.Drawing.Point(18, 112);
+            this.lbSavedCharacter.Name = "lbSavedCharacter";
+            this.lbSavedCharacter.Size = new System.Drawing.Size(59, 13);
+            this.lbSavedCharacter.TabIndex = 4;
+            this.lbSavedCharacter.Text = "Character:";
+            this.lbSavedCharacter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbMonitorFile
             // 
@@ -283,12 +283,12 @@ namespace EVEMon
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(668, 239);
+            this.ClientSize = new System.Drawing.Size(342, 239);
             this.ControlBox = false;
             this.Controls.Add(this.gbSavedXML);
             this.Controls.Add(this.gbEveLogin);
             this.Controls.Add(this.cbCharacterType);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lbAddCharacter);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -310,26 +310,26 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbUsername;
+        private System.Windows.Forms.Label lbPassword;
+        private System.Windows.Forms.Label lbLoginCharacter;
         private System.Windows.Forms.TextBox tbUsername;
         private System.Windows.Forms.TextBox tbPassword;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label enterLoginLabel;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TextBox tbCharName;
         private System.Windows.Forms.Button btnCharSelect;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.TextBox tbFilename;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lbSpecifyXML;
+        private System.Windows.Forms.Label lbAddCharacter;
         private System.Windows.Forms.ComboBox cbCharacterType;
         private System.Windows.Forms.GroupBox gbEveLogin;
         private System.Windows.Forms.GroupBox gbSavedXML;
         private System.Windows.Forms.CheckBox cbMonitorFile;
         private System.Windows.Forms.OpenFileDialog ofdOpenXml;
         private System.Windows.Forms.TextBox tbFileCharName;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lbSavedCharacter;
     }
 }
