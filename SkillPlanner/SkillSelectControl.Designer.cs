@@ -64,12 +64,13 @@ namespace EVEMon.SkillPlanner
             "Level I Ready",
             "Not Known",
             "Not Known - Owned",
+            "Not Known - Trainable",
             "Not Known - Unowned",
             "Not Planned",
             "Not Planned - Trainable",
             "Partially Trained",
             "Planned",
-            "Trainable"});
+            "Trainable (All)"});
             this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSkillFilter.MaxDropDownItems = 12;

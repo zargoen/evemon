@@ -145,6 +145,12 @@ namespace EVEMon.SkillPlanner
                        };
                     break;
 
+                case "Not Known - Trainable":
+                    sf = delegate(Skill gs)
+                       {
+                           return !gs.Known && gs.PrerequisitesMet;
+                       };
+                    break;
 
                 case "Planned": // Planned Skills
                     sf = delegate(Skill gs)
@@ -158,7 +164,7 @@ namespace EVEMon.SkillPlanner
                                  return gs.Level == 0 && gs.PrerequisitesMet;
                              };
                     break;
-                case "Trainable": // Trainable Skills
+                case "Trainable (All)": // Trainable Skills
                     sf = delegate(Skill gs)
                              {
                                  return gs.PrerequisitesMet && gs.Level < 5;
