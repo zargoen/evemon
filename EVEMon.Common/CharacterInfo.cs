@@ -989,10 +989,10 @@ namespace EVEMon.Common
             {
                 _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
             }
-            if (this.CurrentlyTrainingSkill != null &&
+			if (m_SkillInTraining != null &&
                     m_OldSkillInTraining != null &&
-                        (m_OldSkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id ||
-                        ((TimeSpan)_OSITLocalCompleteTime.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion)).Duration() > new TimeSpan(0, 3, 30)))
+						(m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
+						m_OldSkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))
             {
                 this.CancelCurrentSkillTraining();
             }
@@ -1148,11 +1148,11 @@ namespace EVEMon.Common
             }
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-            if (this.CurrentlyTrainingSkill != null &&
+			if (m_SkillInTraining != null &&
                     (SkillInTraining == null || 
-                    (SkillInTraining != null && 
-                        (SkillInTraining.TrainingSkillWithTypeID != this.CurrentlyTrainingSkill.Id || 
-                        (((TimeSpan)(_SITLocalCompleteTime.Subtract(this.CurrentlyTrainingSkill.EstimatedCompletion))).Duration() > new TimeSpan(0, 3, 30))))))
+                    (SkillInTraining != null &&
+						(SkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
+						(SkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime)))))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
