@@ -39,6 +39,7 @@ namespace EVEMon
             slDevelopers.Add("Anders Chydenius","02");
 
             slDevelopers.Add("mrcue", "03");
+            slDevelopers.Add("Collin Grady", "03");
 
             slDevelopers.Add("DCShadow", "04");
             slDevelopers.Add("Jalon Mevek", "04");
@@ -50,7 +51,6 @@ namespace EVEMon
 
             slDevelopers.Add("Adam Butt", "05");
             slDevelopers.Add("bugusnot", "05");
-            slDevelopers.Add("Collin Grady", "05");
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("exi", "05");
             slDevelopers.Add("FangVV", "05");
@@ -67,6 +67,7 @@ namespace EVEMon
             slDevelopers.Add("Michayel Lyon", "05");
             slDevelopers.Add("mintoko", "05");
             slDevelopers.Add("Nascent Nimbus", "05");
+            slDevelopers.Add("NetMage", "05");
             slDevelopers.Add("Nilyen", "05");
             slDevelopers.Add("Nimrel", "05");
             slDevelopers.Add("phorge", "05");
@@ -78,10 +79,8 @@ namespace EVEMon
             slDevelopers.Add("Shocky", "05");
             slDevelopers.Add("Spiff Nutter", "05");
             slDevelopers.Add("vardoj", "05");
-			slDevelopers.Add("NetMage", "05");
 
             slOutput = new SortedList();
-
         }
 
         private void AboutWindow_Load(object sender, EventArgs e)
