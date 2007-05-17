@@ -173,6 +173,7 @@ namespace EVEMon.SkillPlanner
 
         private void UpdateListViewItems()
         {
+            if (m_settings == null) m_settings = Settings.GetInstance();
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
@@ -253,6 +254,42 @@ namespace EVEMon.SkillPlanner
                     {
                         planGroups = "Multiple (" + pe.PlanGroups.Count + ")";
                     }
+
+                    // See if this entry conflicts witha  schedule entry
+                    string BlockingEntry = string.Empty;
+                    bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
+                    if (isBlocked)
+                        BlockingEntry = "DOWNTIME";
+                    if (!isBlocked && m_settings != null)
+                    {
+                        for (int j = 0; j < m_settings.Schedule.Count; j++)
+                        {
+                            ScheduleEntry temp = m_settings.Schedule[j];
+                            if (temp.GetType() == typeof(SimpleScheduleEntry))
+                            {
+                                SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
+                                if (y.Blocking(thisEnd))
+                                {
+                                    isBlocked = true;
+                                    BlockingEntry = y.Title;
+                                    break;
+                                }
+                            }
+                            else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                            {
+                                RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
+                                if (y.Blocking(thisEnd))
+                                {
+                                    isBlocked = true;
+                                    BlockingEntry = y.Title;
+                                    break;
+                                }
+                            }
+                        }
+                    } 
+                    if (isBlocked) lvi.ForeColor = Color.Red;
+                    // end of schedule checking
+
 
                     for (int x = 0; x < lvSkills.Columns.Count; x++)
                     {
@@ -339,6 +376,9 @@ namespace EVEMon.SkillPlanner
                                         }
                                     }
                                     break;
+                                case ColumnPreference.ColumnType.Conflicts:
+                                    res = BlockingEntry;
+                                    break;
                             }
                         }
                         else
@@ -365,55 +405,6 @@ namespace EVEMon.SkillPlanner
                         }
 
                         lvi.SubItems[x].Text = res;
-
-                        // OK first wait for the right column type
-                        if (ct == ColumnPreference.ColumnType.EarliestEnd)
-                        {
-                            // Now find out if it's blocked
-                            string BlockingEntry = string.Empty;
-                            bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
-                            if (isBlocked)
-                                BlockingEntry = "DOWNTIME";
-                            if (m_settings == null)
-                                m_settings = Settings.GetInstance();
-                            if (!isBlocked && m_settings != null)
-                            {
-                                for (int j = 0; j < m_settings.Schedule.Count; j++)
-                                {
-                                    ScheduleEntry temp = m_settings.Schedule[j];
-                                    if (temp.GetType() == typeof(SimpleScheduleEntry))
-                                    {
-                                        SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
-                                        if (y.Blocking(thisEnd))
-                                        {
-                                            isBlocked = true;
-                                            BlockingEntry = y.Title;
-                                            break;
-                                        }
-                                    }
-                                    else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                                    {
-                                        RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
-                                        if (y.Blocking(thisEnd))
-                                        {
-                                            isBlocked = true;
-                                            BlockingEntry = y.Title;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (isBlocked)
-                            {
-                                // Now do something with the knowledge that this entry is blocked...
-                                // This doesn't actually do anything yet...
-                                // Anyone got any ideas?
-
-                                // Brad's idea... with a little something from Eewec...
-                                lvi.ForeColor=Color.Red;
-                                lvi.SubItems[x].Text += " *CONFLICT WITH " + BlockingEntry + "*";
-                            }
-                        }
                     }
 
                     lvi.SubItems[lvSkills.Columns.Count].Text = pe.EntryType.ToString();

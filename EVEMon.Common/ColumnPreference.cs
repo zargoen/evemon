@@ -52,6 +52,7 @@ namespace EVEMon.Common
             [ColumnDisplay("Training Time (no implants)","Train Time (no implants)")]TrainingTimeNatural,
             [ColumnDisplay("Earliest Start")] EarliestStart,
             [ColumnDisplay("Earliest End")] EarliestEnd,
+            [ColumnDisplay("Conflicts")] Conflicts,
             [ColumnDisplay("Percent Complete", "%")] PercentComplete,
             [ColumnDisplay("Skill Rank", "Rank")] SkillRank,
             [ColumnDisplay("Primary Attribute", "Primary")] PrimaryAttribute,
@@ -80,6 +81,7 @@ namespace EVEMon.Common
             this.TrainingTime = true;
             this.EarliestStart = true;
             this.EarliestEnd = true;
+            this.Conflicts = true;
             this.Priority = true;
         }
 
@@ -203,6 +205,14 @@ namespace EVEMon.Common
             get { return this[ColumnType.EarliestEnd]; }
             set { this[ColumnType.EarliestEnd] = value; }
         }
+
+        [XmlAttribute]
+        public bool Conflicts
+        {
+            get { return this[ColumnType.Conflicts]; }
+            set { this[ColumnType.Conflicts] = value; }
+        }
+
 
         [XmlAttribute]
         public bool PercentComplete
