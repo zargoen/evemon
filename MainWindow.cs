@@ -1270,10 +1270,12 @@ namespace EVEMon
             {
                 inEvenetToolStripMenuItem.Enabled = true;
                 inEvenetToolStripMenuItem.Checked = m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
+                sendToInEveToolStripMenuItem.Enabled = inEvenetToolStripMenuItem.Checked;
             }
             else
             {
                 inEvenetToolStripMenuItem.Enabled = false;
+                sendToInEveToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -1292,6 +1294,15 @@ namespace EVEMon
             if (cm != null)
             {
                 m_settings.GetCharacterSettings(cm.CharacterName).IneveSync = !m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
+            }
+        }
+
+        private void sendToInEveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.Session.UpdateIneveAsync(cm.GrandCharacterInfo);
             }
         }
     }

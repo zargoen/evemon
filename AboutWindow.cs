@@ -70,6 +70,7 @@ namespace EVEMon
             slDevelopers.Add("NetMage", "05");
             slDevelopers.Add("Nilyen", "05");
             slDevelopers.Add("Nimrel", "05");
+            slDevelopers.Add("Phoenix Flames", "05");
             slDevelopers.Add("phorge", "05");
             slDevelopers.Add("Richard Slater", "05");
             slDevelopers.Add("Ruldar", "05");

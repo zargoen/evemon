@@ -2332,5 +2332,13 @@ namespace EVEMon
         {
             return (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
         }
+
+        public EveSession Session
+        {
+            get
+            {
+                return m_session;
+            }
+        }
     }
 }
