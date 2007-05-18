@@ -593,7 +593,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\default_char_pic.png" />
-    <Content Include="Microsoft.VC80.CRT.manifest">
+    <Content Include="Microsoft.VC80.CRT\Microsoft.VC80.CRT.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
@@ -603,13 +603,13 @@
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="msvcm80.dll">
+    <Content Include="Microsoft.VC80.CRT\msvcm80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="msvcp80.dll">
+    <Content Include="Microsoft.VC80.CRT\msvcp80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="msvcr80.dll">
+    <Content Include="Microsoft.VC80.CRT\msvcr80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
