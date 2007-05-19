@@ -299,6 +299,9 @@ namespace EVEMon.PieChart
             base.OnMouseMove(e);
             if (m_pieChart != null && m_values != null && m_values.Length > 0)
             {
+                if (e.X == m_lastX && e.Y == m_lastY) return;
+                m_lastX = e.X;
+                m_lastY = e.Y;
                 int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
                 if (index != m_highlightedIndex)
                 {
@@ -308,9 +311,13 @@ namespace EVEMon.PieChart
                 if (m_highlightedIndex != -1)
                 {
                     if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex || m_drawToolTipTexts[m_highlightedIndex].Length == 0)
+                    {
                         m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
+                    }
                     else
+                    {
                         m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
+                    }
                 }
                 else
                 {
@@ -463,6 +470,9 @@ namespace EVEMon.PieChart
         private int m_highlightedIndex = -1;
         private ToolTip m_toolTip = null;
 
+        private int m_lastX = -1;
+        private int m_lastY = -1;
+        
         // These are used for the actual drawing. They are modified depending
         // on wether sorting by size is on or off
         private decimal[] m_drawValues = null;
