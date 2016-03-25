@@ -58,7 +58,7 @@ html, body, .about, .content {
 }
 
 .brand-logo-big {
-    background-image: url(/evemon/wwwroot/images/EVEMonLogoBlue.png);
+    background-image: url(../images/EVEMonLogoBlue.png);
     margin: auto;
     display: block;
     width: 18.2865em;
