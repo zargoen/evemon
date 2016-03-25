@@ -47,12 +47,12 @@
         $(isMobile.any ? ".onlyDesktop" : ".onlyMobile").hide();
 
         // Gets the latest news feed
-        getFeed("https://raw.githubusercontent.com/JimiC/jimic.github.io/master/mds/latestNews.md",
+        getFeed("https://raw.githubusercontent.com/evemondevteam/evemon/gh-pages/mds/latestNews.md",
             $(".latest-news")[0],
             "Unable to get the latest news.");
 
         // Gets the change log feed
-        getFeed("https://raw.githubusercontent.com/JimiC/jimic.github.io/master/mds/changeLog.md",
+        getFeed("https://raw.githubusercontent.com/evemondevteam/evemon/gh-pages/mds/changeLog.md",
             $(".change-log")[0],
             "Unable to get the change logs.");
 
