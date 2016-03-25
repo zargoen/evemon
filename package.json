@@ -1,0 +1,20 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "The EVEMon website on github pages",
+  "scripts": { },
+  "author": "JimiC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/evemondevteam/evemon.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-clean-css": "^2.0.4",
+    "gulp-uglify": "^1.5.3",
+    "gulp-sourcemaps": "^1.6.0",
+    "rimraf": "^2.5.2"
+  }
+}
