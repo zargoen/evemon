@@ -8,7 +8,7 @@
         m.parentNode.insertBefore(a, m);
     })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
 
-    ga("create", "UA-26851280-5", "auto");
+    ga("create", "UA-71610557-4", "auto");
     ga("send", "pageview");
 
     // Fix for IE on WP8
