@@ -1,3 +1,7 @@
 .vs/
+.bin/
 *.sln
-*.config
+/*.cmd
+web.config
+packages/
+node_modules/

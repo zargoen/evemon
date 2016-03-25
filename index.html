@@ -9,99 +9,115 @@
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/normalize.css" media="screen">
-    <link rel="stylesheet" href="css/main.css" media="screen">
+    <link rel="stylesheet" href="wwwroot/css/site.min.css" type="text/css" media="screen">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="scripts/main.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="wwwroot/lib/marked.0.3.5.min.js"></script>
+    <script type="text/javascript" src="wwwroot/js/site.min.js"></script>
 
     <title>EVEMon - Character Monitoring and Planning for EVE Online</title>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/"><img src="https://avatars3.githubusercontent.com/u/17931721?v=3&amp;s=60" alt="logo" /></a>
+    <div class="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/" title="Home"><span class="logo brand-logo"></span></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="http://evemon.readthedocs.org/en/latest/" title="Documentation"><span class="logo docs-logo"></span>Documentation</a></li>
+                        <li><a href="https://forums.eveonline.com/default.aspx?g=posts&t=6765" title="Forums"><span class="logo forums-logo"></span>Forums</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="https://twitter.com/EVEMon" title="Twitter"><span class="logo twitter-logo"></span>Twitter</a></li>
+                        <li><a href="https://evemon.uservoice.com" title="UserVoice"><span class="logo uservoice-logo"></span>UserVoice</a></li>
+                        <li><a href="mailto:devteam.evemon@gmail.com" title="Contact Us"><span class="logo email-logo"></span>Contact Us</a></li>
+                    </ul>
+                </div>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left">
-                    <li class="docs"><a href="http://evemon.readthedocs.org/en/latest/">Documentation</a></li>
-                    <li class="forums"><a href="https://forums.eveonline.com/default.aspx?g=posts&t=6765">Forums</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="twitter"><a href="https://twitter.com/EVEMon">Twitter</a></li>
-                    <li class="uservoice"><a href="https://evemon.uservoice.com">UserVoice</a></li>
-                </ul>
+        </nav>
+        <section class="about">
+            <div class="container justify">
+                <div class="logo brand-logo-big"></div>
+                <div>
+                    EVEMon is a lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression.
+                    You can view your current skills and attributes, what you're currently training, and your ISK balance.
+                    EVEMon can track multiple characters across multiple accounts, so all your alts can be monitored through the same, simple interface.
+                    You can also plan your future character progression, by setting up a skill training plan; or even just play "what if" with detailed listings of all skills and training times.
+                </div>
             </div>
-        </div>
-    </nav>
-    <section class="logo">
-        <div class="container text justify">
-            <div class="logo-img">
-                <img src="https://raw.githubusercontent.com/evemondevteam/evemon/v3/src/EVEMon.Common/Resources/Images/EVEMonLogoBlue.png" alt="logo" />
-            </div>
-            <div>
-                EVEMon is a lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression. You can view your current skills and attributes, what you're currently training, and your ISK balance. EVEMon can track multiple characters across multiple accounts, so all your alts can be monitored through the same, simple interface. You can also plan your future character progression, by setting up a skill training plan; or even just play "what if" with detailed listings of all skills and training times.
-            </div>
-        </div>
-    </section>
-    <section class="download">
-        <div class="container text center">
-            <div class="onlyDesktop">
-                <div class="btn-group" role="group">
-                    <p>
-                        <a class="btn btn-lg btn-success" role="button" href="#">Get EVEMon for Windows 7+</a>
-                    </p>
-                    <p>
-                        <a class="btn btn-md btn-info" href="#">Get binaries for OS X and Linux under Wine</a>
+        </section>
+        <section class="download">
+            <div class="container center">
+                <div class="onlyDesktop">
+                    <div class="btn-group" role="group">
+                        <p>
+                            <a class="btn btn-lg btn-success" id="installer" role="button" href="#">Get EVEMon for Windows 7+</a>
+                        </p>
+                        <p>
+                            <a class="btn btn-md btn-info" id="binaries" role="button" href="#">Get binaries for OS X and Linux under Wine</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="onlyMobile">
+                    <p class="label label-warning">
+                        Not available for Mobile Devices
                     </p>
                 </div>
                 <p>
-                    The latest stable version is: <span id="version" class="badge">2.2.2</span>
+                    The latest stable version is: <span id="version" class="badge"><span class="loader"></span></span>
                 </p>
             </div>
-            <div class="onlyMobile">
-                <p class="label label-warning">
-                    Not available for Mobile Devices
-                </p>
-            </div>
-        </div>
-    </section>
-    <section class="news">
-        <div class="container text justify">
-            <div class="">
-                EVEMon is a lightweight, easy-to-use standalone Windows application designed to assist you in keeping track of your EVE Online character progression. You can view your current skills and attributes, what you're currently training, and your ISK balance. EVEMon can track multiple characters across multiple accounts, so all your alts can be monitored through the same, simple interface. You can also plan your future character progression, by setting up a skill training plan; or even just play "what if" with detailed listings of all skills and training times.
-            </div>
-        </div>
-    </section>
-    <section class="devs-contribs">
-        <div class="container text center">
-            <div class="row">
-                <div class="col-sm-6 text center">
-                    <p>
-                        <a class="btn btn-lg btn-success" role="button" href="https://github.com/evemondevteam/evemon">View us on <span class="github-logo">GitHub</span></a>
-                    </p>
-                </div>
-                <div class="col-sm-6 text center">
-                    <p>
-                        <a class="btn btn-lg btn-success" role="button" href="https://bitbucket.org/evemondevteam/evemon">View us on <span class="bitbucket-logo">Bitbucket</span></a>
-                    </p>
+        </section>
+        <section class="content">
+            <div class="container justify">
+                <div class="row">
+                    <div class="col-md-7 col-sm-12">
+                        <h2>Latest News</h2>
+                        <div class="latest-news"></div>
+                    </div>
+                    <div class="col-md-5 col-sm-12">
+                        <h2>Change Logs</h2>
+                        <div class="change-log"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+        <section class="repo">
+            <div class="container center">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <p>
+                            <a class="btn btn-lg btn-success" role="button" href="https://github.com/evemondevteam/evemon" title="View us on GitHub">View us on <span class="logo logo-indent github-logo">GitHub</span></a>
+                        </p>
+                    </div>
+                    <div class="col-xs-6">
+                        <p>
+                            <a class="btn btn-lg btn-success" role="button" href="https://bitbucket.org/evemondevteam/evemon" title="View us on Bitbucket">View us on <span class="logo logo-indent bitbucket-logo">Bitbucket</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="push"></div>
     <footer>
         <div class="container">
-            <small>&copy; 2016 Created by <a href="https://github.com/JimiC">JimiC</a></small><span class="separator"></span>
-            <small>Maintained by the <a href="https://github.com/evemondevteam">EVEMon Development Team</a></small><span class="separator"></span>
-            <small>Hosted by <a href="https://pages.github.com/">GitHub Pages</a></small>
+            <div class="creds">
+                <small>
+                    &copy; <span id="year">2016</span> Created by <a href="https://github.com/JimiC">JimiC</a><span class="separator"></span>
+                    Maintained by the <a href="https://github.com/evemondevteam">EVEMon Development Team</a><span class="separator"></span>
+                    Hosted by <a href="https://pages.github.com/">GitHub Pages</a>
+                </small>
+            </div>
         </div>
     </footer>
 </body>
