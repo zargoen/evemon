@@ -12,4 +12,4 @@ Just released EVEMon Docs v1.0.0 at http://evemon.readthedocs.org/. Any helping 
 
 ##### 2016-03-25 11:36 UTC
 
-EVEMon Dev Team is presenting the new official presentation site for EVEMon.
+EVEMon Development Team is presenting the new official presentation site for EVEMon.
