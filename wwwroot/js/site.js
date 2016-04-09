@@ -108,6 +108,11 @@
         return 0;
     }
 
+    // Gets the version text of the specified element
+    var getVersionText = function (e) {
+        return e.find("version").text();
+    }
+
     // Gets the version in the format of 'major.minor.build'
     var getVersionWithoutRevision = function (version) {
         return version.substr(0, version.lastIndexOf("."));
@@ -136,11 +141,14 @@
             $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
                 .done(function (data) {
                     try {
-                        var xmlDoc;
-                        if ($.type(data) === $.type(new Object())) {
-                            xmlDoc = new XMLSerializer().serializeToString(data);
-                        } else {
-                            xmlDoc = $.parseXML(data);
+                        var xmlDoc = undefined;
+                        try {
+                            xmlDoc = $.type(data) === $.type(new Object())
+                                ? new XMLSerializer().serializeToString(data)
+                                : $.parseXML(data);
+                        }
+                        catch (exc) {
+                            console.log(exc);
                         }
                         if (!xmlDoc)
                             return;
@@ -149,19 +157,19 @@
                             releases.each(function (i, elem) {
                                 if (!elem.nextElementSibling) {
                                     if (versionText === "Unknown") {
-                                        versionText = getVersionWithoutRevision($(elem).find('version').text());
+                                        versionText = getVersionWithoutRevision(getVersionText($(elem)));
                                     }
                                     return;
                                 }
-                                var v1 = $(elem).find("version").text();
-                                var v2 = $(elem.nextElementSibling).find("version").text();
+                                var v1 = getVersionText($(elem)),
+                                 v2 = getVersionText($(elem.nextElementSibling));
                                 versionText = getVersionWithoutRevision(v1);
                                 if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
                                     versionText = getVersionWithoutRevision(v2);
                                 }
                             });
                         } else {
-                            versionText = getVersionWithoutRevision($(xmlDoc).find("newest version").text());
+                            versionText = getVersionWithoutRevision(getVersionText($(xmlDoc)));
                         }
                         if (!isMobile.any) {
                             var installerLink = $(xmlDoc).find("autopatchurl").text();
@@ -171,8 +179,8 @@
                             if ($("#binaries")[0])
                                 $("#binaries")[0].href = installerLink.replace("install", "binaries").replace("exe", "zip");
                         }
-                    } catch (e) {
-                        console.log(e);
+                    } catch (ex) {
+                        console.log(ex);
                     }
                 })
                 .fail(function (e) {
