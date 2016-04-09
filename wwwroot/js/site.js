@@ -162,7 +162,7 @@
                                     return;
                                 }
                                 var v1 = getVersionText($(elem)),
-                                 v2 = getVersionText($(elem.nextElementSibling));
+                                    v2 = getVersionText($(elem.nextElementSibling));
                                 versionText = getVersionWithoutRevision(v1);
                                 if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
                                     versionText = getVersionWithoutRevision(v2);
