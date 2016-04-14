@@ -165,6 +165,9 @@
         } catch (ex) {
             console.log(ex);
         }
+
+        if ($("#version"))
+            $("#version").text(versionText);
     }
 
     /**************************************************************/
@@ -194,12 +197,10 @@
                     $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
                         .done(success)
                         .fail(function (ex) {
+                            if ($("#version"))
+                                $("#version").text(versionText);
                             console.log(ex);
                         });
-                })
-                .always(function () {
-                    if ($("#version"))
-                        $("#version").text(versionText);
                 });
         })();
 
