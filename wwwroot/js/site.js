@@ -118,6 +118,55 @@
         return version.substr(0, version.lastIndexOf("."));
     }
 
+    // Initilaizes the version text
+    var versionText = "Unknown";
+
+    // Occurs when a call to a uri succeeds
+    var success = function (data) {
+        try {
+            var xmlDoc = undefined;
+            try {
+                xmlDoc = $.type(data) === $.type(new Object())
+                    ? new XMLSerializer().serializeToString(data)
+                    : $.parseXML(data);
+            }
+            catch (exc) {
+                console.log(exc);
+            }
+            if (!xmlDoc)
+                return;
+            var releases = $(xmlDoc).find("release");
+            if (releases && releases.length > 0) {
+                releases.each(function (i, elem) {
+                    if (!elem.nextElementSibling) {
+                        if (versionText === "Unknown") {
+                            versionText = getVersionWithoutRevision(getVersionText($(elem)));
+                        }
+                        return;
+                    }
+                    var v1 = getVersionText($(elem)),
+                        v2 = getVersionText($(elem.nextElementSibling));
+                    versionText = getVersionWithoutRevision(v1);
+                    if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
+                        versionText = getVersionWithoutRevision(v2);
+                    }
+                });
+            } else {
+                versionText = getVersionWithoutRevision(getVersionText($(xmlDoc)));
+            }
+            if (!isMobile.any) {
+                var installerLink = $(xmlDoc).find("autopatchurl").text();
+                if ($("#installer")[0])
+                    $("#installer")[0].href = installerLink;
+
+                if ($("#binaries")[0])
+                    $("#binaries")[0].href = installerLink.replace("install", "binaries").replace("exe", "zip");
+            }
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
     /**************************************************************/
 
     // Occurs when document is ready
@@ -135,56 +184,18 @@
             $(".change-log")[0],
             "Unable to get the change logs.");
 
+
         // Gets the latest semantic version
         (function () {
-            var versionText = "Unknown";
-            $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
-                .done(function (data) {
-                    try {
-                        var xmlDoc = undefined;
-                        try {
-                            xmlDoc = $.type(data) === $.type(new Object())
-                                ? new XMLSerializer().serializeToString(data)
-                                : $.parseXML(data);
-                        }
-                        catch (exc) {
-                            console.log(exc);
-                        }
-                        if (!xmlDoc)
-                            return;
-                        var releases = $(xmlDoc).find("release");
-                        if (releases && releases.length > 0) {
-                            releases.each(function (i, elem) {
-                                if (!elem.nextElementSibling) {
-                                    if (versionText === "Unknown") {
-                                        versionText = getVersionWithoutRevision(getVersionText($(elem)));
-                                    }
-                                    return;
-                                }
-                                var v1 = getVersionText($(elem)),
-                                    v2 = getVersionText($(elem.nextElementSibling));
-                                versionText = getVersionWithoutRevision(v1);
-                                if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
-                                    versionText = getVersionWithoutRevision(v2);
-                                }
-                            });
-                        } else {
-                            versionText = getVersionWithoutRevision(getVersionText($(xmlDoc)));
-                        }
-                        if (!isMobile.any) {
-                            var installerLink = $(xmlDoc).find("autopatchurl").text();
-                            if ($("#installer")[0])
-                                $("#installer")[0].href = installerLink;
-
-                            if ($("#binaries")[0])
-                                $("#binaries")[0].href = installerLink.replace("install", "binaries").replace("exe", "zip");
-                        }
-                    } catch (ex) {
-                        console.log(ex);
-                    }
-                })
+            $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch-emergency.xml")
+                .done(success)
                 .fail(function (e) {
                     console.log(e);
+                    $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
+                        .done(success)
+                        .fail(function (ex) {
+                            console.log(ex);
+                        });
                 })
                 .always(function () {
                     if ($("#version"))
