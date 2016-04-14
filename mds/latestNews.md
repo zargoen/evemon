@@ -1,10 +1,4 @@
-﻿##### 2016-04-14 11:38 UTC
-
-EVEMon Development Team is announcing the release of EVEMon v2.2.3. http://bit.ly/1T6cbpT
-
-----
-
-##### 2016-03-28 10:49 UTC
+﻿##### 2016-03-28 10:49 UTC
 
 EVEMon Development Team is announcing the release of EVEMon v3.0.0-RC2. https://bit.ly/1QXzWRo
 
