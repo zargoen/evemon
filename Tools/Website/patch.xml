@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>21 December 2015</date>
-    <version>2.2.2.4104</version>
-    <md5>7a1fad1269389f98c0c77b59671c5760</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=189359.0</url>
-    <autopatchurl>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/EVEMon-install-2.2.2.exe</autopatchurl>
+    <date>14 April 2016</date>
+    <version>2.2.3.4120</version>
+    <md5>13c61ba3da594c9f15cfbe89d8051b30</md5>
+    <url>https://evemondevteam.github.io/evemon/#change-logs</url>
+    <autopatchurl>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/EVEMon-install-2.2.3.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,21 +14,13 @@
 
 == Bug Fixes ==
 
- * Included lookup for certificates and masteries data files when there is a data files update.
+ * Fixed a bug for the custom message box check box handling.
  
 == Enhancements ==
  
- * Improved the handling of the "DOWNTIME" indicator. Indicator will show only if there is only one skill in skill queue and training ends between DT.
- * Added support for parsing contact notification.
- * Added support of Osmium loadouts. 
- * Added support of Common Loadout Format (CLF).
- * Improved the exported EFT format of a loadout.
- 
-== Misc ==
-
- * Switched time check server from BattleClinic to NIST.
- * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
+ * Added support for the new distribution channel.]]></message>
   </newest>
+  <releases />
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
