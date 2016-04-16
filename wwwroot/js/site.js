@@ -1,4 +1,6 @@
 (function ($) {
+    "use strict";
+	
     // Hackish solution to https://github.com/twitter/bootstrap/issues/1768
     // where fixed-top navbar overlaps the jump link position
     $(window).load(function () {
