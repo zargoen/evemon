@@ -40,10 +40,8 @@ gulp.task("min:js", function () {
 
 gulp.task("min:css", function () {
     return gulp.src([paths.css, "!" + paths.minCss])
-        .pipe(sourcemaps.init())
         .pipe(concat(paths.concatCssDest))
         .pipe(cleanCss())
-        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
 
