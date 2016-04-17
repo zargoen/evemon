@@ -53,7 +53,7 @@
             })
             .always(function () {
                 if (element) {
-                    element.innerHTML += defaultText;
+                    element.html(defaultText);
                 }
             });
     };
@@ -156,11 +156,11 @@
             }
             if (!isMobile.any) {
                 var installerLink = $(xmlDoc).find("autopatchurl").text();
-                if ($("#installer")[0]) {
-                    $("#installer")[0].href = installerLink;
+                if ($("#installer")) {
+                    $("#installer").attr("href", installerLink);
                 }
-                if ($("#binaries")[0]) {
-                    $("#binaries")[0].href = installerLink.replace("install", "binaries").replace("exe", "zip");
+                if ($("#binaries")) {
+                    $("#binaries").attr("href", installerLink.replace("install", "binaries").replace("exe", "zip"));
                 }
             }
         } catch (ex) {
@@ -181,12 +181,12 @@
 
         // Gets the latest news feed
         getFeed("https://raw.githubusercontent.com/evemondevteam/evemon/gh-pages/mds/latestNews.md",
-            $(".latest-news")[0],
+            $(".latest-news"),
             "Unable to get the latest news.");
 
         // Gets the change log feed
         getFeed("https://raw.githubusercontent.com/evemondevteam/evemon/gh-pages/mds/changeLog.md",
-            $(".change-log")[0],
+            $(".change-log"),
             "Unable to get the change logs.");
 
 
