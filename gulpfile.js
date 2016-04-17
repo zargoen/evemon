@@ -31,19 +31,19 @@ gulp.task("clean", ["clean:js", "clean:css"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
 
 gulp.task("min:css", function () {
     return gulp.src([paths.css, "!" + paths.minCss])
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(concat(paths.concatCssDest))
         .pipe(cleanCss())
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
 
@@ -54,5 +54,5 @@ gulp.task("watch", function () {
 gulp.task("build", ["min:js", "min:css"]);
 
 gulp.task("watch", function () {
-    return gulp.watch([paths.js, paths.css], ["build"]);
+    return gulp.watch([paths.js, paths.css], ["clean", "build"]);
 });
