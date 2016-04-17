@@ -52,8 +52,9 @@
                 console.log(e);
             })
             .always(function () {
-                if (element)
+                if (element) {
                     element.innerHTML += defaultText;
+                }
             });
     };
 
@@ -155,18 +156,20 @@
             }
             if (!isMobile.any) {
                 var installerLink = $(xmlDoc).find("autopatchurl").text();
-                if ($("#installer")[0])
+                if ($("#installer")[0]) {
                     $("#installer")[0].href = installerLink;
-
-                if ($("#binaries")[0])
+                }
+                if ($("#binaries")[0]) {
                     $("#binaries")[0].href = installerLink.replace("install", "binaries").replace("exe", "zip");
+                }
             }
         } catch (ex) {
             console.log(ex);
         }
 
-        if ($("#version"))
+        if ($("#version")) {
             $("#version").text(versionText);
+        }
     }
 
     /**************************************************************/
