@@ -1,4 +1,10 @@
-﻿##### 2016-04-14 11:38 UTC
+﻿##### 2016-04-27 12:54 UTC
+
+YC118-4 1.0 (Citadel) data files are available via EVEMon's auto-updater.
+
+----
+
+##### 2016-04-14 11:38 UTC
 
 EVEMon Development Team is announcing the release of EVEMon v2.2.3. http://bit.ly/1T6cbpT
 
