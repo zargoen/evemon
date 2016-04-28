@@ -1,4 +1,10 @@
-﻿##### 2016-04-27 12:54 UTC
+﻿##### 2016-04-28 12:37 UTC
+
+YC118-4 1.1 (Citadel) data files are available via EVEMon's auto-updater.
+
+----
+
+##### 2016-04-27 12:54 UTC
 
 YC118-4 1.0 (Citadel) data files are available via EVEMon's auto-updater.
 
