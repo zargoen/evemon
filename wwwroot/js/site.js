@@ -199,9 +199,15 @@
                     $.get("https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
                         .done(success)
                         .fail(function (ex) {
-                            if ($("#version"))
-                                $("#version").text(versionText);
                             console.log(ex);
+                            // Really hacking way to support Safari (don't like it at all)
+                            $.get("https://bytebucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
+                                .done(success)
+                                .fail(function(exc) {
+                                    if ($("#version"))
+                                        $("#version").text(versionText);
+                                    console.log(exc);
+                                });
                         });
                 });
         })();
