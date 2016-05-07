@@ -118,6 +118,11 @@
         return version.substr(0, version.lastIndexOf("."));
     }
 
+    // Gets the installer link of the release
+    var getInstallerLinkOf = function (release) {
+        return release.find("autopatchurl").text();
+    }
+
     // Initilaizes the version text
     var versionText = "Unknown";
 
@@ -138,14 +143,14 @@
             var releases = $(xmlDoc).find("release");
             if (releases && releases.length > 0) {
                 releases.each(function (i, elem) {
+                    var v1 = getVersionText($(elem)),
+                        v2 = getVersionText($(elem.nextElementSibling));
                     if (!elem.nextElementSibling) {
                         if (versionText === "Unknown") {
-                            versionText = getVersionWithoutRevision(getVersionText($(elem)));
+                            versionText = getVersionWithoutRevision(v1);
                         }
                         return;
                     }
-                    var v1 = getVersionText($(elem)),
-                        v2 = getVersionText($(elem.nextElementSibling));
                     versionText = getVersionWithoutRevision(v1);
                     if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
                         versionText = getVersionWithoutRevision(v2);
@@ -155,13 +160,31 @@
                 versionText = getVersionWithoutRevision(getVersionText($(xmlDoc)));
             }
             if (!isMobile.any) {
-                //var installerLink = $(xmlDoc).find("autopatchurl").text();
-                //if ($("#installer")) {
-                //    $("#installer").attr("href", installerLink);
-                //}
-                //if ($("#binaries")) {
-                //    $("#binaries").attr("href", installerLink.replace("install", "binaries").replace("exe", "zip"));
-                //}
+                var installerLink;
+                if (releases && releases.length > 0) {
+                    releases.each(function (i, elem) {
+                        if (!elem.nextElementSibling) {
+                            if (installerLink === undefined) {
+                                installerLink = getInstallerLinkOf($(elem));
+                            }
+                            return;
+                        }
+                        var v1 = getVersionText($(elem)),
+                            v2 = getVersionText($(elem.nextElementSibling));
+                        installerLink = getInstallerLinkOf($(elem));
+                        if (versionComparer(v1, v2, { lexicographical: true }) < 0) {
+                            installerLink = getInstallerLinkOf($(elem.nextElementSibling));
+                        }
+                    });
+                } else {
+                    installerLink = $(xmlDoc).find("newest autopatchurl").text();
+                }
+                if ($("#installer")) {
+                    $("#installer").attr("href", installerLink);
+                }
+                if ($("#binaries")) {
+                    $("#binaries").attr("href", installerLink.replace("install", "binaries").replace("exe", "zip"));
+                }
             }
         } catch (ex) {
             console.log(ex);
