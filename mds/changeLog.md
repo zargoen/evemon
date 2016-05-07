@@ -1,15 +1,14 @@
 #### Release 3.0.0
 ##### Breaking Changes
-<span style="color: red">
+<ul style="color: red">
+ <li> Minimum .NET Framework version required is 4.6.1.</li>
+ <li> Windows XP is no more supported.</li>
+ <li> Windows Vista is no more supported.</li>
+ <li> EVEMon Market Unified Uploaded (EMUU) has been removed.</li>
+ <li> BattleClinic cloud storage service has been removed.</li>
+ <li> Downgrading to v2 is not supported, without losing your settings.</li>
+</ul>
 
- * Minimum .NET Framework version required is 4.6.1.
- * Windows XP is no more supported.
- * Windows Vista is no more supported.
- * EVEMon Market Unified Uploaded (EMUU) has been removed.
- * BattleClinic cloud storage service has been removed.
- * Downgrading to v2 is not supported, without losing your settings.
-  
-</span>
 ##### Contributors for this version
 
  * Jimi
