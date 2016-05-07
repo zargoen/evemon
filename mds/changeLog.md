@@ -1,6 +1,6 @@
 #### Release 3.0.0
 ##### Breaking Changes
-<span style color="red">
+<span style="color: red">
 
  * Minimum .NET Framework version required is 4.6.1.
  * Windows XP is no more supported.
