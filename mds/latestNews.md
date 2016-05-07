@@ -1,4 +1,4 @@
-﻿##### 2016-05-07 00:0 UTC
+﻿##### 2016-05-07 10:41 UTC
 
 EVEMon Development Team is announcing the release of EVEMon v3.0.0.
 EVEMon v3.0.0 will not be distributed via EVEMon's auto-updater.
