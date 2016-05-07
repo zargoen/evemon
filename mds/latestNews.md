@@ -1,8 +1,11 @@
 ﻿##### 2016-05-07 10:41 UTC
 
 EVEMon Development Team is announcing the release of EVEMon v3.0.0.
+
 EVEMon v3.0.0 will not be distributed via EVEMon's auto-updater.
+
 You will have to manually get the installer or binaries, in order to upgrade.
+
 It's strongly advised to make a backup of your settings before upgrading to EVEMon v3.
 
 EVEMon v2 will still be distributed for a limited time but will not be supported.
