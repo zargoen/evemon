@@ -155,13 +155,13 @@
                 versionText = getVersionWithoutRevision(getVersionText($(xmlDoc)));
             }
             if (!isMobile.any) {
-                var installerLink = $(xmlDoc).find("autopatchurl").text();
-                if ($("#installer")) {
-                    $("#installer").attr("href", installerLink);
-                }
-                if ($("#binaries")) {
-                    $("#binaries").attr("href", installerLink.replace("install", "binaries").replace("exe", "zip"));
-                }
+                //var installerLink = $(xmlDoc).find("autopatchurl").text();
+                //if ($("#installer")) {
+                //    $("#installer").attr("href", installerLink);
+                //}
+                //if ($("#binaries")) {
+                //    $("#binaries").attr("href", installerLink.replace("install", "binaries").replace("exe", "zip"));
+                //}
             }
         } catch (ex) {
             console.log(ex);
