@@ -125,6 +125,19 @@ html, body, .about, .content {
     overflow: auto;
 }
 
+.js {
+    display: none;
+}
+
+.no-js {
+    color: rgb(203, 203, 19);
+    height: 5em;
+    max-height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 footer, .push {
     height: 4.28572em;
 }

@@ -199,6 +199,10 @@
 
     // Occurs when document is ready
     $(function () {
+        // Display js enabled sections
+        $(".no-js").hide();
+        $(".js").show();
+
         // Display the download section only for Desktops
         $(isMobile.any ? ".onlyDesktop" : ".onlyMobile").hide();
 
@@ -226,7 +230,7 @@
                             // Really hacking way to support Safari (don't like it at all)
                             $.get("https://bytebucket.org/EVEMonDevTeam/evemon/wiki/updates/patch.xml")
                                 .done(success)
-                                .fail(function(exc) {
+                                .fail(function (exc) {
                                     if ($("#version"))
                                         $("#version").text(versionText);
                                     console.log(exc);
