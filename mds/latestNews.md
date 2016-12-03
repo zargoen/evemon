@@ -2,8 +2,10 @@
 The EVEMon Development Team are pleased to announce the release of version 3.0.3 of EVEMon to the community. Special thanks go to JimiC for helping with this release - despite his efforts to leave EVEMon behind, he has willingly given up many hours of his personal time over the last few weeks to answer stupid questions from Ashilta and to fix a few bugs to help with the release process. 
 
 Over the coming weeks, the team will start to focus on implementing proper support for Citadels and supporting a number of long-running bugs within the code. Of course, community contributions are still welcome!
+
+----
  
- ##### 2016-05-07 10:41 UTC
+##### 2016-05-07 10:41 UTC
 
 EVEMon Development Team is announcing the release of EVEMon v3.0.0.
 
