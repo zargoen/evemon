@@ -1,4 +1,4 @@
-#### Release 3.0.0
+#### Release 3.0.3
 ##### Breaking Changes
 <ul style="color: red">
  <li> Minimum .NET Framework version required is 4.6.1.</li>
