@@ -2,6 +2,34 @@
 ##### Breaking Changes
 <ul style="color: red">
  <li> Minimum .NET Framework version required is 4.6.1.</li>
+</ul>
+
+##### Contributors for this version
+ * Ashilta
+ * JimiC
+ * Elliena Bulmer
+ 
+##### New Features
+ * Unfortunately, no new features are provided in this release.
+ 
+##### Bug Fixes
+ * Fixed a bug wich caused exceptions to be thrown in the skill planner when no plan was loaded
+ * Fixed a bug which caused issues parsing the details of a users wallet following trades in Citadels
+ * Fixed a bug where the EVEMon installer was unable to see more recent versions of the .NET Framework
+ * Fixed a bug where scrolling through the skill queue would occasionally throw a 'System.DivideByZero' exception
+ 
+##### Enhancements
+ * EVEMon has been brought up-to-date with the latest version of the EVE SDE.
+ 
+##### Misc
+  * An issue where the pre-requisites of the Advanced Weapon Upgrades were listed incorrectly is resolved by updating the SDE
+  
+----
+
+#### Release 3.0.0
+##### Breaking Changes
+<ul style="color: red">
+ <li> Minimum .NET Framework version required is 4.6.1.</li>
  <li> Windows XP is no more supported.</li>
  <li> Windows Vista is no more supported.</li>
  <li> EVEMon Market Unified Uploaded (EMUU) has been removed.</li>
