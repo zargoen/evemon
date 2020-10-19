@@ -79,8 +79,7 @@ namespace EVEMon.SkillPlanner
                     var charAttribute = m_character[attrib];
                     long min = charAttribute.EffectiveValue - charAttribute.ImplantBonus;
                     nud.Minimum = min;
-                    nud.Maximum = min + Math.Min(m_plan.ChosenImplantSet[attrib].Bonus,
-                        EveConstants. MaxImplantPoints);
+                    nud.Maximum = min + EveConstants. MaxImplantPoints;
                 }
             }
 
